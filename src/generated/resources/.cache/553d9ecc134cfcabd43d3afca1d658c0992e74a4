@@ -1,0 +1,7 @@
+// 1.20.1	2024-12-31T22:47:17.6470877	Tags for minecraft:item mod id lostintime
+5dabbd9fe865bf02cde0af2e71236559d417151a data/curios/tags/items/belt.json
+5228e686341b5dffa19bcee74c555600e9338e85 data/lostintime/tags/items/seeds.json
+b76d3b02080cf1cb2925168676d24a4dcc872d07 data/minecraft/tags/items/leaves.json
+34eca28f08b8fc0afdcd907a1635e2aa706156ee data/minecraft/tags/items/logs.json
+34eca28f08b8fc0afdcd907a1635e2aa706156ee data/minecraft/tags/items/logs_that_burn.json
+0143fe839fcaa8df807ec7a615535cd7d509494c data/minecraft/tags/items/saplings.json

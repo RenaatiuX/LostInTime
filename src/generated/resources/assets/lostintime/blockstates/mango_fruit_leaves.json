@@ -1,0 +1,109 @@
+{
+  "variants": {
+    "age=0,distance=1": {
+      "model": "lostintime:block/mango_fruit_leaves_stage0"
+    },
+    "age=0,distance=2": {
+      "model": "lostintime:block/mango_fruit_leaves_stage0"
+    },
+    "age=0,distance=3": {
+      "model": "lostintime:block/mango_fruit_leaves_stage0"
+    },
+    "age=0,distance=4": {
+      "model": "lostintime:block/mango_fruit_leaves_stage0"
+    },
+    "age=0,distance=5": {
+      "model": "lostintime:block/mango_fruit_leaves_stage0"
+    },
+    "age=0,distance=6": {
+      "model": "lostintime:block/mango_fruit_leaves_stage0"
+    },
+    "age=0,distance=7": {
+      "model": "lostintime:block/mango_fruit_leaves_stage0"
+    },
+    "age=1,distance=1": {
+      "model": "lostintime:block/mango_fruit_leaves_stage1"
+    },
+    "age=1,distance=2": {
+      "model": "lostintime:block/mango_fruit_leaves_stage1"
+    },
+    "age=1,distance=3": {
+      "model": "lostintime:block/mango_fruit_leaves_stage1"
+    },
+    "age=1,distance=4": {
+      "model": "lostintime:block/mango_fruit_leaves_stage1"
+    },
+    "age=1,distance=5": {
+      "model": "lostintime:block/mango_fruit_leaves_stage1"
+    },
+    "age=1,distance=6": {
+      "model": "lostintime:block/mango_fruit_leaves_stage1"
+    },
+    "age=1,distance=7": {
+      "model": "lostintime:block/mango_fruit_leaves_stage1"
+    },
+    "age=2,distance=1": {
+      "model": "lostintime:block/mango_fruit_leaves_stage2"
+    },
+    "age=2,distance=2": {
+      "model": "lostintime:block/mango_fruit_leaves_stage2"
+    },
+    "age=2,distance=3": {
+      "model": "lostintime:block/mango_fruit_leaves_stage2"
+    },
+    "age=2,distance=4": {
+      "model": "lostintime:block/mango_fruit_leaves_stage2"
+    },
+    "age=2,distance=5": {
+      "model": "lostintime:block/mango_fruit_leaves_stage2"
+    },
+    "age=2,distance=6": {
+      "model": "lostintime:block/mango_fruit_leaves_stage2"
+    },
+    "age=2,distance=7": {
+      "model": "lostintime:block/mango_fruit_leaves_stage2"
+    },
+    "age=3,distance=1": {
+      "model": "lostintime:block/mango_fruit_leaves_stage3"
+    },
+    "age=3,distance=2": {
+      "model": "lostintime:block/mango_fruit_leaves_stage3"
+    },
+    "age=3,distance=3": {
+      "model": "lostintime:block/mango_fruit_leaves_stage3"
+    },
+    "age=3,distance=4": {
+      "model": "lostintime:block/mango_fruit_leaves_stage3"
+    },
+    "age=3,distance=5": {
+      "model": "lostintime:block/mango_fruit_leaves_stage3"
+    },
+    "age=3,distance=6": {
+      "model": "lostintime:block/mango_fruit_leaves_stage3"
+    },
+    "age=3,distance=7": {
+      "model": "lostintime:block/mango_fruit_leaves_stage3"
+    },
+    "age=4,distance=1": {
+      "model": "lostintime:block/mango_fruit_leaves_stage4"
+    },
+    "age=4,distance=2": {
+      "model": "lostintime:block/mango_fruit_leaves_stage4"
+    },
+    "age=4,distance=3": {
+      "model": "lostintime:block/mango_fruit_leaves_stage4"
+    },
+    "age=4,distance=4": {
+      "model": "lostintime:block/mango_fruit_leaves_stage4"
+    },
+    "age=4,distance=5": {
+      "model": "lostintime:block/mango_fruit_leaves_stage4"
+    },
+    "age=4,distance=6": {
+      "model": "lostintime:block/mango_fruit_leaves_stage4"
+    },
+    "age=4,distance=7": {
+      "model": "lostintime:block/mango_fruit_leaves_stage4"
+    }
+  }
+}

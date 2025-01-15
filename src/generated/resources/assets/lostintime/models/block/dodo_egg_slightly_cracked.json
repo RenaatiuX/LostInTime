@@ -1,0 +1,7 @@
+{
+  "parent": "lostintime:block/dodo_egg",
+  "textures": {
+    "1": "lostintime:block/dodo_egg_slightly_cracked",
+    "particle": "lostintime:block/dodo_egg_slightly_cracked"
+  }
+}

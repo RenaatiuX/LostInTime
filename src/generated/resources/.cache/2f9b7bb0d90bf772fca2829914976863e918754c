@@ -1,0 +1,6 @@
+// 1.20.1	2024-12-31T11:16:10.4524158	Tags for minecraft:block mod id lostintime
+b76d3b02080cf1cb2925168676d24a4dcc872d07 data/minecraft/tags/blocks/leaves.json
+34eca28f08b8fc0afdcd907a1635e2aa706156ee data/minecraft/tags/blocks/logs.json
+34eca28f08b8fc0afdcd907a1635e2aa706156ee data/minecraft/tags/blocks/logs_that_burn.json
+b76d3b02080cf1cb2925168676d24a4dcc872d07 data/minecraft/tags/blocks/mineable/hoe.json
+0143fe839fcaa8df807ec7a615535cd7d509494c data/minecraft/tags/blocks/saplings.json
