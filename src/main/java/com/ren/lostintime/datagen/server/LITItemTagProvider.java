@@ -41,6 +41,10 @@ public class LITItemTagProvider extends ItemTagsProvider {
                 .add(Items.WHEAT_SEEDS).add(Items.BEETROOT_SEEDS).add(Items.MELON_SEEDS).add(Items.PUMPKIN_SEEDS)
                 .add(Items.TORCHFLOWER_SEEDS);
 
+        tag(LITTags.Items.FRUITS)
+                .add(Items.APPLE).add(Items.MELON_SLICE).add(Items.SWEET_BERRIES).add(Items.GLOW_BERRIES)
+                .add(ItemInit.MANGO.get().asItem());
+
         tag(CuriosTags.Items.BELT)
                 .add(ItemInit.GOLDEN_EYE.get());
     }

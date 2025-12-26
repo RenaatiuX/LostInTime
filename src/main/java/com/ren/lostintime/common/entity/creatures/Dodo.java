@@ -1,21 +1,41 @@
 package com.ren.lostintime.common.entity.creatures;
 
+import com.ren.lostintime.common.entity.goal.CircleAroundGoal;
+import com.ren.lostintime.common.entity.goal.FindDroppedFruitGoal;
+import com.ren.lostintime.common.entity.goal.GoToPeckSpotGoal;
+import com.ren.lostintime.common.entity.goal.PeckGoal;
+import com.ren.lostintime.common.init.ItemInit;
 import com.ren.lostintime.datagen.server.LITTags;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +49,15 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Dodo extends Animal implements GeoEntity {
+
+    private static final EntityDataAccessor<Boolean> PECKING =
+            SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> PECK_X =
+            SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> PECK_Y =
+            SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> PECK_Z =
+            SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.INT);
 
     private static final Ingredient FOOD_ITEMS = Ingredient.of(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS,
             Items.BEETROOT_SEEDS, Items.TORCHFLOWER_SEEDS, Items.PITCHER_POD);
@@ -50,6 +79,10 @@ public class Dodo extends Animal implements GeoEntity {
     private int eggTime;
     private int eatAnimationTick;
     private EatBlockGoal eatBlockGoal;
+    public BlockPos peckTarget;
+    public boolean hasFruitTarget;
+    public int peckCooldown = 0;
+    public PeckState peckState = PeckState.NONE;
 
     public Dodo(EntityType<? extends Animal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -61,15 +94,19 @@ public class Dodo extends Animal implements GeoEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
-        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(3, new TemptGoal(this, 1.0D, FOOD_ITEMS, false));
-        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, AbstractIllager.class, 6.0F, 1.0D, 1.2D));
-        this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.addGoal(2, new FindDroppedFruitGoal(this));
+        this.goalSelector.addGoal(3, new GoToPeckSpotGoal(this));
+        this.goalSelector.addGoal(4, new CircleAroundGoal(this));
+        this.goalSelector.addGoal(5, new PeckGoal(this));
+        this.goalSelector.addGoal(6, new BreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(7, new TemptGoal(this, 1.0D, FOOD_ITEMS, false));
+        this.goalSelector.addGoal(7, new AvoidEntityGoal<>(this, AbstractIllager.class, 6.0F, 1.0D, 1.2D));
+        this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.1D));
         this.eatBlockGoal = new EatBlockGoal(this);
-        this.goalSelector.addGoal(5, this.eatBlockGoal);
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(8, this.eatBlockGoal);
+        this.goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(11, new RandomLookAroundGoal(this));
     }
 
     @Override
@@ -139,7 +176,85 @@ public class Dodo extends Animal implements GeoEntity {
         if (this.level().isClientSide) {
             this.eatAnimationTick = Math.max(0, this.eatAnimationTick - 1);
         }
+
+        if (this.level().isClientSide && getPecking()) {
+            BlockPos pos = new BlockPos(
+                    this.entityData.get(PECK_X),
+                    this.entityData.get(PECK_Y),
+                    this.entityData.get(PECK_Z)
+            );
+
+            BlockState state = this.level().getBlockState(pos);
+            if (!state.isAir()) {
+                for (int i = 0; i < 3; i++) {
+                    double px = pos.getX() + 0.5 + (this.random.nextDouble() - 0.5) * 0.3;
+                    double py = pos.getY() + 0.1;
+                    double pz = pos.getZ() + 0.5 + (this.random.nextDouble() - 0.5) * 0.3;
+
+                    this.level().addParticle(
+                            new BlockParticleOption(ParticleTypes.BLOCK, state),
+                            px, py, pz,
+                            0, 0.05, 0
+                    );
+                }
+
+                this.level().playLocalSound(
+                        this.getX(), this.getY(), this.getZ(),
+                        SoundEvents.SNIFFER_DIGGING,
+                        SoundSource.NEUTRAL,
+                        0.8F, 1.0F,
+                        false
+                );
+            }
+        }
+
     }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        // Peck
+        if (peckCooldown > 0) {
+            peckCooldown--;
+        }
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(PECKING, false);
+        this.entityData.define(PECK_X, 0);
+        this.entityData.define(PECK_Y, 0);
+        this.entityData.define(PECK_Z, 0);
+    }
+
+    public boolean getPecking() {
+        return this.entityData.get(PECKING);
+    }
+
+    public void setPecking(boolean pecking) {
+        this.entityData.set(PECKING, pecking);
+    }
+
+    public void startPecking(BlockPos pos) {
+        this.peckTarget = pos;
+        this.peckState = PeckState.PECKING;
+
+        this.entityData.set(PECKING, true);
+        this.entityData.set(PECK_X, pos.getX());
+        this.entityData.set(PECK_Y, pos.getY());
+        this.entityData.set(PECK_Z, pos.getZ());
+    }
+
+    public void stopPecking() {
+        this.peckTarget = null;
+        this.peckState = PeckState.NONE;
+
+        this.entityData.set(PECKING, false);
+    }
+
+
 
     @Override
     public void handleEntityEvent(byte pId) {
@@ -160,6 +275,26 @@ public class Dodo extends Animal implements GeoEntity {
             this.ageUp(60);
         }
     }
+
+    @Override
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+
+        if (level().isClientSide)
+            return InteractionResult.SUCCESS;
+
+        if (isFruit(stack) && peckCooldown <= 0 && peckState == PeckState.NONE) {
+            stack.shrink(1);
+            peckTarget = player.blockPosition().below();
+            peckState = PeckState.MOVING;
+            hasFruitTarget = true;
+
+            return InteractionResult.CONSUME;
+        }
+
+        return super.mobInteract(player, hand);
+    }
+
 
     //Animation
     @Override
@@ -197,5 +332,43 @@ public class Dodo extends Animal implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    public void finishPecking() {
+        this.peckCooldown = 1000;
+        this.hasFruitTarget = false;
+        stopPecking();
+
+    }
+
+    public void pickRandomSoil() {
+        for (int i = 0; i < 20; i++) {
+            BlockPos pos = this.blockPosition().offset(
+                    this.random.nextInt(6) - 3,
+                    -1,
+                    this.random.nextInt(6) - 3
+            );
+
+            if (isValidSoil(this.level().getBlockState(pos))) {
+                this.peckTarget = pos;
+                return;
+            }
+        }
+    }
+
+    private boolean isValidSoil(BlockState state) {
+        return state.is(LITTags.Blocks.DODO_SOILS);
+
+    }
+
+    public boolean isFruit(ItemStack stack) {
+        return stack.is(LITTags.Items.FRUITS);
+    }
+
+    public enum PeckState {
+        NONE,
+        MOVING,
+        CIRCLING,
+        PECKING
     }
 }
