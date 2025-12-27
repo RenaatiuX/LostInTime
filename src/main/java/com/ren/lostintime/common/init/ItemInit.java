@@ -23,6 +23,7 @@ public class ItemInit {
     public static final RegistryObject<Item> AMBER = registerSimple("amber");
     public static final RegistryObject<Item> GUARDIAN_SPIKE = ITEMS.register("guardian_spike",
             () -> new GuardianSpikeItem(new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<Item> DEVONIAN_FOSSIL = registerSimple("devonian_fossil");
 
     //EQUIP
     public static final RegistryObject<Item> GOLDEN_EYE = ITEMS.register("golden_eye",

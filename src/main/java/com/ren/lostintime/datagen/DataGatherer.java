@@ -28,6 +28,7 @@ public class DataGatherer {
         gen.addProvider(event.includeServer(), new LITWorldGenProvider(output, provider));
         gen.addProvider(event.includeServer(), new LITRecipeProvider(output));
         gen.addProvider(event.includeServer(), new CuriosTagProvider(output, helper, provider));
+        gen.addProvider(event.includeServer(), new LITLootTableProvider(output));
 
         //CLIENT
         gen.addProvider(event.includeClient(), new LITItemsModelProvider(output, helper));

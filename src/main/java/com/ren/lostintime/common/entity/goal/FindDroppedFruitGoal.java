@@ -47,6 +47,6 @@ public class FindDroppedFruitGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return false;
+        return targetItem != null && targetItem.isAlive() && dodo.peckState == Dodo.PeckState.NONE;
     }
 }

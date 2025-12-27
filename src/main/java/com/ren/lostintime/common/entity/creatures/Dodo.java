@@ -1,5 +1,6 @@
 package com.ren.lostintime.common.entity.creatures;
 
+import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.entity.goal.CircleAroundGoal;
 import com.ren.lostintime.common.entity.goal.FindDroppedFruitGoal;
 import com.ren.lostintime.common.entity.goal.GoToPeckSpotGoal;
@@ -12,6 +13,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -37,6 +39,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -47,6 +53,8 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.List;
 
 public class Dodo extends Animal implements GeoEntity {
 
@@ -61,6 +69,10 @@ public class Dodo extends Animal implements GeoEntity {
 
     private static final Ingredient FOOD_ITEMS = Ingredient.of(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS,
             Items.BEETROOT_SEEDS, Items.TORCHFLOWER_SEEDS, Items.PITCHER_POD);
+
+    public static final ResourceLocation PECK_LOOT =
+            new ResourceLocation(LostInTime.MODID, "dodo/pecking");
+
 
     protected static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
     protected static final RawAnimation FLAP = RawAnimation.begin().thenLoop("misc.flap");
@@ -197,14 +209,6 @@ public class Dodo extends Animal implements GeoEntity {
                             0, 0.05, 0
                     );
                 }
-
-                this.level().playLocalSound(
-                        this.getX(), this.getY(), this.getZ(),
-                        SoundEvents.SNIFFER_DIGGING,
-                        SoundSource.NEUTRAL,
-                        0.8F, 1.0F,
-                        false
-                );
             }
         }
 
@@ -335,10 +339,27 @@ public class Dodo extends Animal implements GeoEntity {
     }
 
     public void finishPecking() {
+        if (!level().isClientSide) {
+            generatePeckLoot();
+        }
         this.peckCooldown = 1000;
         this.hasFruitTarget = false;
         stopPecking();
+    }
+    private void generatePeckLoot() {
+        ServerLevel server = (ServerLevel) this.level();
+        LootTable table = server.getServer().getLootData().getLootTable(PECK_LOOT);
 
+        LootParams params = new LootParams.Builder(server)
+                .withParameter(LootContextParams.ORIGIN, this.position())
+                .withParameter(LootContextParams.THIS_ENTITY, this)
+                .create(LootContextParamSets.GIFT);
+
+        List<ItemStack> drops = table.getRandomItems(params);
+
+        for (ItemStack stack : drops) {
+            this.spawnAtLocation(stack);
+        }
     }
 
     public void pickRandomSoil() {

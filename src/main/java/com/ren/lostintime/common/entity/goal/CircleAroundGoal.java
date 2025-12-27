@@ -1,6 +1,7 @@
 package com.ren.lostintime.common.entity.goal;
 
 import com.ren.lostintime.common.entity.creatures.Dodo;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 
@@ -34,13 +35,15 @@ public class CircleAroundGoal extends Goal {
     public void tick() {
         timer++;
 
+        BlockPos center = dodo.peckTarget;
+
         double angle = timer * 0.25;
         double radius = 2.0;
 
         Vec3 pos = new Vec3(
-                dodo.getX() + Math.cos(angle) * radius,
-                dodo.getY(),
-                dodo.getZ() + Math.sin(angle) * radius
+                center.getX() + 0.5 + Math.cos(angle) * radius,
+                center.getY(),
+                center.getZ() + 0.5 + Math.sin(angle) * radius
         );
 
         dodo.getNavigation().moveTo(pos.x, pos.y, pos.z, 1.0);

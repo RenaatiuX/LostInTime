@@ -45,6 +45,9 @@ public class LITItemTagProvider extends ItemTagsProvider {
                 .add(Items.APPLE).add(Items.MELON_SLICE).add(Items.SWEET_BERRIES).add(Items.GLOW_BERRIES)
                 .add(ItemInit.MANGO.get().asItem());
 
+        tag(LITTags.Items.UNIDENTIFIED_FOSSIL)
+                .add(ItemInit.DEVONIAN_FOSSIL.get());
+
         tag(CuriosTags.Items.BELT)
                 .add(ItemInit.GOLDEN_EYE.get());
     }

@@ -36,6 +36,7 @@ public class LostInTime {
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTab() == GroupInit.LOST_IN_TIME_GROUP.get()) {
             event.accept(ItemInit.AMBER);
+            event.accept(ItemInit.DEVONIAN_FOSSIL);
             event.accept(ItemInit.RAW_DODO);
             event.accept(ItemInit.COOKED_DODO);
             event.accept(ItemInit.MANGO);

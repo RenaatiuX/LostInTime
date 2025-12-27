@@ -41,6 +41,7 @@ public class LITItemsModelProvider extends ItemModelProvider {
         saplingItem(BlockInit.MANGO_SAPLING);
 
         simple(ItemInit.GUARDIAN_SPIKE.get());
+        simple(ItemInit.DEVONIAN_FOSSIL.get());
     }
 
     private void simple(Item... items) {
