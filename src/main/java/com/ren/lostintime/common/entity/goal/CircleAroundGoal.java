@@ -49,13 +49,13 @@ public class CircleAroundGoal extends Goal {
         dodo.getNavigation().moveTo(pos.x, pos.y, pos.z, 1.0);
 
         if (timer > 80) {
-            dodo.pickRandomSoil();
-            if (dodo.peckTarget != null) {
+            if (dodo.peckTarget != null && dodo.isValidSoil(dodo.level().getBlockState(dodo.peckTarget))) {
                 dodo.startPecking(dodo.peckTarget);
             } else {
                 dodo.peckState = Dodo.PeckState.NONE;
                 dodo.hasFruitTarget = false;
             }
         }
+
     }
 }

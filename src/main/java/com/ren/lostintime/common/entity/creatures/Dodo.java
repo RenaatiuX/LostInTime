@@ -362,24 +362,8 @@ public class Dodo extends Animal implements GeoEntity {
         }
     }
 
-    public void pickRandomSoil() {
-        for (int i = 0; i < 20; i++) {
-            BlockPos pos = this.blockPosition().offset(
-                    this.random.nextInt(6) - 3,
-                    -1,
-                    this.random.nextInt(6) - 3
-            );
-
-            if (isValidSoil(this.level().getBlockState(pos))) {
-                this.peckTarget = pos;
-                return;
-            }
-        }
-    }
-
-    private boolean isValidSoil(BlockState state) {
+    public boolean isValidSoil(BlockState state) {
         return state.is(LITTags.Blocks.DODO_SOILS);
-
     }
 
     public boolean isFruit(ItemStack stack) {
