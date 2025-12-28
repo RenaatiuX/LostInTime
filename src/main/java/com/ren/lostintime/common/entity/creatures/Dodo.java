@@ -279,14 +279,29 @@ public class Dodo extends Animal implements GeoEntity, IPeckerEntity {
     //Animation
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "movePredicate", 5, this::movePredicate)
+        controllers.add(new AnimationController<>(this, "stateController", 5, this::statePredicate)
                 .receiveTriggeredAnimations()
                 .triggerableAnim("peck", PECK));
+        controllers.add(new AnimationController<>(this, "movePredicate", 5, this::movePredicate));
         controllers.add(new AnimationController<>(this, "flapController", 2, this::flapPredicate));
     }
 
-    protected <E extends Dodo> PlayState movePredicate(final AnimationState<E> event) {
+    protected <E extends Dodo> PlayState statePredicate(AnimationState<E> event) {
+        if (isNight()
+                && getPeckState() == PeckState.NONE
+                && this.onGround()
+                && this.getDeltaMovement().lengthSqr() < 0.001) {
+            event.getController().setAnimation(SLEEP);
+            return PlayState.CONTINUE;
+        }
 
+        return PlayState.STOP;
+    }
+
+    protected <E extends Dodo> PlayState movePredicate(final AnimationState<E> event) {
+        if (getPeckState() != PeckState.NONE || isNight()) {
+            return PlayState.STOP;
+        }
         if (this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6) {
             if (this.isSprinting()) {
                 event.getController().setAnimation(RUN);
@@ -305,8 +320,6 @@ public class Dodo extends Animal implements GeoEntity, IPeckerEntity {
             event.getController().setAnimation(FLAP);
             return PlayState.CONTINUE;
         }
-        event.getController().forceAnimationReset();
-
         return PlayState.STOP;
     }
 
