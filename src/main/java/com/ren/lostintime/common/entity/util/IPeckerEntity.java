@@ -51,6 +51,8 @@ public interface IPeckerEntity {
         return true;
     }
 
+    boolean isValidSoil(BlockState state);
+
     static enum PeckState {
         NONE,
         MOVING,

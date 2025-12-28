@@ -80,7 +80,6 @@ public class Dodo extends Animal implements GeoEntity, IPeckerEntity {
     private int eatAnimationTick;
     private EatBlockGoal eatBlockGoal;
     public BlockPos peckTarget;
-    public boolean hasFruitTarget;
     public int peckCooldown = 0;
     public PeckState peckState = PeckState.NONE;
     private int goldenBoostRolls = 0;
@@ -181,7 +180,7 @@ public class Dodo extends Animal implements GeoEntity, IPeckerEntity {
             this.eatAnimationTick = Math.max(0, this.eatAnimationTick - 1);
         }
 
-        if (this.level() instanceof ServerLevel serverLevel) {
+        if (this.level() instanceof ServerLevel serverLevel && peckTarget != null) {
 
             BlockState state = serverLevel.getBlockState(peckTarget);
             if (!state.isAir()) {
@@ -213,7 +212,6 @@ public class Dodo extends Animal implements GeoEntity, IPeckerEntity {
     @Override
     public void tick() {
         super.tick();
-
         // Peck
         if (peckCooldown > 0) {
             peckCooldown--;
@@ -270,7 +268,6 @@ public class Dodo extends Animal implements GeoEntity, IPeckerEntity {
             stack.shrink(1);
             peckTarget = player.blockPosition().below();
             peckState = PeckState.MOVING;
-            hasFruitTarget = true;
 
             return InteractionResult.CONSUME;
         }
@@ -316,6 +313,11 @@ public class Dodo extends Animal implements GeoEntity, IPeckerEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    public boolean isNight() {
+        long time = this.level().getDayTime() % 24000L;
+        return time >= 13000 && time <= 23000;
     }
 
     /**

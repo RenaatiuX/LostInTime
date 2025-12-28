@@ -3,7 +3,6 @@ package com.ren.lostintime.common.entity.goal;
 import com.ren.lostintime.common.entity.creatures.Dodo;
 import com.ren.lostintime.common.entity.util.IPeckerEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
@@ -63,11 +62,10 @@ public class CircleAroundGoal<T extends PathfinderMob & IPeckerEntity> extends G
         dodo.getNavigation().moveTo(pos.x, pos.y, pos.z, 1.0);
 
         if (timer > 80) {
-            if (dodo.peckTarget != null && dodo.isValidSoil(dodo.level().getBlockState(dodo.peckTarget))) {
-                dodo.startPecking(dodo.peckTarget);
+            if (dodo.getPeckTarget() != null && dodo.isValidSoil(dodo.level().getBlockState(dodo.getPeckTarget()))) {
+                dodo.startPecking();
             } else {
-                dodo.peckState = Dodo.PeckState.NONE;
-                dodo.hasFruitTarget = false;
+                dodo.setPeckState(IPeckerEntity.PeckState.NONE);
             }
         }
 
