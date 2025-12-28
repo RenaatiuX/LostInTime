@@ -1,29 +1,38 @@
 package com.ren.lostintime.common.entity.goal;
 
 import com.ren.lostintime.common.entity.creatures.Dodo;
+import com.ren.lostintime.common.entity.util.IPeckerEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 
-public class CircleAroundGoal extends Goal {
-    private final Dodo dodo;
+public class CircleAroundGoal<T extends PathfinderMob & IPeckerEntity> extends Goal {
+    private final T dodo;
     private int timer = 0;
 
-    public CircleAroundGoal(Dodo pDodo) {
+    public CircleAroundGoal(T pDodo) {
         this.dodo = pDodo;
         this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override
     public boolean canUse() {
-        return dodo.peckState == Dodo.PeckState.CIRCLING;
+        if (dodo.getPeckTarget() == null){
+            return false;
+        }
+        return dodo.getPeckState() == Dodo.PeckState.CIRCLING;
     }
 
     @Override
     public boolean canContinueToUse() {
-        return dodo.peckState == Dodo.PeckState.CIRCLING;
+        if (dodo.getPeckTarget() == null){
+            return false;
+        }
+        return dodo.getPeckState() == Dodo.PeckState.CIRCLING;
     }
 
     @Override
@@ -35,7 +44,7 @@ public class CircleAroundGoal extends Goal {
     public void tick() {
         timer++;
 
-        BlockPos center = dodo.peckTarget;
+        BlockPos center = dodo.getPeckTarget();
 
         double angle = timer * 0.25;
         double radius = 2.0;
@@ -45,6 +54,11 @@ public class CircleAroundGoal extends Goal {
                 center.getY(),
                 center.getZ() + 0.5 + Math.sin(angle) * radius
         );
+
+        double x = Math.cos(angle) * radius;
+        double z = Math.sin(angle) * radius;
+
+        var circlePos = center.offset((int)Math.round(x), 0, (int)Math.round(z));
 
         dodo.getNavigation().moveTo(pos.x, pos.y, pos.z, 1.0);
 

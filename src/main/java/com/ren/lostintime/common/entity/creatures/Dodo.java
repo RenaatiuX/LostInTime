@@ -5,7 +5,8 @@ import com.ren.lostintime.common.entity.goal.CircleAroundGoal;
 import com.ren.lostintime.common.entity.goal.FindDroppedFruitGoal;
 import com.ren.lostintime.common.entity.goal.GoToPeckSpotGoal;
 import com.ren.lostintime.common.entity.goal.PeckGoal;
-import com.ren.lostintime.common.init.ItemInit;
+import com.ren.lostintime.common.entity.util.IPeckerEntity;
+import com.ren.lostintime.common.init.EntityInit;
 import com.ren.lostintime.datagen.server.LITTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -15,11 +16,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -30,13 +27,10 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -57,19 +51,10 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Dodo extends Animal implements GeoEntity {
+public class Dodo extends Animal implements GeoEntity, IPeckerEntity {
 
     private static final EntityDataAccessor<Boolean> PECKING =
             SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Integer> PECK_X =
-            SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> PECK_Y =
-            SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> PECK_Z =
-            SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.INT);
-
-    private static final Ingredient FOOD_ITEMS = Ingredient.of(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS,
-            Items.BEETROOT_SEEDS, Items.TORCHFLOWER_SEEDS, Items.PITCHER_POD);
 
     public static final ResourceLocation PECK_LOOT =
             new ResourceLocation(LostInTime.MODID, "dodo/pecking");
@@ -112,12 +97,13 @@ public class Dodo extends Animal implements GeoEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
-        this.goalSelector.addGoal(2, new FindDroppedFruitGoal(this));
-        this.goalSelector.addGoal(3, new GoToPeckSpotGoal(this));
-        this.goalSelector.addGoal(4, new CircleAroundGoal(this));
+        this.goalSelector.addGoal(2, new FindDroppedFruitGoal<>(this));
+        this.goalSelector.addGoal(3, new GoToPeckSpotGoal<>(this));
+        this.goalSelector.addGoal(4, new CircleAroundGoal<>(this));
         this.goalSelector.addGoal(5, new PeckGoal(this));
         this.goalSelector.addGoal(6, new BreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(7, new TemptGoal(this, 1.0D, FOOD_ITEMS, false));
+        //TODO look u can create ingredients out of tags
+        this.goalSelector.addGoal(7, new TemptGoal(this, 1.0D, Ingredient.of(LITTags.Items.DODO_FOOD), false));
         this.goalSelector.addGoal(7, new AvoidEntityGoal<>(this, AbstractIllager.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.1D));
         this.eatBlockGoal = new EatBlockGoal(this);
@@ -138,12 +124,12 @@ public class Dodo extends Animal implements GeoEntity {
 
     @Override
     public boolean isFood(ItemStack pStack) {
-        return pStack.is(LITTags.Items.SEEDS);
+        return pStack.is(LITTags.Items.DODO_FOOD);
     }
 
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
-        return null;
+        return EntityInit.DODO.get().create(pLevel);
     }
 
     //Ai
@@ -195,24 +181,21 @@ public class Dodo extends Animal implements GeoEntity {
             this.eatAnimationTick = Math.max(0, this.eatAnimationTick - 1);
         }
 
-        if (this.level().isClientSide && getPecking()) {
-            BlockPos pos = new BlockPos(
-                    this.entityData.get(PECK_X),
-                    this.entityData.get(PECK_Y),
-                    this.entityData.get(PECK_Z)
-            );
+        if (this.level() instanceof ServerLevel serverLevel) {
 
-            BlockState state = this.level().getBlockState(pos);
+            BlockState state = serverLevel.getBlockState(peckTarget);
             if (!state.isAir()) {
                 for (int i = 0; i < 3; i++) {
-                    double px = pos.getX() + 0.5 + (this.random.nextDouble() - 0.5) * 0.3;
-                    double py = pos.getY() + 0.1;
-                    double pz = pos.getZ() + 0.5 + (this.random.nextDouble() - 0.5) * 0.3;
+                    double px = peckTarget.getX() + 0.5 + (this.random.nextDouble() - 0.5) * 0.3;
+                    double py = peckTarget.getY() + 0.1;
+                    double pz = peckTarget.getZ() + 0.5 + (this.random.nextDouble() - 0.5) * 0.3;
 
-                    this.level().addParticle(
+                    serverLevel.sendParticles(
                             new BlockParticleOption(ParticleTypes.BLOCK, state),
                             px, py, pz,
-                            0, 0.05, 0
+                            3,
+                            0, 0.05, 0,
+                            1d
                     );
                 }
             }
@@ -241,12 +224,9 @@ public class Dodo extends Animal implements GeoEntity {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(PECKING, false);
-        this.entityData.define(PECK_X, 0);
-        this.entityData.define(PECK_Y, 0);
-        this.entityData.define(PECK_Z, 0);
     }
 
-    public boolean getPecking() {
+    public boolean isPecking() {
         return this.entityData.get(PECKING);
     }
 
@@ -254,35 +234,10 @@ public class Dodo extends Animal implements GeoEntity {
         this.entityData.set(PECKING, pecking);
     }
 
-    public void startPecking(BlockPos pos) {
-        this.peckTarget = pos;
-        this.peckState = PeckState.PECKING;
-
-        this.entityData.set(PECKING, true);
-        this.entityData.set(PECK_X, pos.getX());
-        this.entityData.set(PECK_Y, pos.getY());
-        this.entityData.set(PECK_Z, pos.getZ());
-    }
-
-    public void stopPecking() {
-        this.peckTarget = null;
-        this.peckState = PeckState.NONE;
-
-        this.entityData.set(PECKING, false);
-    }
-
-
-    @Override
-    public void handleEntityEvent(byte pId) {
-        if (pId == 10) {
-            this.eatAnimationTick = 40;
-        } else {
-            super.handleEntityEvent(pId);
-        }
-    }
-
-    public boolean isEating() {
-        return this.eatAnimationTick > 0;
+    public void startPecking() {
+        setPecking(true);
+        //TODO look this can be triggered like this from the server side
+        triggerAnim("movePredicate", "peck");
     }
 
     @Override
@@ -327,14 +282,15 @@ public class Dodo extends Animal implements GeoEntity {
     //Animation
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "movePredicate", 5, this::movePredicate));
+        controllers.add(new AnimationController<>(this, "movePredicate", 5, this::movePredicate)
+                .receiveTriggeredAnimations()
+                .triggerableAnim("peck", PECK));
         controllers.add(new AnimationController<>(this, "flapController", 2, this::flapPredicate));
     }
 
     protected <E extends Dodo> PlayState movePredicate(final AnimationState<E> event) {
-        if (this.isEating()) {
-            event.getController().setAnimation(PECK);
-        } else if (this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6) {
+
+        if (this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6) {
             if (this.isSprinting()) {
                 event.getController().setAnimation(RUN);
             } else {
@@ -362,13 +318,13 @@ public class Dodo extends Animal implements GeoEntity {
         return this.cache;
     }
 
+    /**
+     * only called on the server side
+     */
     public void finishPecking() {
-        if (!level().isClientSide) {
-            generatePeckLoot();
-        }
+        generatePeckLoot();
         this.peckCooldown = 1000;
-        this.hasFruitTarget = false;
-        stopPecking();
+        setPecking(false);
     }
 
     private void generatePeckLoot() {
@@ -402,6 +358,7 @@ public class Dodo extends Animal implements GeoEntity {
         return state.is(LITTags.Blocks.DODO_SOILS);
     }
 
+    @Override
     public boolean isFruit(ItemStack stack) {
         return stack.is(LITTags.Items.FRUITS);
     }
@@ -417,10 +374,31 @@ public class Dodo extends Animal implements GeoEntity {
     }
 
 
-    public enum PeckState {
-        NONE,
-        MOVING,
-        CIRCLING,
-        PECKING
+    @Override
+    public void setPeckTarget(BlockPos target) {
+        this.peckTarget = target;
+    }
+
+    @Override
+    public BlockPos getPeckTarget() {
+        return this.peckTarget;
+    }
+
+    @Override
+    public PeckState getPeckState() {
+        return this.peckState;
+    }
+
+    @Override
+    public void setPeckState(PeckState state) {
+        this.peckState = state;
+        if (state != PeckState.PECKING) {
+            setPecking(false);
+        }
+    }
+
+    @Override
+    public boolean canPeck() {
+        return peckCooldown <= 0;
     }
 }

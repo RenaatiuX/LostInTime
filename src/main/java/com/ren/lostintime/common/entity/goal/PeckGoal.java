@@ -27,16 +27,19 @@ public class PeckGoal extends Goal {
 
     @Override
     public void start() {
-        peckTime = 40;
-        dodo.level().broadcastEntityEvent(dodo, (byte) 10);
+        // because it is just executed every second tick
+        peckTime = reducedTickDelay(40);
+        dodo.startPecking();
+    }
+
+    @Override
+    public void stop() {
+        dodo.finishPecking();
     }
 
     @Override
     public void tick() {
-        peckTime--;
 
-        if (peckTime <= 0) {
-            dodo.finishPecking();
-        }
+        peckTime--;
     }
 }

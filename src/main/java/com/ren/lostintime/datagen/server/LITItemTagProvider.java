@@ -50,6 +50,10 @@ public class LITItemTagProvider extends ItemTagsProvider {
 
         tag(CuriosTags.Items.BELT_SLOT_TAG)
                 .add(ItemInit.GOLDEN_EYE.get());
+
+        //TODO this is the wrapper for dodo food cause in case someone wants to add something exclusivelz to the dod food, he can do it here or add seeds which he then can do in the seeds tag
+        // seperate always food and general stuff like seeds, even tho they might contain the same items cause i never know what someone might want to add to this mod
+        tag(LITTags.Items.DODO_FOOD).addTags(LITTags.Items.SEEDS);
     }
 
 

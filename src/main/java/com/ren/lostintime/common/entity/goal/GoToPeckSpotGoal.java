@@ -1,51 +1,66 @@
 package com.ren.lostintime.common.entity.goal;
 
 import com.ren.lostintime.common.entity.creatures.Dodo;
+import com.ren.lostintime.common.entity.util.IPeckerEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 
-public class GoToPeckSpotGoal extends Goal {
+public class GoToPeckSpotGoal<T extends PathfinderMob & IPeckerEntity> extends Goal {
 
-    private final Dodo dodo;
+    private final T dodo;
 
-    public GoToPeckSpotGoal(Dodo pDodo) {
+    public GoToPeckSpotGoal(T pDodo) {
         this.dodo = pDodo;
         this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override
     public boolean canUse() {
-        return dodo.peckState == Dodo.PeckState.MOVING && dodo.peckTarget != null;
+        if (dodo.getPeckState() != IPeckerEntity.PeckState.MOVING)
+            return false;
+        var pos = dodo.getPeckTarget();
+
+        if (pos == null){
+            return false;
+        }
+        return true;
     }
 
     @Override
     public void tick() {
+        // actually adding 0.5 to the position doesnt change anything cause it will just be converted back to a whole blocck position
         dodo.getNavigation().moveTo(
-                dodo.peckTarget.getX() + 0.5,
-                dodo.peckTarget.getY(),
-                dodo.peckTarget.getZ() + 0.5,
+                dodo.getPeckTarget().getX(),
+                dodo.getPeckTarget().getX(),
+                dodo.getPeckTarget().getX(),
                 1.0
         );
     }
 
+    protected boolean hasReachedTarget(){
+        return dodo.distanceToSqr(Vec3.atLowerCornerOf(dodo.getPeckTarget())) <= 1.2;
+    }
+
     @Override
     public boolean canContinueToUse() {
-        return dodo.peckState == Dodo.PeckState.MOVING
-                && dodo.peckTarget != null
-                && dodo.distanceToSqr(Vec3.atCenterOf(dodo.peckTarget)) > 1.2;
+        return dodo.getPeckState() == Dodo.PeckState.MOVING
+                && dodo.getPeckTarget() != null
+                && !hasReachedTarget();
     }
 
     @Override
     public void stop() {
-        if (dodo.peckTarget != null &&
-                dodo.distanceToSqr(Vec3.atCenterOf(dodo.peckTarget)) <= 1.2) {
-            dodo.peckState = Dodo.PeckState.CIRCLING;
+        if (dodo.getPeckTarget() != null && hasReachedTarget()) {
+            dodo.setPeckState(Dodo.PeckState.CIRCLING);
         } else {
-            dodo.peckState = Dodo.PeckState.NONE;
-            dodo.peckTarget = null;
-            dodo.hasFruitTarget = false;
+            dodo.cancelPecking();
         }
     }
 
