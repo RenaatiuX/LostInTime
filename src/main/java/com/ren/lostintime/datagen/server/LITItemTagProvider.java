@@ -48,11 +48,7 @@ public class LITItemTagProvider extends ItemTagsProvider {
         tag(LITTags.Items.UNIDENTIFIED_FOSSIL)
                 .add(ItemInit.DEVONIAN_FOSSIL.get());
 
-        tag(LITTags.Items.GOLDEN_FOODS)
-                .add(Items.GOLDEN_APPLE).add(Items.GOLDEN_CARROT).add(Items.ENCHANTED_GOLDEN_APPLE)
-                .add(Items.GLISTERING_MELON_SLICE);
-
-        tag(CuriosTags.Items.BELT)
+        tag(CuriosTags.Items.BELT_SLOT_TAG)
                 .add(ItemInit.GOLDEN_EYE.get());
     }
 
