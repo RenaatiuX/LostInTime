@@ -1,6 +1,7 @@
 package com.ren.lostintime.datagen.server;
 
 import com.ren.lostintime.LostInTime;
+import com.ren.lostintime.common.init.CuriousSlotInit;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.entity.EntityType;
@@ -17,11 +18,11 @@ public class CuriosTagProvider extends CuriosDataProvider {
 
     @Override
     public void generate(HolderLookup.Provider registries, ExistingFileHelper fileHelper) {
-        createSlot("belt")
+        createSlot(CuriousSlotInit.BELT_SLOT)
                 .size(2);
 
         createEntities("slots")
                 .addEntities(EntityType.PLAYER)
-                .addSlots("belt");
+                .addSlots(CuriousSlotInit.BELT_SLOT);
     }
 }
