@@ -1,6 +1,7 @@
-// 1.20.1	2025-12-26T23:21:24.2539122	Tags for minecraft:item mod id lostintime
+// 1.20.1	2025-12-27T18:08:57.1814302	Tags for minecraft:item mod id lostintime
 5dabbd9fe865bf02cde0af2e71236559d417151a data/curios/tags/items/belt.json
 c2988c46f55e67e0680f37518a0ad9b3a9f78e64 data/lostintime/tags/items/fruits.json
+b02a72ab3dc9d67267621fc77751c432cf76d1f2 data/lostintime/tags/items/golden_foods.json
 5228e686341b5dffa19bcee74c555600e9338e85 data/lostintime/tags/items/seeds.json
 efa37ad44c2d7a83219ca45fbb79b42d9edeb0fa data/lostintime/tags/items/unidentified_fossil.json
 b76d3b02080cf1cb2925168676d24a4dcc872d07 data/minecraft/tags/items/leaves.json

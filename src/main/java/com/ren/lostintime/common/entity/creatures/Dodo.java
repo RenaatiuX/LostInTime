@@ -54,6 +54,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Dodo extends Animal implements GeoEntity {
@@ -95,6 +96,9 @@ public class Dodo extends Animal implements GeoEntity {
     public boolean hasFruitTarget;
     public int peckCooldown = 0;
     public PeckState peckState = PeckState.NONE;
+    private int goldenBoostRolls = 0;
+    private boolean goldenBoostUsedToday = false;
+    private int currentGoldenMultiplier = 1;
 
     public Dodo(EntityType<? extends Animal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -212,6 +216,13 @@ public class Dodo extends Animal implements GeoEntity {
             }
         }
 
+        // Reset
+        if (!this.level().isClientSide) {
+            long time = this.level().getDayTime() % 24000L;
+            if (time == 0) {
+                goldenBoostUsedToday = false;
+            }
+        }
     }
 
     @Override
@@ -259,7 +270,6 @@ public class Dodo extends Animal implements GeoEntity {
     }
 
 
-
     @Override
     public void handleEntityEvent(byte pId) {
         if (pId == 10) {
@@ -287,6 +297,18 @@ public class Dodo extends Animal implements GeoEntity {
         if (level().isClientSide)
             return InteractionResult.SUCCESS;
 
+        //Golden food
+        if (stack.is(LITTags.Items.GOLDEN_FOODS) && !goldenBoostUsedToday) {
+            int mult = getGoldenFoodMultiplier(stack);
+            this.currentGoldenMultiplier = mult;
+            this.goldenBoostRolls = 10;
+            this.goldenBoostUsedToday = true;
+            stack.shrink(1);
+            this.level().broadcastEntityEvent(this, (byte) 10);
+            return InteractionResult.CONSUME;
+        }
+
+        //Normal food
         if (isFruit(stack) && peckCooldown <= 0 && peckState == PeckState.NONE) {
             stack.shrink(1);
             peckTarget = player.blockPosition().below();
@@ -346,6 +368,7 @@ public class Dodo extends Animal implements GeoEntity {
         this.hasFruitTarget = false;
         stopPecking();
     }
+
     private void generatePeckLoot() {
         ServerLevel server = (ServerLevel) this.level();
         LootTable table = server.getServer().getLootData().getLootTable(PECK_LOOT);
@@ -355,7 +378,18 @@ public class Dodo extends Animal implements GeoEntity {
                 .withParameter(LootContextParams.THIS_ENTITY, this)
                 .create(LootContextParamSets.GIFT);
 
-        List<ItemStack> drops = table.getRandomItems(params);
+        List<ItemStack> drops = new ArrayList<>();
+
+        int rolls = 1;
+
+        if (goldenBoostRolls > 0) {
+            rolls = currentGoldenMultiplier;
+            goldenBoostRolls--;
+        }
+
+        for (int i = 0; i < rolls; i++) {
+            drops.addAll(table.getRandomItems(params));
+        }
 
         for (ItemStack stack : drops) {
             this.spawnAtLocation(stack);
@@ -369,6 +403,17 @@ public class Dodo extends Animal implements GeoEntity {
     public boolean isFruit(ItemStack stack) {
         return stack.is(LITTags.Items.FRUITS);
     }
+
+    public int getGoldenFoodMultiplier(ItemStack stack) {
+        if (!stack.is(LITTags.Items.GOLDEN_FOODS)) return 1;
+
+        if (stack.is(Items.GOLDEN_CARROT)) return 2;
+        if (stack.is(Items.GOLDEN_APPLE)) return 4;
+        if (stack.is(Items.ENCHANTED_GOLDEN_APPLE)) return 8;
+
+        return 2;
+    }
+
 
     public enum PeckState {
         NONE,
