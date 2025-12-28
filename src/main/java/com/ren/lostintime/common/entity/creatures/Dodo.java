@@ -80,6 +80,8 @@ public class Dodo extends Animal implements GeoEntity {
     protected static final RawAnimation PECK = RawAnimation.begin().thenPlay("misc.peck");
     public static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     public static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
+    public static final RawAnimation SLEEP = RawAnimation.begin().thenLoop("misc.sleep");
+    public static final RawAnimation NO = RawAnimation.begin().thenLoop("misc.no");
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
