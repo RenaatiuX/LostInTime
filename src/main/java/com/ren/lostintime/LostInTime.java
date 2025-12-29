@@ -39,6 +39,11 @@ public class LostInTime {
             event.accept(ItemInit.DEVONIAN_FOSSIL);
             event.accept(ItemInit.BOTHRIOLEPIS_FOSSIL);
             event.accept(ItemInit.QUATERNARY_FOSSIL);
+            event.accept(ItemInit.DODO_FOSSIL);
+            event.accept(ItemInit.DODO_SKULL);
+            event.accept(ItemInit.DODO_FOSSIL_MOUNT);
+            event.accept(ItemInit.EMPTY_SKELETON_MOUNT);
+
             event.accept(ItemInit.RAW_DODO);
             event.accept(ItemInit.COOKED_DODO);
             event.accept(ItemInit.MANGO);

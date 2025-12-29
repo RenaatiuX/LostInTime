@@ -34,6 +34,10 @@ public class ItemInit {
     public static final RegistryObject<Item> DEVONIAN_FOSSIL = registerSimple("devonian_fossil");
     public static final RegistryObject<Item> BOTHRIOLEPIS_FOSSIL = registerSimple("bothriolepis_fossil");
     public static final RegistryObject<Item> QUATERNARY_FOSSIL =  registerSimple("quaternary_fossil");
+    public static final RegistryObject<Item> DODO_FOSSIL = registerSimple("dodo_fossil");
+    public static final RegistryObject<Item> DODO_SKULL =  registerSimple("dodo_skull");
+    public static final RegistryObject<Item> DODO_FOSSIL_MOUNT = registerSimple("dodo_fossil_mount");
+    public static final RegistryObject<Item> EMPTY_SKELETON_MOUNT = registerSimple("empty_skeleton_mount");
 
     //EQUIP
     public static final RegistryObject<Item> GOLDEN_EYE = ITEMS.register("golden_eye",

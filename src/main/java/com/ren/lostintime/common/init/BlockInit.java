@@ -36,6 +36,9 @@ public class BlockInit {
     public static final RegistryObject<Block> DODO_EGG = registerBlock("dodo_egg",
             () -> new DodoEggBlock(BlockBehaviour.Properties.copy(Blocks.TURTLE_EGG)));
 
+    //ORES
+
+
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> registeredBlock = BLOCKS.register(name, block);
         registerBlockItem(name, registeredBlock);

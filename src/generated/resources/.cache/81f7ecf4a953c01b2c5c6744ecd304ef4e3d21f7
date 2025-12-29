@@ -1,4 +1,4 @@
-// 1.20.1	2025-12-29T11:39:55.0431233	Item Models: lostintime
+// 1.20.1	2025-12-29T16:12:28.2618244	Item Models: lostintime
 0570665fcef0e1f3922095a8aa98973135ded46e assets/lostintime/models/item/amber.json
 169e5cacebf9d8d673af2bcaf773bf19e835abe6 assets/lostintime/models/item/aspect_differentiation.json
 d5f072db00826b49ec9efbb50e2a72413fdadfd5 assets/lostintime/models/item/aspect_emergence.json
@@ -13,7 +13,11 @@ b76e0e23a00efba60ad6c21578d8059802740dc3 assets/lostintime/models/item/cooked_bo
 6cb9c4f5feb2b215cce230831873a4b8251010a4 assets/lostintime/models/item/cooked_endoceras.json
 39dc454b5a524d3d25dd619660235442462936d3 assets/lostintime/models/item/devonian_fossil.json
 e35fe5ed570cadaa48e0daf5324b372edc1b9703 assets/lostintime/models/item/dodo_egg.json
+2fd9d5c671331fb0f17017783c96198997711305 assets/lostintime/models/item/dodo_fossil.json
+85d11763defe6ef33ca8e7f968a9e90719c2bc5f assets/lostintime/models/item/dodo_fossil_mount.json
+78338d9f88d2461b6968d5f5cf26c3ac083edf82 assets/lostintime/models/item/dodo_skull.json
 63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/lostintime/models/item/dodo_spawn_egg.json
+17a26591b08b6017bfb1201567d7baa1b4e62c6e assets/lostintime/models/item/empty_skeleton_mount.json
 af7affd58910004752be8cb604091600bd28e888 assets/lostintime/models/item/golden_eye.json
 9503bba495ea11cf6474824156381cf39bb9afdc assets/lostintime/models/item/guardian_spike.json
 116a1a8a2155e45eb4a3d8cedc9aa6eef3b5a80f assets/lostintime/models/item/mango.json

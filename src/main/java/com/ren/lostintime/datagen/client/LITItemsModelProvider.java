@@ -53,6 +53,10 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.DEVONIAN_FOSSIL.get());
         simple(ItemInit.BOTHRIOLEPIS_FOSSIL.get());
         simple(ItemInit.QUATERNARY_FOSSIL.get());
+        simple(ItemInit.DODO_FOSSIL.get());
+        simple(ItemInit.DODO_SKULL.get());
+        simple(ItemInit.DODO_FOSSIL_MOUNT.get());
+        simple(ItemInit.EMPTY_SKELETON_MOUNT.get());
 
         simple(ItemInit.ASPECT_DIFFERENTIATION.get());
         simple(ItemInit.ASPECT_EMERGENCE.get());
