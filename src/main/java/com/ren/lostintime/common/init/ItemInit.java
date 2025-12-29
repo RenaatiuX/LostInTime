@@ -23,7 +23,17 @@ public class ItemInit {
     public static final RegistryObject<Item> AMBER = registerSimple("amber");
     public static final RegistryObject<Item> GUARDIAN_SPIKE = ITEMS.register("guardian_spike",
             () -> new GuardianSpikeItem(new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<Item> ASPECT_DIFFERENTIATION = registerSimple("aspect_differentiation");
+    public static final RegistryObject<Item> ASPECT_EMERGENCE = registerSimple("aspect_emergence");
+    public static final RegistryObject<Item> ASPECT_INTEGRATION = registerSimple("aspect_integration");
+    public static final RegistryObject<Item> ASPECT_STRUCTURING = registerSimple("aspect_structuring");
+    public static final RegistryObject<Item> ASPECT_TRANSIENCE = registerSimple("aspect_transience");
+    public static final RegistryObject<Item> ZIRCON =  registerSimple("zircon");
+
+    //FOSSIL
     public static final RegistryObject<Item> DEVONIAN_FOSSIL = registerSimple("devonian_fossil");
+    public static final RegistryObject<Item> BOTHRIOLEPIS_FOSSIL = registerSimple("bothriolepis_fossil");
+    public static final RegistryObject<Item> QUATERNARY_FOSSIL =  registerSimple("quaternary_fossil");
 
     //EQUIP
     public static final RegistryObject<Item> GOLDEN_EYE = ITEMS.register("golden_eye",
@@ -32,8 +42,18 @@ public class ItemInit {
     //FOOD
     public static final RegistryObject<Item> RAW_DODO = registerFood("raw_dodo", FoodInit.RAW_DODO);
     public static final RegistryObject<Item> COOKED_DODO = registerFood("cooked_dodo", FoodInit.COOKED_DODO);
+    public static final RegistryObject<Item> RAW_ANOMALOCARIS = registerFood("raw_anomalocaris", FoodInit.RAW_ANOMALOCARIS);
+    public static final RegistryObject<Item> COOKED_ANOMALOCARIS = registerFood("cooked_anomalocaris", FoodInit.COOKED_ANOMALOCARIS);
+    public static final RegistryObject<Item> RAW_BOTHRIOLEPIS = registerFood("raw_bothriolepis", FoodInit.RAW_BOTHRIOLEPIS);
+    public static final RegistryObject<Item> COOKED_BOTHRIOLEPIS = registerFood("cooked_bothriolepis", FoodInit.COOKED_BOTHRIOLEPIS);
+    public static final RegistryObject<Item> RAW_DAEODON = registerFood("raw_daeodon", FoodInit.RAW_DAEODON);
+    public static final RegistryObject<Item> COOKED_DAEODON = registerFood("cooked_daeodon", FoodInit.COOKED_DAEODON);
+    public static final RegistryObject<Item> RAW_ENDOCERAS = registerFood("raw_endoceras",  FoodInit.RAW_ENDOCERAS);
+    public static final RegistryObject<Item> COOKED_ENDOCERAS = registerFood("cooked_endoceras",  FoodInit.COOKED_ENDOCERAS);
 
     public static final RegistryObject<Item> MANGO = registerFood("mango", FoodInit.MANGO);
+
+    //BUCKETS
 
 
     //SPAWN EGG

@@ -31,6 +31,15 @@ public class LITItemsModelProvider extends ItemModelProvider {
 
         simple(ItemInit.RAW_DODO.get());
         simple(ItemInit.COOKED_DODO.get());
+        simple(ItemInit.RAW_ANOMALOCARIS.get());
+        simple(ItemInit.COOKED_ANOMALOCARIS.get());
+        simple(ItemInit.RAW_BOTHRIOLEPIS.get());
+        simple(ItemInit.COOKED_BOTHRIOLEPIS.get());
+        simple(ItemInit.RAW_DAEODON.get());
+        simple(ItemInit.COOKED_DAEODON.get());
+        simple(ItemInit.RAW_ENDOCERAS.get());
+        simple(ItemInit.COOKED_ENDOCERAS.get());
+
         simple(ItemInit.MANGO.get());
         simple(BlockInit.DODO_EGG.get());
 
@@ -42,6 +51,15 @@ public class LITItemsModelProvider extends ItemModelProvider {
 
         simple(ItemInit.GUARDIAN_SPIKE.get());
         simple(ItemInit.DEVONIAN_FOSSIL.get());
+        simple(ItemInit.BOTHRIOLEPIS_FOSSIL.get());
+        simple(ItemInit.QUATERNARY_FOSSIL.get());
+
+        simple(ItemInit.ASPECT_DIFFERENTIATION.get());
+        simple(ItemInit.ASPECT_EMERGENCE.get());
+        simple(ItemInit.ASPECT_INTEGRATION.get());
+        simple(ItemInit.ASPECT_STRUCTURING.get());
+        simple(ItemInit.ASPECT_TRANSIENCE.get());
+        simple(ItemInit.ZIRCON.get());
     }
 
     private void simple(Item... items) {

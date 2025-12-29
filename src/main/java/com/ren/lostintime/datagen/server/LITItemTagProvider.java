@@ -43,10 +43,10 @@ public class LITItemTagProvider extends ItemTagsProvider {
 
         tag(LITTags.Items.FRUITS)
                 .add(Items.APPLE).add(Items.MELON_SLICE).add(Items.SWEET_BERRIES).add(Items.GLOW_BERRIES)
-                .add(ItemInit.MANGO.get().asItem());
+                .add(ItemInit.MANGO.get());
 
         tag(LITTags.Items.UNIDENTIFIED_FOSSIL)
-                .add(ItemInit.DEVONIAN_FOSSIL.get());
+                .add(ItemInit.DEVONIAN_FOSSIL.get()).add(ItemInit.BOTHRIOLEPIS_FOSSIL.get()).add(ItemInit.QUATERNARY_FOSSIL.get());
 
         tag(CuriosTags.Items.BELT_SLOT_TAG)
                 .add(ItemInit.GOLDEN_EYE.get());

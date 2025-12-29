@@ -1,6 +1,16 @@
-// 1.20.1	2025-12-26T23:21:24.2469144	Item Models: lostintime
+// 1.20.1	2025-12-29T11:39:55.0431233	Item Models: lostintime
 0570665fcef0e1f3922095a8aa98973135ded46e assets/lostintime/models/item/amber.json
+169e5cacebf9d8d673af2bcaf773bf19e835abe6 assets/lostintime/models/item/aspect_differentiation.json
+d5f072db00826b49ec9efbb50e2a72413fdadfd5 assets/lostintime/models/item/aspect_emergence.json
+ef36ea5f6a7ba58062d31636dabd9d41a28013d6 assets/lostintime/models/item/aspect_integration.json
+3766b419941a537b685542b99d5cce22554cebc8 assets/lostintime/models/item/aspect_structuring.json
+b9273a07d8eb31e9bfd6acb72869f32287f454fc assets/lostintime/models/item/aspect_transience.json
+5c4aa24722cb1ff9b6900a440864ec816cf64284 assets/lostintime/models/item/bothriolepis_fossil.json
+1bed6ab22c0b492929e14a27f13751d7608ded92 assets/lostintime/models/item/cooked_anomalocaris.json
+b76e0e23a00efba60ad6c21578d8059802740dc3 assets/lostintime/models/item/cooked_bothriolepis.json
+0bd1e7f09f57db8a990e6df40808ab12b6da9fb9 assets/lostintime/models/item/cooked_daeodon.json
 8b2b67e1d54049b242993334119680165ffb9c3a assets/lostintime/models/item/cooked_dodo.json
+6cb9c4f5feb2b215cce230831873a4b8251010a4 assets/lostintime/models/item/cooked_endoceras.json
 39dc454b5a524d3d25dd619660235442462936d3 assets/lostintime/models/item/devonian_fossil.json
 e35fe5ed570cadaa48e0daf5324b372edc1b9703 assets/lostintime/models/item/dodo_egg.json
 63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/lostintime/models/item/dodo_spawn_egg.json
@@ -8,4 +18,10 @@ af7affd58910004752be8cb604091600bd28e888 assets/lostintime/models/item/golden_ey
 9503bba495ea11cf6474824156381cf39bb9afdc assets/lostintime/models/item/guardian_spike.json
 116a1a8a2155e45eb4a3d8cedc9aa6eef3b5a80f assets/lostintime/models/item/mango.json
 926da5d74ffd9f81b61e3170ad6417a141d0ceb7 assets/lostintime/models/item/mango_sapling.json
+d73453f8dd4c6d1328a109f61e7fef3b423d61f3 assets/lostintime/models/item/quaternary_fossil.json
+405092086662efa0187e56b57d887888711981b7 assets/lostintime/models/item/raw_anomalocaris.json
+209502ffa63236256176fe2a5decd3a0a28ab5d6 assets/lostintime/models/item/raw_bothriolepis.json
+016fcfbe5560a3a11fc4356039afef229274e1c0 assets/lostintime/models/item/raw_daeodon.json
 a87c28ce3a8b26d757bf486206ce44bb9f71f4f5 assets/lostintime/models/item/raw_dodo.json
+ffe77b8124f3e956a3af0e2a680ccbadf8e5be5f assets/lostintime/models/item/raw_endoceras.json
+b27a11dc7972e5d83d1681de3e33c06f398e405b assets/lostintime/models/item/zircon.json

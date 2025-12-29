@@ -37,9 +37,26 @@ public class LostInTime {
         if (event.getTab() == GroupInit.LOST_IN_TIME_GROUP.get()) {
             event.accept(ItemInit.AMBER);
             event.accept(ItemInit.DEVONIAN_FOSSIL);
+            event.accept(ItemInit.BOTHRIOLEPIS_FOSSIL);
+            event.accept(ItemInit.QUATERNARY_FOSSIL);
             event.accept(ItemInit.RAW_DODO);
             event.accept(ItemInit.COOKED_DODO);
             event.accept(ItemInit.MANGO);
+            event.accept(ItemInit.RAW_ANOMALOCARIS);
+            event.accept(ItemInit.COOKED_ANOMALOCARIS);
+            event.accept(ItemInit.RAW_BOTHRIOLEPIS);
+            event.accept(ItemInit.COOKED_BOTHRIOLEPIS);
+            event.accept(ItemInit.RAW_DAEODON);
+            event.accept(ItemInit.COOKED_DAEODON);
+            event.accept(ItemInit.RAW_ENDOCERAS);
+            event.accept(ItemInit.COOKED_ENDOCERAS);
+
+            event.accept(ItemInit.ASPECT_DIFFERENTIATION);
+            event.accept(ItemInit.ASPECT_EMERGENCE);
+            event.accept(ItemInit.ASPECT_INTEGRATION);
+            event.accept(ItemInit.ASPECT_STRUCTURING);
+            event.accept(ItemInit.ASPECT_TRANSIENCE);
+            event.accept(ItemInit.ZIRCON);
 
             event.accept(ItemInit.GOLDEN_EYE);
             event.accept(ItemInit.GUARDIAN_SPIKE);
