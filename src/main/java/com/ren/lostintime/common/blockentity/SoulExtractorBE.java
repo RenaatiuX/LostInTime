@@ -184,9 +184,13 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
         }
     }
 
-    protected @Nullable SoulExtractorRecipe getRecipe() {
-        return level.getRecipeManager().getRecipeFor(RecipeInit.SOUL_EXTRACTOR_RECIPE.get(), new SoulExtractorRecipeContainer(input.orElseThrow(IllegalStateException::new),
-                getInventory().getStackInSlot(SLOT_SOUL_SOURCE), getInventory().getStackInSlot(SLOT_CATALYST)), level).orElse(null);
+    public @Nullable SoulExtractorRecipe getRecipe() {
+        return level.getRecipeManager().getRecipeFor(RecipeInit.SOUL_EXTRACTOR_RECIPE.get(), createContainer(), level).orElse(null);
+    }
+
+    public SoulExtractorRecipeContainer createContainer(){
+        return new SoulExtractorRecipeContainer(input.orElseThrow(IllegalStateException::new),
+                getInventory().getStackInSlot(SLOT_SOUL_SOURCE), getInventory().getStackInSlot(SLOT_CATALYST));
     }
 
     @Override

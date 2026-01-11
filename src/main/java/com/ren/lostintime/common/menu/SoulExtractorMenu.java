@@ -68,12 +68,6 @@ public class SoulExtractorMenu extends AbstractContainerMenu {
         return containerData.get(0);
     }
 
-    private SoulExtractorRecipe getRecipeItem(Container container, Level level) {
-        return level.getRecipeManager()
-                .getRecipeFor(RecipeInit.SOUL_EXTRACTOR_RECIPE.get(), container, level)
-                .orElse(null);
-    }
-
     @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
         ItemStack itemStack = ItemStack.EMPTY;
@@ -89,11 +83,7 @@ public class SoulExtractorMenu extends AbstractContainerMenu {
                 if (!moveItemStackTo(current, soulExtractorSlots, bottomRowEnd, true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (getRecipeItem(new SimpleContainer(itemStack), pPlayer.level()) != null) {
-                if (!moveItemStackTo(current, 0, soulExtractorSlots, false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (pIndex < bottomRowStart) {
+            }else if (pIndex < bottomRowStart) {
                 if (!moveItemStackTo(current, bottomRowStart, bottomRowEnd, false)) {
                     return ItemStack.EMPTY;
                 }
