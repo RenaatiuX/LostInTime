@@ -10,39 +10,48 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.SlotItemHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class SoulExtractorMenu extends AbstractContainerMenu {
 
-    private final Container container;
+    private final IItemHandlerModifiable container;
     private final ContainerData containerData;
 
     public SoulExtractorMenu(int pContainerId, Inventory playerInventory) {
-        this(pContainerId, playerInventory, new SimpleContainer(9), new SimpleContainerData(2));
+        this(pContainerId, playerInventory, new ItemStackHandler(9), new SimpleContainerData(2));
     }
 
-    public SoulExtractorMenu(int id, Inventory playerInventory, Container container, ContainerData containerData) {
+    public SoulExtractorMenu(int id, Inventory playerInventory, IItemHandlerModifiable container, ContainerData containerData) {
         super(MenuInit.SOUL_EXTRACTOR_MENU.get(), id);
         this.container = container;
         this.containerData = containerData;
 
         // Inputs
         for (int i = 0; i < 3; i++) {
-            addSlot(new Slot(container, i, 18 + 18 * i, 26));
+            addSlot(new SlotItemHandler(container, i, 18 + 18 * i, 26));
         }
 
         // Soul source
-        addSlot(new Slot(container, 3, 18, 54));
+        addSlot(new SlotItemHandler(container, 3, 18, 54));
 
         // Catalyst
-        addSlot(new Slot(container, 4, 54, 54));
+        addSlot(new SlotItemHandler(container, 4, 54, 54));
 
         // Residues
         for (int i = 0; i < 3; i++) {
-            addSlot(new Slot(container, 5 + i, 112 + 18 * i, 55));
+            addSlot(new SlotItemHandler(container, 5 + i, 112 + 18 * i, 55));
         }
 
         // Output
-        addSlot(new FurnaceResultSlot(playerInventory.player, container, 9, 130, 26));
+        addSlot(new SlotItemHandler(container, 9, 130, 26){
+            @Override
+            public boolean mayPlace(@NotNull ItemStack stack) {
+                return false;
+            }
+        });
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
@@ -106,8 +115,9 @@ public class SoulExtractorMenu extends AbstractContainerMenu {
         return itemStack;
     }
 
+    //im to lazy to make anything here
     @Override
     public boolean stillValid(Player pPlayer) {
-        return container.stillValid(pPlayer);
+        return true;
     }
 }

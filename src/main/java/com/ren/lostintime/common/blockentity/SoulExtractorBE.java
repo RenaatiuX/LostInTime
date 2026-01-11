@@ -6,22 +6,31 @@ import com.ren.lostintime.common.init.RecipeInit;
 import com.ren.lostintime.common.menu.SoulExtractorMenu;
 import com.ren.lostintime.common.recipe.SoulExtractorRecipe;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RangedWrapper;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-public class SoulExtractorBE extends LITMachineBE {
+public class SoulExtractorBE extends BlockEntity implements MenuProvider {
+
+    public static final int MAX_RESIDUE = 27;
 
     public static final int SLOT_INPUT_START = 0;
     public static final int SLOT_INPUT_END = 2;
@@ -31,26 +40,36 @@ public class SoulExtractorBE extends LITMachineBE {
     public static final int SLOT_RESIDUE_END = 7;
     public static final int SLOT_OUTPUT = 8;
 
-    private static final int BASE_PROCESS_TIME = 200;
+    //60 seconds in ticks
+    public static final int RESIDUE_REDUCTION_TIME = 60 * 20;
 
-    private final NonNullList<ItemStack> items = NonNullList.withSize(9, ItemStack.EMPTY);
+    //20 seconds in ticks
+    private static final int BASE_PROCESS_TIME = 20 * 20;
 
-    private final ContainerData data = new ContainerData() {
+
+    private final LazyOptional<IItemHandlerModifiable> itemHandler = LazyOptional.of(() -> new ItemStackHandler(9));
+    private final LazyOptional<IItemHandlerModifiable> input = LazyOptional.of(() -> new RangedWrapper(itemHandler.orElseThrow(IllegalStateException::new), SLOT_INPUT_START, SLOT_RESIDUE_END + 1));
+    private final LazyOptional<IItemHandlerModifiable> residue = LazyOptional.of(() -> new RangedWrapper(itemHandler.orElseThrow(IllegalStateException::new), SLOT_RESIDUE_START, SLOT_RESIDUE_END + 1));
+    private final LazyOptional<IItemHandlerModifiable> output = LazyOptional.of(() -> new RangedWrapper(itemHandler.orElseThrow(IllegalStateException::new), SLOT_OUTPUT, SLOT_OUTPUT + 1));
+
+    protected int processTime;
+    protected int processCounter;
+
+    protected int currentResidue = 0;
+
+    public final ContainerData data = new ContainerData() {
         @Override
         public int get(int pIndex) {
             return switch (pIndex) {
-                case 0 -> cookingProgress;
-                case 1 -> cookingTotalTime;
+                case 0 -> Math.round((processCounter * 100f) / (float) processTime);
+                case 1 -> currentResidue;
                 default -> 0;
             };
         }
 
         @Override
         public void set(int pIndex, int pValue) {
-            switch (pIndex) {
-                case 0 -> cookingProgress = pValue;
-                case 1 -> cookingTotalTime = pValue;
-            }
+            //we dont need to do anything here actually
         }
 
         @Override
@@ -61,149 +80,126 @@ public class SoulExtractorBE extends LITMachineBE {
 
     public SoulExtractorBE(BlockPos pPos, BlockState pBlockState) {
         super(BlockEntityInit.SOUL_EXTRACTOR.get(), pPos, pBlockState);
-        this.cookingTotalTime = BASE_PROCESS_TIME;
+        this.processTime = BASE_PROCESS_TIME;
     }
 
-    @Override
-    public ContainerData getDataAccess() {
-        return data;
+    protected List<ItemStack> getCurrentPossibleWasteItems() {
+        List<ItemStack> list = new ArrayList<>(3);
+        if (currentResidue <= 9) {
+            list.add(new ItemStack(ItemInit.SOUL_ASH.get()));
+            list.add(new ItemStack(ItemInit.SOUL_GRUME.get()));
+            return list;
+        } else if (currentResidue <= 18) {
+            list.add(new ItemStack(ItemInit.SOUL_ASH.get()));
+            list.add(new ItemStack(ItemInit.SOUL_GRUME.get()));
+            list.add(new ItemStack(ItemInit.ECTOPLASM.get()));
+        }
+        list.add(new ItemStack(ItemInit.SOUL_GRUME.get()));
+        list.add(new ItemStack(ItemInit.ECTOPLASM.get()));
+        return list;
     }
 
-    @Override
-    protected boolean canProcess() {
+
+    //basically check for outputs etc
+    protected boolean canProcess(SoulExtractorRecipe recipe) {
         if (level == null) return false;
 
-        Optional<SoulExtractorRecipe> recipeOpt =
-                level.getRecipeManager()
-                        .getRecipeFor(RecipeInit.SOUL_EXTRACTOR_RECIPE.get(), this, level);
-
-        if (recipeOpt.isEmpty()) return false;
-        SoulExtractorRecipe recipe = recipeOpt.get();
         ItemStack output = recipe.getResultItem(level.registryAccess());
-        ItemStack currentOutput = items.get(SLOT_OUTPUT);
-        if (currentOutput.isEmpty()) return true;
-        if (!ItemStack.isSameItemSameTags(currentOutput, output)) return false;
-        return currentOutput.getCount() + output.getCount()
-                <= currentOutput.getMaxStackSize();
+        if (!ItemHandlerHelper.insertItemStacked(this.output.orElseThrow(IllegalStateException::new), output, true).isEmpty())
+            return false;
+
+        var wasteList = getCurrentPossibleWasteItems();
+        for (var item : wasteList) {
+            //when those items cant be added to the residue, even if it may be ok because of chances, this will block it never the less
+            if (!ItemHandlerHelper.insertItemStacked(residue.orElseThrow(IllegalAccessError::new), item, true).isEmpty())
+                return false;
+        }
+        return true;
     }
 
-    @Override
-    protected void createItem() {
+    protected void finishProcessing(SoulExtractorRecipe recipe) {
         if (level == null) return;
 
-        Optional<SoulExtractorRecipe> recipeOpt =
-                level.getRecipeManager()
-                        .getRecipeFor(RecipeInit.SOUL_EXTRACTOR_RECIPE.get(), this, level);
+        if (level.random.nextFloat() < recipe.getChance()) {
+            increaseResidue(recipe.getResidueOnSuccess());
+            ItemStack result = recipe.getResultItem(level.registryAccess()).copy();
+            ItemHandlerHelper.insertItemStacked(this.output.orElseThrow(IllegalStateException::new), result, false);
+        }
+        getInventory().getStackInSlot(SLOT_SOUL_SOURCE).shrink(1);
+        getInventory().getStackInSlot(SLOT_CATALYST).shrink(1);
 
-        if (recipeOpt.isEmpty()) return;
+        var outputInventory = output.orElseThrow(IllegalStateException::new);
 
-        SoulExtractorRecipe recipe = recipeOpt.get();
-
-        for (int i = SLOT_INPUT_START; i <= SLOT_INPUT_END; i++) {
-            if (!items.get(i).isEmpty()) {
-                items.get(i).shrink(1);
+        for (var ingredient : recipe.getInputs()) {
+            for (int i = 0; i < outputInventory.getSlots(); i++) {
+                var stack = outputInventory.getStackInSlot(i);
+                if (ingredient.test(stack)){
+                    stack.shrink(1);
+                    break;
+                }
             }
         }
-        items.get(SLOT_SOUL_SOURCE).shrink(1);
 
-        if (!items.get(SLOT_CATALYST).isEmpty()) {
-            items.get(SLOT_CATALYST).shrink(1);
-        }
-
-        ItemStack result = recipe.getResultItem(level.registryAccess()).copy();
-        ItemStack outputSlot = items.get(SLOT_OUTPUT);
-
-        if (outputSlot.isEmpty()) {
-            items.set(SLOT_OUTPUT, result);
-        } else {
-            outputSlot.grow(result.getCount());
-        }
-
-        insertResidue(new ItemStack(ItemInit.DAEODON_FOSSIL.get()));
-
-        cookingProgress = 0;
         setChanged();
     }
 
-    private void insertResidue(ItemStack residue) {
-        for (int i = SLOT_RESIDUE_START; i <= SLOT_RESIDUE_END; i++) {
-            ItemStack slot = items.get(i);
+    protected void reset() {
+        processCounter = 0;
+    }
 
-            if (slot.isEmpty()) {
-                items.set(i, residue.copy());
-                return;
-            }
+    protected void startProcessing(SoulExtractorRecipe recipe) {
+        increaseResidue();
+    }
 
-            if (ItemStack.isSameItemSameTags(slot, residue)
-                    && slot.getCount() < slot.getMaxStackSize()) {
-                slot.grow(1);
-                return;
-            }
-        }
+    protected void increaseResidue() {
+        increaseResidue(1);
+    }
+
+    protected void increaseResidue(int amount) {
+        currentResidue = Mth.clamp(currentResidue + amount, 0, MAX_RESIDUE);
+    }
+
+    protected void decreaseResidue(int amount) {
+        increaseResidue(-amount);
+    }
+
+    protected void decreaseResidue() {
+        decreaseResidue(1);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, SoulExtractorBE be) {
-        if (!be.canProcess()) {
-            be.cookingProgress = 0;
-            return;
+        var recipe = be.getRecipe();
+        if (recipe != null && be.canProcess(recipe)) {
+            if (be.processCounter == 0) {
+                be.startProcessing(recipe);
+            }
+            if (be.processCounter >= be.processTime) {
+                be.finishProcessing(recipe);
+                be.reset();
+            } else
+                be.processCounter++;
+
+        } else {
+            be.reset();
         }
-        be.cookingProgress++;
-        if (be.cookingProgress >= be.cookingTotalTime) {
-            be.createItem();
-        }
+    }
+
+    protected @Nullable SoulExtractorRecipe getRecipe() {
+        return level.getRecipeManager().getRecipeFor(RecipeInit.SOUL_EXTRACTOR_RECIPE.get(), new SoulExtractorRecipeContainer(input.orElseThrow(IllegalStateException::new),
+                getInventory().getStackInSlot(SLOT_SOUL_SOURCE), getInventory().getStackInSlot(SLOT_CATALYST)), level).orElse(null);
     }
 
     @Override
-    protected @NotNull NonNullList<ItemStack> getItems() {
-        return items;
-    }
-
-    @Override
-    public int[] getSlotsForFace(Direction pSide) {
-        return switch (pSide) {
-            case DOWN -> new int[]{
-                    SLOT_OUTPUT,
-                    SLOT_RESIDUE_START,
-                    SLOT_RESIDUE_START + 1,
-                    SLOT_RESIDUE_END
-            };
-            case UP -> new int[]{
-                    SLOT_INPUT_START,
-                    SLOT_INPUT_START + 1,
-                    SLOT_INPUT_END
-            };
-            default -> new int[]{
-                    SLOT_SOUL_SOURCE,
-                    SLOT_CATALYST
-            };
-        };
-    }
-
-    @Override
-    public boolean canPlaceItemThroughFace(int pIndex, ItemStack pItemStack, @Nullable Direction pDirection) {
-        return pIndex <= SLOT_CATALYST;
-    }
-
-    @Override
-    public boolean canTakeItemThroughFace(int pIndex, ItemStack pStack, Direction pDirection) {
-        return pIndex >= SLOT_RESIDUE_START;
-    }
-
-    @Override
-    protected Component getDefaultName() {
+    public Component getDisplayName() {
         return Component.translatable("container.lostintime.soul_extractor");
     }
 
     @Override
-    protected AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory) {
-        return new SoulExtractorMenu(pContainerId, pInventory, this, getDataAccess());
+    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player player) {
+        return new SoulExtractorMenu(pContainerId, pInventory, itemHandler.orElse(new ItemStackHandler(9)), data);
     }
 
-    @Override
-    public void setItem(int pSlot, ItemStack pStack) {
-        items.set(pSlot, pStack);
-        if (pSlot <= SLOT_CATALYST) {
-            setChanged();
-        }
+    public IItemHandlerModifiable getInventory() {
+        return itemHandler.orElseThrow(IllegalStateException::new);
     }
 }

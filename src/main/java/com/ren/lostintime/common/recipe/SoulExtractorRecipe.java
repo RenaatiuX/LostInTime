@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.ren.lostintime.common.blockentity.SoulExtractorRecipeContainer;
 import com.ren.lostintime.common.init.RecipeInit;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
@@ -18,12 +19,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
-public class SoulExtractorRecipe implements Recipe<Container> {
+public class SoulExtractorRecipe implements Recipe<SoulExtractorRecipeContainer> {
 
     public static final Serializer SERIALIZER = new Serializer();
-
-    public static final int MAX_INPUTS = 3;
 
     private final ResourceLocation id;
     private final NonNullList<Ingredient> inputs;
@@ -45,34 +46,39 @@ public class SoulExtractorRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container pContainer, Level pLevel) {
+    public boolean matches(SoulExtractorRecipeContainer pContainer, Level pLevel) {
         if (pLevel.isClientSide) return false;
-        List<ItemStack> remaining = new ArrayList<>();
-        for (int i = 0; i < MAX_INPUTS; i++) {
-            ItemStack stack = pContainer.getItem(i);
-            if (!stack.isEmpty()) {
-                remaining.add(stack);
-            }
+        if (pContainer.getAmountInputSlots() < inputs.size()) return false;
+        var list = new ArrayList<ItemStack>();
+        //cleanse all empty stacks
+        for (int i = 0; i < pContainer.getAmountInputSlots(); i++) {
+            var stack = pContainer.getInput().getStackInSlot(i);
+            if (!stack.isEmpty())
+                list.add(stack);
         }
+        //only the allowed amount of inputs is allowed inside the input inventory
+        if (list.size() != inputs.size()) return false;
+        Set<Integer> indicesBlacklisted = new TreeSet<>();
         for (Ingredient ingredient : inputs) {
-            boolean matched = false;
-            for (ItemStack stack : remaining) {
+            for (int i = 0; i < list.size(); i++) {
+                if (indicesBlacklisted.contains(i)) continue;
+                var stack = list.get(i);
+                if (stack.isEmpty()) continue;
                 if (ingredient.test(stack)) {
-                    matched = true;
-                    remaining.remove(stack);
+                    indicesBlacklisted.add(i);
                     break;
                 }
             }
-            if (!matched) return false;
+            if (indicesBlacklisted.size() != inputs.size()) return false;
         }
-        if (!soulSource.test(pContainer.getItem(3))) {
+        if (!soulSource.test(pContainer.getSoulSource())) {
             return false;
         }
-        return catalyst.isEmpty() || catalyst.test(pContainer.getItem(4));
+        return (catalyst.isEmpty() && pContainer.getCatalyst().isEmpty()) || catalyst.test(pContainer.getCatalyst());
     }
 
     @Override
-    public ItemStack assemble(Container pContainer, RegistryAccess pRegistryAccess) {
+    public ItemStack assemble(SoulExtractorRecipeContainer pContainer, RegistryAccess pRegistryAccess) {
         return result.copy();
     }
 
@@ -127,10 +133,6 @@ public class SoulExtractorRecipe implements Recipe<Container> {
         public SoulExtractorRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
             NonNullList<Ingredient> inputs = NonNullList.create();
             JsonArray inputsArray = GsonHelper.getAsJsonArray(pSerializedRecipe, "inputs", new JsonArray());
-            if (inputsArray.size() > SoulExtractorRecipe.MAX_INPUTS) {
-                throw new JsonParseException("Soul Extractor recipe can have at most "
-                        + SoulExtractorRecipe.MAX_INPUTS + " inputs");
-            }
             for (JsonElement element : inputsArray) {
                 inputs.add(Ingredient.fromJson(element));
             }
@@ -173,9 +175,10 @@ public class SoulExtractorRecipe implements Recipe<Container> {
             for (Ingredient ingredient : pRecipe.getInputs()) {
                 ingredient.toNetwork(pBuffer);
             }
+            //u can access even private fields directly in here, use it!
             pRecipe.getSoulSource().toNetwork(pBuffer);
             pRecipe.getCatalyst().toNetwork(pBuffer);
-            pBuffer.writeItem(pRecipe.getResultItem(null));
+            pBuffer.writeItem(pRecipe.result);
             pBuffer.writeFloat(pRecipe.getChance());
             pBuffer.writeVarInt(pRecipe.getResidueOnSuccess());
         }

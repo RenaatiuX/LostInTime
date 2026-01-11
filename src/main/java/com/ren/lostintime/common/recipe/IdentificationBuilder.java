@@ -14,6 +14,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,7 +53,7 @@ public class IdentificationBuilder implements RecipeBuilder {
 
     public IdentificationBuilder addOutput(ItemLike itemLike, int minCount, int maxCount, double weight) {
         total += weight;
-        weightedOutputs.put(new ItemHolder(BuiltInRegistries.ITEM.getKey(itemLike.asItem()), minCount, maxCount), weight);
+        weightedOutputs.put(new ItemHolder(ForgeRegistries.ITEMS.getKey(itemLike.asItem()), minCount, maxCount), weight);
         return this;
     }
 
