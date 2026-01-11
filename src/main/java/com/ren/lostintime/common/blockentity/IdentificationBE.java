@@ -27,15 +27,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class IdentificationBE extends BaseContainerBlockEntity implements Container, WorldlyContainer {
+public class IdentificationBE extends LITMachineBE implements Container, WorldlyContainer {
 
     private static final int[] INPUT = new int[]{0};
     private static final int[] OUTPUT = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
-
-    protected int litTime;
-    protected int litDuration;
-    protected int cookingProgress;
-    protected int cookingTotalTime;
 
     private final ContainerData data = new ContainerData() {
         @Override
@@ -190,35 +185,6 @@ public class IdentificationBE extends BaseContainerBlockEntity implements Contai
     }
 
     @Override
-    public int getContainerSize() {
-        return getItems().size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        for (ItemStack itemStack : getItems()) {
-            if (itemStack.isEmpty()) continue;
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public ItemStack getItem(int pSlot) {
-        return getItems().get(pSlot);
-    }
-
-    @Override
-    public ItemStack removeItem(int pSlot, int pAmount) {
-        return ContainerHelper.removeItem(getItems(), pSlot, pAmount);
-    }
-
-    @Override
-    public ItemStack removeItemNoUpdate(int pSlot) {
-        return ContainerHelper.takeItem(getItems(), pSlot);
-    }
-
-    @Override
     public void setItem(int pSlot, ItemStack pStack) {
         items.set(pSlot, pStack);
         if (pStack.getCount() > getMaxStackSize()) {
@@ -228,35 +194,7 @@ public class IdentificationBE extends BaseContainerBlockEntity implements Contai
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
-        if (level.getBlockEntity(worldPosition) != this) {
-            return false;
-        }
-        return pPlayer.distanceToSqr(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5) <= 64.0;
-    }
-
-    @Override
-    public void clearContent() {
-        getItems().clear();
-    }
-
-    @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        ContainerHelper.loadAllItems(pTag, getItems());
-        this.litTime = pTag.getShort("LitTime");
-        this.litDuration = pTag.getShort("LitDuration");
-        this.cookingProgress = pTag.getShort("CookingProgress");
-        this.cookingTotalTime = pTag.getShort("CookingTotalTime");
-    }
-
-    @Override
-    protected void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        pTag.putShort("LitTime", (short) this.litTime);
-        pTag.putShort("LitDuration", (short) this.litDuration);
-        pTag.putShort("CookingProgress", (short) this.cookingProgress);
-        pTag.putShort("CookingTotalTime", (short) this.cookingTotalTime);
-        ContainerHelper.saveAllItems(pTag, getItems());
+    public ContainerData getDataAccess() {
+        return data;
     }
 }
