@@ -1,0 +1,19 @@
+{
+  "type": "lostintime:fossil_formation",
+  "config": {
+    "deepslateFossilBlock": {
+      "Name": "lostintime:deepslate_triassic_fossil_block"
+    },
+    "deepslateReplaceable": {
+      "predicate_type": "minecraft:tag_match",
+      "tag": "minecraft:deepslate_ore_replaceables"
+    },
+    "fossilBlock": {
+      "Name": "minecraft:air"
+    },
+    "replaceable": {
+      "predicate_type": "minecraft:tag_match",
+      "tag": "minecraft:stone_ore_replaceables"
+    }
+  }
+}

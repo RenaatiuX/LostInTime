@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "half=lower,on=false": {
+      "model": "lostintime:block/soul_extractor_lower_off"
+    },
+    "half=lower,on=true": {
+      "model": "lostintime:block/soul_extractor_lower_on"
+    },
+    "half=upper,on=false": {
+      "model": "lostintime:block/soul_extractor_upper_off"
+    },
+    "half=upper,on=true": {
+      "model": "lostintime:block/soul_extractor_upper_on"
+    }
+  }
+}

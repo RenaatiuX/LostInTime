@@ -1,39 +1,39 @@
-[29dic2025 16:12:12.698] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgedatauserdev, --assetIndex, 5, --assetsDir, C:\Users\Alonso\.gradle\caches\forge_gradle\assets, --gameDir, ., --fml.forgeVersion, 47.3.12, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --mod, lostintime, --all, --output, C:\Users\Alonso\Desktop\LostInTime\src\generated\resources, --existing, C:\Users\Alonso\Desktop\LostInTime\src\main\resources]
-[29dic2025 16:12:12.708] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 21.0.8 by Eclipse Adoptium; OS Windows 11 arch amd64 version 10.0
-[29dic2025 16:12:12.944] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgedatauserdev
-[29dic2025 16:12:13.038] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/C:/Users/Alonso/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23128!/ Service=ModLauncher Env=CLIENT
-[29dic2025 16:12:13.619] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\Alonso\.gradle\caches\modules-2\files-2.1\net.minecraftforge\javafmllanguage\1.20.1-47.3.12\f6b9f7f45e33548b47f78d9f54c7b4eb1e94e9bd\javafmllanguage-1.20.1-47.3.12.jar is missing mods.toml file
-[29dic2025 16:12:13.624] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\Alonso\.gradle\caches\modules-2\files-2.1\net.minecraftforge\lowcodelanguage\1.20.1-47.3.12\81de74e1180787af25604b6ecb3728fc485bd3c7\lowcodelanguage-1.20.1-47.3.12.jar is missing mods.toml file
-[29dic2025 16:12:13.630] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\Alonso\.gradle\caches\modules-2\files-2.1\net.minecraftforge\mclanguage\1.20.1-47.3.12\1ff4ed058e0774b82d8da352d9e051e6d2a154eb\mclanguage-1.20.1-47.3.12.jar is missing mods.toml file
-[29dic2025 16:12:13.636] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\Alonso\.gradle\caches\modules-2\files-2.1\net.minecraftforge\fmlcore\1.20.1-47.3.12\9a4d9f99e106aa2358cdbe6777921855d353371\fmlcore-1.20.1-47.3.12.jar is missing mods.toml file
-[29dic2025 16:12:13.901] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: Found 1 dependencies adding them to mods collection
-[29dic2025 16:12:16.223] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
-[29dic2025 16:12:16.233] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgedatauserdev' with arguments [--gameDir, ., --assetsDir, C:\Users\Alonso\.gradle\caches\forge_gradle\assets, --assetIndex, 5, --mod, lostintime, --all, --output, C:\Users\Alonso\Desktop\LostInTime\src\generated\resources, --existing, C:\Users\Alonso\Desktop\LostInTime\src\main\resources]
-[29dic2025 16:12:16.737] [main/INFO] [mixin/]: Remapping refMap curios.refmap.json using C:\Users\Alonso\Desktop\LostInTime\build\createSrgToMcp\output.srg
-[29dic2025 16:12:16.738] [main/INFO] [mixin/]: Remapping refMap geckolib.refmap.json using C:\Users\Alonso\Desktop\LostInTime\build\createSrgToMcp\output.srg
-[29dic2025 16:12:17.565] [main/INFO] [net.minecraftforge.data.loading.DatagenModLoader/]: Initializing Data Gatherer for mods [lostintime]
-[29dic2025 16:12:26.100] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.3.12, for MC 1.20.1 with MCP 20230612.114412
-[29dic2025 16:12:26.101] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.3.12 Initialized
-[29dic2025 16:12:26.166] [modloading-worker-0/WARN] [software.bernie.geckolib.GeckoLib/]: Minecraft.getInstance() was null, could not register reload listeners
-[29dic2025 16:12:27.189] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/Alonso/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.12_mapped_parchment_2023.09.03-1.20.1/forge-1.20.1-47.3.12_mapped_parchment_2023.09.03-1.20.1-recomp.jar%23191!/assets/.mcassetsroot' uses unexpected schema
-[29dic2025 16:12:27.190] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/Alonso/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.12_mapped_parchment_2023.09.03-1.20.1/forge-1.20.1-47.3.12_mapped_parchment_2023.09.03-1.20.1-recomp.jar%23191!/data/.mcassetsroot' uses unexpected schema
-[29dic2025 16:12:27.549] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:block mod id lostintime
-[29dic2025 16:12:27.788] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:block mod id lostintime finished after 237 ms
-[29dic2025 16:12:27.788] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:item mod id lostintime
-[29dic2025 16:12:27.796] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:item mod id lostintime finished after 7 ms
-[29dic2025 16:12:27.796] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Registries
-[29dic2025 16:12:27.813] [main/INFO] [net.minecraft.data.DataGenerator/]: Registries finished after 16 ms
-[29dic2025 16:12:27.813] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Recipes
-[29dic2025 16:12:27.874] [main/INFO] [net.minecraft.data.DataGenerator/]: Recipes finished after 61 ms
-[29dic2025 16:12:27.874] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Curios for lostintime
-[29dic2025 16:12:27.883] [main/INFO] [net.minecraft.data.DataGenerator/]: Curios for lostintime finished after 7 ms
-[29dic2025 16:12:27.883] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Loot Tables
-[29dic2025 16:12:28.020] [main/INFO] [net.minecraft.data.DataGenerator/]: Loot Tables finished after 136 ms
-[29dic2025 16:12:28.020] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Item Models: lostintime
-[29dic2025 16:12:28.045] [main/INFO] [net.minecraft.data.DataGenerator/]: Item Models: lostintime finished after 24 ms
-[29dic2025 16:12:28.046] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Block States: lostintime
-[29dic2025 16:12:28.252] [main/INFO] [net.minecraft.data.DataGenerator/]: Block States: lostintime finished after 206 ms
-[29dic2025 16:12:28.252] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Languages: en_us
-[29dic2025 16:12:28.258] [main/INFO] [net.minecraft.data.DataGenerator/]: Languages: en_us finished after 4 ms
-[29dic2025 16:12:28.258] [main/INFO] [net.minecraft.data.DataGenerator/]: All providers took: 710 ms
-[29dic2025 16:12:28.289] [main/INFO] [net.minecraft.data.HashCache/]: Caching: total files: 77, old count: 73, new count: 78, removed stale: 0, written: 6
+[11ene2026 16:58:35.889] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgedatauserdev, --assetIndex, 5, --assetsDir, C:\Users\Alonso\.gradle\caches\forge_gradle\assets, --gameDir, ., --fml.forgeVersion, 47.3.12, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --mod, lostintime, --all, --output, C:\Users\Alonso\Desktop\LostInTime\src\generated\resources, --existing, C:\Users\Alonso\Desktop\LostInTime\src\main\resources]
+[11ene2026 16:58:35.896] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 21.0.8 by Eclipse Adoptium; OS Windows 11 arch amd64 version 10.0
+[11ene2026 16:58:36.054] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgedatauserdev
+[11ene2026 16:58:36.123] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/C:/Users/Alonso/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23128!/ Service=ModLauncher Env=CLIENT
+[11ene2026 16:58:36.454] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\Alonso\.gradle\caches\modules-2\files-2.1\net.minecraftforge\javafmllanguage\1.20.1-47.3.12\f6b9f7f45e33548b47f78d9f54c7b4eb1e94e9bd\javafmllanguage-1.20.1-47.3.12.jar is missing mods.toml file
+[11ene2026 16:58:36.457] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\Alonso\.gradle\caches\modules-2\files-2.1\net.minecraftforge\lowcodelanguage\1.20.1-47.3.12\81de74e1180787af25604b6ecb3728fc485bd3c7\lowcodelanguage-1.20.1-47.3.12.jar is missing mods.toml file
+[11ene2026 16:58:36.461] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\Alonso\.gradle\caches\modules-2\files-2.1\net.minecraftforge\mclanguage\1.20.1-47.3.12\1ff4ed058e0774b82d8da352d9e051e6d2a154eb\mclanguage-1.20.1-47.3.12.jar is missing mods.toml file
+[11ene2026 16:58:36.464] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\Alonso\.gradle\caches\modules-2\files-2.1\net.minecraftforge\fmlcore\1.20.1-47.3.12\9a4d9f99e106aa2358cdbe6777921855d353371\fmlcore-1.20.1-47.3.12.jar is missing mods.toml file
+[11ene2026 16:58:36.623] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: Found 1 dependencies adding them to mods collection
+[11ene2026 16:58:38.971] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
+[11ene2026 16:58:39.002] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgedatauserdev' with arguments [--gameDir, ., --assetsDir, C:\Users\Alonso\.gradle\caches\forge_gradle\assets, --assetIndex, 5, --mod, lostintime, --all, --output, C:\Users\Alonso\Desktop\LostInTime\src\generated\resources, --existing, C:\Users\Alonso\Desktop\LostInTime\src\main\resources]
+[11ene2026 16:58:39.474] [main/INFO] [mixin/]: Remapping refMap curios.refmap.json using C:\Users\Alonso\Desktop\LostInTime\build\createSrgToMcp\output.srg
+[11ene2026 16:58:39.476] [main/INFO] [mixin/]: Remapping refMap geckolib.refmap.json using C:\Users\Alonso\Desktop\LostInTime\build\createSrgToMcp\output.srg
+[11ene2026 16:58:40.039] [main/INFO] [net.minecraftforge.data.loading.DatagenModLoader/]: Initializing Data Gatherer for mods [lostintime]
+[11ene2026 16:58:44.342] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.3.12, for MC 1.20.1 with MCP 20230612.114412
+[11ene2026 16:58:44.342] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.3.12 Initialized
+[11ene2026 16:58:44.402] [modloading-worker-0/WARN] [software.bernie.geckolib.GeckoLib/]: Minecraft.getInstance() was null, could not register reload listeners
+[11ene2026 16:58:45.015] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/Alonso/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.12_mapped_parchment_2023.09.03-1.20.1/forge-1.20.1-47.3.12_mapped_parchment_2023.09.03-1.20.1-recomp.jar%23191!/assets/.mcassetsroot' uses unexpected schema
+[11ene2026 16:58:45.016] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/Alonso/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.12_mapped_parchment_2023.09.03-1.20.1/forge-1.20.1-47.3.12_mapped_parchment_2023.09.03-1.20.1-recomp.jar%23191!/data/.mcassetsroot' uses unexpected schema
+[11ene2026 16:58:45.232] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:block mod id lostintime
+[11ene2026 16:58:45.379] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:block mod id lostintime finished after 145 ms
+[11ene2026 16:58:45.379] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:item mod id lostintime
+[11ene2026 16:58:45.384] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:item mod id lostintime finished after 4 ms
+[11ene2026 16:58:45.384] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Registries
+[11ene2026 16:58:45.411] [main/INFO] [net.minecraft.data.DataGenerator/]: Registries finished after 27 ms
+[11ene2026 16:58:45.411] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Recipes
+[11ene2026 16:58:45.448] [main/INFO] [net.minecraft.data.DataGenerator/]: Recipes finished after 35 ms
+[11ene2026 16:58:45.448] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Curios for lostintime
+[11ene2026 16:58:45.450] [main/INFO] [net.minecraft.data.DataGenerator/]: Curios for lostintime finished after 2 ms
+[11ene2026 16:58:45.450] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Loot Tables
+[11ene2026 16:58:45.520] [main/INFO] [net.minecraft.data.DataGenerator/]: Loot Tables finished after 69 ms
+[11ene2026 16:58:45.520] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Item Models: lostintime
+[11ene2026 16:58:45.541] [main/INFO] [net.minecraft.data.DataGenerator/]: Item Models: lostintime finished after 21 ms
+[11ene2026 16:58:45.541] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Block States: lostintime
+[11ene2026 16:58:45.655] [main/INFO] [net.minecraft.data.DataGenerator/]: Block States: lostintime finished after 113 ms
+[11ene2026 16:58:45.655] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Languages: en_us
+[11ene2026 16:58:45.658] [main/INFO] [net.minecraft.data.DataGenerator/]: Languages: en_us finished after 2 ms
+[11ene2026 16:58:45.658] [main/INFO] [net.minecraft.data.DataGenerator/]: All providers took: 427 ms
+[11ene2026 16:58:45.680] [main/INFO] [net.minecraft.data.HashCache/]: Caching: total files: 200, old count: 200, new count: 201, removed stale: 0, written: 1

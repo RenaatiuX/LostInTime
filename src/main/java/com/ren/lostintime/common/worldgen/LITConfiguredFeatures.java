@@ -3,14 +3,17 @@ package com.ren.lostintime.common.worldgen;
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.block.MangoFruitBlock;
 import com.ren.lostintime.common.init.BlockInit;
-import net.minecraft.core.BlockPos;
+import com.ren.lostintime.common.init.FeatureInit;
+import com.ren.lostintime.common.worldgen.fossil.FossilEra;
+import com.ren.lostintime.common.worldgen.feature.config.FossilFormationConfig;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -21,10 +24,19 @@ import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlac
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlacer;
+import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
+import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 public class LITConfiguredFeatures {
 
-    public static final ResourceKey<ConfiguredFeature<?, ?>> MANGO_TREE_KEY = registerKey("mango");
+    //TREE
+    public static final ResourceKey<ConfiguredFeature<?, ?>> MANGO_TREE_KEY = registerKey("mango_tree");
+
+    //FOSSILS
+    public static final Map<FossilEra, ResourceKey<ConfiguredFeature<?, ?>>> FOSSIL_KEYS = new EnumMap<>(FossilEra.class);
 
     public static void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> context) {
         register(context, MANGO_TREE_KEY, Feature.TREE, new TreeConfiguration.TreeConfigurationBuilder(
@@ -39,6 +51,29 @@ public class LITConfiguredFeatures {
                 new BlobFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0), 3),
                 //1 Height of the bottom layer ,0 Variation in the height of the middle layer and2 Maximum height of the top layer.
                 new TwoLayersFeatureSize(1, 0, 2)).build());
+
+        for (FossilEra era : FossilEra.values()) {
+            ResourceKey<ConfiguredFeature<?, ?>> key = ResourceKey.create(Registries.CONFIGURED_FEATURE,
+                    new ResourceLocation(LostInTime.MODID, "fossil/" + era.name().toLowerCase()));
+
+            FOSSIL_KEYS.put(era, key);
+
+            RuleTest stoneReplace = new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES);
+            RuleTest deepslateReplace = new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
+
+            BlockState stoneBlock = Blocks.AIR.defaultBlockState();
+            BlockState deepslateBlock = Blocks.AIR.defaultBlockState();
+
+            switch (era) {
+                case CAMBRIAN, ORDOVICIAN, SILURIAN, DEVONIAN, CARBONIFEROUS, PERMIAN, TRIASSIC, JURASSIC ->
+                        deepslateBlock = BlockInit.getDeepslateFossilBlock(era).defaultBlockState();
+                case CRETACEOUS, PALEOGENE, NEOGENE, QUATERNARY -> stoneBlock =
+                        BlockInit.getFossilBlock(era).defaultBlockState();
+            }
+
+            register(context, key, FeatureInit.FOSSIL_FORMATION.get(),
+                    new FossilFormationConfig(stoneBlock, deepslateBlock, stoneReplace, deepslateReplace));
+        }
     }
 
     private static ResourceKey<ConfiguredFeature<?, ?>> registerKey(String name) {
@@ -49,6 +84,4 @@ public class LITConfiguredFeatures {
                                                                                           ResourceKey<ConfiguredFeature<?, ?>> key, F feature, FC config) {
         context.register(key, new ConfiguredFeature<>(feature, config));
     }
-
-
 }

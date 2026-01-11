@@ -1,13 +1,22 @@
 package com.ren.lostintime.datagen.client;
 
 import com.ren.lostintime.LostInTime;
-import com.ren.lostintime.common.block.DodoEggBlock;
+import com.ren.lostintime.common.block.SingleEggBlock;
 import com.ren.lostintime.common.block.MangoFruitBlock;
+import com.ren.lostintime.common.block.SoulExtractorBlock;
 import com.ren.lostintime.common.init.BlockInit;
+import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.models.model.ModelLocationUtils;
+import net.minecraft.data.models.model.ModelTemplates;
+import net.minecraft.data.models.model.TextureMapping;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
@@ -29,14 +38,35 @@ public class LITBlockStateProvider extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         logBlock((RotatedPillarBlock) BlockInit.MANGO_LOG.get());
+        blockItem(BlockInit.MANGO_LOG);
 
         leavesBlock(BlockInit.MANGO_LEAVES);
-        blockItem(BlockInit.MANGO_LOG);
         saplingBlock(BlockInit.MANGO_SAPLING);
         stageBlock(BlockInit.MANGO_FRUIT_LEAVES.get(), MangoFruitBlock.AGE, true);
         blockItem(BlockInit.MANGO_FRUIT_LEAVES);
 
-        createDodoEggModel(BlockInit.DODO_EGG.get(), DodoEggBlock.HATCH);
+        createDodoEggModel(BlockInit.DODO_EGG.get(), SingleEggBlock.HATCH);
+        createBabyRoeBlock(BlockInit.BOTHRIOLEPIS_ROE.get());
+
+        block(BlockInit.QUATERNARY_FOSSIL_BLOCK.get());
+        block(BlockInit.NEOGENE_FOSSIL_BLOCK.get());
+        block(BlockInit.PALEOGENE_FOSSIL_BLOCK.get());
+        block(BlockInit.CRETACEOUS_FOSSIL_BLOCK.get());
+        block(BlockInit.DEEPSLATE_JURASSIC_FOSSIL_BLOCK.get());
+        block(BlockInit.DEEPSLATE_TRIASSIC_FOSSIL_BLOCK.get());
+        block(BlockInit.DEEPSLATE_PERMIAN_FOSSIL_BLOCK.get());
+        block(BlockInit.DEEPSLATE_CARBONIFEROUS_FOSSIL_BLOCK.get());
+        block(BlockInit.DEEPSLATE_DEVONIAN_FOSSIL_BLOCK.get());
+        block(BlockInit.DEEPSLATE_SILURIAN_FOSSIL_BLOCK.get());
+        block(BlockInit.DEEPSLATE_ORDOVICIAN_FOSSIL_BLOCK.get());
+        block(BlockInit.DEEPSLATE_CAMBRIAN_FOSSIL_BLOCK.get());
+
+        block(BlockInit.SANDSTONE_BRICKS.get());
+        block(BlockInit.SMALL_SANDSTONE_BRICKS.get());
+
+        soulExtractorModels(BlockInit.SOUL_EXTRACTOR.get());
+        soulExtractor(BlockInit.SOUL_EXTRACTOR.get());
+
     }
 
     private void saplingBlock(RegistryObject<Block> blockRegistryObject) {
@@ -101,6 +131,86 @@ public class LITBlockStateProvider extends BlockStateProvider {
                     .modelFile(new ModelFile.ExistingModelFile(modelGenerator.apply(hatchStage), models().existingFileHelper))
                     .build();
         });
+    }
+
+    private void createBabyRoeBlock(Block block) {
+        ModelFile modelFile = models().withExistingParent(blockName(block), modLoc("block/template_roe"))
+                .texture("texture", resourceBlock(blockName(block)))
+                .texture("particle", resourceBlock(blockName(block)))
+                .renderType("cutout");
+
+        simpleBlock(block, modelFile);
+    }
+
+    private void soulExtractorModels(Block block) {
+        String name = blockName(block);
+
+        // LOWER OFF
+        models().withExistingParent(name + "_lower_off",
+                        modLoc("block/soul_extractor_lower"))
+                .texture("2", modLoc("block/soul_extractor_lower_side_off"))
+                .texture("3", modLoc("block/soul_extractor_lower_top"))
+                .texture("4", modLoc("block/soul_extractor_bottom"))
+                .texture("particle", modLoc("block/soul_extractor_lower_side_off"))
+                .renderType("cutout");
+
+        // LOWER ON
+        models().withExistingParent(name + "_lower_on",
+                        modLoc("block/soul_extractor_lower"))
+                .texture("2", modLoc("block/soul_extractor_lower_side_on"))
+                .texture("3", modLoc("block/soul_extractor_lower_top"))
+                .texture("4", modLoc("block/soul_extractor_bottom"))
+                .texture("particle", modLoc("block/soul_extractor_lower_side_on"))
+                .renderType("cutout");
+
+        // UPPER OFF
+        models().withExistingParent(name + "_upper_off",
+                        modLoc("block/soul_extractor_upper"))
+                .texture("3", modLoc("block/soul_extractor_side_upper_off"))
+                .texture("0", modLoc("block/soul_extractor_upper_top"))
+                .texture("2", modLoc("block/soul_extractor_lower_bottom"))
+                .texture("particle", modLoc("block/soul_extractor_upper_top"))
+                .renderType("cutout");
+
+        // UPPER ON
+        models().withExistingParent(name + "_upper_on",
+                        modLoc("block/soul_extractor_upper"))
+                .texture("3", modLoc("block/soul_extractor_side_upper_on"))
+                .texture("0", modLoc("block/soul_extractor_upper_top"))
+                .texture("2", modLoc("block/soul_extractor_lower_bottom"))
+                .texture("particle", modLoc("block/soul_extractor_upper_top"))
+                .renderType("cutout");
+    }
+
+
+    private void soulExtractor(Block block) {
+        String name = blockName(block);
+
+        ModelFile lowerOff = models().getExistingFile(modLoc("block/" + name + "_lower_off"));
+        ModelFile lowerOn = models().getExistingFile(modLoc("block/" + name + "_lower_on"));
+        ModelFile upperOff = models().getExistingFile(modLoc("block/" + name + "_upper_off"));
+        ModelFile upperOn = models().getExistingFile(modLoc("block/" + name + "_upper_on"));
+
+        getVariantBuilder(block).forAllStates(state -> {
+            boolean on = state.getValue(SoulExtractorBlock.ON);
+            DoubleBlockHalf half = state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF);
+
+            ModelFile model = half == DoubleBlockHalf.LOWER ? (on ? lowerOn : lowerOff) : (on ? upperOn : upperOff);
+
+            return ConfiguredModel.builder().modelFile(model).build();
+        });
+    }
+
+    protected void block(Block block, ModelFile model) {
+        simpleBlock(block, model);
+        simpleBlockItem(block, model);
+    }
+
+    protected void block(Block... blocks) {
+        for (Block b : blocks) {
+            simpleBlock(b);
+            simpleBlockItem(b, cubeAll(b));
+        }
     }
 
     private String blockName(Block block) {

@@ -48,7 +48,7 @@ public class GoToPeckSpotGoal<T extends PathfinderMob & IPeckerEntity> extends G
         return dodo.distanceToSqr(Vec3.atLowerCornerOf(dodo.getPeckTarget())) <= 1.2;
     }
 
-    @Override
+    /*@Override
     public boolean canContinueToUse() {
         return dodo.getPeckState() == Dodo.PeckState.MOVING
                 && dodo.getPeckTarget() != null
@@ -62,6 +62,6 @@ public class GoToPeckSpotGoal<T extends PathfinderMob & IPeckerEntity> extends G
         } else {
             dodo.cancelPecking();
         }
-    }
+    }*/
 
 }

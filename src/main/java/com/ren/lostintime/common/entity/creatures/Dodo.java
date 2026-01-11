@@ -1,45 +1,49 @@
 package com.ren.lostintime.common.entity.creatures;
 
-import com.ren.lostintime.LostInTime;
-import com.ren.lostintime.common.entity.goal.CircleAroundGoal;
-import com.ren.lostintime.common.entity.goal.FindDroppedFruitGoal;
-import com.ren.lostintime.common.entity.goal.GoToPeckSpotGoal;
-import com.ren.lostintime.common.entity.goal.PeckGoal;
-import com.ren.lostintime.common.entity.util.IPeckerEntity;
+import com.ren.lostintime.common.entity.LITAnimal;
+import com.ren.lostintime.common.entity.goal.*;
+import com.ren.lostintime.common.entity.util.IEggLayer;
+import com.ren.lostintime.common.entity.util.ISleepingEntity;
+import com.ren.lostintime.common.init.BlockInit;
 import com.ren.lostintime.common.init.EntityInit;
+import com.ren.lostintime.common.init.ParticlesInit;
 import com.ren.lostintime.datagen.server.LITTags;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.AbstractIllager;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -48,17 +52,15 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
-public class Dodo extends Animal implements GeoEntity, IPeckerEntity {
+public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEntity {
 
-    private static final EntityDataAccessor<Boolean> PECKING =
-            SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
-
-    public static final ResourceLocation PECK_LOOT =
-            new ResourceLocation(LostInTime.MODID, "dodo/pecking");
-
+    private static final EntityDataAccessor<Boolean> PECKING = SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> HAS_EGG = SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> LAYING_EGG = SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
 
     protected static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
     protected static final RawAnimation FLAP = RawAnimation.begin().thenLoop("misc.flap");
@@ -70,46 +72,46 @@ public class Dodo extends Animal implements GeoEntity, IPeckerEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    private float flap;
-    private float flapSpeed;
-    private float oFlapSpeed;
-    private float oFlap;
-    private float flapping = 1.0F;
+    //egg
+    private int layEggCounter;
+
+    //flap
+    public float flap;
+    public float flapSpeed;
+    public float oFlapSpeed;
+    public float oFlap;
+    public float flapping = 1.0F;
     private float nextFlap = 1.0F;
-    private int eggTime;
-    private int eatAnimationTick;
-    private EatBlockGoal eatBlockGoal;
-    public BlockPos peckTarget;
-    public int peckCooldown = 0;
-    public PeckState peckState = PeckState.NONE;
-    private int goldenBoostRolls = 0;
-    private boolean goldenBoostUsedToday = false;
-    private int currentGoldenMultiplier = 1;
+
+    //zombie
+    public boolean isChickenJockey;
+
+    //sleep particles
+    private int sleepParticleCooldown = 0;
+
+    //Peck logic
+    private BlockPos forageTarget;
 
     public Dodo(EntityType<? extends Animal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
-        this.eggTime = this.random.nextInt(6000) + 6000;
     }
 
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
-        this.goalSelector.addGoal(2, new FindDroppedFruitGoal<>(this));
-        this.goalSelector.addGoal(3, new GoToPeckSpotGoal<>(this));
-        this.goalSelector.addGoal(4, new CircleAroundGoal<>(this));
-        this.goalSelector.addGoal(5, new PeckGoal(this));
-        this.goalSelector.addGoal(6, new BreedGoal(this, 1.0D));
-        //TODO look u can create ingredients out of tags
+        this.goalSelector.addGoal(2, new DodoEatFruitGoal(this));
+        this.goalSelector.addGoal(3, new DodoForageBlockGoal(this));
+        this.goalSelector.addGoal(4, new DodoPeckGoal(this));
+        this.goalSelector.addGoal(5, new EggBreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(6, new LayEggGoal(this, 1.0D, BlockTags.DIRT, BlockInit.DODO_EGG, 1.0D));
         this.goalSelector.addGoal(7, new TemptGoal(this, 1.0D, Ingredient.of(LITTags.Items.DODO_FOOD), false));
-        this.goalSelector.addGoal(7, new AvoidEntityGoal<>(this, AbstractIllager.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.1D));
-        this.eatBlockGoal = new EatBlockGoal(this);
-        this.goalSelector.addGoal(8, this.eatBlockGoal);
         this.goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(11, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(10, new AvoidEntityGoal<>(this, AbstractIllager.class, 6.0F, 1.0D, 1.2D));
+        this.goalSelector.addGoal(11, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(12, new RandomLookAroundGoal(this));
     }
 
     @Override
@@ -131,18 +133,49 @@ public class Dodo extends Animal implements GeoEntity, IPeckerEntity {
         return EntityInit.DODO.get().create(pLevel);
     }
 
-    //Ai
-    protected boolean isFlapping() {
-        return this.flyDist > this.nextFlap;
-    }
-
-    protected void onFlap() {
-        this.nextFlap = this.flyDist + this.flapSpeed / 2.0F;
-    }
-
     @Override
-    public boolean causeFallDamage(float fallDistance, float multiplier, DamageSource source) {
-        return false;
+    public void aiStep() {
+        super.aiStep();
+        this.oFlap = this.flap;
+        this.oFlapSpeed = this.flapSpeed;
+        this.flapSpeed += (this.onGround() ? -1.0F : 4.0F) * 0.3F;
+        this.flapSpeed = Mth.clamp(this.flapSpeed, 0.0F, 1.0F);
+        if (!this.onGround() && this.flapping < 1.0F) {
+            this.flapping = 1.0F;
+        }
+        this.flapping *= 0.9F;
+        Vec3 vec3 = this.getDeltaMovement();
+        if (!this.onGround() && vec3.y < 0.0D) {
+            this.setDeltaMovement(vec3.multiply(1.0D, 0.6D, 1.0D));
+        }
+        this.flap += this.flapping * 2.0F;
+
+        if (this.isAlive() && this.isLayingEgg() && this.layEggCounter >= 1 && this.layEggCounter % 5 == 0) {
+            BlockPos blockpos = this.blockPosition();
+            if (this.level().getBlockState(blockpos.below()).is(BlockTags.DIRT)) {
+                this.level().levelEvent(2001, blockpos, Block.getId(this.level().getBlockState(blockpos.below())));
+            }
+        }
+
+        if (this.level().isClientSide() && this.isSleeping()) {
+            spawnSleepingParticles();
+        }
+    }
+
+    private void spawnSleepingParticles() {
+        if (!this.isSleeping()) return;
+
+        if (sleepParticleCooldown > 0) {
+            sleepParticleCooldown--;
+            return;
+        }
+        sleepParticleCooldown = 40 + this.random.nextInt(40);
+        double yaw = this.yBodyRot;
+
+        double x = this.getX();
+        double y = this.getY() + this.getBbHeight() + 0.15D;
+        double z = this.getZ();
+        this.level().addParticle(ParticlesInit.SLEEPING_PARTICLES.get(), x, y, z, yaw, this.getId(), 0);
     }
 
     @Override
@@ -157,151 +190,161 @@ public class Dodo extends Animal implements GeoEntity, IPeckerEntity {
     }
 
     @Override
-    public void aiStep() {
-        super.aiStep();
-        this.oFlap = this.flap;
-        this.oFlapSpeed = this.flapSpeed;
-        this.flapSpeed += (this.onGround() ? -1.0F : 4.0F) * 0.3F;
-        this.flapSpeed = Mth.clamp(this.flapSpeed, 0.0F, 1.0F);
-        if (!this.onGround() && this.flapping < 1.0F) {
-            this.flapping = 1.0F;
-        }
-
-        this.flapping *= 0.9F;
-        Vec3 vec3 = this.getDeltaMovement();
-        if (!this.onGround() && vec3.y < 0.0) {
-            this.setDeltaMovement(vec3.multiply(1.0, 0.6, 1.0));
-        }
-
-        this.flap += this.flapping * 2.0F;
-
-        //Eat
-        if (this.level().isClientSide) {
-            this.eatAnimationTick = Math.max(0, this.eatAnimationTick - 1);
-        }
-
-        if (this.level() instanceof ServerLevel serverLevel && peckTarget != null) {
-
-            BlockState state = serverLevel.getBlockState(peckTarget);
-            if (!state.isAir()) {
-                for (int i = 0; i < 3; i++) {
-                    double px = peckTarget.getX() + 0.5 + (this.random.nextDouble() - 0.5) * 0.3;
-                    double py = peckTarget.getY() + 0.1;
-                    double pz = peckTarget.getZ() + 0.5 + (this.random.nextDouble() - 0.5) * 0.3;
-
-                    serverLevel.sendParticles(
-                            new BlockParticleOption(ParticleTypes.BLOCK, state),
-                            px, py, pz,
-                            3,
-                            0, 0.05, 0,
-                            1d
-                    );
-                }
-            }
-        }
-
-        // Reset
-        if (!this.level().isClientSide) {
-            long time = this.level().getDayTime() % 24000L;
-            if (time == 0) {
-                goldenBoostUsedToday = false;
-            }
-        }
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        // Peck
-        if (peckCooldown > 0) {
-            peckCooldown--;
-        }
+    public boolean canBeLeashed(Player player) {
+        return !this.isSleeping() && super.canBeLeashed(player);
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(PECKING, false);
+        this.entityData.define(HAS_EGG, false);
+        this.entityData.define(LAYING_EGG, false);
+        this.entityData.define(SLEEPING, false);
     }
 
-    public boolean isPecking() {
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putBoolean("isPecking", this.getIsPecking());
+        pCompound.putBoolean("HasEgg", this.hasEgg());
+        pCompound.putBoolean("IsChickenJockey", this.isChickenJockey);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        this.setIsPecking(pCompound.getBoolean("isPecking"));
+        this.setHasEgg(pCompound.getBoolean("HasEgg"));
+        this.isChickenJockey = pCompound.getBoolean("IsChickenJockey");
+    }
+
+    @Override
+    protected void onFlap() {
+        this.nextFlap = this.flyDist + this.flapSpeed / 2.0F;
+    }
+
+    @Override
+    protected boolean isFlapping() {
+        return this.flyDist > this.nextFlap;
+    }
+
+    //Pecking
+    public boolean getIsPecking() {
         return this.entityData.get(PECKING);
     }
 
-    public void setPecking(boolean pecking) {
+    public void setIsPecking(boolean pecking) {
         this.entityData.set(PECKING, pecking);
     }
 
-    public void startPecking() {
-        setPecking(true);
-        //TODO look this can be triggered like this from the server side
-        triggerAnim("movePredicate", "peck");
+    //Egg
+    @Override
+    public boolean hasEgg() {
+        return this.entityData.get(HAS_EGG);
     }
 
     @Override
-    public void ate() {
-        if (this.isBaby()) {
-            this.ageUp(60);
-        }
+    public void setHasEgg(boolean pHasEgg) {
+        this.entityData.set(HAS_EGG, pHasEgg);
     }
 
     @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
-
-        if (level().isClientSide)
-            return InteractionResult.SUCCESS;
-
-        //Golden food
-        if (stack.is(LITTags.Items.GOLDEN_FOODS) && !goldenBoostUsedToday) {
-            int mult = getGoldenFoodMultiplier(stack);
-            this.currentGoldenMultiplier = mult;
-            this.goldenBoostRolls = 10;
-            this.goldenBoostUsedToday = true;
-            stack.shrink(1);
-            this.level().broadcastEntityEvent(this, (byte) 10);
-            return InteractionResult.CONSUME;
-        }
-
-        //Normal food
-        if (isFruit(stack) && peckCooldown <= 0 && peckState == PeckState.NONE) {
-            stack.shrink(1);
-            peckTarget = player.blockPosition().below();
-            peckState = PeckState.MOVING;
-
-            return InteractionResult.CONSUME;
-        }
-
-        return super.mobInteract(player, hand);
+    public int getLayEggCounter() {
+        return this.layEggCounter;
     }
 
+    @Override
+    public void setLayEggCounter(int layEggCounter) {
+        this.layEggCounter = layEggCounter;
+    }
+
+    @Override
+    public boolean isLayingEgg() {
+        return this.entityData.get(LAYING_EGG);
+    }
+
+    @Override
+    public void setLayingEgg(boolean pIsLayingEgg) {
+        this.layEggCounter = pIsLayingEgg ? 1 : 0;
+        this.entityData.set(LAYING_EGG, pIsLayingEgg);
+    }
+
+    @Override
+    public void onEggLaid() {
+
+    }
+
+    //babe zombie
+    public boolean isChickenJockey() {
+        return this.isChickenJockey;
+    }
+
+    public void setChickenJockey(boolean pIsChickenJockey) {
+        this.isChickenJockey = pIsChickenJockey;
+    }
+
+    //Sleep
+    @Override
+    public boolean isSleeping() {
+        return this.entityData.get(SLEEPING);
+    }
+
+    @Override
+    public void setSleeping(boolean sleeping) {
+        this.entityData.set(SLEEPING, sleeping);
+    }
+
+    @Override
+    public boolean canSleep() {
+        return !this.isInLove() && !this.isLayingEgg();
+    }
+
+    public boolean isForaging() {
+        return forageTarget != null;
+    }
+
+    public void setForageTarget(@Nullable BlockPos pos) {
+        this.forageTarget = pos;
+    }
+
+    @Nullable
+    public BlockPos getForageTarget() {
+        return forageTarget;
+    }
+
+    @Override
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, DamageSource pSource) {
+        return false;
+    }
+
+    @Override
+    public boolean canFallInLove() {
+        return super.canFallInLove() && !this.hasEgg();
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        this.setSleeping(false);
+        return super.hurt(pSource, pAmount);
+    }
 
     //Animation
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "stateController", 5, this::statePredicate)
-                .receiveTriggeredAnimations()
-                .triggerableAnim("peck", PECK));
-        controllers.add(new AnimationController<>(this, "movePredicate", 5, this::movePredicate));
+        controllers.add(new AnimationController<>(this, "sleepController", 5, this::sleepPredicate));
         controllers.add(new AnimationController<>(this, "flapController", 2, this::flapPredicate));
-    }
-
-    protected <E extends Dodo> PlayState statePredicate(AnimationState<E> event) {
-        if (isNight()
-                && getPeckState() == PeckState.NONE
-                && this.onGround()
-                && this.getDeltaMovement().lengthSqr() < 0.001) {
-            event.getController().setAnimation(SLEEP);
-            return PlayState.CONTINUE;
-        }
-
-        return PlayState.STOP;
+        controllers.add(new AnimationController<>(this, "moveController", 5, this::movePredicate));
+        controllers.add(new AnimationController<>(this, "peckController", 2, state -> {
+            if (this.getIsPecking()) {
+                return state.setAndContinue(PECK);
+            }
+            state.getController().forceAnimationReset();
+            return PlayState.STOP;
+        }));
     }
 
     protected <E extends Dodo> PlayState movePredicate(final AnimationState<E> event) {
-        if (getPeckState() != PeckState.NONE || isNight()) {
-            return PlayState.STOP;
-        }
         if (this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6) {
             if (this.isSprinting()) {
                 event.getController().setAnimation(RUN);
@@ -311,6 +354,7 @@ public class Dodo extends Animal implements GeoEntity, IPeckerEntity {
             return PlayState.CONTINUE;
         } else {
             event.getController().setAnimation(IDLE);
+            event.getController().setAnimationSpeed(1.0D);
         }
         return PlayState.CONTINUE;
     }
@@ -318,8 +362,20 @@ public class Dodo extends Animal implements GeoEntity, IPeckerEntity {
     protected <E extends Dodo> PlayState flapPredicate(final AnimationState<E> event) {
         if (!this.onGround() && !this.isInWater()) {
             event.getController().setAnimation(FLAP);
+            event.getController().setAnimationSpeed(1.0D);
             return PlayState.CONTINUE;
         }
+        event.getController().forceAnimationReset();
+        return PlayState.STOP;
+    }
+
+    protected <E extends Dodo> PlayState sleepPredicate(AnimationState<E> event) {
+        if (this.isSleeping()) {
+            event.getController().setAnimation(SLEEP);
+            event.getController().setAnimationSpeed(1.0D);
+            return PlayState.CONTINUE;
+        }
+        event.getController().forceAnimationReset();
         return PlayState.STOP;
     }
 
@@ -328,92 +384,192 @@ public class Dodo extends Animal implements GeoEntity, IPeckerEntity {
         return this.cache;
     }
 
-    public boolean isNight() {
-        long time = this.level().getDayTime() % 24000L;
-        return time >= 13000 && time <= 23000;
-    }
-
-    /**
-     * only called on the server side
-     */
-    public void finishPecking() {
-        generatePeckLoot();
-        this.peckCooldown = 1000;
-        setPecking(false);
-    }
-
-    private void generatePeckLoot() {
-        ServerLevel server = (ServerLevel) this.level();
-        LootTable table = server.getServer().getLootData().getLootTable(PECK_LOOT);
-
-        LootParams params = new LootParams.Builder(server)
-                .withParameter(LootContextParams.ORIGIN, this.position())
-                .withParameter(LootContextParams.THIS_ENTITY, this)
-                .create(LootContextParamSets.GIFT);
-
-        List<ItemStack> drops = new ArrayList<>();
-
-        int rolls = 1;
-
-        if (goldenBoostRolls > 0) {
-            rolls = currentGoldenMultiplier;
-            goldenBoostRolls--;
-        }
-
-        for (int i = 0; i < rolls; i++) {
-            drops.addAll(table.getRandomItems(params));
-        }
-
-        for (ItemStack stack : drops) {
-            this.spawnAtLocation(stack);
-        }
-    }
-
-    public boolean isValidSoil(BlockState state) {
-        return state.is(LITTags.Blocks.DODO_SOILS);
+    @Override
+    protected void playStepSound(BlockPos pPos, BlockState pState) {
+        this.playSound(SoundEvents.CHICKEN_STEP, 0.15F, 1.0F);
     }
 
     @Override
-    public boolean isFruit(ItemStack stack) {
-        return stack.is(LITTags.Items.FRUITS);
-    }
-
-    public int getGoldenFoodMultiplier(ItemStack stack) {
-        if (!stack.is(LITTags.Items.GOLDEN_FOODS)) return 1;
-
-        if (stack.is(Items.GOLDEN_CARROT)) return 2;
-        if (stack.is(Items.GOLDEN_APPLE)) return 4;
-        if (stack.is(Items.ENCHANTED_GOLDEN_APPLE)) return 8;
-
-        return 2;
-    }
-
-
-    @Override
-    public void setPeckTarget(BlockPos target) {
-        this.peckTarget = target;
+    protected PathNavigation createNavigation(Level pLevel) {
+        return super.createNavigation(pLevel);
     }
 
     @Override
-    public BlockPos getPeckTarget() {
-        return this.peckTarget;
+    public boolean removeWhenFarAway(double pDistanceToClosestPlayer) {
+        return this.isChickenJockey();
     }
 
     @Override
-    public PeckState getPeckState() {
-        return this.peckState;
-    }
-
-    @Override
-    public void setPeckState(PeckState state) {
-        this.peckState = state;
-        if (state != PeckState.PECKING) {
-            setPecking(false);
+    protected void positionRider(Entity pPassenger, MoveFunction pCallback) {
+        super.positionRider(pPassenger, pCallback);
+        float f = Mth.sin(this.yBodyRot * ((float) Math.PI / 180F));
+        float f1 = Mth.cos(this.yBodyRot * ((float) Math.PI / 180F));
+        float f2 = 0.15F;
+        float f3 = 0.0F;
+        pCallback.accept(pPassenger, this.getX() + (double) (f2 * f), this.getY(0.6D) + pPassenger.getMyRidingOffset() + f3,
+                this.getZ() - (double) (f2 * f1));
+        if (pPassenger instanceof LivingEntity) {
+            ((LivingEntity) pPassenger).yBodyRot = this.yBodyRot;
         }
     }
 
     @Override
-    public boolean canPeck() {
-        return peckCooldown <= 0;
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+        SpawnGroupData data = super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+
+        if (!this.level().isClientSide() && !this.isBaby() && this.random.nextFloat() < 0.05F) {
+            spawnChickenJockey((ServerLevel) pLevel);
+        }
+
+        return data;
+    }
+
+    private void spawnChickenJockey(ServerLevel world) {
+        Zombie babyZombie = EntityType.ZOMBIE.create(world);
+        if (babyZombie != null) {
+            babyZombie.setBaby(true);
+            babyZombie.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
+            babyZombie.startRiding(this);
+            setChickenJockey(true);
+            world.addFreshEntity(babyZombie);
+        }
+    }
+
+    static class DodoEatFruitGoal extends Goal {
+
+        private final Dodo dodo;
+        private ItemEntity targetItem;
+
+        public DodoEatFruitGoal(Dodo dodo) {
+            this.dodo = dodo;
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            if (dodo.isSleeping() || dodo.isForaging() || dodo.isLayingEgg() || dodo.hasEgg()) return false;
+
+            List<ItemEntity> items = dodo.level().getEntitiesOfClass(
+                    ItemEntity.class,
+                    dodo.getBoundingBox().inflate(6.0D),
+                    item -> item.getItem().is(LITTags.Items.FRUITS)
+            );
+
+            if (!items.isEmpty()) {
+                targetItem = items.get(0);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void start() {
+            dodo.getNavigation().moveTo(targetItem, 1.0D);
+        }
+
+        @Override
+        public void tick() {
+            if (targetItem == null) return;
+
+            if (dodo.distanceTo(targetItem) < 1.2F) {
+                dodo.setForageTarget(targetItem.blockPosition());
+                targetItem.discard();
+            }
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return targetItem != null && targetItem.isAlive();
+        }
+
+        @Override
+        public void stop() {
+            targetItem = null;
+        }
+    }
+
+    static class DodoForageBlockGoal extends Goal {
+
+        private final Dodo dodo;
+
+        public DodoForageBlockGoal(Dodo dodo) {
+            this.dodo = dodo;
+            this.setFlags(EnumSet.of(Flag.MOVE));
+        }
+
+        @Override
+        public boolean canUse() {
+            return !dodo.isSleeping() && !dodo.hasEgg();
+        }
+
+        @Override
+        public void start() {
+            BlockPos pos = findValidBlock();
+            if (pos != null) {
+                dodo.setForageTarget(pos);
+                dodo.getNavigation().moveTo(
+                        pos.getX(), pos.getY(), pos.getZ(), 1.0D
+                );
+            }
+        }
+
+        private BlockPos findValidBlock() {
+            BlockPos origin = dodo.blockPosition();
+
+            for (int i = 0; i < 20; i++) {
+                BlockPos pos = origin.offset(
+                        dodo.getRandom().nextInt(8) - 4,
+                        -1,
+                        dodo.getRandom().nextInt(8) - 4
+                );
+
+                if (dodo.level().getBlockState(pos).is(Blocks.DIRT)) {
+                    return pos;
+                }
+            }
+            return null;
+        }
+    }
+
+    static class DodoPeckGoal extends Goal {
+
+        private final Dodo dodo;
+        private int peckTime;
+
+        public DodoPeckGoal(Dodo dodo) {
+            this.dodo = dodo;
+            this.setFlags(EnumSet.of(Flag.LOOK, Flag.JUMP));
+        }
+
+        @Override
+        public boolean canUse() {
+            return dodo.getForageTarget() != null
+                    && dodo.distanceToSqr(Vec3.atCenterOf(dodo.getForageTarget())) < 1.5D;
+        }
+
+        @Override
+        public void start() {
+            peckTime = 40 + dodo.getRandom().nextInt(20);
+            dodo.setIsPecking(true);
+        }
+
+        @Override
+        public void tick() {
+            peckTime--;
+            if (peckTime % 10 == 0) {
+                dodo.playSound(SoundEvents.CHICKEN_STEP, 0.4F, 1.2F);
+            }
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return peckTime > 0;
+        }
+
+        @Override
+        public void stop() {
+            dodo.setIsPecking(false);
+            dodo.setForageTarget(null);
+        }
     }
 }

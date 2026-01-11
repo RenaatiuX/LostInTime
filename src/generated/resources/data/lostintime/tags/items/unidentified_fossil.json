@@ -1,8 +1,16 @@
 {
   "values": [
+    "lostintime:cambrian_fossil",
+    "lostintime:ordovician_fossil",
+    "lostintime:silurian_fossil",
+    "lostintime:carboniferous_fossil",
     "lostintime:devonian_fossil",
-    "lostintime:bothriolepis_fossil",
-    "lostintime:quaternary_fossil",
-    "lostintime:dodo_fossil"
+    "lostintime:permian_fossil",
+    "lostintime:triassic_fossil",
+    "lostintime:jurassic_fossil",
+    "lostintime:cretaceous_fossil",
+    "lostintime:paleogene_fossil",
+    "lostintime:neogene_fossil",
+    "lostintime:quaternary_fossil"
   ]
 }

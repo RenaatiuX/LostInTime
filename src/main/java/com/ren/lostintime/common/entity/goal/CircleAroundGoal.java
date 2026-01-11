@@ -9,16 +9,16 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 
-public class CircleAroundGoal<T extends PathfinderMob & IPeckerEntity> extends Goal {
-    private final T dodo;
+public class CircleAroundGoal {
+    private final Dodo dodo;
     private int timer = 0;
 
-    public CircleAroundGoal(T pDodo) {
+    public CircleAroundGoal(Dodo pDodo) {
         this.dodo = pDodo;
-        this.setFlags(EnumSet.of(Flag.MOVE));
+        //this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
-    @Override
+    /*@Override
     public boolean canUse() {
         if (dodo.getPeckTarget() == null){
             return false;
@@ -69,5 +69,5 @@ public class CircleAroundGoal<T extends PathfinderMob & IPeckerEntity> extends G
             }
         }
 
-    }
+    }*/
 }

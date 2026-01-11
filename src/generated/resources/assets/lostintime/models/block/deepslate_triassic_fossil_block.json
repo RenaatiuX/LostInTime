@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "lostintime:block/deepslate_triassic_fossil_block"
+  }
+}

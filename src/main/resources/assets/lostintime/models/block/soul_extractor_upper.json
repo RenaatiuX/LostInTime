@@ -1,0 +1,36 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "lostintime:block/soul_extractor_upper_top",
+		"2": "lostintime:block/soul_extractor_lower_bottom",
+		"3": "lostintime:block/soul_extractor_side_upper_off",
+		"particle": "lostintime:block/soul_extractor_upper_top"
+	},
+	"elements": [
+		{
+			"from": [3, 0, 3],
+			"to": [13, 6, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [3, 0, 3]},
+			"faces": {
+				"north": {"uv": [3, 10, 13, 16], "texture": "#3"},
+				"east": {"uv": [3, 10, 13, 16], "texture": "#3"},
+				"south": {"uv": [3, 10, 13, 16], "texture": "#3"},
+				"west": {"uv": [3, 10, 13, 16], "texture": "#3"}
+			}
+		},
+		{
+			"from": [1, 6, 1],
+			"to": [15, 16, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [3, 6, 3]},
+			"faces": {
+				"north": {"uv": [1, 0, 15, 10], "texture": "#3"},
+				"east": {"uv": [1, 0, 15, 10], "texture": "#3"},
+				"south": {"uv": [1, 0, 15, 10], "texture": "#3"},
+				"west": {"uv": [1, 0, 15, 10], "texture": "#3"},
+				"up": {"uv": [1, 1, 15, 15], "texture": "#0"},
+				"down": {"uv": [0, 2, 14, 16], "texture": "#2"}
+			}
+		}
+	]
+}

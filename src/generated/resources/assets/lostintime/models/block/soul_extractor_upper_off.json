@@ -1,0 +1,10 @@
+{
+  "parent": "lostintime:block/soul_extractor_upper",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "0": "lostintime:block/soul_extractor_upper_top",
+    "2": "lostintime:block/soul_extractor_lower_bottom",
+    "3": "lostintime:block/soul_extractor_side_upper_off",
+    "particle": "lostintime:block/soul_extractor_upper_top"
+  }
+}

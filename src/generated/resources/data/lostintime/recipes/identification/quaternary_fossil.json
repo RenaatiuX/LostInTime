@@ -1,0 +1,64 @@
+{
+  "type": "lostintime:identification_recipe",
+  "input": {
+    "item": "lostintime:quaternary_fossil"
+  },
+  "outputs": [
+    {
+      "item": "lostintime:amber",
+      "weight": 0.25
+    },
+    {
+      "item": "minecraft:bone",
+      "weight": 33.0
+    },
+    {
+      "item": "minecraft:bone_meal",
+      "weight": 33.0
+    },
+    {
+      "item": "minecraft:cobbled_deepslate",
+      "weight": 30.0
+    },
+    {
+      "item": "minecraft:cobblestone",
+      "weight": 15.0
+    },
+    {
+      "item": "minecraft:dirt",
+      "weight": 25.0
+    },
+    {
+      "item": "lostintime:dodo_fossil",
+      "weight": 25.0
+    },
+    {
+      "item": "lostintime:dodo_skull",
+      "weight": 5.0
+    },
+    {
+      "item": "minecraft:gold_nugget",
+      "maxCount": 3,
+      "minCount": 1,
+      "weight": 0.25
+    },
+    {
+      "item": "minecraft:gravel",
+      "weight": 33.0
+    },
+    {
+      "item": "minecraft:iron_nugget",
+      "maxCount": 3,
+      "minCount": 1,
+      "weight": 10.0
+    },
+    {
+      "item": "minecraft:nautilus_shell",
+      "weight": 1.0
+    },
+    {
+      "item": "minecraft:skeleton_skull",
+      "weight": 1.0
+    }
+  ]
+}

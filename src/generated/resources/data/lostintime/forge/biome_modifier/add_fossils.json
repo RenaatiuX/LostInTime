@@ -1,0 +1,19 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": [
+    "lostintime:fossil/cambrian",
+    "lostintime:fossil/ordovician",
+    "lostintime:fossil/silurian",
+    "lostintime:fossil/devonian",
+    "lostintime:fossil/carboniferous",
+    "lostintime:fossil/permian",
+    "lostintime:fossil/triassic",
+    "lostintime:fossil/jurassic",
+    "lostintime:fossil/cretaceous",
+    "lostintime:fossil/paleogene",
+    "lostintime:fossil/neogene",
+    "lostintime:fossil/quaternary"
+  ],
+  "step": "underground_ores"
+}

@@ -1,7 +1,8 @@
-// 1.20.1	2024-12-31T11:51:17.6563172	Recipes
+// 1.20.1	2026-01-09T20:39:48.5446357	Recipes
 334e226d286d4f776663fc970162381466eb1e6d data/lostintime/advancements/recipes/food/cooked_dodo.json
 f4abb2e811999d9ceef51f5781ec5bedc062bd92 data/lostintime/advancements/recipes/food/cooked_dodo_from_campfire_cooking.json
 069d46778f0610a31ea02de739a956261de5ca9d data/lostintime/advancements/recipes/food/cooked_dodo_from_smoking.json
 67150f15b100c2d8b96a45f3f30158bfbe6fe2cc data/lostintime/recipes/cooked_dodo.json
 a23ee9df1bbfa16e0debe6d06e9f5073128bbd6e data/lostintime/recipes/cooked_dodo_from_campfire_cooking.json
 39246b66267526baea0415b252bb2de67462510e data/lostintime/recipes/cooked_dodo_from_smoking.json
+60e1163dac5ba07b219e03d213ca63faa86e5dc1 data/lostintime/recipes/identification/quaternary_fossil.json

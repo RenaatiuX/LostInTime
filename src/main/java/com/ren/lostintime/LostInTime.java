@@ -2,10 +2,7 @@ package com.ren.lostintime;
 
 import com.mojang.logging.LogUtils;
 import com.ren.lostintime.common.config.Config;
-import com.ren.lostintime.common.init.BlockInit;
-import com.ren.lostintime.common.init.EntityInit;
-import com.ren.lostintime.common.init.GroupInit;
-import com.ren.lostintime.common.init.ItemInit;
+import com.ren.lostintime.common.init.*;
 import com.ren.lostintime.datagen.DataGatherer;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -29,6 +26,12 @@ public class LostInTime {
         GroupInit.GROUP.register(modEventBus);
         EntityInit.ENTITIES.register(modEventBus);
         BlockInit.BLOCKS.register(modEventBus);
+        ParticlesInit.PARTICLE_TYPE.register(modEventBus);
+        BlockEntityInit.BLOCK_ENTITY_TYPES.register(modEventBus);
+        RecipeInit.RECIPE_SERIALIZER.register(modEventBus);
+        RecipeInit.RECIPE_TYPES.register(modEventBus);
+        MenuInit.MENUS.register(modEventBus);
+        FeatureInit.FEATURES.register(modEventBus);
 
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
@@ -36,9 +39,24 @@ public class LostInTime {
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTab() == GroupInit.LOST_IN_TIME_GROUP.get()) {
             event.accept(ItemInit.AMBER);
+            event.accept(ItemInit.ECTOPLASM);
+            event.accept(ItemInit.SOUL_ASH);
+            event.accept(ItemInit.SOUL_GRUME);
+
             event.accept(ItemInit.DEVONIAN_FOSSIL);
-            event.accept(ItemInit.BOTHRIOLEPIS_FOSSIL);
+            event.accept(ItemInit.CAMBRIAN_FOSSIL);
+            event.accept(ItemInit.ORDOVICIAN_FOSSIL);
+            event.accept(ItemInit.SILURIAN_FOSSIL);
+            event.accept(ItemInit.CARBONIFEROUS_FOSSIL);
+            event.accept(ItemInit.PERMIAN_FOSSIL);
+            event.accept(ItemInit.TRIASSIC_FOSSIL);
+            event.accept(ItemInit.JURASSIC_FOSSIL);
+            event.accept(ItemInit.CRETACEOUS_FOSSIL);
+            event.accept(ItemInit.PALEOGENE_FOSSIL);
+            event.accept(ItemInit.NEOGENE_FOSSIL);
             event.accept(ItemInit.QUATERNARY_FOSSIL);
+
+            event.accept(ItemInit.BOTHRIOLEPIS_FOSSIL);
             event.accept(ItemInit.DODO_FOSSIL);
             event.accept(ItemInit.DODO_SKULL);
             event.accept(ItemInit.DODO_FOSSIL_MOUNT);
@@ -61,7 +79,28 @@ public class LostInTime {
             event.accept(ItemInit.ASPECT_INTEGRATION);
             event.accept(ItemInit.ASPECT_STRUCTURING);
             event.accept(ItemInit.ASPECT_TRANSIENCE);
+            event.accept(ItemInit.ASPECT_ABUNDANCE);
+            event.accept(ItemInit.ASPECT_CONTINUITY);
+            event.accept(ItemInit.ASPECT_MAGNITUDE);
+            event.accept(ItemInit.ASPECT_PROLIFERATION);
+            event.accept(ItemInit.ASPECT_RECOVERY);
+            event.accept(ItemInit.ASPECT_REFINEMENT);
+            event.accept(ItemInit.ASPECT_RESILIENCE);
+
             event.accept(ItemInit.ZIRCON);
+
+            event.accept(ItemInit.AMETHYST_CATALYST);
+            event.accept(ItemInit.BLUE_ICE_CATALYST);
+            event.accept(ItemInit.CALCITE_CATALYST);
+            event.accept(ItemInit.COAL_CATALYST);
+            event.accept(ItemInit.COPPER_CATALYST);
+            event.accept(ItemInit.EMERALD_CATALYST);
+            event.accept(ItemInit.GOLD_CATALYST);
+            event.accept(ItemInit.IRON_CATALYST);
+            event.accept(ItemInit.LAPIS_LAZULI_CATALYST);
+            event.accept(ItemInit.QUARTZ_CATALYST);
+            event.accept(ItemInit.REDSTONE_CATALYST);
+            event.accept(ItemInit.ZIRCON_CATALYST);
 
             event.accept(ItemInit.GOLDEN_EYE);
             event.accept(ItemInit.GUARDIAN_SPIKE);
@@ -72,6 +111,26 @@ public class LostInTime {
             event.accept(BlockInit.MANGO_LOG);
             event.accept(BlockInit.MANGO_SAPLING);
             event.accept(BlockInit.DODO_EGG);
+            event.accept(ItemInit.BOTHRIOLEPIS_ROE);
+
+            event.accept(BlockInit.QUATERNARY_FOSSIL_BLOCK);
+            event.accept(BlockInit.NEOGENE_FOSSIL_BLOCK);
+            event.accept(BlockInit.PALEOGENE_FOSSIL_BLOCK);
+            event.accept(BlockInit.CRETACEOUS_FOSSIL_BLOCK);
+            event.accept(BlockInit.DEEPSLATE_JURASSIC_FOSSIL_BLOCK);
+            event.accept(BlockInit.DEEPSLATE_TRIASSIC_FOSSIL_BLOCK);
+            event.accept(BlockInit.DEEPSLATE_PERMIAN_FOSSIL_BLOCK);
+            event.accept(BlockInit.DEEPSLATE_CARBONIFEROUS_FOSSIL_BLOCK);
+            event.accept(BlockInit.DEEPSLATE_DEVONIAN_FOSSIL_BLOCK);
+            event.accept(BlockInit.DEEPSLATE_SILURIAN_FOSSIL_BLOCK);
+            event.accept(BlockInit.DEEPSLATE_ORDOVICIAN_FOSSIL_BLOCK);
+            event.accept(BlockInit.DEEPSLATE_CAMBRIAN_FOSSIL_BLOCK);
+
+            event.accept(BlockInit.SANDSTONE_BRICKS);
+            event.accept(BlockInit.SMALL_SANDSTONE_BRICKS);
+
+            event.accept(BlockInit.IDENTIFICATION_TABLE);
+            event.accept(BlockInit.SOUL_EXTRACTOR);
         }
     }
 }

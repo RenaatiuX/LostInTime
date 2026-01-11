@@ -2,20 +2,23 @@ package com.ren.lostintime.common.entity.goal;
 
 import com.ren.lostintime.common.entity.creatures.Dodo;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.Level;
 
 import java.util.EnumSet;
 
-public class PeckGoal extends Goal {
+public class PeckGoal {
 
     private final Dodo dodo;
+    private final Level level;
     private int peckTime;
 
     public PeckGoal(Dodo pDodo) {
         this.dodo = pDodo;
-        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
+        this.level = pDodo.level();
+        //this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP));
     }
 
-    @Override
+    /*@Override
     public boolean canUse() {
         return dodo.peckState == Dodo.PeckState.PECKING;
     }
@@ -41,5 +44,5 @@ public class PeckGoal extends Goal {
     public void tick() {
 
         peckTime--;
-    }
+    }*/
 }

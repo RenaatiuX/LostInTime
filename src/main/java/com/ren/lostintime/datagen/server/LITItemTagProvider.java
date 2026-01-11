@@ -46,8 +46,10 @@ public class LITItemTagProvider extends ItemTagsProvider {
                 .add(ItemInit.MANGO.get());
 
         tag(LITTags.Items.UNIDENTIFIED_FOSSIL)
-                .add(ItemInit.DEVONIAN_FOSSIL.get()).add(ItemInit.BOTHRIOLEPIS_FOSSIL.get()).add(ItemInit.QUATERNARY_FOSSIL.get())
-                .add(ItemInit.DODO_FOSSIL.get());
+                .add(ItemInit.CAMBRIAN_FOSSIL.get()).add(ItemInit.ORDOVICIAN_FOSSIL.get()).add(ItemInit.SILURIAN_FOSSIL.get())
+                .add(ItemInit.CARBONIFEROUS_FOSSIL.get()).add(ItemInit.DEVONIAN_FOSSIL.get()).add(ItemInit.PERMIAN_FOSSIL.get())
+                .add(ItemInit.TRIASSIC_FOSSIL.get()).add(ItemInit.JURASSIC_FOSSIL.get()).add(ItemInit.CRETACEOUS_FOSSIL.get())
+                .add(ItemInit.PALEOGENE_FOSSIL.get()).add(ItemInit.NEOGENE_FOSSIL.get()).add(ItemInit.QUATERNARY_FOSSIL.get());
 
         tag(CuriosTags.Items.BELT_SLOT_TAG)
                 .add(ItemInit.GOLDEN_EYE.get());
