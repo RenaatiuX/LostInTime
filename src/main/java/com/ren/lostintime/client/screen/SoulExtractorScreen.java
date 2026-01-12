@@ -6,11 +6,16 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 
 public class SoulExtractorScreen extends AbstractContainerScreen<SoulExtractorMenu> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(LostInTime.MODID, "textures/gui/soul_extractor.png");
+
+    // arrow dimensions 47x16
+    //arrow position 75x26
+    //arrow original 176x13
 
     public SoulExtractorScreen(SoulExtractorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -28,6 +33,11 @@ public class SoulExtractorScreen extends AbstractContainerScreen<SoulExtractorMe
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
         pGuiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
+
+        if (menu.getProgress() > 0){
+            int width = Math.round(Mth.map(menu.getProgress(), 0f, 100f, 0f, 47f));
+            pGuiGraphics.blit(TEXTURE, x + 75, y + 26, 176, 13, width, 18);
+        }
     }
 
     @Override

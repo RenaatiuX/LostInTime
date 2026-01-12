@@ -68,6 +68,10 @@ public class SoulExtractorMenu extends AbstractContainerMenu {
         return containerData.get(0);
     }
 
+    public int getResidue() {
+        return containerData.get(1);
+    }
+
     @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
         ItemStack itemStack = ItemStack.EMPTY;

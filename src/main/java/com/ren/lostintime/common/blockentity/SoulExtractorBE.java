@@ -48,7 +48,7 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
 
 
     private final LazyOptional<IItemHandlerModifiable> itemHandler = LazyOptional.of(() -> new ItemStackHandler(9));
-    private final LazyOptional<IItemHandlerModifiable> input = LazyOptional.of(() -> new RangedWrapper(itemHandler.orElseThrow(IllegalStateException::new), SLOT_INPUT_START, SLOT_RESIDUE_END + 1));
+    private final LazyOptional<IItemHandlerModifiable> input = LazyOptional.of(() -> new RangedWrapper(itemHandler.orElseThrow(IllegalStateException::new), SLOT_INPUT_START, SLOT_INPUT_END + 1));
     private final LazyOptional<IItemHandlerModifiable> residue = LazyOptional.of(() -> new RangedWrapper(itemHandler.orElseThrow(IllegalStateException::new), SLOT_RESIDUE_START, SLOT_RESIDUE_END + 1));
     private final LazyOptional<IItemHandlerModifiable> output = LazyOptional.of(() -> new RangedWrapper(itemHandler.orElseThrow(IllegalStateException::new), SLOT_OUTPUT, SLOT_OUTPUT + 1));
 
@@ -56,6 +56,7 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
     protected int processCounter;
 
     protected int currentResidue = 0;
+    protected int residueReductionCounter = 0;
 
     public final ContainerData data = new ContainerData() {
         @Override
@@ -99,6 +100,47 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
         return list;
     }
 
+    protected List<ItemStack> calculateWaste() {
+        List<ItemStack> list = new ArrayList<>(3);
+        assert level != null;
+        if (currentResidue <= 9) {
+            float soulAshChance = Mth.map(currentResidue, 0f, 9f, 0.1f, 0.25f);
+            if (level.random.nextFloat() < soulAshChance){
+                list.add(new ItemStack(ItemInit.SOUL_ASH.get()));
+            }
+            float soulGrumeChance = Mth.map(currentResidue, 0f, 9f, 0.025f, 0.05f);
+            if (level.random.nextFloat() < soulGrumeChance){
+                list.add(new ItemStack(ItemInit.SOUL_GRUME.get()));
+            }
+        }else if (currentResidue <= 18){
+            float soulAshChance = Mth.map(currentResidue, 10f, 18f, 0.25f, 0.05f);
+
+            if (level.random.nextFloat() < soulAshChance){
+                list.add(new ItemStack(ItemInit.SOUL_ASH.get()));
+            }
+            float soulGrumeChance = Mth.map(currentResidue, 10f, 18f, 0.05f, 0.25f);
+            if (level.random.nextFloat() < soulGrumeChance){
+                list.add(new ItemStack(ItemInit.SOUL_GRUME.get()));
+            }
+
+            float ectoplasmChance = Mth.map(currentResidue, 10f, 18f, 0.01f, 0.02f);
+            if (level.random.nextFloat() < ectoplasmChance){
+                list.add(new ItemStack(ItemInit.ECTOPLASM.get()));
+            }
+        }else {
+            float soulGrumeChance = Mth.map(currentResidue, 19f, 27f, 0.25f, 0.1f);
+            if (level.random.nextFloat() < soulGrumeChance){
+                list.add(new ItemStack(ItemInit.SOUL_GRUME.get()));
+            }
+            float ectoplasmChance = Mth.map(currentResidue, 10f, 27f, 0.02f, 0.05f);
+            if (level.random.nextFloat() < ectoplasmChance){
+                list.add(new ItemStack(ItemInit.ECTOPLASM.get()));
+            }
+        }
+        return list;
+
+    }
+
 
     //basically check for outputs etc
     protected boolean canProcess(SoulExtractorRecipe recipe) {
@@ -140,11 +182,21 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
             }
         }
 
+
+        residue.ifPresent(d -> {
+            var waste = calculateWaste();
+            for (var stack : waste){
+                ItemHandlerHelper.insertItem(d, stack, false);
+            }
+        });
+
+
         setChanged();
     }
 
     protected void reset() {
         processCounter = 0;
+        processTime = Math.round(20f + (currentResidue / 27f) * 40f);
     }
 
     protected void startProcessing(SoulExtractorRecipe recipe) {
@@ -170,6 +222,7 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
     public static void tick(Level level, BlockPos pos, BlockState state, SoulExtractorBE be) {
         var recipe = be.getRecipe();
         if (recipe != null && be.canProcess(recipe)) {
+            be.residueReductionCounter = 0;
             if (be.processCounter == 0) {
                 be.startProcessing(recipe);
             }
@@ -181,6 +234,12 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
 
         } else {
             be.reset();
+            if (be.residueReductionCounter < RESIDUE_REDUCTION_TIME){
+                be.residueReductionCounter++;
+            }else {
+                be.decreaseResidue();
+                be.residueReductionCounter = 0;
+            }
         }
     }
 
