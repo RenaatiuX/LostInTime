@@ -170,11 +170,11 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
         getInventory().getStackInSlot(SLOT_SOUL_SOURCE).shrink(1);
         getInventory().getStackInSlot(SLOT_CATALYST).shrink(1);
 
-        var outputInventory = output.orElseThrow(IllegalStateException::new);
+        var inputInventory = input.orElseThrow(IllegalStateException::new);
 
         for (var ingredient : recipe.getInputs()) {
-            for (int i = 0; i < outputInventory.getSlots(); i++) {
-                var stack = outputInventory.getStackInSlot(i);
+            for (int i = 0; i < inputInventory.getSlots(); i++) {
+                var stack = inputInventory.getStackInSlot(i);
                 if (ingredient.test(stack)){
                     stack.shrink(1);
                     break;
@@ -196,7 +196,7 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
 
     protected void reset() {
         processCounter = 0;
-        processTime = Math.round(20f + (currentResidue / 27f) * 40f);
+        processTime = 20 * Math.round(20f + (currentResidue / 27f) * 40f);
     }
 
     protected void startProcessing(SoulExtractorRecipe recipe) {
@@ -209,6 +209,7 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
 
     protected void increaseResidue(int amount) {
         currentResidue = Mth.clamp(currentResidue + amount, 0, MAX_RESIDUE);
+        processTime = 20 * Math.round(20f + (currentResidue / 27f) * 40f);
     }
 
     protected void decreaseResidue(int amount) {

@@ -1,0 +1,22 @@
+{
+  "criteria": {
+    "has_soul_blob": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "lostintime:soul_grume"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_soul_blob"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

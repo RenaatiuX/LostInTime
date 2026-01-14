@@ -1,6 +1,7 @@
 package com.ren.lostintime.client.screen;
 
 import com.ren.lostintime.LostInTime;
+import com.ren.lostintime.common.blockentity.SoulExtractorBE;
 import com.ren.lostintime.common.menu.SoulExtractorMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -36,7 +37,11 @@ public class SoulExtractorScreen extends AbstractContainerScreen<SoulExtractorMe
 
         if (menu.getProgress() > 0){
             int width = Math.round(Mth.map(menu.getProgress(), 0f, 100f, 0f, 47f));
-            pGuiGraphics.blit(TEXTURE, x + 75, y + 26, 176, 13, width, 18);
+            pGuiGraphics.blit(TEXTURE, x + 76, y + 24, 176, 13, width, 18);
+        }
+        if (menu.getResidue() > 0){
+            int width = Math.round(Mth.map(menu.getResidue(), 0f, SoulExtractorBE.MAX_RESIDUE, 0f, 52f));
+            pGuiGraphics.blit(TEXTURE, x + 72, y + 9, 176, 0, width, 13);
         }
     }
 

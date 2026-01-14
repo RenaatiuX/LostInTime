@@ -3,6 +3,7 @@ package com.ren.lostintime.common.recipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.ren.lostintime.LostInTime;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.SerializationContext;
 import net.minecraft.core.NonNullList;
@@ -29,7 +30,7 @@ public class SoulExtractorBuilder implements RecipeBuilder {
     private float chance = 1.0F;
     private int residueOnSuccess = 0;
     private String group;
-    private final Map<String, CriterionTriggerInstance> criteria = new LinkedHashMap<>();
+    private final Advancement.Builder advancement = Advancement.Builder.recipeAdvancement();
 
     public SoulExtractorBuilder(ItemStack result) {
         this.result = result;
@@ -64,7 +65,7 @@ public class SoulExtractorBuilder implements RecipeBuilder {
 
     @Override
     public RecipeBuilder unlockedBy(String pCriterionName, CriterionTriggerInstance pCriterionTrigger) {
-        this.criteria.put(pCriterionName, pCriterionTrigger);
+        this.advancement.addCriterion(pCriterionName, pCriterionTrigger);
         return this;
     }
 
@@ -97,11 +98,11 @@ public class SoulExtractorBuilder implements RecipeBuilder {
 
     @Override
     public void save(Consumer<FinishedRecipe> pFinishedRecipeConsumer, ResourceLocation pRecipeId) {
-        if (criteria.isEmpty()) {
-            throw new IllegalStateException("No way of obtaining recipe " + pRecipeId);
+        if (advancement.getCriteria().isEmpty()) {
+            LostInTime.LOGGER.warn("No way of obtaining recipe {}", pRecipeId);
         }
         pFinishedRecipeConsumer.accept(new Result(pRecipeId, group, inputs, soulSource, catalyst, result, chance,
-                residueOnSuccess, criteria));
+                residueOnSuccess, advancement));
     }
 
     protected ResourceLocation getRecipeId() {
@@ -120,10 +121,10 @@ public class SoulExtractorBuilder implements RecipeBuilder {
         private final ItemStack result;
         private final float chance;
         private final int residueOnSuccess;
-        private final Map<String, CriterionTriggerInstance> criteria;
+        private final Advancement.Builder criteria;
 
         public Result(ResourceLocation id, String group, NonNullList<Ingredient> inputs, Ingredient soulSource,
-                Ingredient catalyst, ItemStack result, float chance, int residueOnSuccess, Map<String, CriterionTriggerInstance> criteria) {
+                Ingredient catalyst, ItemStack result, float chance, int residueOnSuccess, Advancement.Builder criteria) {
             this.id = id;
             this.group = group;
             this.inputs = inputs;
@@ -171,20 +172,15 @@ public class SoulExtractorBuilder implements RecipeBuilder {
 
         @Override
         public @Nullable JsonObject serializeAdvancement() {
-            JsonObject json = new JsonObject();
-            JsonObject criteriaJson = new JsonObject();
-
-            criteria.forEach((key, value) ->
-                    criteriaJson.add(key, value.serializeToJson(SerializationContext.INSTANCE))
-            );
-
-            json.add("criteria", criteriaJson);
-            json.addProperty("parent", "minecraft:recipes/root");
-            return json;
+            if (criteria.getCriteria().isEmpty())
+                return null;
+            return criteria.serializeToJson();
         }
 
         @Override
         public @Nullable ResourceLocation getAdvancementId() {
+            if (criteria.getCriteria().isEmpty())
+                return null;
             return new ResourceLocation(id.getNamespace(),
                     "recipes/soul_extractor/" + id.getPath());
         }

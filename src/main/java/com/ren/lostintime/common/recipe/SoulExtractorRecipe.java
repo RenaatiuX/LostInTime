@@ -139,12 +139,10 @@ public class SoulExtractorRecipe implements Recipe<SoulExtractorRecipeContainer>
             if (!pSerializedRecipe.has("soul_source")) {
                 throw new JsonParseException("Soul Extractor recipe requires a soul_source");
             }
-            Ingredient soulSource = Ingredient.fromJson(
-                    GsonHelper.getAsJsonObject(pSerializedRecipe, "soul_source"));
+            Ingredient soulSource = Ingredient.fromJson(pSerializedRecipe.get("soul_source"));
             Ingredient catalyst = Ingredient.EMPTY;
             if (pSerializedRecipe.has("catalyst")) {
-                catalyst = Ingredient.fromJson(
-                        GsonHelper.getAsJsonObject(pSerializedRecipe, "catalyst"));
+                catalyst = Ingredient.fromJson(pSerializedRecipe.get("catalyst"));
             }
             ItemStack result = ShapedRecipe.itemStackFromJson(
                     GsonHelper.getAsJsonObject(pSerializedRecipe, "result"));

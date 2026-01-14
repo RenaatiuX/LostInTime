@@ -1,0 +1,20 @@
+{
+  "type": "lostintime:soul_extractor_recipe",
+  "catalyst": {
+    "item": "lostintime:calcite_catalyst"
+  },
+  "inputs": [
+    {
+      "item": "lostintime:soul_grume"
+    }
+  ],
+  "residue_on_success": 3,
+  "result": {
+    "chance": 0.25,
+    "count": 1,
+    "item": "lostintime:aspect_emergence"
+  },
+  "soul_source": {
+    "item": "lostintime:ectoplasm"
+  }
+}

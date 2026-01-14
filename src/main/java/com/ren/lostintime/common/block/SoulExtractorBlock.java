@@ -1,6 +1,7 @@
 package com.ren.lostintime.common.block;
 
 import com.ren.lostintime.common.blockentity.SoulExtractorBE;
+import com.ren.lostintime.common.init.BlockEntityInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -125,12 +126,12 @@ public class SoulExtractorBlock extends LITMachineBlock {
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return super.getTicker(pLevel, pState, pBlockEntityType);
+        return pLevel.isClientSide ? null : createTickerHelper(pBlockEntityType, BlockEntityInit.SOUL_EXTRACTOR.get(), SoulExtractorBE::tick);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         super.createBlockStateDefinition(pBuilder);
-        pBuilder.add(HALF);
+        pBuilder.add(HALF, BlockStateProperties.HORIZONTAL_FACING);
     }
 }

@@ -40,14 +40,14 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
                 .addOutput(Items.IRON_NUGGET, 1, 3, 10).addOutput(Items.GOLD_NUGGET, 1, 3, 0.25)
                 .addOutput(Items.DIRT, 25).addOutput(Items.SKELETON_SKULL, 1).save(pWriter);
 
-        /*soulExtract(ItemInit.ASPECT_EMERGENCE.get())
-                .addInput(Ingredient.of(ItemInit.SOUL_BLOB.get()))
-                .soulSource(Ingredient.of(Items.SOUL_SAND))
-                .catalyst(Ingredient.of(ItemInit.SOUL_CATALYST.get()))
+        soulExtract(ItemInit.ASPECT_EMERGENCE.get())
+                .addInput(Ingredient.of(ItemInit.SOUL_GRUME.get()))
+                .soulSource(Ingredient.of(ItemInit.ECTOPLASM.get()))
+                .catalyst(Ingredient.of(ItemInit.CALCITE_CATALYST.get()))
                 .chance(0.25f)
                 .residueOnSuccess(3)
-                .unlockedBy("has_soul_blob", has(ItemInit.SOUL_BLOB.get()))
-                .save(pWriter, new ResourceLocation(LostInTime.MODID, "aspect_emergence"));*/
+                .unlockedBy("has_soul_blob", has(ItemInit.SOUL_GRUME.get()))
+                .save(pWriter, new ResourceLocation(LostInTime.MODID, "aspect_emergence"));
 
     }
 

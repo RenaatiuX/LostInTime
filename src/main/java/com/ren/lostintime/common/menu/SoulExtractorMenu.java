@@ -46,7 +46,7 @@ public class SoulExtractorMenu extends AbstractContainerMenu {
         }
 
         // Output
-        addSlot(new SlotItemHandler(container, 9, 130, 26){
+        addSlot(new SlotItemHandler(container, 8, 130, 26){
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
                 return false;
