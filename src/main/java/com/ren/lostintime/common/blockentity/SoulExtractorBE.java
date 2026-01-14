@@ -6,6 +6,8 @@ import com.ren.lostintime.common.init.RecipeInit;
 import com.ren.lostintime.common.menu.SoulExtractorMenu;
 import com.ren.lostintime.common.recipe.SoulExtractorRecipe;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
@@ -17,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -26,7 +29,6 @@ import net.minecraftforge.items.wrapper.RangedWrapper;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class SoulExtractorBE extends BlockEntity implements MenuProvider {
 
@@ -105,35 +107,35 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
         assert level != null;
         if (currentResidue <= 9) {
             float soulAshChance = Mth.map(currentResidue, 0f, 9f, 0.1f, 0.25f);
-            if (level.random.nextFloat() < soulAshChance){
+            if (level.random.nextFloat() < soulAshChance) {
                 list.add(new ItemStack(ItemInit.SOUL_ASH.get()));
             }
             float soulGrumeChance = Mth.map(currentResidue, 0f, 9f, 0.025f, 0.05f);
-            if (level.random.nextFloat() < soulGrumeChance){
+            if (level.random.nextFloat() < soulGrumeChance) {
                 list.add(new ItemStack(ItemInit.SOUL_GRUME.get()));
             }
-        }else if (currentResidue <= 18){
+        } else if (currentResidue <= 18) {
             float soulAshChance = Mth.map(currentResidue, 10f, 18f, 0.25f, 0.05f);
 
-            if (level.random.nextFloat() < soulAshChance){
+            if (level.random.nextFloat() < soulAshChance) {
                 list.add(new ItemStack(ItemInit.SOUL_ASH.get()));
             }
             float soulGrumeChance = Mth.map(currentResidue, 10f, 18f, 0.05f, 0.25f);
-            if (level.random.nextFloat() < soulGrumeChance){
+            if (level.random.nextFloat() < soulGrumeChance) {
                 list.add(new ItemStack(ItemInit.SOUL_GRUME.get()));
             }
 
             float ectoplasmChance = Mth.map(currentResidue, 10f, 18f, 0.01f, 0.02f);
-            if (level.random.nextFloat() < ectoplasmChance){
+            if (level.random.nextFloat() < ectoplasmChance) {
                 list.add(new ItemStack(ItemInit.ECTOPLASM.get()));
             }
-        }else {
+        } else {
             float soulGrumeChance = Mth.map(currentResidue, 19f, 27f, 0.25f, 0.1f);
-            if (level.random.nextFloat() < soulGrumeChance){
+            if (level.random.nextFloat() < soulGrumeChance) {
                 list.add(new ItemStack(ItemInit.SOUL_GRUME.get()));
             }
             float ectoplasmChance = Mth.map(currentResidue, 10f, 27f, 0.02f, 0.05f);
-            if (level.random.nextFloat() < ectoplasmChance){
+            if (level.random.nextFloat() < ectoplasmChance) {
                 list.add(new ItemStack(ItemInit.ECTOPLASM.get()));
             }
         }
@@ -175,7 +177,7 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
         for (var ingredient : recipe.getInputs()) {
             for (int i = 0; i < inputInventory.getSlots(); i++) {
                 var stack = inputInventory.getStackInSlot(i);
-                if (ingredient.test(stack)){
+                if (ingredient.test(stack)) {
                     stack.shrink(1);
                     break;
                 }
@@ -185,13 +187,38 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
 
         residue.ifPresent(d -> {
             var waste = calculateWaste();
-            for (var stack : waste){
+            for (var stack : waste) {
                 ItemHandlerHelper.insertItem(d, stack, false);
             }
         });
 
 
         setChanged();
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
+        this.itemHandler.ifPresent(d -> {
+            if (d instanceof INBTSerializable<?> serializable) {
+                pTag.put("inventory", serializable.serializeNBT());
+            }
+        });
+    }
+
+    @Override
+    public void load(CompoundTag pTag) {
+        super.load(pTag);
+        //not beautiful but rare
+        //german saying
+        if (pTag.contains("inventory")) {
+            this.itemHandler.ifPresent(d -> {
+                if (d instanceof INBTSerializable<?> serializable) {
+                    ((INBTSerializable<Tag>) serializable)
+                            .deserializeNBT(pTag.get("inventory"));
+                }
+            });
+        }
     }
 
     protected void reset() {
@@ -235,9 +262,9 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
 
         } else {
             be.reset();
-            if (be.residueReductionCounter < RESIDUE_REDUCTION_TIME){
+            if (be.residueReductionCounter < RESIDUE_REDUCTION_TIME) {
                 be.residueReductionCounter++;
-            }else {
+            } else {
                 be.decreaseResidue();
                 be.residueReductionCounter = 0;
             }
@@ -248,7 +275,7 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
         return level.getRecipeManager().getRecipeFor(RecipeInit.SOUL_EXTRACTOR_RECIPE.get(), createContainer(), level).orElse(null);
     }
 
-    public SoulExtractorRecipeContainer createContainer(){
+    public SoulExtractorRecipeContainer createContainer() {
         return new SoulExtractorRecipeContainer(input.orElseThrow(IllegalStateException::new),
                 getInventory().getStackInSlot(SLOT_SOUL_SOURCE), getInventory().getStackInSlot(SLOT_CATALYST));
     }
