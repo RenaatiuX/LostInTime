@@ -31,6 +31,9 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.ECTOPLASM.get());
         simple(ItemInit.SOUL_ASH.get());
         simple(ItemInit.SOUL_GRUME.get());
+        simple(ItemInit.EMPTY_VITAL_PATTERN.get());
+        simple(ItemInit.INFORMATION_DOME.get());
+        simple(ItemInit.SOUL_POWDER.get());
 
         simple(ItemInit.RAW_DODO.get());
         simple(ItemInit.COOKED_DODO.get());
@@ -117,6 +120,21 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.QUARTZ_CATALYST.get());
         simple(ItemInit.REDSTONE_CATALYST.get());
         simple(ItemInit.ZIRCON_CATALYST.get());
+
+        simple(ItemInit.ANOMALOCARIS_SOUL_CFC.get());
+        simple(ItemInit.BOTHRIOLEPIS_SOUL_CFC.get());
+        simple(ItemInit.DAEODON_SOUL_CFC.get());
+        simple(ItemInit.DEINONYCHUS_SOUL_CFC.get());
+        simple(ItemInit.DODO_SOUL_CFC.get());
+        simple(ItemInit.EMPTY_SOUL_CFC.get());
+        simple(ItemInit.ENDOCERAS_SOUL_CFC.get());
+        simple(ItemInit.HYLONOMUS_SOUL_CFC.get());
+        simple(ItemInit.LEPTICTIDIUM_SOUL_CFC.get());
+        simple(ItemInit.MASTODONSAURUS_SOUL_CFC.get());
+        simple(ItemInit.PLESIOSAURUS_SOUL_CFC.get());
+        simple(ItemInit.PROTOTAXITES_VITAL_PATTERN.get());
+        simple(ItemInit.PTERYGOTUS_SOUL_CFC.get());
+        simple(ItemInit.SCUTOSAURUS_SOUL_CFC.get());
     }
 
     private void simple(Item... items) {

@@ -1,4 +1,4 @@
-// 1.20.1	2026-01-11T16:58:45.6601251	Block States: lostintime
+// 1.20.1	2026-01-15T11:43:02.8282195	Block States: lostintime
 55c266068d17de9929946f06f73e14173ecce311 assets/lostintime/blockstates/bothriolepis_roe.json
 8480e5c6959e623254f628609559cb67755b360b assets/lostintime/blockstates/cretaceous_fossil_block.json
 37f6533e5ef5dace5d131a8e9d639f5f8f967c04 assets/lostintime/blockstates/deepslate_cambrian_fossil_block.json
@@ -19,7 +19,7 @@ f8e9d5397471041fc7098f747e0a1b011d93b285 assets/lostintime/blockstates/mango_lea
 b41dcf2dffb4cb177307edd1e3b849538fad08ab assets/lostintime/blockstates/quaternary_fossil_block.json
 0502082681ffec2a1ac0c127f0e8377fd6946ce6 assets/lostintime/blockstates/sandstone_bricks.json
 c59a1d9690a000c574ef7aab1d98744eba6bd2e9 assets/lostintime/blockstates/small_sandstone_bricks.json
-e8a37444e25451830fc006d0e51ac517c2514558 assets/lostintime/blockstates/soul_extractor.json
+4d07379db33c4e71f5f61e78b9583856c6f20327 assets/lostintime/blockstates/soul_extractor.json
 2f9df3ca7fa1fd7a37fd660567e77660b56f706e assets/lostintime/models/block/bothriolepis_roe.json
 66fbdfd4c047cce7ce2eab89c8c752fa05bf8208 assets/lostintime/models/block/cretaceous_fossil_block.json
 07d2106ce23b4168e20dbbac68763e3d72717e58 assets/lostintime/models/block/deepslate_cambrian_fossil_block.json
