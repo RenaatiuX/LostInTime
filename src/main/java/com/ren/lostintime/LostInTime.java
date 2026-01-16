@@ -42,6 +42,9 @@ public class LostInTime {
             event.accept(ItemInit.ECTOPLASM);
             event.accept(ItemInit.SOUL_ASH);
             event.accept(ItemInit.SOUL_GRUME);
+            event.accept(ItemInit.EMPTY_VITAL_PATTERN);
+            event.accept(ItemInit.INFORMATION_DOME);
+            event.accept(ItemInit.SOUL_POWDER);
 
             event.accept(ItemInit.DEVONIAN_FOSSIL);
             event.accept(ItemInit.CAMBRIAN_FOSSIL);
@@ -101,6 +104,21 @@ public class LostInTime {
             event.accept(ItemInit.QUARTZ_CATALYST);
             event.accept(ItemInit.REDSTONE_CATALYST);
             event.accept(ItemInit.ZIRCON_CATALYST);
+
+            event.accept(ItemInit.ANOMALOCARIS_SOUL_CFC);
+            event.accept(ItemInit.BOTHRIOLEPIS_SOUL_CFC);
+            event.accept(ItemInit.DAEODON_SOUL_CFC);
+            event.accept(ItemInit.DEINONYCHUS_SOUL_CFC);
+            event.accept(ItemInit.DODO_SOUL_CFC);
+            event.accept(ItemInit.EMPTY_SOUL_CFC);
+            event.accept(ItemInit.ENDOCERAS_SOUL_CFC);
+            event.accept(ItemInit.HYLONOMUS_SOUL_CFC);
+            event.accept(ItemInit.LEPTICTIDIUM_SOUL_CFC);
+            event.accept(ItemInit.MASTODONSAURUS_SOUL_CFC);
+            event.accept(ItemInit.PLESIOSAURUS_SOUL_CFC);
+            event.accept(ItemInit.PROTOTAXITES_VITAL_PATTERN);
+            event.accept(ItemInit.PTERYGOTUS_SOUL_CFC);
+            event.accept(ItemInit.SCUTOSAURUS_SOUL_CFC);
 
             event.accept(ItemInit.GOLDEN_EYE);
             event.accept(ItemInit.GUARDIAN_SPIKE);

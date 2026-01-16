@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "lostintime:item/prototaxites_vital_pattern"
+  }
+}

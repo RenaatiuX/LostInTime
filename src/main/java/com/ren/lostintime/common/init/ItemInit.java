@@ -26,7 +26,12 @@ public class ItemInit {
     public static final RegistryObject<Item> ECTOPLASM = registerSimple("ectoplasm");
     public static final RegistryObject<Item> SOUL_ASH =  registerSimple("soul_ash");
     public static final RegistryObject<Item> SOUL_GRUME =  registerSimple("soul_grume");
+    public static final RegistryObject<Item> EMPTY_VITAL_PATTERN =  registerSimple("empty_vital_pattern");
+    public static final RegistryObject<Item> INFORMATION_DOME = registerSimple("information_dome");
+    public static final RegistryObject<Item> SOUL_POWDER = registerSimple("soul_powder");
+    public static final RegistryObject<Item> PROTOTAXITES_VITAL_PATTERN = registerSimple("prototaxites_vital_pattern");
 
+    //ASPECT
     public static final RegistryObject<Item> ASPECT_DIFFERENTIATION = registerSimple("aspect_differentiation");
     public static final RegistryObject<Item> ASPECT_EMERGENCE = registerSimple("aspect_emergence");
     public static final RegistryObject<Item> ASPECT_INTEGRATION = registerSimple("aspect_integration");
@@ -69,6 +74,22 @@ public class ItemInit {
     public static final RegistryObject<Item> PALEOGENE_FOSSIL = registerSimple("paleogene_fossil");
     public static final RegistryObject<Item> NEOGENE_FOSSIL =  registerSimple("neogene_fossil");
     public static final RegistryObject<Item> QUATERNARY_FOSSIL =  registerSimple("quaternary_fossil");
+
+    //CONFIGURATION
+    public static final RegistryObject<Item> ANOMALOCARIS_SOUL_CFC = registerSimple("anomalocaris_soul_configuration");
+    public static final RegistryObject<Item> BOTHRIOLEPIS_SOUL_CFC = registerSimple("bothriolepis_soul_configuration");
+    public static final RegistryObject<Item> DAEODON_SOUL_CFC = registerSimple("daeodon_soul_configuration");
+    public static final RegistryObject<Item> DEINONYCHUS_SOUL_CFC = registerSimple("deinonychus_soul_configuration");
+    public static final RegistryObject<Item> DODO_SOUL_CFC = registerSimple("dodo_soul_configuration");
+    public static final RegistryObject<Item> EMPTY_SOUL_CFC = registerSimple("empty_soul_configuration");
+    public static final RegistryObject<Item> ENDOCERAS_SOUL_CFC = registerSimple("endoceras_soul_configuration");
+    public static final RegistryObject<Item> HYLONOMUS_SOUL_CFC = registerSimple("hylonomus_soul_configuration");
+    public static final RegistryObject<Item> LEPTICTIDIUM_SOUL_CFC = registerSimple("leptictidium_soul_configuration");
+    public static final RegistryObject<Item> MASTODONSAURUS_SOUL_CFC = registerSimple("mastodonsaurus_soul_configuration");
+    public static final RegistryObject<Item> PLESIOSAURUS_SOUL_CFC = registerSimple("plesiosaurus_soul_configuration");
+    public static final RegistryObject<Item> PTERYGOTUS_SOUL_CFC = registerSimple("pterygotus_soul_configuration");
+    public static final RegistryObject<Item> SCUTOSAURUS_SOUL_CFC = registerSimple("scutosaurus_soul_configuration");
+
 
     public static final RegistryObject<Item> DODO_FOSSIL = registerSimple("dodo_fossil");
     public static final RegistryObject<Item> DODO_SKULL =  registerSimple("dodo_skull");
