@@ -10,6 +10,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.registries.DeferredRegister;
@@ -27,7 +29,8 @@ public class BlockInit {
     public static final RegistryObject<Block> IDENTIFICATION_TABLE = registerBlock("identification_table",
             () -> new IdentificationTableBlock(BlockBehaviour.Properties.copy(Blocks.CRAFTING_TABLE)));
     public static final RegistryObject<Block> SOUL_EXTRACTOR = registerBlock("soul_extractor",
-            () -> new SoulExtractorBlock(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE)));
+            () -> new SoulExtractorBlock(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE).noOcclusion()
+                    .lightLevel(state -> state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER && state.getValue(SoulExtractorBlock.ON) ? 10 : 0)));
 
     //SAPLINGS
     public static final RegistryObject<Block> MANGO_SAPLING = registerBlock("mango_sapling",

@@ -141,7 +141,12 @@ public class IdentificationBE extends BlockEntity implements MenuProvider {
                 return true;
             }
         }
-        return false;
+        //if all outputs fit in simultaneously even tho we might be full, ensures that we can process actually
+        for (ItemStack stack : recipe.allPossibleOutputs()){
+            if (!ItemHandlerHelper.insertItemStacked(output, stack, true).isEmpty())
+                return false;
+        }
+        return true;
     }
 
     protected void finishProcessing(@NotNull IdentificationRecipe recipe) {

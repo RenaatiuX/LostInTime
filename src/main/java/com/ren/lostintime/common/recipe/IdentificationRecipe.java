@@ -18,9 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.TreeMap;
+import java.util.*;
 
 public class IdentificationRecipe implements Recipe<Container> {
 
@@ -66,6 +64,10 @@ public class IdentificationRecipe implements Recipe<Container> {
 
     public ItemStack getRandomOutput(RandomSource random){
         return weightedOutputs.higherEntry(random.nextDouble() * weightedOutputs.lastKey()).getValue().copy();
+    }
+
+    public Collection<ItemStack> allPossibleOutputs(){
+        return weightedOutputs.values();
     }
 
     @Override

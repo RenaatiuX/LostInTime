@@ -1,5 +1,6 @@
 package com.ren.lostintime.common.blockentity;
 
+import com.ren.lostintime.common.block.SoulExtractorBlock;
 import com.ren.lostintime.common.init.BlockEntityInit;
 import com.ren.lostintime.common.init.ItemInit;
 import com.ren.lostintime.common.init.RecipeInit;
@@ -19,6 +20,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -204,6 +207,9 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
                 pTag.put("inventory", serializable.serializeNBT());
             }
         });
+        pTag.putInt("residue", currentResidue);
+        pTag.putInt("processTime", processTime);
+        pTag.putInt("processCounter", processCounter);
     }
 
     @Override
@@ -219,6 +225,9 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
                 }
             });
         }
+        currentResidue = pTag.getInt("residue");
+        processTime = pTag.getInt("processTime");
+        processCounter = pTag.getInt("processCounter");
     }
 
     protected void reset() {
@@ -268,6 +277,13 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
                 be.decreaseResidue();
                 be.residueReductionCounter = 0;
             }
+        }
+        if (state.getValue(SoulExtractorBlock.ON) != be.processCounter > 0){
+            level.setBlock(pos, state.setValue(SoulExtractorBlock.ON, be.processCounter > 0), 3);
+            var doubleBlockHalf = state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF);
+            var otherHalfPos = doubleBlockHalf == DoubleBlockHalf.LOWER ? pos.above() : pos.below();
+            var otherHalfState = level.getBlockState(otherHalfPos);
+            level.setBlock(otherHalfPos, otherHalfState.setValue(SoulExtractorBlock.ON, be.processCounter > 0), 3);
         }
     }
 
