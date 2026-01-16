@@ -1,15 +1,51 @@
 {
   "variants": {
-    "half=lower,on=false": {
+    "facing=east,half=lower,on=false": {
       "model": "lostintime:block/soul_extractor_lower_off"
     },
-    "half=lower,on=true": {
+    "facing=east,half=lower,on=true": {
       "model": "lostintime:block/soul_extractor_lower_on"
     },
-    "half=upper,on=false": {
+    "facing=east,half=upper,on=false": {
       "model": "lostintime:block/soul_extractor_upper_off"
     },
-    "half=upper,on=true": {
+    "facing=east,half=upper,on=true": {
+      "model": "lostintime:block/soul_extractor_upper_on"
+    },
+    "facing=north,half=lower,on=false": {
+      "model": "lostintime:block/soul_extractor_lower_off"
+    },
+    "facing=north,half=lower,on=true": {
+      "model": "lostintime:block/soul_extractor_lower_on"
+    },
+    "facing=north,half=upper,on=false": {
+      "model": "lostintime:block/soul_extractor_upper_off"
+    },
+    "facing=north,half=upper,on=true": {
+      "model": "lostintime:block/soul_extractor_upper_on"
+    },
+    "facing=south,half=lower,on=false": {
+      "model": "lostintime:block/soul_extractor_lower_off"
+    },
+    "facing=south,half=lower,on=true": {
+      "model": "lostintime:block/soul_extractor_lower_on"
+    },
+    "facing=south,half=upper,on=false": {
+      "model": "lostintime:block/soul_extractor_upper_off"
+    },
+    "facing=south,half=upper,on=true": {
+      "model": "lostintime:block/soul_extractor_upper_on"
+    },
+    "facing=west,half=lower,on=false": {
+      "model": "lostintime:block/soul_extractor_lower_off"
+    },
+    "facing=west,half=lower,on=true": {
+      "model": "lostintime:block/soul_extractor_lower_on"
+    },
+    "facing=west,half=upper,on=false": {
+      "model": "lostintime:block/soul_extractor_upper_off"
+    },
+    "facing=west,half=upper,on=true": {
       "model": "lostintime:block/soul_extractor_upper_on"
     }
   }

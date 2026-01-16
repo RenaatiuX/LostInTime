@@ -9,11 +9,13 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -58,11 +60,12 @@ public class IdentificationRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container pContainer, RegistryAccess pRegistryAccess) {
-        if (pContainer instanceof BlockEntity blockEntity) {
-            return weightedOutputs.higherEntry(blockEntity.getLevel().random.nextDouble() * weightedOutputs.lastKey()).getValue().copy();
-        }
+    public @NotNull ItemStack assemble(Container pContainer, RegistryAccess pRegistryAccess) {
         return ItemStack.EMPTY;
+    }
+
+    public ItemStack getRandomOutput(RandomSource random){
+        return weightedOutputs.higherEntry(random.nextDouble() * weightedOutputs.lastKey()).getValue().copy();
     }
 
     @Override
@@ -71,7 +74,7 @@ public class IdentificationRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
+    public @NotNull ItemStack getResultItem(RegistryAccess pRegistryAccess) {
         return ItemStack.EMPTY;
     }
 

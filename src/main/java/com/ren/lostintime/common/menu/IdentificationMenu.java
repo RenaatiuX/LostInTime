@@ -1,5 +1,6 @@
 package com.ren.lostintime.common.menu;
 
+import com.ren.lostintime.common.blockentity.IdentificationBE;
 import com.ren.lostintime.common.init.MenuInit;
 import com.ren.lostintime.common.init.RecipeInit;
 import com.ren.lostintime.common.recipe.IdentificationRecipe;
@@ -10,28 +11,37 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.SlotItemHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class IdentificationMenu extends AbstractContainerMenu {
 
     public static final int DURATION = 300;
 
-    private final Container container;
+    private final IItemHandlerModifiable container;
     private final ContainerData containerData;
 
     public IdentificationMenu(int pContainerId, Inventory playerInventory) {
-        this(pContainerId, playerInventory, new SimpleContainer(10), new SimpleContainerData(3));
+        this(pContainerId, playerInventory, new ItemStackHandler(10), new SimpleContainerData(3));
     }
 
-    public IdentificationMenu(int id, Inventory playerInventory, Container container, ContainerData containerData) {
+    public IdentificationMenu(int id, Inventory playerInventory, IItemHandlerModifiable container, ContainerData containerData) {
         super(MenuInit.IDENTIFICATION_TABLE_MENU.get(), id);
         this.container = container;
         this.containerData = containerData;
 
-        addSlot(new Slot(container, 0, 27, 34));
+        addSlot(new SlotItemHandler(container, 0, 27, 34));
 
         for(int i = 0; i < 3; ++i) {
             for(int j = 0; j < 3; ++j) {
-                addSlot(new FurnaceResultSlot(playerInventory.player, container, 1 + (i * 3) + j,91 + j * 18, 17 + i * 18));
+                addSlot(new SlotItemHandler(container, 1 + (i * 3) + j,91 + j * 18, 17 + i * 18){
+                    @Override
+                    public boolean mayPlace(@NotNull ItemStack stack) {
+                        return false;
+                    }
+                });
             }
         }
 
@@ -50,12 +60,6 @@ public class IdentificationMenu extends AbstractContainerMenu {
         return containerData.get(0);
     }
 
-    private IdentificationRecipe getRecipeItem(Container container, Level level) {
-        return level.getRecipeManager()
-                .getRecipeFor(RecipeInit.IDENTIFICATION_RECIPE.get(), container, level)
-                .orElse(null);
-    }
-
     @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
         ItemStack itemStack = ItemStack.EMPTY;
@@ -71,7 +75,7 @@ public class IdentificationMenu extends AbstractContainerMenu {
                 if (!moveItemStackTo(current, identificationSlots, bottomRowEnd, true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (getRecipeItem(new SimpleContainer(itemStack), pPlayer.level()) != null) {
+            } else if (IdentificationBE.canBeInvestigated(pPlayer.level(), itemStack)) {
                 if (!moveItemStackTo(current, 0, identificationSlots, false)) {
                     return ItemStack.EMPTY;
                 }
@@ -99,6 +103,6 @@ public class IdentificationMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player pPlayer) {
-        return container.stillValid(pPlayer);
+        return true;
     }
 }

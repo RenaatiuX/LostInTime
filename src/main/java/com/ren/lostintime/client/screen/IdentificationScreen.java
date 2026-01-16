@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 
 public class IdentificationScreen extends AbstractContainerScreen<IdentificationMenu> {
@@ -29,9 +30,10 @@ public class IdentificationScreen extends AbstractContainerScreen<Identification
         int y = (height - imageHeight) / 2;
         pGuiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
         int progress = Math.round(menu.getProgress() * 27F / IdentificationMenu.DURATION);
-        progress = Math.max(0, Math.min(progress, 27));
+        progress = Mth.clamp(progress, 0, 27);
         if (progress > 0) {
-            pGuiGraphics.blit(TEXTURE, x + 56, y + 26, 176, 0, 25, progress);
+            int inverseProgress = 27 - progress;
+            pGuiGraphics.blit(TEXTURE, x + 56, y + 26 + inverseProgress, 176, inverseProgress, 25, progress);
         }
     }
 
