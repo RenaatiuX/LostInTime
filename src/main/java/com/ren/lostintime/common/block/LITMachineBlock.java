@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public abstract class LITMachineBlock extends BaseEntityBlock {
 
@@ -44,9 +45,13 @@ public abstract class LITMachineBlock extends BaseEntityBlock {
 
     protected void dropInventory(Level level, BlockPos pos) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof Container) {
-            Containers.dropContents(level, pos, (Container) blockEntity);
-            level.updateNeighbourForOutputSignal(pos, this);
+        if (blockEntity != null) {
+            blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(d -> {
+                for (int i = 0; i < d.getSlots(); i++) {
+                    Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), d.getStackInSlot(i));
+                }
+                level.updateNeighbourForOutputSignal(pos, this);
+            });
         }
     }
 

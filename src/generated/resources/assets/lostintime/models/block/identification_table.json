@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "minecraft:block/oak_planks",
+    "front": "lostintime:block/identification_table_side_front",
+    "side": "lostintime:block/identification_table_side",
+    "top": "lostintime:block/identification_table_top"
+  }
+}

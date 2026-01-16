@@ -67,6 +67,8 @@ public class LITBlockStateProvider extends BlockStateProvider {
         soulExtractorModels(BlockInit.SOUL_EXTRACTOR.get());
         soulExtractor(BlockInit.SOUL_EXTRACTOR.get());
 
+        identificationTableBlock(BlockInit.IDENTIFICATION_TABLE.get());
+
     }
 
     private void saplingBlock(RegistryObject<Block> blockRegistryObject) {
@@ -199,6 +201,14 @@ public class LITBlockStateProvider extends BlockStateProvider {
 
             return ConfiguredModel.builder().modelFile(model).build();
         });
+    }
+
+    private void identificationTableBlock(Block block){
+        var name = blockName(block);
+        var model = models().orientableWithBottom("block/" + name, modLoc("block/identification_table_side"), modLoc("block/identification_table_side_front"), mcLoc("block/oak_planks"), modLoc("block/identification_table_top"));
+
+        horizontalBlock(block, model);
+        simpleBlockItem(block, model);
     }
 
     protected void block(Block block, ModelFile model) {
