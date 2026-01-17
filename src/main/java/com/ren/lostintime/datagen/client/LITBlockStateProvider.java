@@ -3,6 +3,7 @@ package com.ren.lostintime.datagen.client;
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.block.SingleEggBlock;
 import com.ren.lostintime.common.block.MangoFruitBlock;
+import com.ren.lostintime.common.block.SoulConfigurator;
 import com.ren.lostintime.common.block.SoulExtractorBlock;
 import com.ren.lostintime.common.init.BlockInit;
 import net.minecraft.core.Direction;
@@ -66,6 +67,7 @@ public class LITBlockStateProvider extends BlockStateProvider {
 
         soulExtractorModels(BlockInit.SOUL_EXTRACTOR.get());
         soulExtractor(BlockInit.SOUL_EXTRACTOR.get());
+        soulConfigurator(BlockInit.SOUL_CONFIGURATOR.get());
 
         identificationTableBlock(BlockInit.IDENTIFICATION_TABLE.get());
 
@@ -203,12 +205,40 @@ public class LITBlockStateProvider extends BlockStateProvider {
         });
     }
 
-    private void identificationTableBlock(Block block){
+    private void identificationTableBlock(Block block) {
         var name = blockName(block);
-        var model = models().orientableWithBottom("block/" + name, modLoc("block/identification_table_side"), modLoc("block/identification_table_side_front"), mcLoc("block/oak_planks"), modLoc("block/identification_table_top"));
+        var model = models().orientableWithBottom("block/" + name, modLoc("block/identification_table_side"),
+                modLoc("block/identification_table_side_front"), mcLoc("block/oak_planks"), modLoc
+                        ("block/identification_table_top"));
 
         horizontalBlock(block, model);
         simpleBlockItem(block, model);
+    }
+
+    private void soulConfigurator(Block block) {
+        String name = blockName(block);
+
+        ModelFile mainModel = models().getExistingFile(modLoc("block/" + name + "_lower"));
+        ModelFile topModel = models().getExistingFile(modLoc("block/" + name + "_upper"));
+        ModelFile sideModel = models().getExistingFile(modLoc("block/" + name + "_right"));
+
+        getVariantBuilder(block).forAllStates(state -> {
+            SoulConfigurator.Part part = state.getValue(SoulConfigurator.PART);
+            Direction facing = state.getValue(SoulConfigurator.FACING);
+            ModelFile model = switch (part) {
+                case MAIN -> mainModel;
+                case TOP -> topModel;
+                case SIDE -> sideModel;
+            };
+            int yRot = switch (facing) {
+                case NORTH -> 180;
+                case SOUTH -> 0;
+                case WEST -> 90;
+                case EAST -> 270;
+                default -> 0;
+            };
+            return ConfiguredModel.builder().modelFile(model).rotationY(yRot).build();
+        });
     }
 
     protected void block(Block block, ModelFile model) {

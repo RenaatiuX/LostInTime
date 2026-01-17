@@ -30,7 +30,10 @@ public class BlockInit {
             () -> new IdentificationTableBlock(BlockBehaviour.Properties.copy(Blocks.CRAFTING_TABLE)));
     public static final RegistryObject<Block> SOUL_EXTRACTOR = registerBlock("soul_extractor",
             () -> new SoulExtractorBlock(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE).noOcclusion()
-                    .lightLevel(state -> state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER && state.getValue(SoulExtractorBlock.ON) ? 10 : 0)));
+                    .lightLevel(state -> state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) ==
+                            DoubleBlockHalf.UPPER && state.getValue(SoulExtractorBlock.ON) ? 10 : 0)));
+    public static final RegistryObject<Block> SOUL_CONFIGURATOR = registerBlock("soul_configurator",
+            () -> new SoulConfigurator(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE).noOcclusion()));
 
     //SAPLINGS
     public static final RegistryObject<Block> MANGO_SAPLING = registerBlock("mango_sapling",

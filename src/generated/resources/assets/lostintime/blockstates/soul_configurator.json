@@ -1,0 +1,94 @@
+{
+  "variants": {
+    "facing=east,on=false,part=main": {
+      "model": "lostintime:block/soul_configurator_lower",
+      "y": 270
+    },
+    "facing=east,on=false,part=side": {
+      "model": "lostintime:block/soul_configurator_right",
+      "y": 270
+    },
+    "facing=east,on=false,part=top": {
+      "model": "lostintime:block/soul_configurator_upper",
+      "y": 270
+    },
+    "facing=east,on=true,part=main": {
+      "model": "lostintime:block/soul_configurator_lower",
+      "y": 270
+    },
+    "facing=east,on=true,part=side": {
+      "model": "lostintime:block/soul_configurator_right",
+      "y": 270
+    },
+    "facing=east,on=true,part=top": {
+      "model": "lostintime:block/soul_configurator_upper",
+      "y": 270
+    },
+    "facing=north,on=false,part=main": {
+      "model": "lostintime:block/soul_configurator_lower",
+      "y": 180
+    },
+    "facing=north,on=false,part=side": {
+      "model": "lostintime:block/soul_configurator_right",
+      "y": 180
+    },
+    "facing=north,on=false,part=top": {
+      "model": "lostintime:block/soul_configurator_upper",
+      "y": 180
+    },
+    "facing=north,on=true,part=main": {
+      "model": "lostintime:block/soul_configurator_lower",
+      "y": 180
+    },
+    "facing=north,on=true,part=side": {
+      "model": "lostintime:block/soul_configurator_right",
+      "y": 180
+    },
+    "facing=north,on=true,part=top": {
+      "model": "lostintime:block/soul_configurator_upper",
+      "y": 180
+    },
+    "facing=south,on=false,part=main": {
+      "model": "lostintime:block/soul_configurator_lower"
+    },
+    "facing=south,on=false,part=side": {
+      "model": "lostintime:block/soul_configurator_right"
+    },
+    "facing=south,on=false,part=top": {
+      "model": "lostintime:block/soul_configurator_upper"
+    },
+    "facing=south,on=true,part=main": {
+      "model": "lostintime:block/soul_configurator_lower"
+    },
+    "facing=south,on=true,part=side": {
+      "model": "lostintime:block/soul_configurator_right"
+    },
+    "facing=south,on=true,part=top": {
+      "model": "lostintime:block/soul_configurator_upper"
+    },
+    "facing=west,on=false,part=main": {
+      "model": "lostintime:block/soul_configurator_lower",
+      "y": 90
+    },
+    "facing=west,on=false,part=side": {
+      "model": "lostintime:block/soul_configurator_right",
+      "y": 90
+    },
+    "facing=west,on=false,part=top": {
+      "model": "lostintime:block/soul_configurator_upper",
+      "y": 90
+    },
+    "facing=west,on=true,part=main": {
+      "model": "lostintime:block/soul_configurator_lower",
+      "y": 90
+    },
+    "facing=west,on=true,part=side": {
+      "model": "lostintime:block/soul_configurator_right",
+      "y": 90
+    },
+    "facing=west,on=true,part=top": {
+      "model": "lostintime:block/soul_configurator_upper",
+      "y": 90
+    }
+  }
+}

@@ -149,6 +149,7 @@ public class LostInTime {
 
             event.accept(BlockInit.IDENTIFICATION_TABLE);
             event.accept(BlockInit.SOUL_EXTRACTOR);
+            event.accept(BlockInit.SOUL_CONFIGURATOR);
         }
     }
 }
