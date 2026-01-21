@@ -47,7 +47,7 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
                 .chance(0.25f)
                 .residueOnSuccess(3)
                 .unlockedBy("has_soul_blob", has(ItemInit.SOUL_GRUME.get()))
-                .save(pWriter, new ResourceLocation(LostInTime.MODID, "aspect_emergence"));
+                .save(pWriter);
 
     }
 
@@ -75,9 +75,4 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
     public SoulExtractorBuilder soulExtract(ItemLike result) {
         return new SoulExtractorBuilder(new ItemStack(result));
     }
-
-    public SoulExtractorBuilder soulExtract(ItemStack result) {
-        return new SoulExtractorBuilder(result);
-    }
-
 }

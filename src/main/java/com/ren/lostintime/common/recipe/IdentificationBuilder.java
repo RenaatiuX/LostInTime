@@ -96,11 +96,11 @@ public class IdentificationBuilder implements RecipeBuilder {
 
     protected ResourceLocation getRecipeId() {
         if (itemInput != null) {
-            return new ResourceLocation(modId, "identification/" + BuiltInRegistries.ITEM.getKey(itemInput.asItem()).getPath());
+            return new ResourceLocation(modId, "identification/" + ForgeRegistries.ITEMS.getKey(itemInput.asItem()).getPath());
         } else if (tagInput != null) {
             return new ResourceLocation(modId, "identification/" + tagInput.location().getPath());
         }
-        return BuiltInRegistries.ITEM.getKey(Items.ENDER_PEARL);
+        return ForgeRegistries.ITEMS.getKey(Items.ENDER_PEARL);
     }
 
     public static class Result implements FinishedRecipe {

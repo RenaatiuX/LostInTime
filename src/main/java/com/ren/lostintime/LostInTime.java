@@ -32,6 +32,8 @@ public class LostInTime {
         RecipeInit.RECIPE_TYPES.register(modEventBus);
         MenuInit.MENUS.register(modEventBus);
         FeatureInit.FEATURES.register(modEventBus);
+        VillagerInit.POI_TYPES.register(modEventBus);
+        VillagerInit.VILLAGER_PROFESSIONS.register(modEventBus);
 
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }

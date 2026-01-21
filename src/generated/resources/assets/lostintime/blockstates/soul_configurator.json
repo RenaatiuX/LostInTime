@@ -1,93 +1,93 @@
 {
   "variants": {
     "facing=east,on=false,part=main": {
-      "model": "lostintime:block/soul_configurator_lower",
+      "model": "lostintime:block/soul_configurator_main",
       "y": 270
     },
     "facing=east,on=false,part=side": {
-      "model": "lostintime:block/soul_configurator_right",
+      "model": "lostintime:block/soul_configurator_side",
       "y": 270
     },
     "facing=east,on=false,part=top": {
-      "model": "lostintime:block/soul_configurator_upper",
+      "model": "lostintime:block/soul_configurator_top",
       "y": 270
     },
     "facing=east,on=true,part=main": {
-      "model": "lostintime:block/soul_configurator_lower",
+      "model": "lostintime:block/soul_configurator_main",
       "y": 270
     },
     "facing=east,on=true,part=side": {
-      "model": "lostintime:block/soul_configurator_right",
+      "model": "lostintime:block/soul_configurator_side",
       "y": 270
     },
     "facing=east,on=true,part=top": {
-      "model": "lostintime:block/soul_configurator_upper",
+      "model": "lostintime:block/soul_configurator_top",
       "y": 270
     },
     "facing=north,on=false,part=main": {
-      "model": "lostintime:block/soul_configurator_lower",
+      "model": "lostintime:block/soul_configurator_main",
       "y": 180
     },
     "facing=north,on=false,part=side": {
-      "model": "lostintime:block/soul_configurator_right",
+      "model": "lostintime:block/soul_configurator_side",
       "y": 180
     },
     "facing=north,on=false,part=top": {
-      "model": "lostintime:block/soul_configurator_upper",
+      "model": "lostintime:block/soul_configurator_top",
       "y": 180
     },
     "facing=north,on=true,part=main": {
-      "model": "lostintime:block/soul_configurator_lower",
+      "model": "lostintime:block/soul_configurator_main",
       "y": 180
     },
     "facing=north,on=true,part=side": {
-      "model": "lostintime:block/soul_configurator_right",
+      "model": "lostintime:block/soul_configurator_side",
       "y": 180
     },
     "facing=north,on=true,part=top": {
-      "model": "lostintime:block/soul_configurator_upper",
+      "model": "lostintime:block/soul_configurator_top",
       "y": 180
     },
     "facing=south,on=false,part=main": {
-      "model": "lostintime:block/soul_configurator_lower"
+      "model": "lostintime:block/soul_configurator_main"
     },
     "facing=south,on=false,part=side": {
-      "model": "lostintime:block/soul_configurator_right"
+      "model": "lostintime:block/soul_configurator_side"
     },
     "facing=south,on=false,part=top": {
-      "model": "lostintime:block/soul_configurator_upper"
+      "model": "lostintime:block/soul_configurator_top"
     },
     "facing=south,on=true,part=main": {
-      "model": "lostintime:block/soul_configurator_lower"
+      "model": "lostintime:block/soul_configurator_main"
     },
     "facing=south,on=true,part=side": {
-      "model": "lostintime:block/soul_configurator_right"
+      "model": "lostintime:block/soul_configurator_side"
     },
     "facing=south,on=true,part=top": {
-      "model": "lostintime:block/soul_configurator_upper"
+      "model": "lostintime:block/soul_configurator_top"
     },
     "facing=west,on=false,part=main": {
-      "model": "lostintime:block/soul_configurator_lower",
+      "model": "lostintime:block/soul_configurator_main",
       "y": 90
     },
     "facing=west,on=false,part=side": {
-      "model": "lostintime:block/soul_configurator_right",
+      "model": "lostintime:block/soul_configurator_side",
       "y": 90
     },
     "facing=west,on=false,part=top": {
-      "model": "lostintime:block/soul_configurator_upper",
+      "model": "lostintime:block/soul_configurator_top",
       "y": 90
     },
     "facing=west,on=true,part=main": {
-      "model": "lostintime:block/soul_configurator_lower",
+      "model": "lostintime:block/soul_configurator_main",
       "y": 90
     },
     "facing=west,on=true,part=side": {
-      "model": "lostintime:block/soul_configurator_right",
+      "model": "lostintime:block/soul_configurator_side",
       "y": 90
     },
     "facing=west,on=true,part=top": {
-      "model": "lostintime:block/soul_configurator_upper",
+      "model": "lostintime:block/soul_configurator_top",
       "y": 90
     }
   }

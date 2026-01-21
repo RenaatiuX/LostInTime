@@ -58,7 +58,7 @@ public class SoulConfigurator extends LITMachineBlock {
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
         Level level = pContext.getLevel();
         BlockPos pos = pContext.getClickedPos();
-        Direction direction = pContext.getHorizontalDirection().getOpposite();
+        Direction direction = pContext.getHorizontalDirection();
 
         BlockPos topPos = pos.above();
         BlockPos sidePos = pos.relative(direction.getClockWise());
@@ -67,7 +67,7 @@ public class SoulConfigurator extends LITMachineBlock {
             return null;
         }
 
-        return this.defaultBlockState().setValue(PART, Part.MAIN);
+        return this.defaultBlockState().setValue(PART, Part.MAIN).setValue(FACING, direction);
     }
 
     @Override

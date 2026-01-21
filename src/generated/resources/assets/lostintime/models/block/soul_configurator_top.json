@@ -1,0 +1,8 @@
+{
+  "parent": "lostintime:block/soul_configurator_upper",
+  "render_type": "minecraft:translucent",
+  "textures": {
+    "0": "lostintime:block/soul_configurator_off",
+    "particle": "lostintime:block/soul_configurator_off"
+  }
+}

@@ -1,6 +1,5 @@
 package com.ren.lostintime.common.blockentity;
 
-import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.block.IdentificationTableBlock;
 import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.init.BlockEntityInit;
@@ -9,7 +8,6 @@ import com.ren.lostintime.common.menu.IdentificationMenu;
 import com.ren.lostintime.common.recipe.IdentificationRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;

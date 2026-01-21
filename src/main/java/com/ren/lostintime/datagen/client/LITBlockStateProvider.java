@@ -67,6 +67,7 @@ public class LITBlockStateProvider extends BlockStateProvider {
 
         soulExtractorModels(BlockInit.SOUL_EXTRACTOR.get());
         soulExtractor(BlockInit.SOUL_EXTRACTOR.get());
+        soulConfiguratorModels(BlockInit.SOUL_CONFIGURATOR.get());
         soulConfigurator(BlockInit.SOUL_CONFIGURATOR.get());
 
         identificationTableBlock(BlockInit.IDENTIFICATION_TABLE.get());
@@ -215,31 +216,64 @@ public class LITBlockStateProvider extends BlockStateProvider {
         simpleBlockItem(block, model);
     }
 
+    private void soulConfiguratorModels(Block block) {
+        String name = blockName(block);
+
+        // MAIN
+        models().withExistingParent(name + "_main",
+                        modLoc("block/soul_configurator_lower"))
+                .texture("0", modLoc("block/soul_configurator_off"))
+                .texture("particle", modLoc("block/soul_configurator_off"))
+                .renderType("cutout");
+
+        // TOP
+        models().withExistingParent(name + "_top",
+                        modLoc("block/soul_configurator_upper"))
+                .texture("0", modLoc("block/soul_configurator_off"))
+                .texture("particle", modLoc("block/soul_configurator_off"))
+                .renderType("translucent");
+
+        // SIDE
+        models().withExistingParent(name + "_side",
+                        modLoc("block/soul_configurator_right"))
+                .texture("0", modLoc("block/soul_configurator_off"))
+                .texture("particle", modLoc("block/soul_configurator_off"))
+                .renderType("cutout");
+    }
+
+
     private void soulConfigurator(Block block) {
         String name = blockName(block);
 
-        ModelFile mainModel = models().getExistingFile(modLoc("block/" + name + "_lower"));
-        ModelFile topModel = models().getExistingFile(modLoc("block/" + name + "_upper"));
-        ModelFile sideModel = models().getExistingFile(modLoc("block/" + name + "_right"));
+        ModelFile mainModel = models().getExistingFile(modLoc("block/" + name + "_main"));
+        ModelFile topModel  = models().getExistingFile(modLoc("block/" + name + "_top"));
+        ModelFile sideModel = models().getExistingFile(modLoc("block/" + name + "_side"));
 
         getVariantBuilder(block).forAllStates(state -> {
             SoulConfigurator.Part part = state.getValue(SoulConfigurator.PART);
             Direction facing = state.getValue(SoulConfigurator.FACING);
+
             ModelFile model = switch (part) {
                 case MAIN -> mainModel;
-                case TOP -> topModel;
+                case TOP  -> topModel;
                 case SIDE -> sideModel;
             };
+
             int yRot = switch (facing) {
                 case NORTH -> 180;
                 case SOUTH -> 0;
-                case WEST -> 90;
-                case EAST -> 270;
+                case WEST  -> 90;
+                case EAST  -> 270;
                 default -> 0;
             };
-            return ConfiguredModel.builder().modelFile(model).rotationY(yRot).build();
+
+            return ConfiguredModel.builder()
+                    .modelFile(model)
+                    .rotationY(yRot)
+                    .build();
         });
     }
+
 
     protected void block(Block block, ModelFile model) {
         simpleBlock(block, model);
