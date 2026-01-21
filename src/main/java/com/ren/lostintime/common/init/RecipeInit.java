@@ -1,7 +1,9 @@
 package com.ren.lostintime.common.init;
 
 import com.ren.lostintime.LostInTime;
+import com.ren.lostintime.common.block.SoulConfigurator;
 import com.ren.lostintime.common.recipe.IdentificationRecipe;
+import com.ren.lostintime.common.recipe.SoulConfiguratorRecipe;
 import com.ren.lostintime.common.recipe.SoulExtractorRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
@@ -22,6 +24,8 @@ public class RecipeInit {
             IdentificationRecipe.SERIALIZER);
     public static final RegistryObject<RecipeType<SoulExtractorRecipe>> SOUL_EXTRACTOR_RECIPE = register("soul_extractor_recipe",
             SoulExtractorRecipe.SERIALIZER);
+    public static final RegistryObject<RecipeType<SoulConfiguratorRecipe>> SOUL_CONFIGURATOR_RECIPE = register("soul_configurator_recipe",
+            SoulConfiguratorRecipe.SERIALIZER);
 
     public static <T extends Recipe<?>> RegistryObject<RecipeType<T>> register(String name, RecipeSerializer<T> serializer) {
         RegistryObject<RecipeType<T>> type = RECIPE_TYPES.register(name, () -> type(name));

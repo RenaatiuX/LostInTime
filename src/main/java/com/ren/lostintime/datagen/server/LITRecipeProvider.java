@@ -3,6 +3,7 @@ package com.ren.lostintime.datagen.server;
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.init.ItemInit;
 import com.ren.lostintime.common.recipe.IdentificationBuilder;
+import com.ren.lostintime.common.recipe.SoulConfiguratorBuilder;
 import com.ren.lostintime.common.recipe.SoulExtractorBuilder;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.PackOutput;
@@ -75,4 +76,5 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
     public SoulExtractorBuilder soulExtract(ItemLike result) {
         return new SoulExtractorBuilder(new ItemStack(result));
     }
+
 }
