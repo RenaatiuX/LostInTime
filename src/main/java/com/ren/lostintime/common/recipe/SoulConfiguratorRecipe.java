@@ -5,52 +5,61 @@ import com.ren.lostintime.common.init.RecipeInit;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class SoulConfiguratorRecipe implements Recipe<SimpleContainer> {
+public class SoulConfiguratorRecipe implements Recipe<Container> {
 
     public static final Serializer SERIALIZER = new Serializer();
 
     private final ResourceLocation id;
+    //aka fossil
     private final Ingredient precedentMatter;
     private final Ingredient aspect;
+    //aka binding material
     private final Ingredient coherenceMedium;
-    private final Ingredient soulPowder;
-    private final ItemStack resultA;
-    private final ItemStack resultB;
+    private final ItemStack successResult;
+    private final ItemStack failResult;
     private final float chance;
+    private final int requiredSoulFuel;
 
-    public SoulConfiguratorRecipe(ResourceLocation id, Ingredient precedentMatter, Ingredient aspect, Ingredient coherenceMedium,
-                                  Ingredient soulPowder, ItemStack resultA, ItemStack resultB, float chance) {
+    public SoulConfiguratorRecipe(ResourceLocation id, Ingredient precedentMatter, Ingredient aspect, Ingredient coherenceMedium, ItemStack successResult, ItemStack failResult, float chance, int requiredSoulFuel) {
         this.id = id;
         this.precedentMatter = precedentMatter;
         this.aspect = aspect;
         this.coherenceMedium = coherenceMedium;
-        this.soulPowder = soulPowder;
-        this.resultA = resultA;
-        this.resultB = resultB;
+        this.successResult = successResult;
+        this.failResult = failResult;
         this.chance = chance;
+        this.requiredSoulFuel = requiredSoulFuel;
     }
 
     @Override
-    public boolean matches(SimpleContainer pContainer, Level pLevel) {
+    public boolean matches(Container pContainer, Level pLevel) {
         if (pLevel.isClientSide()) return false;
+        if (pContainer.getContainerSize() != 3) return false;
 
         return precedentMatter.test(pContainer.getItem(0)) && aspect.test(pContainer.getItem(1)) &&
-                coherenceMedium.test(pContainer.getItem(2)) && soulPowder.test(pContainer.getItem(3));
+                coherenceMedium.test(pContainer.getItem(2));
     }
 
     @Override
-    public ItemStack assemble(SimpleContainer pContainer, RegistryAccess pRegistryAccess) {
+    public ItemStack assemble(Container pContainer, RegistryAccess pRegistryAccess) {
         if (Math.random() < chance) {
-            return resultA.copy();
+            return successResult.copy();
         } else {
-            return resultB.copy();
+            return failResult.copy();
         }
+    }
+
+    public int getRequiredSoulFuel() {
+        return requiredSoulFuel;
     }
 
     @Override
@@ -60,7 +69,7 @@ public class SoulConfiguratorRecipe implements Recipe<SimpleContainer> {
 
     @Override
     public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
-        return resultA.copy();
+        return successResult.copy();
     }
 
     @Override
@@ -85,14 +94,14 @@ public class SoulConfiguratorRecipe implements Recipe<SimpleContainer> {
             Ingredient precedent = Ingredient.fromJson(pSerializedRecipe.get("precedent_matter"));
             Ingredient aspect = Ingredient.fromJson(pSerializedRecipe.get("aspect"));
             Ingredient coherence = Ingredient.fromJson(pSerializedRecipe.get("coherence_medium"));
-            Ingredient soulPowder = Ingredient.fromJson(pSerializedRecipe.get("soul_powder"));
 
             ItemStack resultA = ShapedRecipe.itemStackFromJson(pSerializedRecipe.getAsJsonObject("result_a"));
 
             ItemStack resultB = ShapedRecipe.itemStackFromJson(pSerializedRecipe.getAsJsonObject("result_b"));
 
-            float chance = pSerializedRecipe.get("chance").getAsFloat();
-            return new SoulConfiguratorRecipe(pRecipeId, precedent, aspect, coherence, soulPowder, resultA, resultB, chance);
+            float chance = Mth.clamp(GsonHelper.getAsFloat(pSerializedRecipe, "chance", 0.5f), 0f, 1f);
+            int requiredSoulFuel = Math.max(1, GsonHelper.getAsInt(pSerializedRecipe, "requiredSoulFuel", 300));
+            return new SoulConfiguratorRecipe(pRecipeId, precedent, aspect, coherence, resultA, resultB, chance, requiredSoulFuel);
         }
 
         @Override
@@ -100,11 +109,11 @@ public class SoulConfiguratorRecipe implements Recipe<SimpleContainer> {
             Ingredient precedent = Ingredient.fromNetwork(pBuffer);
             Ingredient aspect = Ingredient.fromNetwork(pBuffer);
             Ingredient coherence = Ingredient.fromNetwork(pBuffer);
-            Ingredient soulPowder = Ingredient.fromNetwork(pBuffer);
             ItemStack resultA = pBuffer.readItem();
             ItemStack resultB = pBuffer.readItem();
             float chance = pBuffer.readFloat();
-            return new SoulConfiguratorRecipe(pRecipeId, precedent, aspect, coherence, soulPowder, resultA, resultB, chance);
+            int requiredSoulFuel = pBuffer.readInt();
+            return new SoulConfiguratorRecipe(pRecipeId, precedent, aspect, coherence, resultA, resultB, chance, requiredSoulFuel);
         }
 
         @Override
@@ -112,10 +121,10 @@ public class SoulConfiguratorRecipe implements Recipe<SimpleContainer> {
             pRecipe.precedentMatter.toNetwork(pBuffer);
             pRecipe.aspect.toNetwork(pBuffer);
             pRecipe.coherenceMedium.toNetwork(pBuffer);
-            pRecipe.soulPowder.toNetwork(pBuffer);
-            pBuffer.writeItem(pRecipe.resultA);
-            pBuffer.writeItem(pRecipe.resultB);
+            pBuffer.writeItem(pRecipe.successResult);
+            pBuffer.writeItem(pRecipe.failResult);
             pBuffer.writeFloat(pRecipe.chance);
+            pBuffer.writeInt(pRecipe.requiredSoulFuel);
         }
     }
 }

@@ -1,8 +1,11 @@
 package com.ren.lostintime.common.block;
 
+import com.ren.lostintime.common.blockentity.SoulConfiguratorBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -17,6 +20,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +36,16 @@ public class SoulConfigurator extends LITMachineBlock {
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        if (pState.getValue(PART).isMain()){
+            return new SoulConfiguratorBE(pPos, pState);
+        }
         return null;
+    }
+
+    @Override
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        pPos = pState.getValue(PART).getMainPos(pPos, pState.getValue(FACING));
+        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
     }
 
     @Override
@@ -76,11 +89,7 @@ public class SoulConfigurator extends LITMachineBlock {
         Direction facing = pState.getValue(FACING);
         Part part = pState.getValue(PART);
 
-        BlockPos mainPos = switch (part) {
-            case MAIN -> pPos;
-            case TOP -> pPos.below();
-            case SIDE -> pPos.relative(facing.getCounterClockWise());
-        };
+        BlockPos mainPos = part.getMainPos(pPos, facing);
 
         BlockPos topPos = mainPos.above();
         BlockPos sidePos = mainPos.relative(facing.getClockWise());
@@ -108,6 +117,18 @@ public class SoulConfigurator extends LITMachineBlock {
     public enum Part implements StringRepresentable {
 
         MAIN, TOP, SIDE;
+
+        public boolean isMain(){
+            return this == MAIN;
+        }
+
+        public BlockPos getMainPos(BlockPos pos, Direction facing){
+            return switch (this) {
+                case MAIN -> pos;
+                case TOP -> pos.below();
+                case SIDE -> pos.relative(facing.getCounterClockWise());
+            };
+        }
 
         @Override
         public @NotNull String getSerializedName() {

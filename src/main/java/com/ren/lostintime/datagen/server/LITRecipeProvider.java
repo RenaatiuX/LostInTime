@@ -4,6 +4,7 @@ import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.init.ItemInit;
 import com.ren.lostintime.common.recipe.IdentificationBuilder;
 import com.ren.lostintime.common.recipe.SoulConfiguratorBuilder;
+import com.ren.lostintime.common.recipe.SoulConfiguratorFuelRecipeBuilder;
 import com.ren.lostintime.common.recipe.SoulExtractorBuilder;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.PackOutput;
@@ -49,6 +50,8 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
                 .residueOnSuccess(3)
                 .unlockedBy("has_soul_blob", has(ItemInit.SOUL_GRUME.get()))
                 .save(pWriter);
+
+        SoulConfiguratorFuelRecipeBuilder.fuelRecipe(ItemInit.SOUL_POWDER.get(), 300).save(pWriter, new ResourceLocation(LostInTime.MODID, "sould_powder_fuel"));
 
     }
 
