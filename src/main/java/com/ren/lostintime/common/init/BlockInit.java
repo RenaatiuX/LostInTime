@@ -18,7 +18,6 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.Map;
 import java.util.function.Supplier;
 
 public class BlockInit {
@@ -33,7 +32,7 @@ public class BlockInit {
                     .lightLevel(state -> state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) ==
                             DoubleBlockHalf.UPPER && state.getValue(SoulExtractorBlock.ON) ? 10 : 0)));
     public static final RegistryObject<Block> SOUL_CONFIGURATOR = registerBlock("soul_configurator",
-            () -> new SoulConfigurator(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE).noOcclusion()));
+            () -> new SoulConfiguratorBlock(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE).noOcclusion()));
 
     //SAPLINGS
     public static final RegistryObject<Block> MANGO_SAPLING = registerBlock("mango_sapling",

@@ -1,7 +1,6 @@
 package com.ren.lostintime.common.init;
 
 import com.ren.lostintime.LostInTime;
-import com.ren.lostintime.common.block.SoulConfigurator;
 import com.ren.lostintime.common.blockentity.IdentificationBE;
 import com.ren.lostintime.common.blockentity.SoulConfiguratorBE;
 import com.ren.lostintime.common.blockentity.SoulExtractorBE;

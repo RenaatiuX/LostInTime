@@ -2,6 +2,7 @@ package com.ren.lostintime.common.init;
 
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.menu.IdentificationMenu;
+import com.ren.lostintime.common.menu.SoulConfiguratorMenu;
 import com.ren.lostintime.common.menu.SoulExtractorMenu;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -19,6 +20,8 @@ public class MenuInit {
 
     public static final RegistryObject<MenuType<SoulExtractorMenu>> SOUL_EXTRACTOR_MENU = registerMenuType(
             "soul_extractor_menu", SoulExtractorMenu::new);
+    public static final RegistryObject<MenuType<SoulConfiguratorMenu>> SOUL_CONFIGURATOR_MENU = registerMenuType(
+            "soul_configurator_menu", SoulConfiguratorMenu::new);
 
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(String key, MenuType.MenuSupplier<T> factory) {
         return MENUS.register(key, () -> new MenuType<>(factory, FeatureFlags.VANILLA_SET));

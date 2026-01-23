@@ -2,6 +2,7 @@ package com.ren.lostintime.common.blockentity;
 
 import com.ren.lostintime.common.init.BlockEntityInit;
 import com.ren.lostintime.common.init.RecipeInit;
+import com.ren.lostintime.common.menu.SoulConfiguratorMenu;
 import com.ren.lostintime.common.recipe.SoulConfiguratorRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -10,6 +11,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -31,6 +33,24 @@ public class SoulConfiguratorBE extends BlockEntity implements MenuProvider {
     protected LazyOptional<RangedWrapper> aspectInventory = inventory.lazyMap(d -> new RangedWrapper(d, 2, 3));
     protected LazyOptional<RangedWrapper> bindingInventory = inventory.lazyMap(d -> new RangedWrapper(d, 3, 4));
     protected LazyOptional<RangedWrapper> outputInventory = inventory.lazyMap(d -> new RangedWrapper(d, 4, 5));
+
+    public final ContainerData data = new ContainerData() {
+
+        @Override
+        public int get(int pIndex) {
+            return 0;
+        }
+
+        @Override
+        public void set(int pIndex, int pValue) {
+
+        }
+
+        @Override
+        public int getCount() {
+            return 0;
+        }
+    };
 
     public SoulConfiguratorBE(BlockPos pPos, BlockState pBlockState) {
         super(BlockEntityInit.SOUL_CONFIGURATOR.get(), pPos, pBlockState);
@@ -56,18 +76,18 @@ public class SoulConfiguratorBE extends BlockEntity implements MenuProvider {
     }
 
 
-    public SoulConfiguratorRecipe getRecipe(){
+    /*public SoulConfiguratorRecipe getRecipe(){
 
-    }
+    }*/
 
     @Override
     public Component getDisplayName() {
-        return null;
+        return Component.translatable("container.lostintime.soul_configurator");
     }
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return null;
+        return new SoulConfiguratorMenu(pContainerId, pPlayerInventory, inventory.orElse(new ItemStackHandler(6)), data);
     }
 
     public static boolean isSoulFuel(ItemStack stack, Level level){

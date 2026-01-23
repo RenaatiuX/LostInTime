@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 public class SoulConfiguratorBuilder implements RecipeBuilder {
 
     private final Ingredient precedent;
+    private final Ingredient lapisLazuli;
     private final Ingredient aspect;
     private final Ingredient coherence;
     private final Ingredient soulPowder;
@@ -28,9 +29,10 @@ public class SoulConfiguratorBuilder implements RecipeBuilder {
     private float chance = 0.5F;
     private final Advancement.Builder advancement = Advancement.Builder.recipeAdvancement();
 
-    public SoulConfiguratorBuilder(Ingredient precedent, Ingredient aspect, Ingredient coherence, Ingredient soulPowder,
+    public SoulConfiguratorBuilder(Ingredient precedent, Ingredient lapisLazuli, Ingredient aspect, Ingredient coherence, Ingredient soulPowder,
                                    ItemStack resultA, ItemStack resultB) {
         this.precedent = precedent;
+        this.lapisLazuli = lapisLazuli;
         this.aspect = aspect;
         this.coherence = coherence;
         this.soulPowder = soulPowder;
@@ -65,7 +67,7 @@ public class SoulConfiguratorBuilder implements RecipeBuilder {
         if (advancement.getCriteria().isEmpty()) {
             LostInTime.LOGGER.warn("No way of obtaining recipe {}", pRecipeId);
         }
-        pFinishedRecipeConsumer.accept(new Result(pRecipeId, group, precedent, aspect, coherence, soulPowder,
+        pFinishedRecipeConsumer.accept(new Result(pRecipeId, group, precedent, lapisLazuli, aspect, coherence, soulPowder,
                 resultA, resultB, chance, advancement));
     }
 
@@ -96,6 +98,7 @@ public class SoulConfiguratorBuilder implements RecipeBuilder {
         private final ResourceLocation id;
         private final String group;
         private final Ingredient precedent;
+        private final Ingredient lapisLazuli;
         private final Ingredient aspect;
         private final Ingredient coherence;
         private final Ingredient soulPowder;
@@ -104,11 +107,12 @@ public class SoulConfiguratorBuilder implements RecipeBuilder {
         private final float chance;
         private final Advancement.Builder criteria;
 
-        public Result(ResourceLocation id, String group, Ingredient precedent, Ingredient aspect, Ingredient coherence,
+        public Result(ResourceLocation id, String group, Ingredient precedent, Ingredient lapisLazuli, Ingredient aspect, Ingredient coherence,
                       Ingredient soulPowder, ItemStack resultA, ItemStack resultB, float chance, Advancement.Builder criteria) {
             this.id = id;
             this.group = group;
             this.precedent = precedent;
+            this.lapisLazuli = lapisLazuli;
             this.aspect = aspect;
             this.coherence = coherence;
             this.soulPowder = soulPowder;
@@ -124,6 +128,7 @@ public class SoulConfiguratorBuilder implements RecipeBuilder {
                 pJson.addProperty("group", group);
             }
             pJson.add("precedent_matter", precedent.toJson());
+            pJson.add("lapis_lazuli", lapisLazuli.toJson());
             pJson.add("aspect", aspect.toJson());
             pJson.add("coherence_medium", coherence.toJson());
             pJson.add("soul_powder", soulPowder.toJson());
@@ -148,7 +153,7 @@ public class SoulConfiguratorBuilder implements RecipeBuilder {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return null;
+            return SoulExtractorRecipe.SERIALIZER;
         }
 
         @Override

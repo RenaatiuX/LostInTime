@@ -3,17 +3,12 @@ package com.ren.lostintime.datagen.client;
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.block.SingleEggBlock;
 import com.ren.lostintime.common.block.MangoFruitBlock;
-import com.ren.lostintime.common.block.SoulConfigurator;
+import com.ren.lostintime.common.block.SoulConfiguratorBlock;
 import com.ren.lostintime.common.block.SoulExtractorBlock;
 import com.ren.lostintime.common.init.BlockInit;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.models.model.ModelLocationUtils;
-import net.minecraft.data.models.model.ModelTemplates;
-import net.minecraft.data.models.model.TextureMapping;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -250,8 +245,8 @@ public class LITBlockStateProvider extends BlockStateProvider {
         ModelFile sideModel = models().getExistingFile(modLoc("block/" + name + "_side"));
 
         getVariantBuilder(block).forAllStates(state -> {
-            SoulConfigurator.Part part = state.getValue(SoulConfigurator.PART);
-            Direction facing = state.getValue(SoulConfigurator.FACING);
+            SoulConfiguratorBlock.Part part = state.getValue(SoulConfiguratorBlock.PART);
+            Direction facing = state.getValue(SoulConfiguratorBlock.FACING);
 
             ModelFile model = switch (part) {
                 case MAIN -> mainModel;

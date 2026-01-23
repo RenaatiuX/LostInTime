@@ -24,12 +24,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class SoulConfigurator extends LITMachineBlock {
+public class SoulConfiguratorBlock extends LITMachineBlock {
 
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    public SoulConfigurator(Properties pProperties) {
+    public SoulConfiguratorBlock(Properties pProperties) {
         super(pProperties);
         this.registerDefaultState(this.stateDefinition.any().setValue(PART, Part.MAIN).setValue(FACING, Direction.NORTH));
     }

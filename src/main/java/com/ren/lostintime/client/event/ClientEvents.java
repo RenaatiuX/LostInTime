@@ -5,6 +5,7 @@ import com.ren.lostintime.client.particles.SleepingParticle;
 import com.ren.lostintime.client.render.entity.DodoRender;
 import com.ren.lostintime.client.render.projectile.GuardianSpikeRender;
 import com.ren.lostintime.client.screen.IdentificationScreen;
+import com.ren.lostintime.client.screen.SoulConfiguratorScreen;
 import com.ren.lostintime.client.screen.SoulExtractorScreen;
 import com.ren.lostintime.common.entity.projectile.GuardianSpike;
 import com.ren.lostintime.common.init.EntityInit;
@@ -25,6 +26,7 @@ public class ClientEvents {
     public static void onClientSetup(FMLClientSetupEvent event) {
         MenuScreens.register(MenuInit.IDENTIFICATION_TABLE_MENU.get(), IdentificationScreen::new);
         MenuScreens.register(MenuInit.SOUL_EXTRACTOR_MENU.get(), SoulExtractorScreen::new);
+        MenuScreens.register(MenuInit.SOUL_CONFIGURATOR_MENU.get(), SoulConfiguratorScreen::new);
     }
 
     @SubscribeEvent
