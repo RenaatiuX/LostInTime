@@ -14,6 +14,7 @@ public class SoulConfiguratorScreen extends AbstractContainerScreen<SoulConfigur
 
     public SoulConfiguratorScreen(SoulConfiguratorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
+        this.imageHeight = 172;
     }
 
     @Override

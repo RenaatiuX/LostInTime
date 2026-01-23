@@ -30,7 +30,7 @@ public class SoulConfiguratorMenu extends AbstractContainerMenu {
         addSlot(new SlotItemHandler(container, 1, 12, 57));
 
         //Aspect
-        addSlot(new SlotItemHandler(container, 2, 46, 25));
+        addSlot(new SlotItemHandler(container, 2, 48, 27));
 
         //Bindin matterial
         addSlot(new SlotItemHandler(container, 3, 100, 27));
@@ -39,15 +39,15 @@ public class SoulConfiguratorMenu extends AbstractContainerMenu {
         addSlot(new SlotItemHandler(container,4, 76, 60));
 
         //output
-        addSlot(new SlotItemHandler(container, 5, 137, 54));
+        addSlot(new SlotItemHandler(container, 5, 139, 56));
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlot(new Slot(playerInventory, x + y * 9 + 9, 8 + x * 18, 84 + y * 18));
+                addSlot(new Slot(playerInventory, x + y * 9 + 9, 8 + x * 18, 91 + y * 18));
             }
         }
         for (int x = 0; x < 9; x++) {
-            addSlot(new Slot(playerInventory, x, 8 + x * 18, 142));
+            addSlot(new Slot(playerInventory, x, 8 + x * 18, 149));
         }
         addDataSlots(containerData);
     }
