@@ -32,7 +32,7 @@ public class BlockInit {
                     .lightLevel(state -> state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) ==
                             DoubleBlockHalf.UPPER && state.getValue(SoulExtractorBlock.ON) ? 10 : 0)));
     public static final RegistryObject<Block> SOUL_CONFIGURATOR = registerBlock("soul_configurator",
-            () -> new SoulConfiguratorBlock(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE).noOcclusion()));
+            () -> new SoulConfiguratorBlock(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE).noOcclusion().lightLevel(s -> s.getValue(SoulConfiguratorBlock.PART) == SoulConfiguratorBlock.Part.TOP && s.getValue(LITMachineBlock.ON) ? 10 : 0)));
 
     //SAPLINGS
     public static final RegistryObject<Block> MANGO_SAPLING = registerBlock("mango_sapling",
