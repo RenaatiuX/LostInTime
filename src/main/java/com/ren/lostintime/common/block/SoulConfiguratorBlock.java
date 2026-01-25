@@ -1,6 +1,8 @@
 package com.ren.lostintime.common.block;
 
 import com.ren.lostintime.common.blockentity.SoulConfiguratorBE;
+import com.ren.lostintime.common.blockentity.SoulExtractorBE;
+import com.ren.lostintime.common.init.BlockEntityInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -15,6 +17,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -40,6 +44,11 @@ public class SoulConfiguratorBlock extends LITMachineBlock {
             return new SoulConfiguratorBE(pPos, pState);
         }
         return null;
+    }
+
+    @Override
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        return pLevel.isClientSide || !pState.getValue(PART).isMain() ? null : createTickerHelper(pBlockEntityType, BlockEntityInit.SOUL_CONFIGURATOR.get(), SoulConfiguratorBE::tick);
     }
 
     @Override

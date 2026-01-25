@@ -1,13 +1,17 @@
 package com.ren.lostintime.common.menu;
 
+import com.ren.lostintime.common.blockentity.SoulConfiguratorBE;
 import com.ren.lostintime.common.init.MenuInit;
+import com.ren.lostintime.datagen.server.LITTags;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class SoulConfiguratorMenu extends AbstractContainerMenu {
 
@@ -27,19 +31,35 @@ public class SoulConfiguratorMenu extends AbstractContainerMenu {
         addSlot(new SlotItemHandler(container, 0, 12, 28));
 
         //Lapis lazuli
-        addSlot(new SlotItemHandler(container, 1, 12, 57));
+        addSlot(new SlotItemHandler(container, 1, 12, 57){
+            @Override
+            public boolean mayPlace(@NotNull ItemStack stack) {
+                return stack.is(Items.LAPIS_LAZULI);
+            }
+        });
 
         //Aspect
         addSlot(new SlotItemHandler(container, 2, 48, 27));
 
-        //Bindin matterial
-        addSlot(new SlotItemHandler(container, 3, 100, 27));
-
         //soul powder
-        addSlot(new SlotItemHandler(container,4, 76, 60));
+        addSlot(new SlotItemHandler(container,3, 76, 60){
+            @Override
+            public boolean mayPlace(@NotNull ItemStack stack) {
+                return SoulConfiguratorBE.isSoulFuel(stack, playerInventory.player.level());
+            }
+        });
+
+        //Bindin matterial
+        addSlot(new SlotItemHandler(container, 4, 100, 27));
+
 
         //output
-        addSlot(new SlotItemHandler(container, 5, 139, 56));
+        addSlot(new SlotItemHandler(container, 5, 139, 56){
+            @Override
+            public boolean mayPlace(@NotNull ItemStack stack) {
+                return false;
+            }
+        });
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
@@ -50,6 +70,10 @@ public class SoulConfiguratorMenu extends AbstractContainerMenu {
             addSlot(new Slot(playerInventory, x, 8 + x * 18, 149));
         }
         addDataSlots(containerData);
+    }
+
+    public ContainerData getContainerData() {
+        return containerData;
     }
 
     @Override
@@ -91,6 +115,6 @@ public class SoulConfiguratorMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player pPlayer) {
-        return false;
+        return true;
     }
 }

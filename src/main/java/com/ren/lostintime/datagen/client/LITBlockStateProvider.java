@@ -1,10 +1,7 @@
 package com.ren.lostintime.datagen.client;
 
 import com.ren.lostintime.LostInTime;
-import com.ren.lostintime.common.block.SingleEggBlock;
-import com.ren.lostintime.common.block.MangoFruitBlock;
-import com.ren.lostintime.common.block.SoulConfiguratorBlock;
-import com.ren.lostintime.common.block.SoulExtractorBlock;
+import com.ren.lostintime.common.block.*;
 import com.ren.lostintime.common.init.BlockInit;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
@@ -62,7 +59,6 @@ public class LITBlockStateProvider extends BlockStateProvider {
 
         soulExtractorModels(BlockInit.SOUL_EXTRACTOR.get());
         soulExtractor(BlockInit.SOUL_EXTRACTOR.get());
-        soulConfiguratorModels(BlockInit.SOUL_CONFIGURATOR.get());
         soulConfigurator(BlockInit.SOUL_CONFIGURATOR.get());
 
         identificationTableBlock(BlockInit.IDENTIFICATION_TABLE.get());
@@ -211,47 +207,31 @@ public class LITBlockStateProvider extends BlockStateProvider {
         simpleBlockItem(block, model);
     }
 
-    private void soulConfiguratorModels(Block block) {
-        String name = blockName(block);
-
-        // MAIN
-        models().withExistingParent(name + "_main",
-                        modLoc("block/soul_configurator_lower"))
-                .texture("0", modLoc("block/soul_configurator_off"))
-                .texture("particle", modLoc("block/soul_configurator_off"))
-                .renderType("cutout");
-
-        // TOP
-        models().withExistingParent(name + "_top",
-                        modLoc("block/soul_configurator_upper"))
-                .texture("0", modLoc("block/soul_configurator_off"))
-                .texture("particle", modLoc("block/soul_configurator_off"))
-                .renderType("translucent");
-
-        // SIDE
-        models().withExistingParent(name + "_side",
-                        modLoc("block/soul_configurator_right"))
-                .texture("0", modLoc("block/soul_configurator_off"))
-                .texture("particle", modLoc("block/soul_configurator_off"))
-                .renderType("cutout");
-    }
-
 
     private void soulConfigurator(Block block) {
         String name = blockName(block);
-
-        ModelFile mainModel = models().getExistingFile(modLoc("block/" + name + "_main"));
-        ModelFile topModel  = models().getExistingFile(modLoc("block/" + name + "_top"));
-        ModelFile sideModel = models().getExistingFile(modLoc("block/" + name + "_side"));
-
         getVariantBuilder(block).forAllStates(state -> {
             SoulConfiguratorBlock.Part part = state.getValue(SoulConfiguratorBlock.PART);
             Direction facing = state.getValue(SoulConfiguratorBlock.FACING);
+            boolean on = state.getValue(LITMachineBlock.ON);
+            var onString =  on ? "on" : "off";
 
             ModelFile model = switch (part) {
-                case MAIN -> mainModel;
-                case TOP  -> topModel;
-                case SIDE -> sideModel;
+                case MAIN -> models().withExistingParent(name + "_main_" + onString,
+                                modLoc("block/soul_configurator_lower"))
+                        .texture("0", modLoc("block/soul_configurator_" + onString))
+                        .texture("particle", modLoc("block/soul_configurator_" + onString))
+                        .renderType("cutout");
+                case TOP  ->  models().withExistingParent(name + "_top_" + onString,
+                                modLoc("block/soul_configurator_upper"))
+                        .texture("0", modLoc("block/soul_configurator_" + onString))
+                        .texture("particle", modLoc("block/soul_configurator_" + onString))
+                        .renderType("translucent");
+                case SIDE ->  models().withExistingParent(name + "_side_" + onString,
+                                modLoc("block/soul_configurator_right"))
+                        .texture("0", modLoc("block/soul_configurator_" + onString))
+                        .texture("particle", modLoc("block/soul_configurator_" + onString))
+                        .renderType("cutout");
             };
 
             int yRot = switch (facing) {

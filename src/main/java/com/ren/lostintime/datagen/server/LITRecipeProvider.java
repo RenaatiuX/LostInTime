@@ -1,17 +1,15 @@
 package com.ren.lostintime.datagen.server;
 
 import com.ren.lostintime.LostInTime;
+import com.ren.lostintime.common.init.BlockInit;
 import com.ren.lostintime.common.init.ItemInit;
 import com.ren.lostintime.common.recipe.IdentificationBuilder;
-import com.ren.lostintime.common.recipe.SoulConfiguratorBuilder;
 import com.ren.lostintime.common.recipe.SoulConfiguratorFuelRecipeBuilder;
+import com.ren.lostintime.common.recipe.SoulConfiguratorRecipeBuilder;
 import com.ren.lostintime.common.recipe.SoulExtractorBuilder;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -51,7 +49,13 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_soul_blob", has(ItemInit.SOUL_GRUME.get()))
                 .save(pWriter);
 
-        SoulConfiguratorFuelRecipeBuilder.fuelRecipe(ItemInit.SOUL_POWDER.get(), 300).save(pWriter, new ResourceLocation(LostInTime.MODID, "sould_powder_fuel"));
+        SoulConfiguratorFuelRecipeBuilder.fuelRecipe(ItemInit.SOUL_POWDER.get(), 300).save(pWriter, new ResourceLocation(LostInTime.MODID, "soul_powder_fuel"));
+        SoulConfiguratorRecipeBuilder.recipe(ItemInit.ANOMALOCARIS_SOUL_CFC.get(), ItemInit.EMPTY_SOUL_CFC.get())
+                .aspect(ItemInit.ASPECT_EMERGENCE.get())
+                .bindingMaterial(ItemInit.EMPTY_SOUL_CFC.get())
+                .fossil(ItemInit.ANOMALOCARIS_FOSSIL.get())
+                .unlockedBy("hasItem", has(ItemInit.ANOMALOCARIS_FOSSIL.get()))
+                .save(pWriter);
 
     }
 
@@ -66,6 +70,15 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
         SimpleCookingRecipeBuilder.smoking(Ingredient.of(ingredient), RecipeCategory.FOOD, result, experience, 100)
                 .unlockedBy(name, InventoryChangeTrigger.TriggerInstance.hasItems(ingredient))
                 .save(consumer, namePrefix + "_from_smoking");
+    }
+
+    public void machineRecipes(Consumer<FinishedRecipe> pWriter){
+        /*
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, BlockInit.SOUL_CONFIGURATOR.get())
+                .define('I', ItemInit.INFORMATION_DOME.get())
+                .define('S', ItemInit.PANE)
+
+         */
     }
 
     private IdentificationBuilder identify(ItemLike item) {

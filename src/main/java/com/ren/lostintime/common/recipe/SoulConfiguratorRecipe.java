@@ -8,11 +8,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class SoulConfiguratorRecipe implements Recipe<Container> {
 
@@ -28,8 +29,9 @@ public class SoulConfiguratorRecipe implements Recipe<Container> {
     private final ItemStack failResult;
     private final float chance;
     private final int requiredSoulFuel;
+    private final int processTime;
 
-    public SoulConfiguratorRecipe(ResourceLocation id, Ingredient precedentMatter, Ingredient aspect, Ingredient coherenceMedium, ItemStack successResult, ItemStack failResult, float chance, int requiredSoulFuel) {
+    public SoulConfiguratorRecipe(ResourceLocation id, Ingredient precedentMatter, Ingredient aspect, Ingredient coherenceMedium, ItemStack successResult, ItemStack failResult, float chance, int requiredSoulFuel, int processTime) {
         this.id = id;
         this.precedentMatter = precedentMatter;
         this.aspect = aspect;
@@ -38,6 +40,7 @@ public class SoulConfiguratorRecipe implements Recipe<Container> {
         this.failResult = failResult;
         this.chance = chance;
         this.requiredSoulFuel = requiredSoulFuel;
+        this.processTime = processTime;
     }
 
     @Override
@@ -56,6 +59,17 @@ public class SoulConfiguratorRecipe implements Recipe<Container> {
         } else {
             return failResult.copy();
         }
+    }
+
+    public ItemStack getResult(Level level) {
+        if (level.random.nextFloat() < chance) {
+            return successResult.copy();
+        }
+        return failResult.copy();
+    }
+
+    public int getProcessTime() {
+        return processTime;
     }
 
     public int getRequiredSoulFuel() {
@@ -95,13 +109,14 @@ public class SoulConfiguratorRecipe implements Recipe<Container> {
             Ingredient aspect = Ingredient.fromJson(pSerializedRecipe.get("aspect"));
             Ingredient coherence = Ingredient.fromJson(pSerializedRecipe.get("coherence_medium"));
 
-            ItemStack resultA = ShapedRecipe.itemStackFromJson(pSerializedRecipe.getAsJsonObject("result_a"));
+            ItemStack successResult = ShapedRecipe.itemStackFromJson(pSerializedRecipe.getAsJsonObject("success_result"));
 
-            ItemStack resultB = ShapedRecipe.itemStackFromJson(pSerializedRecipe.getAsJsonObject("result_b"));
+            ItemStack failResult = pSerializedRecipe.has("fail_result") ? ShapedRecipe.itemStackFromJson(pSerializedRecipe.getAsJsonObject("fail_result")) : ItemStack.EMPTY;
 
             float chance = Mth.clamp(GsonHelper.getAsFloat(pSerializedRecipe, "chance", 0.5f), 0f, 1f);
-            int requiredSoulFuel = Math.max(1, GsonHelper.getAsInt(pSerializedRecipe, "requiredSoulFuel", 300));
-            return new SoulConfiguratorRecipe(pRecipeId, precedent, aspect, coherence, resultA, resultB, chance, requiredSoulFuel);
+            int requiredSoulFuel = Math.max(1, GsonHelper.getAsInt(pSerializedRecipe, "requiredSoulFuel", 100));
+            int processTime = Math.max(1, GsonHelper.getAsInt(pSerializedRecipe, "processTime", 20 * 10));
+            return new SoulConfiguratorRecipe(pRecipeId, precedent, aspect, coherence, successResult, failResult, chance, requiredSoulFuel, processTime);
         }
 
         @Override
@@ -109,11 +124,12 @@ public class SoulConfiguratorRecipe implements Recipe<Container> {
             Ingredient precedent = Ingredient.fromNetwork(pBuffer);
             Ingredient aspect = Ingredient.fromNetwork(pBuffer);
             Ingredient coherence = Ingredient.fromNetwork(pBuffer);
-            ItemStack resultA = pBuffer.readItem();
-            ItemStack resultB = pBuffer.readItem();
+            ItemStack successResult = pBuffer.readItem();
+            ItemStack failResult = pBuffer.readItem();
             float chance = pBuffer.readFloat();
             int requiredSoulFuel = pBuffer.readInt();
-            return new SoulConfiguratorRecipe(pRecipeId, precedent, aspect, coherence, resultA, resultB, chance, requiredSoulFuel);
+            int processTime = pBuffer.readInt();
+            return new SoulConfiguratorRecipe(pRecipeId, precedent, aspect, coherence, successResult, failResult, chance, requiredSoulFuel, processTime);
         }
 
         @Override
@@ -125,6 +141,7 @@ public class SoulConfiguratorRecipe implements Recipe<Container> {
             pBuffer.writeItem(pRecipe.failResult);
             pBuffer.writeFloat(pRecipe.chance);
             pBuffer.writeInt(pRecipe.requiredSoulFuel);
+            pBuffer.writeInt(pRecipe.processTime);
         }
     }
 }
