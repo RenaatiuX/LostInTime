@@ -1,7 +1,8 @@
 package com.ren.lostintime.common.entity.creatures;
 
 import com.ren.lostintime.common.entity.LITAnimal;
-import com.ren.lostintime.common.entity.goal.*;
+import com.ren.lostintime.common.entity.goal.EggBreedGoal;
+import com.ren.lostintime.common.entity.goal.LayEggGoal;
 import com.ren.lostintime.common.entity.util.IEggLayer;
 import com.ren.lostintime.common.entity.util.ISleepingEntity;
 import com.ren.lostintime.common.init.BlockInit;
@@ -9,8 +10,6 @@ import com.ren.lostintime.common.init.EntityInit;
 import com.ren.lostintime.common.init.ParticlesInit;
 import com.ren.lostintime.datagen.server.LITTags;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ItemParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -25,7 +24,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -43,7 +41,6 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -73,7 +70,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     //egg
-    private int layEggCounter;
+    private int eggCounter;
 
     //flap
     public float flapping = 1.0F;
@@ -96,8 +93,8 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
-        this.goalSelector.addGoal(5, new EggBreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(6, new LayEggGoal(this, 1.0D, BlockTags.DIRT, BlockInit.DODO_EGG, 1.0D));
+        this.goalSelector.addGoal(5, new EggBreedGoal<>(this, 1.0D));
+        this.goalSelector.addGoal(6, new LayEggGoal<>(this, 1.0D));
         this.goalSelector.addGoal(7, new TemptGoal(this, 1.0D, Ingredient.of(LITTags.Items.DODO_FOOD), false));
         this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, 1.0D));
@@ -128,16 +125,13 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     @Override
     public void aiStep() {
         super.aiStep();
+        if (this.eggCounter > 0){
+            this.eggCounter--;
+            System.out.println("Egg Counter : " + eggCounter);
+        }
         Vec3 vec3 = this.getDeltaMovement();
         if (!this.onGround() && vec3.y < 0.0D) {
             this.setDeltaMovement(vec3.multiply(1.0D, 0.6D, 1.0D));
-        }
-
-        if (this.isAlive() && this.isLayingEgg() && this.layEggCounter >= 1 && this.layEggCounter % 5 == 0) {
-            BlockPos blockpos = this.blockPosition();
-            if (this.level().getBlockState(blockpos.below()).is(BlockTags.DIRT)) {
-                this.level().levelEvent(2001, blockpos, Block.getId(this.level().getBlockState(blockpos.below())));
-            }
         }
 
         if (this.level().isClientSide() && this.isSleeping()) {
@@ -190,6 +184,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         super.addAdditionalSaveData(pCompound);
         pCompound.putBoolean("isPecking", this.getIsPecking());
         pCompound.putBoolean("HasEgg", this.hasEgg());
+        pCompound.putInt("eggCounter", this.eggCounter);
         pCompound.putBoolean("IsChickenJockey", this.isChickenJockey);
     }
 
@@ -197,7 +192,8 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         this.setIsPecking(pCompound.getBoolean("isPecking"));
-        this.setHasEgg(pCompound.getBoolean("HasEgg"));
+        this.entityData.set(HAS_EGG, pCompound.getBoolean("HasEgg"));
+        this.eggCounter = pCompound.getInt("eggCounter");
         this.isChickenJockey = pCompound.getBoolean("IsChickenJockey");
     }
 
@@ -208,43 +204,6 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
     public void setIsPecking(boolean pecking) {
         this.entityData.set(PECKING, pecking);
-    }
-
-    //Egg
-    @Override
-    public boolean hasEgg() {
-        return this.entityData.get(HAS_EGG);
-    }
-
-    @Override
-    public void setHasEgg(boolean pHasEgg) {
-        this.entityData.set(HAS_EGG, pHasEgg);
-    }
-
-    @Override
-    public int getLayEggCounter() {
-        return this.layEggCounter;
-    }
-
-    @Override
-    public void setLayEggCounter(int layEggCounter) {
-        this.layEggCounter = layEggCounter;
-    }
-
-    @Override
-    public boolean isLayingEgg() {
-        return this.entityData.get(LAYING_EGG);
-    }
-
-    @Override
-    public void setLayingEgg(boolean pIsLayingEgg) {
-        this.layEggCounter = pIsLayingEgg ? 1 : 0;
-        this.entityData.set(LAYING_EGG, pIsLayingEgg);
-    }
-
-    @Override
-    public void onEggLaid() {
-
     }
 
     //babe zombie
@@ -269,7 +228,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
     @Override
     public boolean canSleep() {
-        return !this.isInLove() && !this.isLayingEgg();
+        return !this.isInLove();
     }
 
     public boolean isForaging() {
@@ -408,6 +367,40 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         }
     }
 
+    @Override
+    public boolean hasEgg() {
+        return this.entityData.get(HAS_EGG);
+    }
+
+    @Override
+    public void hatchEgg(int hatchTicks) {
+        if (!hasEgg()){
+            this.entityData.set(HAS_EGG, true);
+            this.eggCounter = hatchTicks;
+        }
+    }
+
+    @Override
+    public void onEggLayed(BlockPos eggPos) {
+        this.entityData.set(HAS_EGG, false);
+        this.level().levelEvent(2001, eggPos, Block.getId(this.level().getBlockState(eggPos.below())));
+    }
+
+    @Override
+    public boolean validEggPosition(BlockPos pos, BlockState state) {
+        return state.is(BlockTags.DIRT);
+    }
+
+    @Override
+    public boolean canLayEgg() {
+        return this.eggCounter <= 0;
+    }
+
+    @Override
+    public BlockState getEgg() {
+        return BlockInit.DODO_EGG.get().defaultBlockState();
+    }
+
     static class DodoEatFruitGoal extends Goal {
 
         private final Dodo dodo;
@@ -420,7 +413,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
         @Override
         public boolean canUse() {
-            if (dodo.isSleeping() || dodo.isForaging() || dodo.isLayingEgg() || dodo.hasEgg()) return false;
+            if (dodo.isSleeping() || dodo.isForaging() || dodo.hasEgg() || dodo.hasEgg()) return false;
 
             List<ItemEntity> items = dodo.level().getEntitiesOfClass(
                     ItemEntity.class,
