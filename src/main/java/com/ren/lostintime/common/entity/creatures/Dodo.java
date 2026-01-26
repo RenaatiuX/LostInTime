@@ -397,6 +397,12 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     }
 
     @Override
+    public boolean canMate(Animal pOtherAnimal) {
+        return !hasEgg() && super.canMate(pOtherAnimal);
+    }
+
+
+    @Override
     public BlockState getEgg() {
         return BlockInit.DODO_EGG.get().defaultBlockState();
     }
