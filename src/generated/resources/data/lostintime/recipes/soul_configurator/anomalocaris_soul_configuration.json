@@ -1,0 +1,18 @@
+{
+  "type": "lostintime:soul_configurator_recipe",
+  "aspect": {
+    "item": "lostintime:aspect_emergence"
+  },
+  "coherence_medium": {
+    "item": "lostintime:empty_soul_configuration"
+  },
+  "fail_result": {
+    "item": "lostintime:empty_soul_configuration"
+  },
+  "precedent_matter": {
+    "item": "lostintime:anomalocaris_fossil"
+  },
+  "success_result": {
+    "item": "lostintime:anomalocaris_soul_configuration"
+  }
+}
