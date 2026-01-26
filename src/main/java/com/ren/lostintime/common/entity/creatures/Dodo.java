@@ -76,12 +76,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     private int layEggCounter;
 
     //flap
-    public float flap;
-    public float flapSpeed;
-    public float oFlapSpeed;
-    public float oFlap;
     public float flapping = 1.0F;
-    private float nextFlap = 1.0F;
 
     //zombie
     public boolean isChickenJockey;
@@ -101,9 +96,6 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
-        this.goalSelector.addGoal(2, new DodoEatFruitGoal(this));
-        this.goalSelector.addGoal(3, new DodoForageBlockGoal(this));
-        this.goalSelector.addGoal(4, new DodoPeckGoal(this));
         this.goalSelector.addGoal(5, new EggBreedGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new LayEggGoal(this, 1.0D, BlockTags.DIRT, BlockInit.DODO_EGG, 1.0D));
         this.goalSelector.addGoal(7, new TemptGoal(this, 1.0D, Ingredient.of(LITTags.Items.DODO_FOOD), false));
@@ -136,19 +128,10 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     @Override
     public void aiStep() {
         super.aiStep();
-        this.oFlap = this.flap;
-        this.oFlapSpeed = this.flapSpeed;
-        this.flapSpeed += (this.onGround() ? -1.0F : 4.0F) * 0.3F;
-        this.flapSpeed = Mth.clamp(this.flapSpeed, 0.0F, 1.0F);
-        if (!this.onGround() && this.flapping < 1.0F) {
-            this.flapping = 1.0F;
-        }
-        this.flapping *= 0.9F;
         Vec3 vec3 = this.getDeltaMovement();
         if (!this.onGround() && vec3.y < 0.0D) {
             this.setDeltaMovement(vec3.multiply(1.0D, 0.6D, 1.0D));
         }
-        this.flap += this.flapping * 2.0F;
 
         if (this.isAlive() && this.isLayingEgg() && this.layEggCounter >= 1 && this.layEggCounter % 5 == 0) {
             BlockPos blockpos = this.blockPosition();
@@ -170,12 +153,11 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
             return;
         }
         sleepParticleCooldown = 40 + this.random.nextInt(40);
-        double yaw = this.yBodyRot;
 
         double x = this.getX();
         double y = this.getY() + this.getBbHeight() + 0.15D;
         double z = this.getZ();
-        this.level().addParticle(ParticlesInit.SLEEPING_PARTICLES.get(), x, y, z, yaw, this.getId(), 0);
+        this.level().addParticle(ParticlesInit.SLEEPING_PARTICLES.get(), x, y, z, 0f, 0.4f, 0);
     }
 
     @Override
@@ -217,16 +199,6 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         this.setIsPecking(pCompound.getBoolean("isPecking"));
         this.setHasEgg(pCompound.getBoolean("HasEgg"));
         this.isChickenJockey = pCompound.getBoolean("IsChickenJockey");
-    }
-
-    @Override
-    protected void onFlap() {
-        this.nextFlap = this.flyDist + this.flapSpeed / 2.0F;
-    }
-
-    @Override
-    protected boolean isFlapping() {
-        return this.flyDist > this.nextFlap;
     }
 
     //Pecking
@@ -360,7 +332,8 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     }
 
     protected <E extends Dodo> PlayState flapPredicate(final AnimationState<E> event) {
-        if (!this.onGround() && !this.isInWater()) {
+        if (!isSleeping() && !this.onGround() && level().getBlockState(this.getOnPos()).isAir() && !this.isInWater()) {
+
             event.getController().setAnimation(FLAP);
             event.getController().setAnimationSpeed(1.0D);
             return PlayState.CONTINUE;
