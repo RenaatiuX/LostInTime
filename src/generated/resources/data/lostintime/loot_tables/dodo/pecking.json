@@ -1,64 +1,282 @@
 {
-  "type": "minecraft:gift",
+  "type": "lostintime:dodo_peck",
   "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.25,
+          "condition": "minecraft:random_chance"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "lostintime:random_tag_entry",
+              "conditions": [
+                {
+                  "condition": "minecraft:location_check",
+                  "predicate": {
+                    "biome": "minecraft:mushroom_fields"
+                  }
+                }
+              ],
+              "name": "forge:mushrooms"
+            },
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:stick"
+            }
+          ]
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 3.0,
+        "min": 1.0
+      }
+    },
     {
       "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:stick",
-          "weight": 25
-        },
+          "conditions": [
+            {
+              "chance": 0.15,
+              "condition": "minecraft:random_chance"
+            }
+          ],
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:bone"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.15,
+          "condition": "minecraft:random_chance"
+        }
+      ],
+      "entries": [
+        {
+          "type": "lostintime:random_tag_entry",
+          "name": "forge:seeds"
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 3.0,
+        "min": 1.0
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.05,
+          "condition": "lostintime:random_chance_golden"
+        }
+      ],
+      "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:bone",
-          "weight": 15
-        },
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 5.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:iron_nugget"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.05,
+          "condition": "lostintime:random_chance_golden"
+        }
+      ],
+      "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:wheat_seeds",
-          "weight": 10
-        },
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 4.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:gold_nugget"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.05,
+          "condition": "lostintime:random_chance_golden"
+        }
+      ],
+      "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_nugget",
-          "weight": 5
-        },
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            },
+            {
+              "add": false,
+              "damage": {
+                "type": "minecraft:uniform",
+                "max": 1.0,
+                "min": 0.01
+              },
+              "function": "minecraft:set_damage"
+            }
+          ],
+          "name": "minecraft:leather_boots"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.03,
+          "condition": "lostintime:random_chance_golden"
+        }
+      ],
+      "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:gold_nugget",
-          "weight": 5
-        },
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:emerald"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.02,
+          "condition": "lostintime:random_chance_golden"
+        }
+      ],
+      "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:leather_boots",
-          "weight": 5
-        },
+          "name": "minecraft:name_tag"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
         {
-          "type": "minecraft:item",
-          "name": "minecraft:emerald",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:name_tag",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:iron_sword"
-        },
-        {
-          "type": "minecraft:tag",
-          "expand": true,
-          "name": "lostintime:unidentified_fossil"
-        },
+          "chance": 0.001,
+          "condition": "lostintime:random_chance_golden"
+        }
+      ],
+      "entries": [
         {
           "type": "minecraft:item",
           "name": "minecraft:emerald_block"
         }
       ],
       "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.0025,
+          "condition": "lostintime:random_chance_golden"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            },
+            {
+              "add": false,
+              "damage": {
+                "type": "minecraft:uniform",
+                "max": 1.0,
+                "min": 0.01
+              },
+              "function": "minecraft:set_damage"
+            }
+          ],
+          "name": "minecraft:iron_sword"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.0025,
+          "condition": "lostintime:random_chance_golden"
+        }
+      ],
+      "entries": [
+        {
+          "type": "lostintime:random_tag_entry",
+          "name": "lostintime:unidentified_fossil"
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 3.0,
+        "min": 1.0
+      }
     }
   ],
   "random_sequence": "lostintime:dodo/pecking"

@@ -82,7 +82,10 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     private int sleepParticleCooldown = 0;
 
     //Peck logic
-    private BlockPos forageTarget;
+    private BlockPos peckTarget;
+    private int peckCooldown = 0;
+    private int lootMultiplier = 1;
+    private int goldenFoodBonus = 0;
 
     public Dodo(EntityType<? extends Animal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -93,6 +96,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
+        this.goalSelector.addGoal(1, new DodoPeckGoal(this));
         this.goalSelector.addGoal(5, new EggBreedGoal<>(this, 1.0D));
         this.goalSelector.addGoal(6, new LayEggGoal<>(this, 1.0D));
         this.goalSelector.addGoal(7, new TemptGoal(this, 1.0D, Ingredient.of(LITTags.Items.DODO_FOOD), false));
@@ -127,7 +131,9 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         super.aiStep();
         if (this.eggCounter > 0){
             this.eggCounter--;
-            System.out.println("Egg Counter : " + eggCounter);
+        }
+        if (peckCooldown > 0){
+            this.peckCooldown--;
         }
         Vec3 vec3 = this.getDeltaMovement();
         if (!this.onGround() && vec3.y < 0.0D) {
@@ -182,7 +188,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        pCompound.putBoolean("isPecking", this.getIsPecking());
+        pCompound.putBoolean("isPecking", this.isPecking());
         pCompound.putBoolean("HasEgg", this.hasEgg());
         pCompound.putInt("eggCounter", this.eggCounter);
         pCompound.putBoolean("IsChickenJockey", this.isChickenJockey);
@@ -191,18 +197,18 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        this.setIsPecking(pCompound.getBoolean("isPecking"));
+        this.setPecking(pCompound.getBoolean("isPecking"));
         this.entityData.set(HAS_EGG, pCompound.getBoolean("HasEgg"));
         this.eggCounter = pCompound.getInt("eggCounter");
         this.isChickenJockey = pCompound.getBoolean("IsChickenJockey");
     }
 
     //Pecking
-    public boolean getIsPecking() {
+    public boolean isPecking() {
         return this.entityData.get(PECKING);
     }
 
-    public void setIsPecking(boolean pecking) {
+    public void setPecking(boolean pecking) {
         this.entityData.set(PECKING, pecking);
     }
 
@@ -231,17 +237,13 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         return !this.isInLove();
     }
 
-    public boolean isForaging() {
-        return forageTarget != null;
-    }
-
-    public void setForageTarget(@Nullable BlockPos pos) {
-        this.forageTarget = pos;
-    }
-
     @Nullable
-    public BlockPos getForageTarget() {
-        return forageTarget;
+    public BlockPos getPeckTarget() {
+        return peckTarget;
+    }
+
+    public void setPeckTarget(@Nullable BlockPos peckTarget) {
+        this.peckTarget = peckTarget;
     }
 
     @Override
@@ -267,7 +269,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         controllers.add(new AnimationController<>(this, "flapController", 2, this::flapPredicate));
         controllers.add(new AnimationController<>(this, "moveController", 5, this::movePredicate));
         controllers.add(new AnimationController<>(this, "peckController", 2, state -> {
-            if (this.getIsPecking()) {
+            if (this.isPecking()) {
                 return state.setAndContinue(PECK);
             }
             state.getController().forceAnimationReset();
@@ -419,7 +421,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
         @Override
         public boolean canUse() {
-            if (dodo.isSleeping() || dodo.isForaging() || dodo.hasEgg() || dodo.hasEgg()) return false;
+            if (dodo.isSleeping() || dodo.isPecking() || dodo.hasEgg()) return false;
 
             List<ItemEntity> items = dodo.level().getEntitiesOfClass(
                     ItemEntity.class,
@@ -444,8 +446,8 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
             if (targetItem == null) return;
 
             if (dodo.distanceTo(targetItem) < 1.2F) {
-                dodo.setForageTarget(targetItem.blockPosition());
-                targetItem.discard();
+                dodo.setPecking(true);
+                targetItem.getItem().shrink(1);
             }
         }
 
@@ -478,7 +480,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         public void start() {
             BlockPos pos = findValidBlock();
             if (pos != null) {
-                dodo.setForageTarget(pos);
+                dodo.setPeckTarget(pos);
                 dodo.getNavigation().moveTo(
                         pos.getX(), pos.getY(), pos.getZ(), 1.0D
                 );
@@ -515,14 +517,13 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
         @Override
         public boolean canUse() {
-            return dodo.getForageTarget() != null
-                    && dodo.distanceToSqr(Vec3.atCenterOf(dodo.getForageTarget())) < 1.5D;
+            return dodo.peckCooldown <= 0 && dodo.isPecking();
         }
 
         @Override
         public void start() {
             peckTime = 40 + dodo.getRandom().nextInt(20);
-            dodo.setIsPecking(true);
+            dodo.setPeckTarget(null);
         }
 
         @Override
@@ -540,8 +541,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
         @Override
         public void stop() {
-            dodo.setIsPecking(false);
-            dodo.setForageTarget(null);
+            dodo.setPecking(false);
         }
     }
 }
