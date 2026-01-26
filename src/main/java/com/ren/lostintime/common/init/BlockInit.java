@@ -34,6 +34,12 @@ public class BlockInit {
     public static final RegistryObject<Block> SOUL_CONFIGURATOR = registerBlock("soul_configurator",
             () -> new SoulConfiguratorBlock(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE).noOcclusion().lightLevel(s -> s.getValue(SoulConfiguratorBlock.PART) == SoulConfiguratorBlock.Part.TOP && s.getValue(LITMachineBlock.ON) ? 10 : 0)));
 
+    //Environment
+    public static final RegistryObject<Block> DEAD_BARREL_SPONGE = registerBlock("dead_barrel_sponge",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.DEAD_TUBE_CORAL_BLOCK)));
+    public static final RegistryObject<Block> BARREL_SPONGE = registerBlock("barrel_sponge",
+            () -> new LITSpongeBlock(DEAD_BARREL_SPONGE, true, BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL_BLOCK)));
+
     //SAPLINGS
     public static final RegistryObject<Block> MANGO_SAPLING = registerBlock("mango_sapling",
             () -> new SaplingBlock(new MangoTreeGrower(), BlockBehaviour.Properties.copy(Blocks.OAK_SAPLING)));

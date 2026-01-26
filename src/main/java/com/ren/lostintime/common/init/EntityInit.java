@@ -1,6 +1,7 @@
 package com.ren.lostintime.common.init;
 
 import com.ren.lostintime.LostInTime;
+import com.ren.lostintime.common.entity.creatures.Anomalocaris;
 import com.ren.lostintime.common.entity.creatures.Dodo;
 import com.ren.lostintime.common.entity.projectile.GuardianSpike;
 import net.minecraft.world.entity.EntityType;
@@ -18,6 +19,8 @@ public class EntityInit {
 
     public static final RegistryObject<EntityType<Dodo>> DODO = registerMob("dodo", Dodo::new,
             0.6F, 1.0F);
+    public static final RegistryObject<EntityType<Anomalocaris>> ANOMALOCARIS = registerMob("anomalocaris",
+            Anomalocaris::new, 1.0F, 1.0F);
 
     public static final RegistryObject<EntityType<GuardianSpike>> GUARDIAN_SPIKE = registerProjectile("guardian_spike",
             GuardianSpike::new);

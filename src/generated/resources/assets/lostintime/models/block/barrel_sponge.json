@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "lostintime:block/barrel_sponge_bottom",
+    "side": "lostintime:block/barrel_sponge_side",
+    "top": "lostintime:block/barrel_sponge_top"
+  }
+}

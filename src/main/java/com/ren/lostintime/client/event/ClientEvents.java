@@ -2,6 +2,7 @@ package com.ren.lostintime.client.event;
 
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.client.particles.SleepingParticle;
+import com.ren.lostintime.client.render.entity.AnomalocarisRender;
 import com.ren.lostintime.client.render.entity.DodoRender;
 import com.ren.lostintime.client.render.projectile.GuardianSpikeRender;
 import com.ren.lostintime.client.screen.IdentificationScreen;
@@ -32,6 +33,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(EntityInit.DODO.get(), DodoRender::new);
+        event.registerEntityRenderer(EntityInit.ANOMALOCARIS.get(), AnomalocarisRender::new);
 
         event.registerEntityRenderer(EntityInit.GUARDIAN_SPIKE.get(), GuardianSpikeRender::new);
     }

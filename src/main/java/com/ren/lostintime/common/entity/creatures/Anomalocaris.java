@@ -8,21 +8,29 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.NeutralMob;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.ai.goal.TryFindWaterGoal;
 import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
 
@@ -34,8 +42,15 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity, Neutral
             EntityDataSerializers.INT);
 
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
-    @javax.annotation.Nullable
+    @Nullable
     private UUID persistentAngerTarget;
+
+    protected static final RawAnimation SWIM = RawAnimation.begin().thenLoop("move.swim");
+    protected static final RawAnimation OUT_OF_WATER = RawAnimation.begin().thenLoop("move.out_of_water");
+    protected static final RawAnimation GRABBED = RawAnimation.begin().thenPlay("misc.grabbed");
+    public static final RawAnimation GRAB = RawAnimation.begin().thenLoop("misc.grab");
+
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public Anomalocaris(EntityType<? extends WaterAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -43,7 +58,8 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity, Neutral
 
     @Override
     protected void registerGoals() {
-        super.registerGoals();
+        this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
+        this.goalSelector.addGoal(4, new RandomSwimmingGoal(this, 1.0D, 10));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -81,7 +97,12 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity, Neutral
 
     @Override
     public @Nullable SoundEvent getFlopSound() {
-        return null;
+        return SoundEvents.COD_FLOP;
+    }
+
+    @Override
+    public boolean isFood(ItemStack stack) {
+        return false;
     }
 
     @Override
@@ -102,6 +123,25 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity, Neutral
         this.entityData.set(IS_ATTACKING, isAttacking);
     }
 
+    @Override
+    public boolean canBeLeashed(Player pPlayer) {
+        return true;
+    }
+
+    @Override
+    protected @Nullable SoundEvent getHurtSound(DamageSource pDamageSource) {
+        return super.getHurtSound(pDamageSource);
+    }
+
+    @Override
+    protected @Nullable SoundEvent getDeathSound() {
+        return super.getDeathSound();
+    }
+
+    @Override
+    public boolean canAttack(LivingEntity pTarget) {
+        return super.canAttack(pTarget) && !this.isBaby();
+    }
 
     @Override
     public int getRemainingPersistentAngerTime() {
@@ -135,11 +175,18 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity, Neutral
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "moveController", 5, this::movePredicate));
+    }
 
+    protected <E extends Anomalocaris> PlayState movePredicate(final AnimationState<E> event) {
+        if (this.isInWater()) {
+            event.getController().setAnimation(SWIM);
+        }
+        return PlayState.CONTINUE;
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return null;
+        return this.cache;
     }
 }

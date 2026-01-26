@@ -131,6 +131,8 @@ public class LostInTime {
             event.accept(BlockInit.MANGO_LOG);
             event.accept(BlockInit.MANGO_SAPLING);
             event.accept(BlockInit.DODO_EGG);
+            event.accept(BlockInit.DEAD_BARREL_SPONGE);
+            event.accept(BlockInit.BARREL_SPONGE);
             event.accept(ItemInit.BOTHRIOLEPIS_ROE);
 
             event.accept(BlockInit.QUATERNARY_FOSSIL_BLOCK);

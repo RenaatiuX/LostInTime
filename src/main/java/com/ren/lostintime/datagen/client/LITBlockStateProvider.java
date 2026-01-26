@@ -63,6 +63,9 @@ public class LITBlockStateProvider extends BlockStateProvider {
 
         identificationTableBlock(BlockInit.IDENTIFICATION_TABLE.get());
 
+        spongeBlock(BlockInit.BARREL_SPONGE.get());
+        spongeBlock(BlockInit.DEAD_BARREL_SPONGE.get());
+
     }
 
     private void saplingBlock(RegistryObject<Block> blockRegistryObject) {
@@ -249,6 +252,13 @@ public class LITBlockStateProvider extends BlockStateProvider {
         });
     }
 
+    private void spongeBlock(Block block) {
+        String name = blockName(block);
+        ModelFile model = models().cubeBottomTop(name, modLoc("block/" + name + "_side"), modLoc("block/" + name +
+                "_bottom"), modLoc("block/" + name + "_top"));
+        simpleBlock(block, model);
+        simpleBlockItem(block, model);
+    }
 
     protected void block(Block block, ModelFile model) {
         simpleBlock(block, model);
