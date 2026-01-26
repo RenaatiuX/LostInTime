@@ -10,7 +10,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
@@ -22,7 +21,9 @@ import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractBaseFish extends AgeableWaterAnimal implements Bucketable {
 
@@ -34,10 +35,13 @@ public abstract class AbstractBaseFish extends AgeableWaterAnimal implements Buc
     }
 
     @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
-        this.goalSelector.addGoal(1, new PanicGoal(this, 1.5D));
-        this.goalSelector.addGoal(4, new RandomSwimmingGoal(this, 1.0D, 10));
+    public boolean requiresCustomPersistence() {
+        return super.requiresCustomPersistence() || this.fromBucket();
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double pDistanceToClosestPlayer) {
+        return !this.fromBucket() && !this.hasCustomName();
     }
 
     @Override
@@ -73,15 +77,19 @@ public abstract class AbstractBaseFish extends AgeableWaterAnimal implements Buc
         CompoundTag compoundnbt = pStack.getOrCreateTag();
         Bucketable.saveDefaultDataToBucketTag(this, pStack);
         compoundnbt.putFloat("Health", this.getHealth());
-
+        compoundnbt.putInt("Age", this.getAge());
         if (this.hasCustomName()) {
             pStack.setHoverName(this.getCustomName());
         }
+
     }
 
     @Override
     public void loadFromBucketTag(CompoundTag pTag) {
         Bucketable.loadDefaultDataFromBucketTag(this, pTag);
+        if (pTag.contains("Age")) {
+            this.setAge(pTag.getInt("Age"));
+        }
     }
 
     @Override
@@ -103,4 +111,20 @@ public abstract class AbstractBaseFish extends AgeableWaterAnimal implements Buc
     protected void playStepSound(BlockPos pPos, BlockState pBlock) {
     }
 
+    @Override
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+        if (pReason == MobSpawnType.BUCKET && pDataTag != null && pDataTag.contains("Age", 3)) {
+            if (pDataTag.contains("Age")) {
+                this.setAge(pDataTag.getInt("Age"));
+            }
+            this.setFromBucket(true);
+        }
+
+        if (pReason == MobSpawnType.TRIGGERED) {
+            this.setFromBucket(true);
+        }
+
+        pSpawnData = super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    }
 }

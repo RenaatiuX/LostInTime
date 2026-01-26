@@ -1,0 +1,6 @@
+{
+  "type": "lostintime:soul_configurator_fuel_recipe",
+  "input": {
+    "item": "lostintime:soul_powder"
+  }
+}

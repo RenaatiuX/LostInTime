@@ -1,6 +1,5 @@
 package com.ren.lostintime.common.entity;
 
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -12,13 +11,13 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
@@ -28,7 +27,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 import org.jetbrains.annotations.Nullable;
@@ -172,6 +170,30 @@ public abstract class AgeableWaterAnimal extends WaterAnimal {
     @Override
     public void setBaby(boolean pBaby) {
         this.setAge(pBaby ? BABY_START_AGE : 0);
+    }
+
+    @Override
+    protected InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
+        ItemStack itemstack = pPlayer.getItemInHand(pHand);
+        if (this.isFood(itemstack)) {
+            int i = this.getAge();
+            if (!this.level().isClientSide && i == 0 && this.canFallInLove()) {
+                this.usePlayerItem(pPlayer, pHand, itemstack);
+                this.setInLove(pPlayer);
+                return InteractionResult.SUCCESS;
+            }
+
+            if (this.isBaby()) {
+                this.usePlayerItem(pPlayer, pHand, itemstack);
+                this.ageUp(getSpeedUpSecondsWhenFeeding(-i), true);
+                return InteractionResult.sidedSuccess(this.level().isClientSide);
+            }
+
+            if (this.level().isClientSide) {
+                return InteractionResult.CONSUME;
+            }
+        }
+        return super.mobInteract(pPlayer, pHand);
     }
 
     public static int getSpeedUpSecondsWhenFeeding(int pTicksUntilAdult) {
@@ -388,6 +410,8 @@ public abstract class AgeableWaterAnimal extends WaterAnimal {
         return true;
     }
 
+    public abstract boolean isFood(ItemStack stack);
+
     public static class AgeableWaterAnimalGroupData implements SpawnGroupData {
         private int groupSize;
         private final boolean shouldSpawnBaby;
@@ -425,6 +449,7 @@ public abstract class AgeableWaterAnimal extends WaterAnimal {
 
     @Cancelable
     public static class BabyWaterAnimalSpawnEvent extends Event {
+
         private final Mob parentA;
         private final Mob parentB;
         private final Player causedByPlayer;
