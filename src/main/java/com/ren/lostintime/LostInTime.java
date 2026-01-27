@@ -157,6 +157,12 @@ public class LostInTime {
             event.accept(BlockInit.IDENTIFICATION_TABLE);
             event.accept(BlockInit.SOUL_EXTRACTOR);
             event.accept(BlockInit.SOUL_CONFIGURATOR);
+
+            event.accept(BlockInit.DEAD_GLASS_SPONGE);
+            event.accept(BlockInit.GLASS_SPONGE);
+
+            event.accept(BlockInit.DEAD_LARGE_PIPE_SPONGE);
+            event.accept(BlockInit.LARGE_PIPE_SPONGE);
         }
     }
 }

@@ -74,4 +74,8 @@ public class LITSpongeBlock extends Block {
 
         return this.defaultBlockState();
     }
+
+    public Supplier<Block> getDeadBlock() {
+        return deadBlock;
+    }
 }

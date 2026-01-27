@@ -18,13 +18,12 @@ public class DodoModel extends DefaultedEntityGeoModel<Dodo> {
 
     @Override
     public void setCustomAnimations(Dodo animatable, long instanceId, AnimationState<Dodo> animationState) {
-        super.setCustomAnimations(animatable, instanceId, animationState);
         if (animationState == null) return;
 
-        EntityModelData extraDataOfType = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
         CoreGeoBone neck = this.getAnimationProcessor().getBone("neck");
 
         if (neck != null) {
+            EntityModelData extraDataOfType = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
             if (animatable.isBaby()) {
                 neck.setScaleX(1.2F);
                 neck.setScaleY(1.2F);
@@ -35,10 +34,10 @@ public class DodoModel extends DefaultedEntityGeoModel<Dodo> {
                 neck.setScaleZ(1.0F);
             }
 
-            /*if (!animatable.getIsPecking()) {
+            if (!animatable.isPecking()) {
                 neck.setRotX(extraDataOfType.headPitch() * Mth.DEG_TO_RAD);
                 neck.setRotY(extraDataOfType.netHeadYaw() * Mth.DEG_TO_RAD);
-            }*/
+            }
 
         }
     }

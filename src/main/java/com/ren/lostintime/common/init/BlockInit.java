@@ -40,6 +40,32 @@ public class BlockInit {
     public static final RegistryObject<Block> BARREL_SPONGE = registerBlock("barrel_sponge",
             () -> new LITSpongeBlock(DEAD_BARREL_SPONGE, true, BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL_BLOCK)));
 
+    public static final RegistryObject<Block> DEAD_GLASS_SPONGE = registerBlock("dead_glass_sponge",
+            () -> new BaseCoralPlantBlock(BlockBehaviour.Properties.copy(Blocks.DEAD_TUBE_CORAL)));
+    public static final RegistryObject<Block> GLASS_SPONGE = registerBlock("glass_sponge",
+            () -> new CoralPlantBlock(DEAD_GLASS_SPONGE.get(), BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL)));
+    public static final RegistryObject<Block> DEAD_PIPE_SPONGE = registerBlock("dead_pipe_sponge",
+            () -> new BaseCoralPlantBlock(BlockBehaviour.Properties.copy(Blocks.DEAD_TUBE_CORAL)));
+    public static final RegistryObject<Block> PIPE_SPONGE = registerBlock("pipe_sponge",
+            () -> new CoralPlantBlock(DEAD_PIPE_SPONGE.get(), BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL)));
+    public static final RegistryObject<Block> DEAD_TREE_SPONGE = registerBlock("dead_tree_sponge",
+            () -> new BaseCoralPlantBlock(BlockBehaviour.Properties.copy(Blocks.DEAD_TUBE_CORAL)));
+    public static final RegistryObject<Block> TREE_SPONGE = registerBlock("tree_sponge",
+            () -> new CoralPlantBlock(DEAD_TREE_SPONGE.get(), BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL)));
+    public static final RegistryObject<Block> DEAD_VASE_SPONGE = registerBlock("dead_vase_sponge",
+            () -> new BaseCoralPlantBlock(BlockBehaviour.Properties.copy(Blocks.DEAD_TUBE_CORAL)));
+    public static final RegistryObject<Block> VASE_SPONGE = registerBlock("vase_sponge",
+            () -> new CoralPlantBlock(DEAD_VASE_SPONGE.get(), BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL)));
+    public static final RegistryObject<Block> DEAD_WOOL_SPONGE = registerBlock("dead_wool_sponge",
+            () -> new BaseCoralPlantBlock(BlockBehaviour.Properties.copy(Blocks.DEAD_TUBE_CORAL)));
+    public static final RegistryObject<Block> WOOL_SPONGE = registerBlock("wool_sponge",
+            () -> new CoralPlantBlock(DEAD_WOOL_SPONGE.get(), BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL)));
+
+    public static final RegistryObject<Block> DEAD_LARGE_PIPE_SPONGE = registerBlock("dead_large_pipe_sponge",
+            () -> new LITDeadTallSpongeBlock(BlockBehaviour.Properties.copy(Blocks.DEAD_TUBE_CORAL)));
+    public static final RegistryObject<Block> LARGE_PIPE_SPONGE = registerBlock("large_pipe_sponge",
+            () -> new LITTallSpongeBlock(DEAD_LARGE_PIPE_SPONGE, BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL)));
+
     //SAPLINGS
     public static final RegistryObject<Block> MANGO_SAPLING = registerBlock("mango_sapling",
             () -> new SaplingBlock(new MangoTreeGrower(), BlockBehaviour.Properties.copy(Blocks.OAK_SAPLING)));

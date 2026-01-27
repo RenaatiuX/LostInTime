@@ -66,7 +66,43 @@ public class LITBlockStateProvider extends BlockStateProvider {
         spongeBlock(BlockInit.BARREL_SPONGE.get());
         spongeBlock(BlockInit.DEAD_BARREL_SPONGE.get());
 
+        coralPlant(BlockInit.DEAD_GLASS_SPONGE);
+        coralPlant(BlockInit.GLASS_SPONGE);
+
+        doubleCoralPlant(BlockInit.DEAD_LARGE_PIPE_SPONGE);
+        doubleCoralPlant(BlockInit.LARGE_PIPE_SPONGE);
     }
+
+    private void coralPlant(RegistryObject<Block> blockRO) {
+        Block block = blockRO.get();
+        String name = blockName(block);
+
+        ModelFile model = models().cross(name, modLoc("block/" + name)).renderType("cutout");
+
+        simpleBlock(block, model);
+        simpleBlockItem(block, model);
+    }
+
+    private void doubleCoralPlant(RegistryObject<Block> blockRO) {
+        Block block = blockRO.get();
+        String name = blockName(block);
+
+        ModelFile lower = models()
+                .cross(name + "_lower", modLoc("block/" + name + "_lower")).renderType("cutout");
+
+        ModelFile upper = models()
+                .cross(name + "_upper", modLoc("block/" + name + "_upper")).renderType("cutout");
+
+        getVariantBuilder(block)
+                .partialState().with(LITTallSpongeBlock.HALF, DoubleBlockHalf.LOWER)
+                .modelForState().modelFile(lower).addModel()
+
+                .partialState().with(LITTallSpongeBlock.HALF, DoubleBlockHalf.UPPER)
+                .modelForState().modelFile(upper).addModel();
+
+        simpleBlockItem(block, upper);
+    }
+
 
     private void saplingBlock(RegistryObject<Block> blockRegistryObject) {
         simpleBlock(blockRegistryObject.get(),
@@ -217,7 +253,7 @@ public class LITBlockStateProvider extends BlockStateProvider {
             SoulConfiguratorBlock.Part part = state.getValue(SoulConfiguratorBlock.PART);
             Direction facing = state.getValue(SoulConfiguratorBlock.FACING);
             boolean on = state.getValue(LITMachineBlock.ON);
-            var onString =  on ? "on" : "off";
+            var onString = on ? "on" : "off";
 
             ModelFile model = switch (part) {
                 case MAIN -> models().withExistingParent(name + "_main_" + onString,
@@ -225,12 +261,12 @@ public class LITBlockStateProvider extends BlockStateProvider {
                         .texture("0", modLoc("block/soul_configurator_" + onString))
                         .texture("particle", modLoc("block/soul_configurator_" + onString))
                         .renderType("cutout");
-                case TOP  ->  models().withExistingParent(name + "_top_" + onString,
+                case TOP -> models().withExistingParent(name + "_top_" + onString,
                                 modLoc("block/soul_configurator_upper"))
                         .texture("0", modLoc("block/soul_configurator_" + onString))
                         .texture("particle", modLoc("block/soul_configurator_" + onString))
                         .renderType("translucent");
-                case SIDE ->  models().withExistingParent(name + "_side_" + onString,
+                case SIDE -> models().withExistingParent(name + "_side_" + onString,
                                 modLoc("block/soul_configurator_right"))
                         .texture("0", modLoc("block/soul_configurator_" + onString))
                         .texture("particle", modLoc("block/soul_configurator_" + onString))
@@ -240,8 +276,8 @@ public class LITBlockStateProvider extends BlockStateProvider {
             int yRot = switch (facing) {
                 case NORTH -> 180;
                 case SOUTH -> 0;
-                case WEST  -> 90;
-                case EAST  -> 270;
+                case WEST -> 90;
+                case EAST -> 270;
                 default -> 0;
             };
 
