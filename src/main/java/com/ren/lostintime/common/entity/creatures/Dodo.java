@@ -4,6 +4,7 @@ import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.entity.LITAnimal;
 import com.ren.lostintime.common.entity.goal.EggBreedGoal;
 import com.ren.lostintime.common.entity.goal.LayEggGoal;
+import com.ren.lostintime.common.entity.goal.MoveToEntityGoal;
 import com.ren.lostintime.common.entity.util.IEggLayer;
 import com.ren.lostintime.common.entity.util.ISleepingEntity;
 import com.ren.lostintime.common.init.*;
@@ -446,56 +447,53 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         return BlockInit.DODO_EGG.get().defaultBlockState();
     }
 
-    static class DodoEatFruitGoal extends Goal {
+    static class DodoEatFruitGoal extends MoveToEntityGoal<ItemEntity> {
 
         private final Dodo dodo;
-        private ItemEntity targetItem;
 
         public DodoEatFruitGoal(Dodo dodo) {
+            super(dodo, 1.0D, 10D, ItemEntity.class);
             this.dodo = dodo;
-            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         }
 
         @Override
         public boolean canUse() {
             if (dodo.isSleeping() || dodo.isPecking() || dodo.hasEgg() || dodo.peckCooldown > 0) return false;
-
-            List<ItemEntity> items = dodo.level().getEntitiesOfClass(
-                    ItemEntity.class,
-                    dodo.getBoundingBox().inflate(6.0D), s -> dodo.canEatPeckFood(s.getItem())
-            );
-
-            if (!items.isEmpty()) {
-                targetItem = items.get(0);
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public void start() {
-            dodo.getNavigation().moveTo(targetItem, 1.0D);
+            return super.canUse();
         }
 
         @Override
         public void tick() {
-            if (targetItem == null) return;
-
-            if (dodo.distanceTo(targetItem) < 1.2F) {
+            super.tick();
+            if (isReachedTarget()) {
                 dodo.setPecking(true);
-                dodo.feedPeckItem(targetItem.getItem());
-                targetItem.getItem().shrink(1);
+                dodo.feedPeckItem(target.getItem());
+                target.getItem().shrink(1);
             }
         }
 
         @Override
-        public boolean canContinueToUse() {
-            return targetItem != null && targetItem.isAlive();
+        public void stop() {
+            if (isReachedTarget()){
+                //no cooldown on pathfinding if we actually found the target for the next start
+                nextStartTick = 0;
+            }
         }
 
         @Override
-        public void stop() {
-            targetItem = null;
+        public double acceptedDistance() {
+            return 1.5d;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            if (dodo.isSleeping() || dodo.isPecking() || dodo.hasEgg() || dodo.peckCooldown > 0) return false;
+            return super.canContinueToUse();
+        }
+
+        @Override
+        protected boolean validEntity(ItemEntity entity) {
+            return dodo.canEatPeckFood(entity.getItem());
         }
     }
 
