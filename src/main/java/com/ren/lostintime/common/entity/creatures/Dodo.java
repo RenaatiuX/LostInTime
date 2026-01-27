@@ -1,5 +1,6 @@
 package com.ren.lostintime.common.entity.creatures;
 
+import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.entity.LITAnimal;
 import com.ren.lostintime.common.entity.goal.EggBreedGoal;
 import com.ren.lostintime.common.entity.goal.LayEggGoal;
@@ -7,6 +8,7 @@ import com.ren.lostintime.common.entity.util.IEggLayer;
 import com.ren.lostintime.common.entity.util.ISleepingEntity;
 import com.ren.lostintime.common.init.BlockInit;
 import com.ren.lostintime.common.init.EntityInit;
+import com.ren.lostintime.common.init.ModLootParamSets;
 import com.ren.lostintime.common.init.ParticlesInit;
 import com.ren.lostintime.datagen.server.LITTags;
 import net.minecraft.core.BlockPos;
@@ -33,11 +35,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -61,7 +69,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
     protected static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
     protected static final RawAnimation FLAP = RawAnimation.begin().thenLoop("misc.flap");
-    protected static final RawAnimation PECK = RawAnimation.begin().thenPlay("misc.peck");
+    protected static final RawAnimation PECK = RawAnimation.begin().thenLoop("misc.peck");
     public static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     public static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
     public static final RawAnimation SLEEP = RawAnimation.begin().thenLoop("misc.sleep");
@@ -84,8 +92,9 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     //Peck logic
     private BlockPos peckTarget;
     private int peckCooldown = 0;
-    private int lootMultiplier = 1;
+    private float lootMultiplier = 1;
     private int goldenFoodBonus = 0;
+    protected int goldenCooldown = 0;
 
     public Dodo(EntityType<? extends Animal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -97,6 +106,8 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
         this.goalSelector.addGoal(1, new DodoPeckGoal(this));
+        this.goalSelector.addGoal(2, new DodoEatFruitGoal(this));
+        this.goalSelector.addGoal(4, new DodoWalkToPeckTarget(this, 1.0D));
         this.goalSelector.addGoal(5, new EggBreedGoal<>(this, 1.0D));
         this.goalSelector.addGoal(6, new LayEggGoal<>(this, 1.0D));
         this.goalSelector.addGoal(7, new TemptGoal(this, 1.0D, Ingredient.of(LITTags.Items.DODO_FOOD), false));
@@ -126,6 +137,24 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         return EntityInit.DODO.get().create(pLevel);
     }
 
+    public boolean canEatPeckFood(ItemStack stack){
+        if (Config.goldenFoodMultipliers.containsKey(stack.getItem()) && goldenCooldown <= 0)
+            return true;
+        return stack.is(LITTags.Items.FRUITS);
+    }
+
+
+    public void feedPeckItem(ItemStack stack){
+        if (!canEatPeckFood(stack))
+            return;
+        if (Config.goldenFoodMultipliers.containsKey(stack.getItem())){
+            this.goldenFoodBonus = 10;
+            this.lootMultiplier = Config.goldenFoodMultipliers.get(stack.getItem());
+            goldenCooldown = 24000;//24000 is the time one day and night in minecraft takes
+        }
+
+    }
+
     @Override
     public void aiStep() {
         super.aiStep();
@@ -134,6 +163,9 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         }
         if (peckCooldown > 0){
             this.peckCooldown--;
+        }
+        if (goldenCooldown > 0){
+            goldenCooldown--;
         }
         Vec3 vec3 = this.getDeltaMovement();
         if (!this.onGround() && vec3.y < 0.0D) {
@@ -191,6 +223,10 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         pCompound.putBoolean("isPecking", this.isPecking());
         pCompound.putBoolean("HasEgg", this.hasEgg());
         pCompound.putInt("eggCounter", this.eggCounter);
+        pCompound.putInt("goldenCooldown", this.goldenCooldown);
+        pCompound.putInt("peckCooldown", this.peckCooldown);
+        pCompound.putInt("goldenFoodBonus", this.goldenFoodBonus);
+        pCompound.putFloat("lootMultiplier", this.lootMultiplier);
         pCompound.putBoolean("IsChickenJockey", this.isChickenJockey);
     }
 
@@ -200,6 +236,10 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         this.setPecking(pCompound.getBoolean("isPecking"));
         this.entityData.set(HAS_EGG, pCompound.getBoolean("HasEgg"));
         this.eggCounter = pCompound.getInt("eggCounter");
+        this.goldenCooldown = pCompound.getInt("goldenCooldown");
+        this.peckCooldown = pCompound.getInt("peckCooldown");
+        this.goldenFoodBonus = pCompound.getInt("goldenFoodBonus");
+        this.lootMultiplier = pCompound.getFloat("lootMultiplier");
         this.isChickenJockey = pCompound.getBoolean("IsChickenJockey");
     }
 
@@ -421,12 +461,11 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
         @Override
         public boolean canUse() {
-            if (dodo.isSleeping() || dodo.isPecking() || dodo.hasEgg()) return false;
+            if (dodo.isSleeping() || dodo.isPecking() || dodo.hasEgg() || dodo.peckCooldown > 0) return false;
 
             List<ItemEntity> items = dodo.level().getEntitiesOfClass(
                     ItemEntity.class,
-                    dodo.getBoundingBox().inflate(6.0D),
-                    item -> item.getItem().is(LITTags.Items.FRUITS)
+                    dodo.getBoundingBox().inflate(6.0D), s -> dodo.canEatPeckFood(s.getItem())
             );
 
             if (!items.isEmpty()) {
@@ -447,6 +486,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
             if (dodo.distanceTo(targetItem) < 1.2F) {
                 dodo.setPecking(true);
+                dodo.feedPeckItem(targetItem.getItem());
                 targetItem.getItem().shrink(1);
             }
         }
@@ -462,46 +502,35 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         }
     }
 
-    static class DodoForageBlockGoal extends Goal {
+    static class DodoWalkToPeckTarget extends MoveToBlockGoal {
 
         private final Dodo dodo;
 
-        public DodoForageBlockGoal(Dodo dodo) {
+        public DodoWalkToPeckTarget(Dodo dodo, double speedModifier) {
+            super(dodo, speedModifier, 1);
             this.dodo = dodo;
             this.setFlags(EnumSet.of(Flag.MOVE));
         }
 
         @Override
         public boolean canUse() {
-            return !dodo.isSleeping() && !dodo.hasEgg();
+            return !dodo.isSleeping() && !dodo.hasEgg() && dodo.peckTarget != null && super.canUse();
         }
 
         @Override
-        public void start() {
-            BlockPos pos = findValidBlock();
-            if (pos != null) {
-                dodo.setPeckTarget(pos);
-                dodo.getNavigation().moveTo(
-                        pos.getX(), pos.getY(), pos.getZ(), 1.0D
-                );
-            }
+        public boolean canContinueToUse() {
+            return !dodo.isSleeping() && !dodo.hasEgg() && dodo.peckTarget != null && super.canContinueToUse();
         }
 
-        private BlockPos findValidBlock() {
-            BlockPos origin = dodo.blockPosition();
+        @Override
+        protected boolean isValidTarget(LevelReader pLevel, BlockPos pPos) {
+            return true;
+        }
 
-            for (int i = 0; i < 20; i++) {
-                BlockPos pos = origin.offset(
-                        dodo.getRandom().nextInt(8) - 4,
-                        -1,
-                        dodo.getRandom().nextInt(8) - 4
-                );
-
-                if (dodo.level().getBlockState(pos).is(Blocks.DIRT)) {
-                    return pos;
-                }
-            }
-            return null;
+        @Override
+        protected boolean findNearestBlock() {
+            this.blockPos = dodo.peckTarget;
+            return true;
         }
     }
 
@@ -512,7 +541,8 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
         public DodoPeckGoal(Dodo dodo) {
             this.dodo = dodo;
-            this.setFlags(EnumSet.of(Flag.LOOK, Flag.JUMP));
+            //actually setting the move and Jump flag so the dodo doesnt execute move and jump and look goals
+            this.setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE, Flag.JUMP));
         }
 
         @Override
@@ -531,6 +561,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
             peckTime--;
             if (peckTime % 10 == 0) {
                 dodo.playSound(SoundEvents.CHICKEN_STEP, 0.4F, 1.2F);
+                dodo.level().gameEvent(GameEvent.BLOCK_PLACE, dodo.getOnPos(), GameEvent.Context.of(this.dodo, dodo.getBlockStateOn()));
             }
         }
 
@@ -542,6 +573,26 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         @Override
         public void stop() {
             dodo.setPecking(false);
+            spawnDodoLoot();
+        }
+
+        protected void spawnDodoLoot(){
+            if (dodo.level() instanceof ServerLevel serverLevel){
+                if (dodo.goldenFoodBonus > 0){
+                    dodo.goldenFoodBonus--;
+                }else {
+                    dodo.lootMultiplier = 1f;
+                }
+                LootTable loottable = serverLevel.getServer().getLootData().getLootTable(BuiltInLootTables.SNIFFER_DIGGING);
+                LootParams params = new LootParams.Builder(serverLevel).withParameter(LootContextParams.BLOCK_STATE, dodo.getBlockStateOn()).withParameter(LootContextParams.ORIGIN, dodo.getOnPos().getCenter()).withParameter(LootContextParams.THIS_ENTITY, dodo).withParameter(ModLootParamSets.DODO_GOLDEN_FOOD_MULTIPLIER, dodo.lootMultiplier).create(ModLootParamSets.DODO_PECK);
+
+                var dropItems = loottable.getRandomItems(params);
+                var spawnPos = dodo.getOnPos().above();
+                for(var item : dropItems){
+                    ItemEntity itementity = new ItemEntity(serverLevel, (double)spawnPos.getX(), (double)spawnPos.getY(), (double)spawnPos.getZ(), item);
+                    serverLevel.addFreshEntity(itementity);
+                }
+            }
         }
     }
 }

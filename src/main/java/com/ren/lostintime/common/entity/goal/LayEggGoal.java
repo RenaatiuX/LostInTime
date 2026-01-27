@@ -35,7 +35,6 @@ public class LayEggGoal<E extends AgeableMob & IEggLayer> extends MoveToBlockGoa
     public void tick() {
         super.tick();
         BlockPos blockpos = this.animal.blockPosition();
-        System.out.println("are we here");
         if (!this.animal.isInWater() && isReachedTarget()) {
             Level level = this.animal.level();
             level.playSound(null, blockpos, SoundEvents.TURTLE_LAY_EGG, SoundSource.BLOCKS, 0.3F, 0.9F + level.random.nextFloat() * 0.2F);
