@@ -39,7 +39,7 @@ public class EggBreedGoal<T extends Animal & IEggLayer> extends BreedGoal {
             CriteriaTriggers.BRED_ANIMALS.trigger(serverplayer, this.animal, this.partner, (AgeableMob)null);
         }
 
-        int cooldown = Config.dodoBreedCooldown + level.random.nextInt(5000) - level.random.nextInt(10000);
+        int cooldown = Config.dodoBreedCooldown + level.random.nextInt(1500) - level.random.nextInt(3000);
         int eggTicks = Config.dodoEggCooldown + level.random.nextInt(1000) - level.random.nextInt(2000);
 
         this.animal.hatchEgg(eggTicks);
