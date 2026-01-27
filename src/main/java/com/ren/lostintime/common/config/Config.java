@@ -33,6 +33,7 @@ public class Config {
                             "dodo_golden_food",
                             ImmutableMap.<Item, Float>builder()
                                     .put(Items.GOLDEN_CARROT, 2f)
+                                    .put(Items.GLISTERING_MELON_SLICE, 2f)
                                     .put(Items.GOLDEN_APPLE, 4f)
                                     .put(Items.ENCHANTED_GOLDEN_APPLE, 8f)
                                     .build().entrySet().stream().map(e -> ForgeRegistries.ITEMS.getKey(e.getKey()) + "=" + e.getValue()).toList(),

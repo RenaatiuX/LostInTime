@@ -6,10 +6,7 @@ import com.ren.lostintime.common.entity.goal.EggBreedGoal;
 import com.ren.lostintime.common.entity.goal.LayEggGoal;
 import com.ren.lostintime.common.entity.util.IEggLayer;
 import com.ren.lostintime.common.entity.util.ISleepingEntity;
-import com.ren.lostintime.common.init.BlockInit;
-import com.ren.lostintime.common.init.EntityInit;
-import com.ren.lostintime.common.init.ModLootParamSets;
-import com.ren.lostintime.common.init.ParticlesInit;
+import com.ren.lostintime.common.init.*;
 import com.ren.lostintime.datagen.server.LITTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -583,7 +580,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
                 }else {
                     dodo.lootMultiplier = 1f;
                 }
-                LootTable loottable = serverLevel.getServer().getLootData().getLootTable(BuiltInLootTables.SNIFFER_DIGGING);
+                LootTable loottable = serverLevel.getServer().getLootData().getLootTable(ModLootTables.DODO_PECK_LOOT);
                 LootParams params = new LootParams.Builder(serverLevel).withParameter(LootContextParams.BLOCK_STATE, dodo.getBlockStateOn()).withParameter(LootContextParams.ORIGIN, dodo.getOnPos().getCenter()).withParameter(LootContextParams.THIS_ENTITY, dodo).withParameter(ModLootParamSets.DODO_GOLDEN_FOOD_MULTIPLIER, dodo.lootMultiplier).create(ModLootParamSets.DODO_PECK);
 
                 var dropItems = loottable.getRandomItems(params);

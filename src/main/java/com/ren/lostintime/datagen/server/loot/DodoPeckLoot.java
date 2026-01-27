@@ -39,7 +39,7 @@ public class DodoPeckLoot implements LootTableSubProvider {
                                         RandomTagEntryLoot.randomTagEntry(Tags.Items.MUSHROOMS).when(LocationCheck.checkLocation(LocationPredicate.Builder.location().setBiome(Biomes.MUSHROOM_FIELDS))),
                                         LootItem.lootTableItem(Items.STICK)
                                 )).when(LootItemRandomChanceCondition.randomChance(0.25f)))
-                        .withPool(LootPool.lootPool().add(LootItem.lootTableItem(Items.BONE).apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 2))).when(LootItemRandomChanceCondition.randomChance(0.15f))))
+                        .withPool(LootPool.lootPool().when(LootItemRandomChanceCondition.randomChance(0.15f)).add(LootItem.lootTableItem(Items.BONE).apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 2)))))
                         .withPool(LootPool.lootPool().when(LootItemRandomChanceCondition.randomChance(0.15f)).setRolls(UniformGenerator.between(1, 3)).add(RandomTagEntryLoot.randomTagEntry(Tags.Items.SEEDS)))
                         .withPool(LootPool.lootPool().when(RandomChanceWithGoldenMultiplier.goldenChance(0.05f)).add(LootItem.lootTableItem(Items.IRON_NUGGET).apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 5)))))
                         .withPool(LootPool.lootPool().when(RandomChanceWithGoldenMultiplier.goldenChance(0.05f)).add(LootItem.lootTableItem(Items.GOLD_NUGGET).apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 4)))))
