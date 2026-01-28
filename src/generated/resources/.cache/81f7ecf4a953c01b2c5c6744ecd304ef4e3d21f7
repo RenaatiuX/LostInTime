@@ -1,4 +1,4 @@
-// 1.20.1	2026-01-15T12:13:12.7885794	Item Models: lostintime
+// 1.20.1	2026-01-28T12:52:20.208303	Item Models: lostintime
 0570665fcef0e1f3922095a8aa98973135ded46e assets/lostintime/models/item/amber.json
 879d909212d6267838764316100b2c449321306b assets/lostintime/models/item/amethyst_catalyst.json
 89daf447e685f234deebcc2968d3f90fa3cee0df assets/lostintime/models/item/anomalocaris_fossil.json
@@ -15,6 +15,7 @@ b9e6d3cb03e3d8c34d04ed82af36c59ece96d4fb assets/lostintime/models/item/aspect_pr
 f6579452234d2d8c682a717f547af4f7c71fc902 assets/lostintime/models/item/aspect_resilience.json
 3766b419941a537b685542b99d5cce22554cebc8 assets/lostintime/models/item/aspect_structuring.json
 b9273a07d8eb31e9bfd6acb72869f32287f454fc assets/lostintime/models/item/aspect_transience.json
+869ef2f4a592d80d2e020c746cdc40134d2dd94c assets/lostintime/models/item/barrel_sponge_vital_pattern.json
 9ed245bfcc75b40264c1652fae6329173dd8891e assets/lostintime/models/item/blue_ice_catalyst.json
 5c4aa24722cb1ff9b6900a440864ec816cf64284 assets/lostintime/models/item/bothriolepis_fossil.json
 1fcac9cbc9168dd6c60f8205a88e5207082d0eac assets/lostintime/models/item/bothriolepis_roe.json
@@ -50,6 +51,7 @@ a2125b55f2fef97b27efe04c23cee719d9c77cee assets/lostintime/models/item/emerald_c
 2f4898b400339bfe12f46bd6773221a8e93a9811 assets/lostintime/models/item/empty_vital_pattern.json
 e1d100bed78d3aa5721135bac0e508c79a5994a5 assets/lostintime/models/item/endoceras_fossil.json
 efb9f416530f5ded53655b7931a26f6ce506dd1e assets/lostintime/models/item/endoceras_soul_configuration.json
+38da57ab5293c01e6933d7c38a1756413b5c3327 assets/lostintime/models/item/glass_sponge_vital_pattern.json
 af7affd58910004752be8cb604091600bd28e888 assets/lostintime/models/item/golden_eye.json
 b88fe4aa34497e9be8c5d9570290a1960bc9f7c6 assets/lostintime/models/item/gold_catalyst.json
 9503bba495ea11cf6474824156381cf39bb9afdc assets/lostintime/models/item/guardian_spike.json
@@ -69,7 +71,9 @@ b9fec14334fdd570eb3c24104333e07a3bcaee56 assets/lostintime/models/item/mastodons
 78b0649195fab95316cc9f76bcb0c4d93ce0c663 assets/lostintime/models/item/neogene_fossil.json
 d00940080cb9e946ad135e5a0126f7da71321dd4 assets/lostintime/models/item/ordovician_fossil.json
 24bcc3e86fc48bbc687da2acc78870cfe08706bd assets/lostintime/models/item/paleogene_fossil.json
+966c7f260d586fca0df0728112f8dcb9e550c293 assets/lostintime/models/item/panel.json
 c40b318522a96e5252b4338bd1b64bb512684c51 assets/lostintime/models/item/permian_fossil.json
+db2f16b7298c90f54763fcbc718f4e0c5db54dbf assets/lostintime/models/item/pipe_sponge_vital_pattern.json
 59102d2a71644149238c430489587034a6d87fe1 assets/lostintime/models/item/plesiosaurus_fossil.json
 8697b9d3f4081e19b9892626cbe689ad38faeccc assets/lostintime/models/item/plesiosaurus_skull.json
 27c07412d4dbb7ce56f2765b8c185e46a800aa75 assets/lostintime/models/item/plesiosaurus_soul_configuration.json
@@ -84,6 +88,7 @@ d73453f8dd4c6d1328a109f61e7fef3b423d61f3 assets/lostintime/models/item/quaternar
 a87c28ce3a8b26d757bf486206ce44bb9f71f4f5 assets/lostintime/models/item/raw_dodo.json
 ffe77b8124f3e956a3af0e2a680ccbadf8e5be5f assets/lostintime/models/item/raw_endoceras.json
 0f490c2044cff4414156010eeea9e30611282fc9 assets/lostintime/models/item/redstone_catalyst.json
+7168a7598d80d180997648e97d5c5f1c8ad5bccd assets/lostintime/models/item/redstone_chip.json
 e1d2f1425b7ad9e81e29a4d47daeafd4e98ef759 assets/lostintime/models/item/scutosaurus_fossil.json
 47641388158d448e0bcbd52460e5c24ed4d21dc0 assets/lostintime/models/item/scutosaurus_skull.json
 290b0661926be97c0b6dd2f8b7fdaa99e8386c02 assets/lostintime/models/item/scutosaurus_soul_configuration.json
@@ -91,6 +96,9 @@ e1d2f1425b7ad9e81e29a4d47daeafd4e98ef759 assets/lostintime/models/item/scutosaur
 59e4f94f7e7f9d7a37b64f87311e630961e68980 assets/lostintime/models/item/soul_ash.json
 43d33cffb94cfd0726352ef9552128999af83c7b assets/lostintime/models/item/soul_grume.json
 7fda5d3a0c139cb379f5e9d55a726611f5d05bde assets/lostintime/models/item/soul_powder.json
+86880944e839fb061ab9f7cab1cc1d8cdeebaae1 assets/lostintime/models/item/tree_sponge_vital_pattern.json
 f8f8a22253e3ca10d74a4fe0a2de33aa27892e2e assets/lostintime/models/item/triassic_fossil.json
+1a8d3b2b37e68f5024280973a1aee0ed343c9906 assets/lostintime/models/item/vase_sponge_vital_pattern.json
+a6f2717ae58d7a11fa4a4026de52b9cb334f11fa assets/lostintime/models/item/wool_sponge_vital_pattern.json
 b27a11dc7972e5d83d1681de3e33c06f398e405b assets/lostintime/models/item/zircon.json
 60b43ff69fe7d7b7f69b050cc6eb651e472226c3 assets/lostintime/models/item/zircon_catalyst.json

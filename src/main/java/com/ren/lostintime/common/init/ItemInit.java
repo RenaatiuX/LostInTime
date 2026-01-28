@@ -29,7 +29,8 @@ public class ItemInit {
     public static final RegistryObject<Item> EMPTY_VITAL_PATTERN =  registerSimple("empty_vital_pattern");
     public static final RegistryObject<Item> INFORMATION_DOME = registerSimple("information_dome");
     public static final RegistryObject<Item> SOUL_POWDER = registerSimple("soul_powder");
-    public static final RegistryObject<Item> PROTOTAXITES_VITAL_PATTERN = registerSimple("prototaxites_vital_pattern");
+    public static final RegistryObject<Item> PANEL = registerSimple("panel");
+    public static final RegistryObject<Item> REDSTONE_CHIP = registerSimple("redstone_chip");
 
     //ASPECT
     public static final RegistryObject<Item> ASPECT_DIFFERENTIATION = registerSimple("aspect_differentiation");
@@ -90,6 +91,14 @@ public class ItemInit {
     public static final RegistryObject<Item> PTERYGOTUS_SOUL_CFC = registerSimple("pterygotus_soul_configuration");
     public static final RegistryObject<Item> SCUTOSAURUS_SOUL_CFC = registerSimple("scutosaurus_soul_configuration");
 
+    //PATTERN
+    public static final RegistryObject<Item> PROTOTAXITES_VITAL_PATTERN = registerSimple("prototaxites_vital_pattern");
+    public static final RegistryObject<Item> BARREL_SPONGE_VITAL_PATTERN = registerSimple("barrel_sponge_vital_pattern");
+    public static final RegistryObject<Item> GLASS_SPONGE_VITAL_PATTERN = registerSimple("glass_sponge_vital_pattern");
+    public static final RegistryObject<Item> PIPE_SPONGE_VITAL_PATTERN = registerSimple("pipe_sponge_vital_pattern");
+    public static final RegistryObject<Item> TREE_SPONGE_VITAL_PATTERN = registerSimple("tree_sponge_vital_pattern");
+    public static final RegistryObject<Item> VASE_SPONGE_VITAL_PATTERN = registerSimple("vase_sponge_vital_pattern");
+    public static final RegistryObject<Item> WOOL_SPONGE_VITAL_PATTERN = registerSimple("wool_sponge_vital_pattern");
 
     public static final RegistryObject<Item> DODO_FOSSIL = registerSimple("dodo_fossil");
     public static final RegistryObject<Item> DODO_SKULL =  registerSimple("dodo_skull");

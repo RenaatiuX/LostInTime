@@ -34,6 +34,8 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.EMPTY_VITAL_PATTERN.get());
         simple(ItemInit.INFORMATION_DOME.get());
         simple(ItemInit.SOUL_POWDER.get());
+        simple(ItemInit.PANEL.get());
+        simple(ItemInit.REDSTONE_CHIP.get());
 
         simple(ItemInit.RAW_DODO.get());
         simple(ItemInit.COOKED_DODO.get());
@@ -135,6 +137,13 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.PROTOTAXITES_VITAL_PATTERN.get());
         simple(ItemInit.PTERYGOTUS_SOUL_CFC.get());
         simple(ItemInit.SCUTOSAURUS_SOUL_CFC.get());
+
+        simple(ItemInit.BARREL_SPONGE_VITAL_PATTERN.get());
+        simple(ItemInit.GLASS_SPONGE_VITAL_PATTERN.get());
+        simple(ItemInit.PIPE_SPONGE_VITAL_PATTERN.get());
+        simple(ItemInit.TREE_SPONGE_VITAL_PATTERN.get());
+        simple(ItemInit.VASE_SPONGE_VITAL_PATTERN.get());
+        simple(ItemInit.WOOL_SPONGE_VITAL_PATTERN.get());
     }
 
     private void simple(Item... items) {

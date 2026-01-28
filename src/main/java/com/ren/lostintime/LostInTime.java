@@ -50,6 +50,8 @@ public class LostInTime {
             event.accept(ItemInit.EMPTY_VITAL_PATTERN);
             event.accept(ItemInit.INFORMATION_DOME);
             event.accept(ItemInit.SOUL_POWDER);
+            event.accept(ItemInit.PANEL);
+            event.accept(ItemInit.REDSTONE_CHIP);
 
             event.accept(ItemInit.DEVONIAN_FOSSIL);
             event.accept(ItemInit.CAMBRIAN_FOSSIL);
@@ -124,6 +126,13 @@ public class LostInTime {
             event.accept(ItemInit.PROTOTAXITES_VITAL_PATTERN);
             event.accept(ItemInit.PTERYGOTUS_SOUL_CFC);
             event.accept(ItemInit.SCUTOSAURUS_SOUL_CFC);
+
+            event.accept(ItemInit.BARREL_SPONGE_VITAL_PATTERN);
+            event.accept(ItemInit.GLASS_SPONGE_VITAL_PATTERN);
+            event.accept(ItemInit.PIPE_SPONGE_VITAL_PATTERN);
+            event.accept(ItemInit.TREE_SPONGE_VITAL_PATTERN);
+            event.accept(ItemInit.VASE_SPONGE_VITAL_PATTERN);
+            event.accept(ItemInit.WOOL_SPONGE_VITAL_PATTERN);
 
             event.accept(ItemInit.GOLDEN_EYE);
             event.accept(ItemInit.GUARDIAN_SPIKE);

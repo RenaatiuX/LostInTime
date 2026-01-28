@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "lostintime:item/barrel_sponge_vital_pattern"
+  }
+}
