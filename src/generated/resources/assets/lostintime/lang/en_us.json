@@ -1,4 +1,5 @@
 {
+  "block.lostintime.anomalocaris_roe": "Anomalocaris Roe",
   "block.lostintime.barrel_sponge": "Barrel Sponge",
   "block.lostintime.bothriolepis_roe": "Bothriolepis Roe",
   "block.lostintime.cretaceous_fossil_block": "Cretaceous Fossil Block",
@@ -39,6 +40,7 @@
   "item.lostintime.amber": "Amber",
   "item.lostintime.amethyst_catalyst": "Amethyst Catalyst",
   "item.lostintime.anomalocaris_fossil": "Anomalocaris Fossil",
+  "item.lostintime.anomalocaris_roe_bucket": "Anomalocaris Roe Bucket",
   "item.lostintime.anomalocaris_soul_configuration": "Anomalocaris Soul Configuration",
   "item.lostintime.aspect_abundance": "Aspect Abundance",
   "item.lostintime.aspect_continuity": "Aspect Continuity",
@@ -55,6 +57,7 @@
   "item.lostintime.barrel_sponge_vital_pattern": "Barrel Sponge Vital Pattern",
   "item.lostintime.blue_ice_catalyst": "Blue Ice Catalyst",
   "item.lostintime.bothriolepis_fossil": "Bothriolepis Fossil",
+  "item.lostintime.bothriolepis_roe_bucket": "Bothriolepis Roe Bucket",
   "item.lostintime.bothriolepis_soul_configuration": "Bothriolepis Soul Configuration",
   "item.lostintime.calcite_catalyst": "Calcite Catalyst",
   "item.lostintime.cambrian_fossil": "Cambrian Fossil",

@@ -205,7 +205,6 @@ public abstract class AgeableWaterAnimal extends WaterAnimal {
         if (this.getAge() != 0) {
             this.inLove = 0;
         }
-
         super.customServerAiStep();
     }
 
@@ -240,7 +239,6 @@ public abstract class AgeableWaterAnimal extends WaterAnimal {
         if (pPlayer != null) {
             this.loveCause = pPlayer.getUUID();
         }
-
         this.level().broadcastEntityEvent(this, (byte) 18);
     }
 

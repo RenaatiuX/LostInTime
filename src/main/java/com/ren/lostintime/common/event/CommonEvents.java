@@ -2,7 +2,9 @@ package com.ren.lostintime.common.event;
 
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.entity.creatures.Anomalocaris;
+import com.ren.lostintime.common.entity.creatures.Bothriolepis;
 import com.ren.lostintime.common.entity.creatures.Dodo;
+import com.ren.lostintime.common.entity.creatures.Hylonomus;
 import com.ren.lostintime.common.init.EntityInit;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,5 +18,7 @@ public class CommonEvents {
     public static void registerAttr(EntityAttributeCreationEvent event) {
         event.put(EntityInit.DODO.get(), Dodo.createAttributes().build());
         event.put(EntityInit.ANOMALOCARIS.get(), Anomalocaris.createAttributes().build());
+        event.put(EntityInit.BOTHRIOLEPIS.get(), Bothriolepis.createAttributes().build());
+        event.put(EntityInit.HYLONOMUS.get(), Hylonomus.createAttributes().build());
     }
 }

@@ -5,12 +5,15 @@ import com.ren.lostintime.common.init.BlockInit;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 public class LITBlockTagProvider extends BlockTagsProvider {
 
@@ -46,5 +49,16 @@ public class LITBlockTagProvider extends BlockTagsProvider {
                 .add(Blocks.SAND)
                 .add(Blocks.GRAVEL);
 
+        pickaxe(BlockInit.CRETACEOUS_FOSSIL_BLOCK);
+    }
+
+    public void pickaxe(Supplier<? extends Block>... blocks) {
+        IntrinsicTagAppender<Block> tagAppender = tag(BlockTags.MINEABLE_WITH_PICKAXE);
+        Arrays.stream(blocks).map(Supplier::get).forEach(tagAppender::add);
+    }
+
+    public void stone(Supplier<? extends Block>... blocks) {
+        IntrinsicTagAppender<Block> tagAppender = tag(BlockTags.NEEDS_STONE_TOOL);
+        Arrays.stream(blocks).map(Supplier::get).forEach(tagAppender::add);
     }
 }

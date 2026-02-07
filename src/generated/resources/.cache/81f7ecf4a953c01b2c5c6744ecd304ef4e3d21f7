@@ -1,7 +1,8 @@
-// 1.20.1	2026-01-28T12:52:20.208303	Item Models: lostintime
+// 1.20.1	2026-02-06T17:07:40.9433748	Item Models: lostintime
 0570665fcef0e1f3922095a8aa98973135ded46e assets/lostintime/models/item/amber.json
 879d909212d6267838764316100b2c449321306b assets/lostintime/models/item/amethyst_catalyst.json
 89daf447e685f234deebcc2968d3f90fa3cee0df assets/lostintime/models/item/anomalocaris_fossil.json
+14b123ac2613be145a56d4e35216487de011ba10 assets/lostintime/models/item/anomalocaris_roe.json
 2c0702a05ea5fedd4159dac2f205fa5a863002d6 assets/lostintime/models/item/anomalocaris_soul_configuration.json
 1a11f9d57f09aec50e333c11c9912e5ff3027ad4 assets/lostintime/models/item/aspect_abundance.json
 1edcddf06fb4ec019755f3e7df0067bde4042b44 assets/lostintime/models/item/aspect_continuity.json
@@ -19,6 +20,7 @@ b9273a07d8eb31e9bfd6acb72869f32287f454fc assets/lostintime/models/item/aspect_tr
 9ed245bfcc75b40264c1652fae6329173dd8891e assets/lostintime/models/item/blue_ice_catalyst.json
 5c4aa24722cb1ff9b6900a440864ec816cf64284 assets/lostintime/models/item/bothriolepis_fossil.json
 1fcac9cbc9168dd6c60f8205a88e5207082d0eac assets/lostintime/models/item/bothriolepis_roe.json
+9ed398a793fa23d08ae479319e1772a95ccbe93d assets/lostintime/models/item/bothriolepis_roe_bucket.json
 d85c6e89ff18abfa0d0318900920da1cf47721eb assets/lostintime/models/item/bothriolepis_soul_configuration.json
 e6f12fb9f3e6e46f9002c6e4464ee53ee4dcab4a assets/lostintime/models/item/calcite_catalyst.json
 3883052ef53dcfa4d0d6b6d2b64b8b44d04ef796 assets/lostintime/models/item/cambrian_fossil.json

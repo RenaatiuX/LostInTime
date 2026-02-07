@@ -4,29 +4,33 @@ import com.ren.lostintime.common.entity.LITAnimal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.frog.Tadpole;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
-public class LITRoeBlock extends Block {
+public class LITRoeBlock extends Block implements BucketPickup{
 
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.5D, 16.0D);
 
@@ -35,11 +39,14 @@ public class LITRoeBlock extends Block {
     private final int minHatchTickDelay;
     private final int maxHatchTickDelay;
     private final Supplier<? extends EntityType> entityType;
+    private final Supplier<? extends Item> roeBucketItem;
 
     public LITRoeBlock(Properties pProperties, Supplier<? extends EntityType> entityType,
+                       Supplier<? extends Item> roeBucketItem,
                        int minBabySpawn, int maxBabySpawn, int minHatchTickDelay, int maxHatchTickDelay) {
         super(pProperties);
         this.entityType = entityType;
+        this.roeBucketItem = roeBucketItem;
         this.minBabySpawn = minBabySpawn;
         this.maxBabySpawn = maxBabySpawn;
         this.minHatchTickDelay = minHatchTickDelay;
@@ -96,14 +103,14 @@ public class LITRoeBlock extends Block {
     private void hatchFrogspawn(ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         this.destroyBlock(pLevel, pPos);
         pLevel.playSound((Player)null, pPos, SoundEvents.FROGSPAWN_HATCH, SoundSource.BLOCKS, 1.0F, 1.0F);
-        this.spawnBabes(pLevel, pPos, pRandom);
+        this.spawnBabies(pLevel, pPos, pRandom);
     }
 
     private void destroyBlock(Level pLevel, BlockPos pPos) {
         pLevel.destroyBlock(pPos, false);
     }
 
-    private void spawnBabes(ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
+    private void spawnBabies(ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         int i = pRandom.nextInt(minBabySpawn, maxBabySpawn);
         for(int j = 1; j <= i; ++j) {
             LITAnimal baby = (LITAnimal) entityType.get().create(pLevel);
@@ -119,7 +126,17 @@ public class LITRoeBlock extends Block {
     }
 
     private double getRandomBabyPositionOffset(RandomSource pRandom) {
-        double d0 = (double)(Tadpole.HITBOX_WIDTH / 2.0F);
-        return Mth.clamp(pRandom.nextDouble(), d0, 1.0D - d0);
+        return Mth.clamp(pRandom.nextDouble(), 0.1, 0.9);
+    }
+
+    @Override
+    public ItemStack pickupBlock(LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
+        pLevel.setBlock(pPos, Blocks.AIR.defaultBlockState(), 3);
+        return new ItemStack(roeBucketItem.get());
+    }
+
+    @Override
+    public Optional<SoundEvent> getPickupSound() {
+        return Optional.of(SoundEvents.BUCKET_FILL);
     }
 }

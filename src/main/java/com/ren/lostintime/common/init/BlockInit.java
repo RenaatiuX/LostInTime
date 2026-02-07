@@ -85,11 +85,11 @@ public class BlockInit {
             () -> new SingleEggBlock(BlockBehaviour.Properties.copy(Blocks.TURTLE_EGG).randomTicks(),
                     EntityInit.DODO, BlockTags.DIRT));
     public static final RegistryObject<Block> BOTHRIOLEPIS_ROE = BLOCKS.register("bothriolepis_roe",
-            () -> new LITRoeBlock(BlockBehaviour.Properties.copy(Blocks.TURTLE_EGG), EntityInit.DODO,
-                    1, 3, 8000, 24000));
-    public static final RegistryObject<Block> ANOMALOCARIS_EGG = BLOCKS.register("anomalocaris_egg",
-            () -> new LITRoeBlock(BlockBehaviour.Properties.copy(Blocks.TURTLE_EGG), EntityInit.DODO,
-                    1, 2, 4000, 12000));
+            () -> new LITRoeBlock(BlockBehaviour.Properties.copy(Blocks.FROGSPAWN), EntityInit.BOTHRIOLEPIS,
+                    ItemInit.BOTHRIOLEPIS_ROE_BUCKET, 1, 3, 8000, 24000));
+    public static final RegistryObject<Block> ANOMALOCARIS_ROE = BLOCKS.register("anomalocaris_roe",
+            () -> new LITRoeBlock(BlockBehaviour.Properties.copy(Blocks.FROGSPAWN), EntityInit.ANOMALOCARIS,
+                    ItemInit.ANOMALOCARIS_ROE_BUCKET, 1, 2, 4000, 12000));
 
     //ORES
     public static final RegistryObject<Block> QUATERNARY_FOSSIL_BLOCK = registerBlock("quaternary_fossil_block",

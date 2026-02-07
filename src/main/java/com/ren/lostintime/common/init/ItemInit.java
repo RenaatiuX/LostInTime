@@ -3,6 +3,8 @@ package com.ren.lostintime.common.init;
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.item.GoldenEyeItem;
 import com.ren.lostintime.common.item.GuardianSpikeItem;
+import com.ren.lostintime.common.item.RoeBucketItem;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.food.FoodProperties;
@@ -143,9 +145,14 @@ public class ItemInit {
     //BLOCKS
     public static final RegistryObject<Item> BOTHRIOLEPIS_ROE = ITEMS.register("bothriolepis_roe",
             () -> new PlaceOnWaterBlockItem(BlockInit.BOTHRIOLEPIS_ROE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> ANOMALOCARIS_ROE = ITEMS.register("anomalocaris_roe",
+            () -> new PlaceOnWaterBlockItem(BlockInit.ANOMALOCARIS_ROE.get(), new Item.Properties()));
 
     //BUCKETS
-
+    public static final RegistryObject<Item> BOTHRIOLEPIS_ROE_BUCKET = ITEMS.register("bothriolepis_roe_bucket",
+            () -> new RoeBucketItem(BlockInit.BOTHRIOLEPIS_ROE, () -> SoundEvents.BUCKET_EMPTY, new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ANOMALOCARIS_ROE_BUCKET = ITEMS.register("anomalocaris_roe_bucket",
+            () -> new RoeBucketItem(BlockInit.ANOMALOCARIS_ROE, () -> SoundEvents.BUCKET_EMPTY, new Item.Properties().stacksTo(1)));
 
     //SPAWN EGG
     public static final RegistryObject<Item> DODO_SPAWN_EGG = registerSpawnEgg("dodo_spawn_egg",

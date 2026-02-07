@@ -57,6 +57,10 @@ public class LITItemsModelProvider extends ItemModelProvider {
 
         saplingItem(BlockInit.MANGO_SAPLING);
         simple(ItemInit.BOTHRIOLEPIS_ROE.get());
+        simple(ItemInit.ANOMALOCARIS_ROE.get());
+
+        simple(ItemInit.BOTHRIOLEPIS_ROE_BUCKET.get());
+        //simple(ItemInit.ANOMALOCARIS_ROE_BUCKET.get());
 
         simple(ItemInit.GUARDIAN_SPIKE.get());
 

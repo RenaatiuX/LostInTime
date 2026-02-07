@@ -34,6 +34,7 @@ public class LostInTime {
         FeatureInit.FEATURES.register(modEventBus);
         VillagerInit.POI_TYPES.register(modEventBus);
         VillagerInit.VILLAGER_PROFESSIONS.register(modEventBus);
+        EnchantmentInit.ENCHANTMENTS.register(modEventBus);
 
         ModLootConditions.LOOT_CONDITIONS.register(modEventBus);
         ModLootConditions.LOOT_POOL_ENTRIES.register(modEventBus);
@@ -146,6 +147,10 @@ public class LostInTime {
             event.accept(BlockInit.DEAD_BARREL_SPONGE);
             event.accept(BlockInit.BARREL_SPONGE);
             event.accept(ItemInit.BOTHRIOLEPIS_ROE);
+            event.accept(ItemInit.ANOMALOCARIS_ROE);
+
+            event.accept(ItemInit.ANOMALOCARIS_ROE_BUCKET);
+            event.accept(ItemInit.BOTHRIOLEPIS_ROE_BUCKET);
 
             event.accept(BlockInit.QUATERNARY_FOSSIL_BLOCK);
             event.accept(BlockInit.NEOGENE_FOSSIL_BLOCK);

@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
-public class EntityLoot extends VanillaEntityLoot {
+public class ModEntityLoot extends VanillaEntityLoot {
 
     protected Set<EntityType<?>> knowEntities = new HashSet<>();
 
