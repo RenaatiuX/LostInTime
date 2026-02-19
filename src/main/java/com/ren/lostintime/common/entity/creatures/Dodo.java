@@ -1,5 +1,6 @@
 package com.ren.lostintime.common.entity.creatures;
 
+import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.entity.LITAnimal;
 import com.ren.lostintime.common.entity.goal.EggBreedGoal;
@@ -57,6 +58,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -73,7 +75,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     public static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     public static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
     public static final RawAnimation SLEEP = RawAnimation.begin().thenLoop("misc.sleep");
-    public static final RawAnimation NO = RawAnimation.begin().thenLoop("misc.no");
+    public static final RawAnimation NO = RawAnimation.begin().thenPlay("misc.no");
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -322,7 +324,10 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
                 }
                 return InteractionResult.SUCCESS;
             }else {
-                //TODO make the no animation work, ohhhhhh god i will hate it from all myself
+                if (!level().isClientSide) {
+                    LostInTime.LOGGER.debug("triggering animation");
+                    triggerAnim("reactionController", "no");
+                }
             }
         }
         return super.mobInteract(pPlayer, pHand);
@@ -341,6 +346,8 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
             state.getController().forceAnimationReset();
             return PlayState.STOP;
         }));
+        controllers.add(new AnimationController<>(this, "reactionController", 5, state -> PlayState.STOP)
+                .triggerableAnim("no", NO));
     }
 
     protected <E extends Dodo> PlayState movePredicate(final AnimationState<E> event) {
@@ -561,12 +568,6 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
             if (spinTicks > 0) {
                 spinTicks--;
                 dodo.setYBodyRot(spinTicks * 360 * 0.1f);
-                /*
-                var currentLook = dodo.getLookAngle();
-                var rotatedLook = currentLook.yRot(spinTicks * 2 * Mth.PI * 0.01f);
-                dodo.getLookControl().setLookAt(dodo.position().add(rotatedLook));
-
-                 */
             } else {
                 if (findPeckTargetFailTicks > 0) {
                     findPeckTargetFailTicks--;
