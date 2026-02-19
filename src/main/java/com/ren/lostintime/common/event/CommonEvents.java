@@ -6,7 +6,10 @@ import com.ren.lostintime.common.entity.creatures.Bothriolepis;
 import com.ren.lostintime.common.entity.creatures.Dodo;
 import com.ren.lostintime.common.entity.creatures.Hylonomus;
 import com.ren.lostintime.common.init.EntityInit;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -20,5 +23,10 @@ public class CommonEvents {
         event.put(EntityInit.ANOMALOCARIS.get(), Anomalocaris.createAttributes().build());
         event.put(EntityInit.BOTHRIOLEPIS.get(), Bothriolepis.createAttributes().build());
         event.put(EntityInit.HYLONOMUS.get(), Hylonomus.createAttributes().build());
+    }
+
+    @SubscribeEvent
+    public static void registerSpawnRules(SpawnPlacementRegisterEvent event){
+        event.register(EntityInit.DODO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Dodo::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
 }
