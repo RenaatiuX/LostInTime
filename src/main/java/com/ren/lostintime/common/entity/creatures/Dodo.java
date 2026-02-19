@@ -7,6 +7,7 @@ import com.ren.lostintime.common.entity.goal.LayEggGoal;
 import com.ren.lostintime.common.entity.goal.MoveToEntityGoal;
 import com.ren.lostintime.common.entity.util.IEggLayer;
 import com.ren.lostintime.common.entity.util.ISleepingEntity;
+import com.ren.lostintime.common.entity.util.SleepController;
 import com.ren.lostintime.common.init.*;
 import com.ren.lostintime.datagen.server.LITTags;
 import net.minecraft.core.BlockPos;
@@ -41,6 +42,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -55,7 +57,9 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
 public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEntity {
 
@@ -70,7 +74,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     public static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     public static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
     public static final RawAnimation SLEEP = RawAnimation.begin().thenLoop("misc.sleep");
-    public static final RawAnimation NO = RawAnimation.begin().thenLoop("misc.no");
+    public static final RawAnimation NO = RawAnimation.begin().thenPlay("misc.no");
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -82,9 +86,6 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
     //zombie
     public boolean isChickenJockey;
-
-    //sleep particles
-    private int sleepParticleCooldown = 0;
 
     //Peck logic
     private BlockPos peckTarget;
@@ -112,8 +113,8 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         this.goalSelector.addGoal(7, new DodoSpinAroundGoal(this, 10));
         this.goalSelector.addGoal(7, new TemptGoal(this, 1.0D, Ingredient.of(LITTags.Items.DODO_FOOD), false));
         this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.1D));
-        this.goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(10, new AvoidEntityGoal<>(this, AbstractIllager.class, 6.0F, 1.0D, 1.2D));
+        this.goalSelector.addGoal(9, new AvoidEntityGoal<>(this, AbstractIllager.class, 6.0F, 1.0D, 1.2D));
+        this.goalSelector.addGoal(10, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(11, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(12, new RandomLookAroundGoal(this));
     }
@@ -171,25 +172,11 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         if (!this.onGround() && vec3.y < 0.0D) {
             this.setDeltaMovement(vec3.multiply(1.0D, 0.6D, 1.0D));
         }
-
-        if (this.level().isClientSide() && this.isSleeping()) {
-            spawnSleepingParticles();
-        }
     }
 
-    private void spawnSleepingParticles() {
-        if (!this.isSleeping()) return;
-
-        if (sleepParticleCooldown > 0) {
-            sleepParticleCooldown--;
-            return;
-        }
-        sleepParticleCooldown = 40 + this.random.nextInt(40);
-
-        double x = this.getX();
-        double y = this.getY() + this.getBbHeight() + 0.15D;
-        double z = this.getZ();
-        this.level().addParticle(ParticlesInit.SLEEPING_PARTICLES.get(), x, y, z, 0f, 0.4f, 0);
+    @Override
+    public @Nullable SleepController<?> getSleepController() {
+        return new SleepController<>(this, SleepController.SleepType.DIURNAL);
     }
 
     @Override
@@ -298,12 +285,6 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         return super.canFallInLove() && !this.hasEgg();
     }
 
-    @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        this.setSleeping(false);
-        return super.hurt(pSource, pAmount);
-    }
-
 
     @Override
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
@@ -319,7 +300,9 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
                 }
                 return InteractionResult.SUCCESS;
             }else {
-                //TODO make the no animation work, ohhhhhh god i will hate it from all myself
+                if (!level().isClientSide) {
+                    triggerAnim("reactionController", "no");
+                }
             }
         }
         return super.mobInteract(pPlayer, pHand);
@@ -338,6 +321,8 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
             state.getController().forceAnimationReset();
             return PlayState.STOP;
         }));
+        controllers.add(new AnimationController<>(this, "reactionController", 5, state -> PlayState.STOP)
+                .triggerableAnim("no", NO));
     }
 
     protected <E extends Dodo> PlayState movePredicate(final AnimationState<E> event) {
@@ -558,12 +543,6 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
             if (spinTicks > 0) {
                 spinTicks--;
                 dodo.setYBodyRot(spinTicks * 360 * 0.1f);
-                /*
-                var currentLook = dodo.getLookAngle();
-                var rotatedLook = currentLook.yRot(spinTicks * 2 * Mth.PI * 0.01f);
-                dodo.getLookControl().setLookAt(dodo.position().add(rotatedLook));
-
-                 */
             } else {
                 if (findPeckTargetFailTicks > 0) {
                     findPeckTargetFailTicks--;
@@ -584,19 +563,36 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
             int j = i;
             BlockPos blockpos = this.dodo.blockPosition();
             BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+            List<BlockPos> candidates = new ArrayList<>();
 
+            searchLoop:
             for (int k = 0; k <= j; k = k > 0 ? -k : 1 - k) {
                 for (int l = 0; l < i; ++l) {
                     for (int i1 = 0; i1 <= l; i1 = i1 > 0 ? -i1 : 1 - i1) {
                         for (int j1 = i1 < l && i1 > -l ? l : 0; j1 <= l; j1 = j1 > 0 ? -j1 : 1 - j1) {
                             blockpos$mutableblockpos.setWithOffset(blockpos, i1, k - 1, j1);
                             if (this.dodo.isWithinRestriction(blockpos$mutableblockpos) && this.isValidTarget(this.dodo.level(), blockpos$mutableblockpos)) {
-                                this.dodo.peckTarget = blockpos$mutableblockpos;
-                                return true;
+                                candidates.add(blockpos$mutableblockpos.immutable());
+                                if (candidates.size() >= 30) break searchLoop;
                             }
                         }
                     }
                 }
+            }
+
+            if (candidates.isEmpty()) return false;
+
+            for (int attempt = 0; attempt < 5; attempt++) {
+                if (candidates.isEmpty()) break;
+                int index = this.dodo.getRandom().nextInt(candidates.size());
+                BlockPos pos = candidates.get(index);
+
+                Path path = this.dodo.getNavigation().createPath(pos, 1);
+                if (path != null && path.canReach()) {
+                    this.dodo.peckTarget = pos;
+                    return true;
+                }
+                candidates.remove(index);
             }
 
             return false;
@@ -632,6 +628,14 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
             super.tick();
             if (isReachedTarget()) {
                 dodo.setPecking(true);
+                dodo.peckTarget = null;
+            }
+        }
+
+        @Override
+        public void stop() {
+            super.stop();
+            if (!isReachedTarget()) {
                 dodo.peckTarget = null;
             }
         }

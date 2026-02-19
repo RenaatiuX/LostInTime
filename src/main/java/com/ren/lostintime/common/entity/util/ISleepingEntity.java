@@ -2,8 +2,23 @@ package com.ren.lostintime.common.entity.util;
 
 public interface ISleepingEntity {
 
+    /**
+     * Checks if the entity is currently sleeping.
+     * @return true if the entity is sleeping, false otherwise.
+     */
     boolean isSleeping();
+
+    /**
+     * Sets the sleeping state of the entity.
+     * @param sleeping the new sleeping state.
+     */
     void setSleeping(boolean sleeping);
+
+    /**
+     * Determines if the entity is currently capable of falling asleep.
+     * this allows for additional conditions besides {@link com.ren.lostintime.common.entity.util.SleepController.SleepType}
+     * @return true if the entity can sleep, false otherwise.
+     */
     default boolean canSleep() {
         return true;
     }
