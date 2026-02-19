@@ -27,6 +27,6 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void registerSpawnRules(SpawnPlacementRegisterEvent event){
-        event.register(EntityInit.DODO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Dodo::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(EntityInit.DODO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Dodo::checkLITAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
 }

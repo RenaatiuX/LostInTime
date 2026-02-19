@@ -39,6 +39,7 @@ public class Config {
                                     .build().entrySet().stream().map(e -> ForgeRegistries.ITEMS.getKey(e.getKey()) + "=" + e.getValue()).toList(),
                             Config::validateGoldenFood
                     );
+    private static final ForgeConfigSpec.BooleanValue NATURAL_SPAWNS = BUILDER.pop().push("Spawns").define("natural_spawns", true);
 
     public static final ForgeConfigSpec SPEC = BUILDER.pop().build();
 
@@ -48,6 +49,8 @@ public class Config {
     public static int dodoPeckCooldown;
 
     public static Map<Item, Float> goldenFoodMultipliers = ImmutableMap.of();
+
+    public static boolean naturalSpawns;
 
 
     @SubscribeEvent
@@ -71,6 +74,7 @@ public class Config {
 
         goldenFoodMultipliers = mapBuilder.build();
         dodoPeckCooldown = DODO_PECK_COOLDOWN.get();
+        naturalSpawns = NATURAL_SPAWNS.get();
 
     }
 

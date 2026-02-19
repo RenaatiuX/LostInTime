@@ -1,5 +1,6 @@
 package com.ren.lostintime.common.entity;
 
+import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.entity.util.ISleepingEntity;
 import com.ren.lostintime.common.entity.util.SleepController;
 import com.ren.lostintime.common.init.ParticlesInit;
@@ -89,7 +90,7 @@ public abstract class LITAnimal extends Animal {
         this.goalSelector.setControlFlag(Goal.Flag.LOOK, !canControlThisEntity && !isSleeping());
     }
 
-    public static boolean checkAnimalSpawnRules(EntityType<? extends Animal> pAnimal, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        return pLevel.getBlockState(pPos.below()).is(BlockTags.ANIMALS_SPAWNABLE_ON) && isBrightEnoughToSpawn(pLevel, pPos);
+    public static boolean checkLITAnimalSpawnRules(EntityType<? extends Animal> pAnimal, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+        return Config.naturalSpawns && pLevel.getBlockState(pPos.below()).is(BlockTags.ANIMALS_SPAWNABLE_ON) && isBrightEnoughToSpawn(pLevel, pPos);
     }
 }
