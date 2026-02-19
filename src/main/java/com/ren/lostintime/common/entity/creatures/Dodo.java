@@ -58,7 +58,6 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -719,6 +718,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
             spawnDodoLoot();
             this.dodo.level().levelEvent(2001, dodo.getOnPos(), Block.getId(this.dodo.getBlockStateOn()));
             //TODO add pecking cooldown
+            dodo.peckCooldown = Config.dodoPeckCooldown;
         }
 
         protected void spawnDodoLoot() {
