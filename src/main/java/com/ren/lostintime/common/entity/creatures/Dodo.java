@@ -7,6 +7,7 @@ import com.ren.lostintime.common.entity.goal.LayEggGoal;
 import com.ren.lostintime.common.entity.goal.MoveToEntityGoal;
 import com.ren.lostintime.common.entity.util.IEggLayer;
 import com.ren.lostintime.common.entity.util.ISleepingEntity;
+import com.ren.lostintime.common.entity.util.SleepController;
 import com.ren.lostintime.common.init.*;
 import com.ren.lostintime.datagen.server.LITTags;
 import net.minecraft.core.BlockPos;
@@ -57,7 +58,6 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -116,8 +116,8 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         this.goalSelector.addGoal(7, new DodoSpinAroundGoal(this, 10));
         this.goalSelector.addGoal(7, new TemptGoal(this, 1.0D, Ingredient.of(LITTags.Items.DODO_FOOD), false));
         this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.1D));
-        this.goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(10, new AvoidEntityGoal<>(this, AbstractIllager.class, 6.0F, 1.0D, 1.2D));
+        this.goalSelector.addGoal(9, new AvoidEntityGoal<>(this, AbstractIllager.class, 6.0F, 1.0D, 1.2D));
+        this.goalSelector.addGoal(10, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(11, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(12, new RandomLookAroundGoal(this));
     }
@@ -194,6 +194,11 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         double y = this.getY() + this.getBbHeight() + 0.15D;
         double z = this.getZ();
         this.level().addParticle(ParticlesInit.SLEEPING_PARTICLES.get(), x, y, z, 0f, 0.4f, 0);
+    }
+
+    @Override
+    public @Nullable SleepController<?> getSleepController() {
+        return new SleepController<>(this, SleepController.SleepType.DIURNAL);
     }
 
     @Override
@@ -300,12 +305,6 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     @Override
     public boolean canFallInLove() {
         return super.canFallInLove() && !this.hasEgg();
-    }
-
-    @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        this.setSleeping(false);
-        return super.hurt(pSource, pAmount);
     }
 
 
