@@ -1,4 +1,4 @@
-// 1.20.1	2026-02-15T17:42:28.8987275	Block States: lostintime
+// 1.20.1	2026-02-20T00:05:32.282282144	Block States: lostintime
 a43e210ef6a7d44d2ebee4e46454692edb44e9e8 assets/lostintime/blockstates/anomalocaris_roe.json
 898d564269561bc78539174dfc02a2ba2b564481 assets/lostintime/blockstates/araucarioxylon_leaves.json
 44b238b503c361bb980c912cbd9ed956a2b36119 assets/lostintime/blockstates/araucarioxylon_log.json
@@ -32,6 +32,7 @@ b41dcf2dffb4cb177307edd1e3b849538fad08ab assets/lostintime/blockstates/quaternar
 c59a1d9690a000c574ef7aab1d98744eba6bd2e9 assets/lostintime/blockstates/small_sandstone_bricks.json
 9be49c577dea87351988261fadcb681800e6edcc assets/lostintime/blockstates/soul_configurator.json
 4d07379db33c4e71f5f61e78b9583856c6f20327 assets/lostintime/blockstates/soul_extractor.json
+96a58e6bfec87cf1af9768dfe36588c902b1136a assets/lostintime/blockstates/transfigurator.json
 13db756aec54d5449d4e8ccc6dbfdcdbc9d3d485 assets/lostintime/models/block/anomalocaris_roe.json
 a71d0b898609cbecf78f6cb8aa92727ae805b79f assets/lostintime/models/block/araucarioxylon_leaves.json
 17d8312c92161e0beabd28d6ec1803264d19c074 assets/lostintime/models/block/araucarioxylon_log.json
@@ -83,6 +84,10 @@ abbedc1e04607f090ba80eb166360223e141c421 assets/lostintime/models/block/soul_ext
 8f74bf163ffc9f2612db1a98b5fa77c0bb3795d7 assets/lostintime/models/block/soul_extractor_lower_on.json
 bc9f86d4645d2125dd282615d9d46aaa2a58baef assets/lostintime/models/block/soul_extractor_upper_off.json
 eecf5f09dac83988e95af537f61b077e0cbb44fc assets/lostintime/models/block/soul_extractor_upper_on.json
+2a5d0e9cd32f37907063dd42f90c357654670aa4 assets/lostintime/models/block/transfigurator_bottom_off.json
+6d853df8bd41df0d4adf88a784de9fa98ca6116f assets/lostintime/models/block/transfigurator_bottom_on.json
+7132200e3241ca0793a5850f3c3a8a325373bc9e assets/lostintime/models/block/transfigurator_top_off.json
+5783c7f4a23a3d219eb1aaf6afb5a658cd4e141e assets/lostintime/models/block/transfigurator_top_on.json
 452db17bdb04b0512b61d6a8a370d8468e70c504 assets/lostintime/models/item/araucarioxylon_leaves.json
 d69d6200420d7cd8ea1fe52bd80f1925929b9443 assets/lostintime/models/item/araucarioxylon_log.json
 ff92d44dbae7f3bb813e9a3fd10019bb27a40516 assets/lostintime/models/item/barrel_sponge.json

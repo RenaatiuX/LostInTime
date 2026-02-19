@@ -34,6 +34,9 @@ public class BlockInit {
                             DoubleBlockHalf.UPPER && state.getValue(SoulExtractorBlock.ON) ? 10 : 0)));
     public static final RegistryObject<Block> SOUL_CONFIGURATOR = registerBlock("soul_configurator",
             () -> new SoulConfiguratorBlock(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE).noOcclusion().lightLevel(s -> s.getValue(SoulConfiguratorBlock.PART) == SoulConfiguratorBlock.Part.TOP && s.getValue(LITMachineBlock.ON) ? 10 : 0)));
+    public static final RegistryObject<Block> TRANSFIGURATOR = registerBlock("transfigurator",
+            () -> new TransfiguratorBlock(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE).noOcclusion()
+                    .lightLevel(state -> state.getValue(TransfiguratorBlock.HALF) == DoubleBlockHalf.UPPER && state.getValue(TransfiguratorBlock.ON) ? 10 : 0)));
 
     //Environment
     public static final RegistryObject<Block> DEAD_BARREL_SPONGE = registerBlock("dead_barrel_sponge",

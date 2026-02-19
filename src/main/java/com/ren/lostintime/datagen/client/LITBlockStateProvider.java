@@ -67,6 +67,8 @@ public class LITBlockStateProvider extends BlockStateProvider {
         soulExtractor(BlockInit.SOUL_EXTRACTOR.get());
         soulConfigurator(BlockInit.SOUL_CONFIGURATOR.get());
 
+        transfigurator(BlockInit.TRANSFIGURATOR.get());
+
         identificationTableBlock(BlockInit.IDENTIFICATION_TABLE.get());
 
         spongeBlock(BlockInit.BARREL_SPONGE.get());
@@ -239,6 +241,51 @@ public class LITBlockStateProvider extends BlockStateProvider {
             ModelFile model = half == DoubleBlockHalf.LOWER ? (on ? lowerOn : lowerOff) : (on ? upperOn : upperOff);
 
             return ConfiguredModel.builder().modelFile(model).build();
+        });
+    }
+
+    private void transfigurator(Block block) {
+        String name = blockName(block);
+
+        // Bottom Off
+        ModelFile bottomOff = models().withExistingParent(name + "_bottom_off", modLoc("block/transfigurator_bottom"))
+                .texture("4", modLoc("block/transfigurator_side"))
+                .renderType("translucent");
+
+        // Bottom On
+        ModelFile bottomOn = models().withExistingParent(name + "_bottom_on", modLoc("block/transfigurator_bottom"))
+                .texture("4", modLoc("block/transfigurator_side_on"))
+                .renderType("translucent");
+
+        // Top Off
+        ModelFile topOff = models().withExistingParent(name + "_top_off", modLoc("block/transfigurator_top"))
+                .texture("5", modLoc("block/transfigurator_side_top"))
+                .renderType("translucent");
+
+        // Top On
+        ModelFile topOn = models().withExistingParent(name + "_top_on", modLoc("block/transfigurator_top"))
+                .texture("5", modLoc("block/transfigurator_side_top_on"))
+                .renderType("translucent");
+
+        getVariantBuilder(block).forAllStates(state -> {
+            boolean on = state.getValue(TransfiguratorBlock.ON);
+            DoubleBlockHalf half = state.getValue(TransfiguratorBlock.HALF);
+            Direction facing = state.getValue(TransfiguratorBlock.FACING);
+
+            ModelFile model = half == DoubleBlockHalf.LOWER ? (on ? bottomOn : bottomOff) : (on ? topOn : topOff);
+
+            int yRot = switch (facing) {
+                case NORTH -> 0;
+                case SOUTH -> 180;
+                case WEST -> 270;
+                case EAST -> 90;
+                default -> 0;
+            };
+
+            return ConfiguredModel.builder()
+                    .modelFile(model)
+                    .rotationY(yRot)
+                    .build();
         });
     }
 

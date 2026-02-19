@@ -176,6 +176,7 @@ public class LostInTime {
             event.accept(BlockInit.SOUL_EXTRACTOR);
             event.accept(BlockInit.SOUL_CONFIGURATOR);
 
+            event.accept(BlockInit.TRANSFIGURATOR);
             event.accept(BlockInit.DEAD_GLASS_SPONGE);
             event.accept(BlockInit.GLASS_SPONGE);
 

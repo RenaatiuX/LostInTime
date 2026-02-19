@@ -2,11 +2,11 @@
 	"format_version": "1.9.0",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "transfigurator_side",
-		"2": "transfigurator_top",
-		"3": "transfigurator_bottom",
-		"4": "transfigurator_side_on",
-		"particle": "transfigurator_side"
+		"0": "lostintime:block/transfigurator_side",
+		"2": "lostintime:block/transfigurator_top",
+		"3": "lostintime:block/transfigurator_bottom",
+		"4": "lostintime:block/transfigurator_side_on",
+		"particle": "lostintime:block/transfigurator_side"
 	},
 	"elements": [
 		{
