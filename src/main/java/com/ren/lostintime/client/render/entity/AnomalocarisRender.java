@@ -1,6 +1,7 @@
 package com.ren.lostintime.client.render.entity;
 
 import com.ren.lostintime.client.model.AnomalocarisModel;
+import com.ren.lostintime.client.render.layers.AnomalocarisItemLayer;
 import com.ren.lostintime.common.entity.creatures.Anomalocaris;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -13,6 +14,7 @@ public class AnomalocarisRender extends GeoEntityRenderer<Anomalocaris> {
 
     public AnomalocarisRender(EntityRendererProvider.Context renderManager) {
         super(renderManager, new AnomalocarisModel());
+        this.addRenderLayer(new AnomalocarisItemLayer(this));
         this.shadowRadius = 0.5F;
     }
 

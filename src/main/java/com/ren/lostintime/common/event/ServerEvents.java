@@ -2,6 +2,8 @@ package com.ren.lostintime.common.event;
 
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.entity.creatures.Dodo;
+import com.ren.lostintime.common.init.BlockInit;
+import com.ren.lostintime.common.init.EnchantmentInit;
 import com.ren.lostintime.common.init.ItemInit;
 import com.ren.lostintime.common.init.VillagerInit;
 import com.ren.lostintime.common.villager.LITItemTrade;
@@ -12,12 +14,19 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -67,6 +76,27 @@ public class ServerEvents {
                     RandomItemStackSource.of(Items.BOOK, 1),
                     RandomItemStackSource.of(Items.EMERALD, 20),
                     RandomItemStackSource.of(Blocks.BONE_BLOCK.asItem(), 1), 12, 2, 0.02F));
+        }
+    }
+
+    @SubscribeEvent
+    public static void onBlockBreak(BlockEvent.BreakEvent event) {
+        Player player = event.getPlayer();
+        Level level = player.level();
+        BlockState state = event.getState();
+        ItemStack tool = player.getMainHandItem();
+
+        int levelEnchant = EnchantmentHelper.getTagEnchantmentLevel(EnchantmentInit.FOSSIL_KNOWLEDGE.get(), tool);
+
+        if (levelEnchant <= 0) return;
+
+        if (!state.is(BlockInit.CRETACEOUS_FOSSIL_BLOCK.get())) return;
+
+        float chance = 0.10F * levelEnchant;
+
+        if (level.random.nextFloat() < chance) {
+            event.setExpToDrop(0);
+            Block.popResource(level, event.getPos(), new ItemStack(ItemInit.CRETACEOUS_FOSSIL.get()));
         }
     }
 

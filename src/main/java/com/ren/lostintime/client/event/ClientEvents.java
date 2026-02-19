@@ -3,7 +3,9 @@ package com.ren.lostintime.client.event;
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.client.particles.SleepingParticle;
 import com.ren.lostintime.client.render.entity.AnomalocarisRender;
+import com.ren.lostintime.client.render.entity.BothriolepisRender;
 import com.ren.lostintime.client.render.entity.DodoRender;
+import com.ren.lostintime.client.render.entity.HylonomusRender;
 import com.ren.lostintime.client.render.projectile.GuardianSpikeRender;
 import com.ren.lostintime.client.screen.IdentificationScreen;
 import com.ren.lostintime.client.screen.SoulConfiguratorScreen;
@@ -34,6 +36,8 @@ public class ClientEvents {
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(EntityInit.DODO.get(), DodoRender::new);
         event.registerEntityRenderer(EntityInit.ANOMALOCARIS.get(), AnomalocarisRender::new);
+        event.registerEntityRenderer(EntityInit.BOTHRIOLEPIS.get(), BothriolepisRender::new);
+        event.registerEntityRenderer(EntityInit.HYLONOMUS.get(), HylonomusRender::new);
 
         event.registerEntityRenderer(EntityInit.GUARDIAN_SPIKE.get(), GuardianSpikeRender::new);
     }

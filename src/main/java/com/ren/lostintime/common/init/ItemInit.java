@@ -3,6 +3,8 @@ package com.ren.lostintime.common.init;
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.item.GoldenEyeItem;
 import com.ren.lostintime.common.item.GuardianSpikeItem;
+import com.ren.lostintime.common.item.RoeBucketItem;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.food.FoodProperties;
@@ -29,7 +31,8 @@ public class ItemInit {
     public static final RegistryObject<Item> EMPTY_VITAL_PATTERN =  registerSimple("empty_vital_pattern");
     public static final RegistryObject<Item> INFORMATION_DOME = registerSimple("information_dome");
     public static final RegistryObject<Item> SOUL_POWDER = registerSimple("soul_powder");
-    public static final RegistryObject<Item> PROTOTAXITES_VITAL_PATTERN = registerSimple("prototaxites_vital_pattern");
+    public static final RegistryObject<Item> PANEL = registerSimple("panel");
+    public static final RegistryObject<Item> REDSTONE_CHIP = registerSimple("redstone_chip");
 
     //ASPECT
     public static final RegistryObject<Item> ASPECT_DIFFERENTIATION = registerSimple("aspect_differentiation");
@@ -90,6 +93,14 @@ public class ItemInit {
     public static final RegistryObject<Item> PTERYGOTUS_SOUL_CFC = registerSimple("pterygotus_soul_configuration");
     public static final RegistryObject<Item> SCUTOSAURUS_SOUL_CFC = registerSimple("scutosaurus_soul_configuration");
 
+    //PATTERN
+    public static final RegistryObject<Item> PROTOTAXITES_VITAL_PATTERN = registerSimple("prototaxites_vital_pattern");
+    public static final RegistryObject<Item> BARREL_SPONGE_VITAL_PATTERN = registerSimple("barrel_sponge_vital_pattern");
+    public static final RegistryObject<Item> GLASS_SPONGE_VITAL_PATTERN = registerSimple("glass_sponge_vital_pattern");
+    public static final RegistryObject<Item> PIPE_SPONGE_VITAL_PATTERN = registerSimple("pipe_sponge_vital_pattern");
+    public static final RegistryObject<Item> TREE_SPONGE_VITAL_PATTERN = registerSimple("tree_sponge_vital_pattern");
+    public static final RegistryObject<Item> VASE_SPONGE_VITAL_PATTERN = registerSimple("vase_sponge_vital_pattern");
+    public static final RegistryObject<Item> WOOL_SPONGE_VITAL_PATTERN = registerSimple("wool_sponge_vital_pattern");
 
     public static final RegistryObject<Item> DODO_FOSSIL = registerSimple("dodo_fossil");
     public static final RegistryObject<Item> DODO_SKULL =  registerSimple("dodo_skull");
@@ -134,9 +145,14 @@ public class ItemInit {
     //BLOCKS
     public static final RegistryObject<Item> BOTHRIOLEPIS_ROE = ITEMS.register("bothriolepis_roe",
             () -> new PlaceOnWaterBlockItem(BlockInit.BOTHRIOLEPIS_ROE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> ANOMALOCARIS_ROE = ITEMS.register("anomalocaris_roe",
+            () -> new PlaceOnWaterBlockItem(BlockInit.ANOMALOCARIS_ROE.get(), new Item.Properties()));
 
     //BUCKETS
-
+    public static final RegistryObject<Item> BOTHRIOLEPIS_ROE_BUCKET = ITEMS.register("bothriolepis_roe_bucket",
+            () -> new RoeBucketItem(BlockInit.BOTHRIOLEPIS_ROE, () -> SoundEvents.BUCKET_EMPTY, new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ANOMALOCARIS_ROE_BUCKET = ITEMS.register("anomalocaris_roe_bucket",
+            () -> new RoeBucketItem(BlockInit.ANOMALOCARIS_ROE, () -> SoundEvents.BUCKET_EMPTY, new Item.Properties().stacksTo(1)));
 
     //SPAWN EGG
     public static final RegistryObject<Item> DODO_SPAWN_EGG = registerSpawnEgg("dodo_spawn_egg",

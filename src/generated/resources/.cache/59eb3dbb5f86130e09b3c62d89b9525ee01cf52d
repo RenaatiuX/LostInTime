@@ -1,3 +1,4 @@
-// 1.20.1	2025-12-27T11:43:33.7767353	Loot Tables
-1a2c839365ebd09f8b39f1028f3c957ed78d7ab7 data/lostintime/loot_tables/dodo/pecking.json
+// 1.20.1	2026-02-04T13:09:30.2924107	Loot Tables
+16fbc73e533736c0a20d815b370f459ae1498dc6 data/lostintime/loot_tables/blocks/cretaceous_fossil_block.json
+68e05ee144f3864987f99d0d413b06b1dd0e9338 data/lostintime/loot_tables/dodo/pecking.json
 03684f8ddb8d4b5a2b8958ed4d71e27bb263e9b4 data/lostintime/loot_tables/entities/dodo.json

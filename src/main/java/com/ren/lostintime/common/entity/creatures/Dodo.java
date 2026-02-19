@@ -64,9 +64,9 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     private static final EntityDataAccessor<Boolean> LAYING_EGG = SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
 
-    protected static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
-    protected static final RawAnimation FLAP = RawAnimation.begin().thenLoop("misc.flap");
-    protected static final RawAnimation PECK = RawAnimation.begin().thenLoop("misc.peck");
+    public static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
+    public static final RawAnimation FLAP = RawAnimation.begin().thenLoop("misc.flap");
+    public static final RawAnimation PECK = RawAnimation.begin().thenLoop("misc.peck");
     public static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
     public static final RawAnimation RUN = RawAnimation.begin().thenLoop("move.run");
     public static final RawAnimation SLEEP = RawAnimation.begin().thenLoop("misc.sleep");

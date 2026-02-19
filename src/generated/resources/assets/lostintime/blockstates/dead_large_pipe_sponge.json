@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "lostintime:block/dead_large_pipe_sponge_lower"
+    },
+    "half=upper": {
+      "model": "lostintime:block/dead_large_pipe_sponge_upper"
+    }
+  }
+}

@@ -34,6 +34,7 @@ public class LostInTime {
         FeatureInit.FEATURES.register(modEventBus);
         VillagerInit.POI_TYPES.register(modEventBus);
         VillagerInit.VILLAGER_PROFESSIONS.register(modEventBus);
+        EnchantmentInit.ENCHANTMENTS.register(modEventBus);
 
         ModLootConditions.LOOT_CONDITIONS.register(modEventBus);
         ModLootConditions.LOOT_POOL_ENTRIES.register(modEventBus);
@@ -50,6 +51,8 @@ public class LostInTime {
             event.accept(ItemInit.EMPTY_VITAL_PATTERN);
             event.accept(ItemInit.INFORMATION_DOME);
             event.accept(ItemInit.SOUL_POWDER);
+            event.accept(ItemInit.PANEL);
+            event.accept(ItemInit.REDSTONE_CHIP);
 
             event.accept(ItemInit.DEVONIAN_FOSSIL);
             event.accept(ItemInit.CAMBRIAN_FOSSIL);
@@ -125,6 +128,13 @@ public class LostInTime {
             event.accept(ItemInit.PTERYGOTUS_SOUL_CFC);
             event.accept(ItemInit.SCUTOSAURUS_SOUL_CFC);
 
+            event.accept(ItemInit.BARREL_SPONGE_VITAL_PATTERN);
+            event.accept(ItemInit.GLASS_SPONGE_VITAL_PATTERN);
+            event.accept(ItemInit.PIPE_SPONGE_VITAL_PATTERN);
+            event.accept(ItemInit.TREE_SPONGE_VITAL_PATTERN);
+            event.accept(ItemInit.VASE_SPONGE_VITAL_PATTERN);
+            event.accept(ItemInit.WOOL_SPONGE_VITAL_PATTERN);
+
             event.accept(ItemInit.GOLDEN_EYE);
             event.accept(ItemInit.GUARDIAN_SPIKE);
 
@@ -137,6 +147,10 @@ public class LostInTime {
             event.accept(BlockInit.DEAD_BARREL_SPONGE);
             event.accept(BlockInit.BARREL_SPONGE);
             event.accept(ItemInit.BOTHRIOLEPIS_ROE);
+            event.accept(ItemInit.ANOMALOCARIS_ROE);
+
+            event.accept(ItemInit.ANOMALOCARIS_ROE_BUCKET);
+            event.accept(ItemInit.BOTHRIOLEPIS_ROE_BUCKET);
 
             event.accept(BlockInit.QUATERNARY_FOSSIL_BLOCK);
             event.accept(BlockInit.NEOGENE_FOSSIL_BLOCK);
@@ -157,6 +171,12 @@ public class LostInTime {
             event.accept(BlockInit.IDENTIFICATION_TABLE);
             event.accept(BlockInit.SOUL_EXTRACTOR);
             event.accept(BlockInit.SOUL_CONFIGURATOR);
+
+            event.accept(BlockInit.DEAD_GLASS_SPONGE);
+            event.accept(BlockInit.GLASS_SPONGE);
+
+            event.accept(BlockInit.DEAD_LARGE_PIPE_SPONGE);
+            event.accept(BlockInit.LARGE_PIPE_SPONGE);
         }
     }
 }
