@@ -717,7 +717,6 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
             dodo.setPecking(false);
             spawnDodoLoot();
             this.dodo.level().levelEvent(2001, dodo.getOnPos(), Block.getId(this.dodo.getBlockStateOn()));
-            //TODO add pecking cooldown
             dodo.peckCooldown = Config.dodoPeckCooldown;
         }
 
