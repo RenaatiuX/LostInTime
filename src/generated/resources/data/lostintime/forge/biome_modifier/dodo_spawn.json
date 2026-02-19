@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "#lostintime:dodo_can_spawn",
+  "spawners": {
+    "type": "lostintime:dodo",
+    "maxCount": 4,
+    "minCount": 1,
+    "weight": 20
+  }
+}

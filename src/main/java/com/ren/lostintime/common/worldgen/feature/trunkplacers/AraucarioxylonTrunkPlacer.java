@@ -51,30 +51,38 @@ public class AraucarioxylonTrunkPlacer extends TrunkPlacer {
             place(pLevel, pBlockSetter, pRandom, pPos.offset(1, y, 1), pConfig);
         }
 
-        int branchCount = 10 + pRandom.nextInt(6);
+        int startBranchY = (int) (height * 0.3);
 
-        for (int i = 0; i <= branchCount; ++i) {
-            int branchY = (int) (height * (0.25 + (i * 0.05)));
-            Direction dir = Direction.Plane.HORIZONTAL.getRandomDirection(pRandom);
+        for (int y = startBranchY; y < height - 2; y += 2 + pRandom.nextInt(2)) {
+            float heightPercent = (float) (y - startBranchY) / (height - startBranchY);
+            int baseLength = 2 + pRandom.nextInt(2);
+            int branchLength = Math.max(1, Math.min(3, (int) (baseLength * (1.2f - heightPercent))));
 
-            BlockPos branchStart = pPos.offset(0, branchY, 0).relative(dir);
-            int branchLength = 2 + pRandom.nextInt(2);
+            for (Direction dir : Direction.Plane.HORIZONTAL) {
+                BlockPos branchStart = switch (dir) {
+                    case NORTH -> pPos.offset(pRandom.nextInt(2), y, 0).relative(dir);
+                    case SOUTH -> pPos.offset(pRandom.nextInt(2), y, 1).relative(dir);
+                    case WEST -> pPos.offset(0, y, pRandom.nextInt(2)).relative(dir);
+                    case EAST -> pPos.offset(1, y, pRandom.nextInt(2)).relative(dir);
+                    default -> pPos.offset(0, y, 0);
+                };
+                BlockPos currentBranchPos = branchStart;
 
-            for (int b = 0; b < branchLength; b++) {
-                place(pLevel, pBlockSetter, pRandom, branchStart, pConfig);
-                branchStart = branchStart.relative(dir);
+                for (int b = 0; b < branchLength; b++) {
+                    place(pLevel, pBlockSetter, pRandom, currentBranchPos, pConfig);
+                    result.add(new FoliagePlacer.FoliageAttachment(currentBranchPos.above(), 0, false));
+                    currentBranchPos = currentBranchPos.relative(dir);
+                    if (b > 1 && pRandom.nextFloat() < 0.3f) {
+                        currentBranchPos = currentBranchPos.below();
+                    }
+                }
+                result.add(new FoliagePlacer.FoliageAttachment(currentBranchPos.above(), 0, false));
             }
-
-            if (pRandom.nextBoolean()) {
-                //nothing
-            } else {
-                branchStart = branchStart.below();
-            }
-
-            place(pLevel, pBlockSetter, pRandom, branchStart, pConfig);
-
-            result.add(new FoliagePlacer.FoliageAttachment(branchStart, 0, false));
         }
+        result.add(new FoliagePlacer.FoliageAttachment(pPos.offset(0, height, 0), 0, false));
+        result.add(new FoliagePlacer.FoliageAttachment(pPos.offset(1, height, 0), 0, false));
+        result.add(new FoliagePlacer.FoliageAttachment(pPos.offset(0, height, 1), 0, false));
+        result.add(new FoliagePlacer.FoliageAttachment(pPos.offset(1, height, 1), 0, false));
 
         return result;
     }

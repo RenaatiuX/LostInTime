@@ -33,6 +33,9 @@ public class ItemInit {
     public static final RegistryObject<Item> SOUL_POWDER = registerSimple("soul_powder");
     public static final RegistryObject<Item> PANEL = registerSimple("panel");
     public static final RegistryObject<Item> REDSTONE_CHIP = registerSimple("redstone_chip");
+    public static final RegistryObject<Item> ZIRCON =  registerSimple("zircon");
+    public static final RegistryObject<Item> OPAL = registerSimple("opal");
+    public static final RegistryObject<Item> SPINEL = registerSimple("spinel");
 
     //ASPECT
     public static final RegistryObject<Item> ASPECT_DIFFERENTIATION = registerSimple("aspect_differentiation");
@@ -48,8 +51,6 @@ public class ItemInit {
     public static final RegistryObject<Item> ASPECT_REFINEMENT = registerSimple("aspect_refinement");
     public static final RegistryObject<Item> ASPECT_RESILIENCE = registerSimple("aspect_resilience");
 
-    public static final RegistryObject<Item> ZIRCON =  registerSimple("zircon");
-
     //CATALYST
     public static final RegistryObject<Item> AMETHYST_CATALYST = registerSimple("amethyst_catalyst");
     public static final RegistryObject<Item> BLUE_ICE_CATALYST = registerSimple("blue_ice_catalyst");
@@ -63,6 +64,9 @@ public class ItemInit {
     public static final RegistryObject<Item> QUARTZ_CATALYST = registerSimple("quartz_catalyst");
     public static final RegistryObject<Item> REDSTONE_CATALYST = registerSimple("redstone_catalyst");
     public static final RegistryObject<Item> ZIRCON_CATALYST = registerSimple("zircon_catalyst");
+    public static final RegistryObject<Item> AMBER_CATALYST = registerSimple("amber_catalyst");
+    public static final RegistryObject<Item> OPAL_CATALYST = registerSimple("opal_catalyst");
+    public static final RegistryObject<Item> SPINEL_CATALYST = registerSimple("spinel_catalyst");
 
     //FOSSIL
     public static final RegistryObject<Item> CAMBRIAN_FOSSIL = registerSimple("cambrian_fossil");
@@ -101,6 +105,31 @@ public class ItemInit {
     public static final RegistryObject<Item> TREE_SPONGE_VITAL_PATTERN = registerSimple("tree_sponge_vital_pattern");
     public static final RegistryObject<Item> VASE_SPONGE_VITAL_PATTERN = registerSimple("vase_sponge_vital_pattern");
     public static final RegistryObject<Item> WOOL_SPONGE_VITAL_PATTERN = registerSimple("wool_sponge_vital_pattern");
+    public static final RegistryObject<Item> ARAUCARIOXYLON_VITAL_PATTERN = registerSimple("araucarioxylon_vital_pattern");
+    public static final RegistryObject<Item> CLADOPHLEBIS_VITAL_PATTERN = registerSimple("cladophlebis_vital_pattern");
+    public static final RegistryObject<Item> CONIOPTERIS_VITAL_PATTERN = registerSimple("coniopteris_vital_pattern");
+    public static final RegistryObject<Item> COOKSONIA_VITAL_PATTERN = registerSimple("cooksonia_vital_pattern");
+    public static final RegistryObject<Item> GONDWANAGARICITES_VITAL_PATTERN = registerSimple("gondwanagaricites_vital_pattern");
+    public static final RegistryObject<Item> RED_ALGAE_VITAL_PATTERN = registerSimple("red_algae_vital_pattern");
+    public static final RegistryObject<Item> TITANOSARCOLITES_VITAL_PATTERN = registerSimple("titanosarcolites_vital_pattern");
+
+    //SOLUTION
+    public static final RegistryObject<Item> BEIGE_SOLUTION = registerSimple("beige_solution");
+    public static final RegistryObject<Item> CARMINE_SOLUTION = registerSimple("carmine_solution");
+    public static final RegistryObject<Item> CHARTREUSE_SOLUTION = registerSimple("chartreuse_solution");
+    public static final RegistryObject<Item> CINEREOUS_SOLUTION = registerSimple("cinereous_solution");
+    public static final RegistryObject<Item> DELFT_SOLUTION = registerSimple("delft_solution");
+    public static final RegistryObject<Item> EVERGREEN_SOLUTION = registerSimple("evergreen_solution");
+    public static final RegistryObject<Item> PERIWINKLE_SOLUTION = registerSimple("periwinkle_solution");
+    public static final RegistryObject<Item> ROSE_SOLUTION = registerSimple("rose_solution");
+    public static final RegistryObject<Item> SHAMROCK_SOLUTION = registerSimple("shamrock_solution");
+    public static final RegistryObject<Item> TEAL_SOLUTION = registerSimple("teal_solution");
+
+    //NUTRIENTS
+    public static final RegistryObject<Item> FIBROUS_NUTRIENT = registerSimple("fibrous_nutrient");
+    public static final RegistryObject<Item> GELATINOUS_NUTRIENT = registerSimple("gelatinous_nutrient");
+    public static final RegistryObject<Item> RICH_NUTRIENT = registerSimple("rich_nutrient");
+    public static final RegistryObject<Item> UNIVERSAL_NUTRIENT = registerSimple("universal_nutrient");
 
     public static final RegistryObject<Item> DODO_FOSSIL = registerSimple("dodo_fossil");
     public static final RegistryObject<Item> DODO_SKULL =  registerSimple("dodo_skull");
@@ -120,6 +149,9 @@ public class ItemInit {
     public static final RegistryObject<Item> PTERYGOTUS_FOSSIL = registerSimple("pterygotus_fossil");
     public static final RegistryObject<Item> SCUTOSAURUS_FOSSIL = registerSimple("scutosaurus_fossil");
     public static final RegistryObject<Item> SCUTOSAURUS_SKULL = registerSimple("scutosaurus_skull");
+    public static final RegistryObject<Item> CLADOPHLEBIS_FOSSIL = registerSimple("cladophlebis_fossil");
+    public static final RegistryObject<Item> CONIOPTERIS_FOSSIL = registerSimple("coniopteris_fossil");
+    public static final RegistryObject<Item> RED_ALGAE_FOSSIL = registerSimple("red_algae_fossil");
 
     public static final RegistryObject<Item> DODO_FOSSIL_MOUNT = registerSimple("dodo_fossil_mount");
     public static final RegistryObject<Item> EMPTY_SKELETON_MOUNT = registerSimple("empty_skeleton_mount");

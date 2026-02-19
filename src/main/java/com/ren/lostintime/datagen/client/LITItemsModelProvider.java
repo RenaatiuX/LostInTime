@@ -96,6 +96,9 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.PTERYGOTUS_FOSSIL.get());
         simple(ItemInit.SCUTOSAURUS_FOSSIL.get());
         simple(ItemInit.SCUTOSAURUS_SKULL.get());
+        simple(ItemInit.CLADOPHLEBIS_FOSSIL.get());
+        simple(ItemInit.CONIOPTERIS_FOSSIL.get());
+        simple(ItemInit.RED_ALGAE_FOSSIL.get());
 
         simple(ItemInit.DODO_FOSSIL_MOUNT.get());
         simple(ItemInit.EMPTY_SKELETON_MOUNT.get());
@@ -114,6 +117,8 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.ASPECT_RESILIENCE.get());
 
         simple(ItemInit.ZIRCON.get());
+        simple(ItemInit.OPAL.get());
+        simple(ItemInit.SPINEL.get());
 
         simple(ItemInit.AMETHYST_CATALYST.get());
         simple(ItemInit.BLUE_ICE_CATALYST.get());
@@ -127,6 +132,9 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.QUARTZ_CATALYST.get());
         simple(ItemInit.REDSTONE_CATALYST.get());
         simple(ItemInit.ZIRCON_CATALYST.get());
+        simple(ItemInit.AMBER_CATALYST.get());
+        simple(ItemInit.OPAL_CATALYST.get());
+        simple(ItemInit.SPINEL_CATALYST.get());
 
         simple(ItemInit.ANOMALOCARIS_SOUL_CFC.get());
         simple(ItemInit.BOTHRIOLEPIS_SOUL_CFC.get());
@@ -149,6 +157,29 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.TREE_SPONGE_VITAL_PATTERN.get());
         simple(ItemInit.VASE_SPONGE_VITAL_PATTERN.get());
         simple(ItemInit.WOOL_SPONGE_VITAL_PATTERN.get());
+        simple(ItemInit.ARAUCARIOXYLON_VITAL_PATTERN.get());
+        simple(ItemInit.CLADOPHLEBIS_VITAL_PATTERN.get());
+        simple(ItemInit.CONIOPTERIS_VITAL_PATTERN.get());
+        simple(ItemInit.COOKSONIA_VITAL_PATTERN.get());
+        simple(ItemInit.GONDWANAGARICITES_VITAL_PATTERN.get());
+        simple(ItemInit.RED_ALGAE_VITAL_PATTERN.get());
+        simple(ItemInit.TITANOSARCOLITES_VITAL_PATTERN.get());
+
+        simple(ItemInit.BEIGE_SOLUTION.get());
+        simple(ItemInit.CARMINE_SOLUTION.get());
+        simple(ItemInit.CHARTREUSE_SOLUTION.get());
+        simple(ItemInit.CINEREOUS_SOLUTION.get());
+        simple(ItemInit.DELFT_SOLUTION.get());
+        simple(ItemInit.EVERGREEN_SOLUTION.get());
+        simple(ItemInit.PERIWINKLE_SOLUTION.get());
+        simple(ItemInit.ROSE_SOLUTION.get());
+        simple(ItemInit.SHAMROCK_SOLUTION.get());
+        simple(ItemInit.TEAL_SOLUTION.get());
+
+        simple(ItemInit.FIBROUS_NUTRIENT.get());
+        simple(ItemInit.GELATINOUS_NUTRIENT.get());
+        simple(ItemInit.RICH_NUTRIENT.get());
+        simple(ItemInit.UNIVERSAL_NUTRIENT.get());
     }
 
     private void simple(Item... items) {
