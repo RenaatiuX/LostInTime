@@ -36,8 +36,11 @@ public class LostInTime {
         VillagerInit.VILLAGER_PROFESSIONS.register(modEventBus);
         EnchantmentInit.ENCHANTMENTS.register(modEventBus);
 
-        ModLootConditions.LOOT_CONDITIONS.register(modEventBus);
-        ModLootConditions.LOOT_POOL_ENTRIES.register(modEventBus);
+        LootConditionsInit.LOOT_CONDITIONS.register(modEventBus);
+        LootConditionsInit.LOOT_POOL_ENTRIES.register(modEventBus);
+
+        TrunkPlacerTypeInit.TRUNK_PLACER.register(modEventBus);
+        FoliagePlacerTypeInit.FOLIAGE_PLACER.register(modEventBus);
 
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
@@ -143,6 +146,7 @@ public class LostInTime {
             event.accept(BlockInit.MANGO_LEAVES);
             event.accept(BlockInit.MANGO_LOG);
             event.accept(BlockInit.MANGO_SAPLING);
+            event.accept(BlockInit.ARAUCARIOXYLON_SAPLING);
             event.accept(BlockInit.DODO_EGG);
             event.accept(BlockInit.DEAD_BARREL_SPONGE);
             event.accept(BlockInit.BARREL_SPONGE);

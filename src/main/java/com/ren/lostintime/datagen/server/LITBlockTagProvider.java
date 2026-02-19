@@ -24,21 +24,26 @@ public class LITBlockTagProvider extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         tag(BlockTags.SAPLINGS)
-                .add(BlockInit.MANGO_SAPLING.get());
+                .add(BlockInit.MANGO_SAPLING.get())
+                .add(BlockInit.ARAUCARIOXYLON_SAPLING.get());
 
         tag(BlockTags.LEAVES)
                 .add(BlockInit.MANGO_LEAVES.get())
-                .add(BlockInit.MANGO_FRUIT_LEAVES.get());
+                .add(BlockInit.MANGO_FRUIT_LEAVES.get())
+                .add(BlockInit.ARAUCARIOXYLON_LEAVES.get());
 
         tag(BlockTags.LOGS)
-                .add(BlockInit.MANGO_LOG.get());
+                .add(BlockInit.MANGO_LOG.get())
+                .add(BlockInit.ARAUCARIOXYLON_LOG.get());
 
         tag(BlockTags.LOGS_THAT_BURN)
-                .add(BlockInit.MANGO_LOG.get());
+                .add(BlockInit.MANGO_LOG.get())
+                .add(BlockInit.ARAUCARIOXYLON_LOG.get());
 
         tag(BlockTags.MINEABLE_WITH_HOE)
                 .add(BlockInit.MANGO_LEAVES.get())
-                .add(BlockInit.MANGO_FRUIT_LEAVES.get());
+                .add(BlockInit.MANGO_FRUIT_LEAVES.get())
+                .add(BlockInit.ARAUCARIOXYLON_LEAVES.get());
 
         tag(LITTags.Blocks.DODO_SOILS)
                 .add(Blocks.GRASS_BLOCK)

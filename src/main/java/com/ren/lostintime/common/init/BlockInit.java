@@ -3,6 +3,7 @@ package com.ren.lostintime.common.init;
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.block.*;
 import com.ren.lostintime.common.worldgen.fossil.FossilEra;
+import com.ren.lostintime.common.worldgen.tree.trees.AraucarioxylonTreeGrower;
 import com.ren.lostintime.common.worldgen.tree.trees.MangoTreeGrower;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -69,16 +70,26 @@ public class BlockInit {
     //SAPLINGS
     public static final RegistryObject<Block> MANGO_SAPLING = registerBlock("mango_sapling",
             () -> new SaplingBlock(new MangoTreeGrower(), BlockBehaviour.Properties.copy(Blocks.OAK_SAPLING)));
+    public static final RegistryObject<Block> ARAUCARIOXYLON_SAPLING = registerBlock("araucarioxylon_sapling",
+            () -> new SaplingBlock(new AraucarioxylonTreeGrower(), BlockBehaviour.Properties.copy(Blocks.OAK_SAPLING)));
 
     //LEAVES
     public static final RegistryObject<Block> MANGO_LEAVES = registerBlock("mango_leaves",
             () -> new LeavesBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LEAVES)));
     public static final RegistryObject<Block> MANGO_FRUIT_LEAVES = registerBlock("mango_fruit_leaves",
-            () -> new MangoFruitBlock(BlockBehaviour.Properties.copy(MANGO_LEAVES.get())));
+            () -> new LITFruitBlock(BlockBehaviour.Properties.copy(MANGO_LEAVES.get())));
+    public static final RegistryObject<Block> ARAUCARIOXYLON_LEAVES = registerBlock("araucarioxylon_leaves",
+            () -> new LeavesBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LEAVES)));
 
     //LOGS
     public static final RegistryObject<Block> MANGO_LOG = registerBlock("mango_log",
             () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LOG).strength(3F)));
+    public static final RegistryObject<Block> ARAUCARIOXYLON_LOG = registerBlock("araucarioxylon_log",
+            () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LOG).strength(3F)));
+
+    //PLANKS
+    /*public static final RegistryObject<Block> ARAUCARIOXYLON_PLANKS = registerBlock("araucarioxylon_planks",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));*/
 
     //EGGS
     public static final RegistryObject<Block> DODO_EGG = registerBlock("dodo_egg",

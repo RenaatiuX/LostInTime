@@ -1,5 +1,6 @@
-// 1.20.1	2026-01-10T13:55:38.1718098	Registries
+// 1.20.1	2026-02-16T20:14:46.3908235	Registries
 ce9df49a01c04a1c69071244fa4a21139c79dff5 data/lostintime/forge/biome_modifier/add_fossils.json
+9281685b774cfa2ee741bc4eb097f4a197663126 data/lostintime/worldgen/configured_feature/araucarioxylon_tree.json
 db618ff049de94630877198ec7e72e1a4bbd742d data/lostintime/worldgen/configured_feature/fossil/cambrian.json
 c213a1cb3176599996254e5581ad411dc34ccc09 data/lostintime/worldgen/configured_feature/fossil/carboniferous.json
 e3f52d7266c2f334c8a12f811b836e13c662e465 data/lostintime/worldgen/configured_feature/fossil/cretaceous.json

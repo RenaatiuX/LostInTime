@@ -33,9 +33,14 @@ public class LITBlockStateProvider extends BlockStateProvider {
         logBlock((RotatedPillarBlock) BlockInit.MANGO_LOG.get());
         blockItem(BlockInit.MANGO_LOG);
 
+        logBlock((RotatedPillarBlock) BlockInit.ARAUCARIOXYLON_LOG.get());
+        blockItem(BlockInit.ARAUCARIOXYLON_LOG);
+        leavesBlock(BlockInit.ARAUCARIOXYLON_LEAVES);
+        saplingBlock(BlockInit.ARAUCARIOXYLON_SAPLING);
+
         leavesBlock(BlockInit.MANGO_LEAVES);
         saplingBlock(BlockInit.MANGO_SAPLING);
-        stageBlock(BlockInit.MANGO_FRUIT_LEAVES.get(), MangoFruitBlock.AGE, true);
+        stageBlock(BlockInit.MANGO_FRUIT_LEAVES.get(), LITFruitBlock.AGE, true);
         blockItem(BlockInit.MANGO_FRUIT_LEAVES);
 
         createDodoEggModel(BlockInit.DODO_EGG.get(), SingleEggBlock.HATCH);

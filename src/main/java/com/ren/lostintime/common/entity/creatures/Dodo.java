@@ -699,8 +699,8 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
                 } else {
                     dodo.lootMultiplier = 1f;
                 }
-                LootTable loottable = serverLevel.getServer().getLootData().getLootTable(ModLootTables.DODO_PECK_LOOT);
-                LootParams params = new LootParams.Builder(serverLevel).withParameter(LootContextParams.BLOCK_STATE, dodo.getBlockStateOn()).withParameter(LootContextParams.ORIGIN, dodo.getOnPos().getCenter()).withParameter(LootContextParams.THIS_ENTITY, dodo).withParameter(ModLootParamSets.DODO_GOLDEN_FOOD_MULTIPLIER, dodo.lootMultiplier).create(ModLootParamSets.DODO_PECK);
+                LootTable loottable = serverLevel.getServer().getLootData().getLootTable(LootTablesInit.DODO_PECK_LOOT);
+                LootParams params = new LootParams.Builder(serverLevel).withParameter(LootContextParams.BLOCK_STATE, dodo.getBlockStateOn()).withParameter(LootContextParams.ORIGIN, dodo.getOnPos().getCenter()).withParameter(LootContextParams.THIS_ENTITY, dodo).withParameter(LootParamSetsInit.DODO_GOLDEN_FOOD_MULTIPLIER, dodo.lootMultiplier).create(LootParamSetsInit.DODO_PECK);
 
                 var dropItems = loottable.getRandomItems(params);
                 var spawnPos = dodo.getOnPos().above();

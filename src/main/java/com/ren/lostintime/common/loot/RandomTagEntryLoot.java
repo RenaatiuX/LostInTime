@@ -3,7 +3,7 @@ package com.ren.lostintime.common.loot;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import com.ren.lostintime.common.init.ModLootConditions;
+import com.ren.lostintime.common.init.LootConditionsInit;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -11,8 +11,6 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.entries.LootPoolEntry;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryType;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
@@ -39,7 +37,7 @@ public class RandomTagEntryLoot extends LootPoolSingletonContainer {
 
     @Override
     public LootPoolEntryType getType() {
-        return ModLootConditions.RANDOM_TAG_ENTRY.get();
+        return LootConditionsInit.RANDOM_TAG_ENTRY.get();
     }
 
     public static LootPoolSingletonContainer.Builder<?> randomTagEntry(TagKey<Item> tag){

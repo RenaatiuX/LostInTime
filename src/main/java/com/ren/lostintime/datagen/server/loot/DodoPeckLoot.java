@@ -1,28 +1,23 @@
 package com.ren.lostintime.datagen.server.loot;
 
-import com.ren.lostintime.LostInTime;
-import com.ren.lostintime.common.init.ItemInit;
-import com.ren.lostintime.common.init.ModLootTables;
+import com.ren.lostintime.common.init.LootTablesInit;
 import com.ren.lostintime.common.loot.RandomChanceWithGoldenMultiplier;
 import com.ren.lostintime.common.loot.RandomTagEntryLoot;
 import com.ren.lostintime.datagen.server.LITTags;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.entries.TagEntry;
 import net.minecraft.world.level.storage.loot.functions.EnchantRandomlyFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemDamageFunction;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.common.Tags;
 
@@ -31,7 +26,7 @@ import java.util.function.BiConsumer;
 public class DodoPeckLoot implements LootTableSubProvider {
     @Override
     public void generate(BiConsumer<ResourceLocation, LootTable.Builder> pOutput) {
-        pOutput.accept(ModLootTables.DODO_PECK_LOOT,
+        pOutput.accept(LootTablesInit.DODO_PECK_LOOT,
                 LootTable.lootTable()
                         .withPool(LootPool.lootPool()
                                 .setRolls(UniformGenerator.between(1, 3))

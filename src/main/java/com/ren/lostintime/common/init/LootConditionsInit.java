@@ -9,7 +9,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
-public class ModLootConditions {
+public class LootConditionsInit {
 
     public static final DeferredRegister<LootItemConditionType> LOOT_CONDITIONS = DeferredRegister.create(BuiltInRegistries.LOOT_CONDITION_TYPE.key(), LostInTime.MODID);
     public static final DeferredRegister<LootPoolEntryType> LOOT_POOL_ENTRIES = DeferredRegister.create(BuiltInRegistries.LOOT_POOL_ENTRY_TYPE.key(), LostInTime.MODID);

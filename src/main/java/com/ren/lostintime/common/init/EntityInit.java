@@ -5,7 +5,9 @@ import com.ren.lostintime.common.entity.creatures.Anomalocaris;
 import com.ren.lostintime.common.entity.creatures.Bothriolepis;
 import com.ren.lostintime.common.entity.creatures.Dodo;
 import com.ren.lostintime.common.entity.creatures.Hylonomus;
+import com.ren.lostintime.common.entity.misc.LITBoatEntity;
 import com.ren.lostintime.common.entity.projectile.GuardianSpike;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
@@ -30,7 +32,8 @@ public class EntityInit {
 
     public static final RegistryObject<EntityType<GuardianSpike>> GUARDIAN_SPIKE = registerProjectile("guardian_spike",
             GuardianSpike::new);
-
+    public static final RegistryObject<EntityType<LITBoatEntity>> LIT_BOAT = registerMiscEntity("lit_boat",
+            LITBoatEntity::new, 1.375F, 0.5625F);
 
     public static <T extends Projectile> RegistryObject<EntityType<T>> registerProjectile(String name, EntityType.EntityFactory<T> entity) {
         return ENTITIES.register(name,
@@ -41,5 +44,10 @@ public class EntityInit {
                                                                             float width, float height) {
         return ENTITIES.register(name,
                 () -> EntityType.Builder.of(entity, MobCategory.CREATURE).sized(width, height).build(name));
+    }
+
+    public static <T extends Entity> RegistryObject<EntityType<T>> registerMiscEntity(String name, EntityType.EntityFactory<T> entity,
+                                                                                      float width, float height) {
+        return ENTITIES.register(name, () -> EntityType.Builder.of(entity, MobCategory.MISC).sized(width, height).build(name));
     }
 }

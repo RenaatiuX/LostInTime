@@ -1,9 +1,11 @@
 package com.ren.lostintime.common.worldgen;
 
 import com.ren.lostintime.LostInTime;
-import com.ren.lostintime.common.block.MangoFruitBlock;
+import com.ren.lostintime.common.block.LITFruitBlock;
 import com.ren.lostintime.common.init.BlockInit;
 import com.ren.lostintime.common.init.FeatureInit;
+import com.ren.lostintime.common.worldgen.feature.foliageplacers.AraucarioxylonFoliagePlacer;
+import com.ren.lostintime.common.worldgen.feature.trunkplacers.AraucarioxylonTrunkPlacer;
 import com.ren.lostintime.common.worldgen.fossil.FossilEra;
 import com.ren.lostintime.common.worldgen.feature.config.FossilFormationConfig;
 import net.minecraft.core.registries.Registries;
@@ -13,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -21,6 +24,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.SpruceFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlacer;
@@ -34,6 +38,7 @@ public class LITConfiguredFeatures {
 
     //TREE
     public static final ResourceKey<ConfiguredFeature<?, ?>> MANGO_TREE_KEY = registerKey("mango_tree");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> ARAUCARIOXYLON_TREE_KEY = registerKey("araucarioxylon_tree");
 
     //FOSSILS
     public static final Map<FossilEra, ResourceKey<ConfiguredFeature<?, ?>>> FOSSIL_KEYS = new EnumMap<>(FossilEra.class);
@@ -46,12 +51,23 @@ public class LITConfiguredFeatures {
                 new WeightedStateProvider(SimpleWeightedRandomList.<BlockState>builder()
                         .add(BlockInit.MANGO_LEAVES.get().defaultBlockState(), 90)
                         .add(BlockInit.MANGO_FRUIT_LEAVES.get().defaultBlockState()
-                                .setValue(MangoFruitBlock.AGE, 3), 20).build()),
+                                .setValue(LITFruitBlock.AGE, 3), 20).build()),
                 //2 Radius of the base foliage, 0 Variation in foliage height and 3 Maximum height of foliage.
                 new BlobFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0), 3),
                 //1 Height of the bottom layer ,0 Variation in the height of the middle layer and2 Maximum height of the top layer.
                 new TwoLayersFeatureSize(1, 0, 2)).build());
 
+        register(context, ARAUCARIOXYLON_TREE_KEY, Feature.TREE, new TreeConfiguration.TreeConfigurationBuilder(
+                BlockStateProvider.simple(BlockInit.ARAUCARIOXYLON_LOG.get()),
+                new AraucarioxylonTrunkPlacer(14, 6, 2),
+                BlockStateProvider.simple(BlockInit.ARAUCARIOXYLON_LEAVES.get()),
+                new AraucarioxylonFoliagePlacer(
+                        ConstantInt.of(1),
+                        ConstantInt.of(0)
+                ),
+                new TwoLayersFeatureSize(2, 0, 2)).ignoreVines().build());
+
+        //FOSSIL
         for (FossilEra era : FossilEra.values()) {
             ResourceKey<ConfiguredFeature<?, ?>> key = ResourceKey.create(Registries.CONFIGURED_FEATURE,
                     new ResourceLocation(LostInTime.MODID, "fossil/" + era.name().toLowerCase()));

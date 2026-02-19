@@ -25,17 +25,21 @@ public class LITItemTagProvider extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         tag(ItemTags.SAPLINGS)
-                .add(BlockInit.MANGO_SAPLING.get().asItem());
+                .add(BlockInit.MANGO_SAPLING.get().asItem())
+                .add(BlockInit.ARAUCARIOXYLON_SAPLING.get().asItem());
 
         tag(ItemTags.LEAVES)
                 .add(BlockInit.MANGO_LEAVES.get().asItem())
-                .add(BlockInit.MANGO_FRUIT_LEAVES.get().asItem());
+                .add(BlockInit.MANGO_FRUIT_LEAVES.get().asItem())
+                .add(BlockInit.MANGO_LEAVES.get().asItem());
 
         tag(ItemTags.LOGS_THAT_BURN)
-                .add(BlockInit.MANGO_LOG.get().asItem());
+                .add(BlockInit.MANGO_LOG.get().asItem())
+                .add(BlockInit.ARAUCARIOXYLON_LOG.get().asItem());
 
         tag(ItemTags.LOGS)
-                .add(BlockInit.MANGO_LOG.get().asItem());
+                .add(BlockInit.MANGO_LOG.get().asItem())
+                .add(BlockInit.ARAUCARIOXYLON_LOG.get().asItem());
 
         tag(LITTags.Items.SEEDS)
                 .add(Items.WHEAT_SEEDS).add(Items.BEETROOT_SEEDS).add(Items.MELON_SEEDS).add(Items.PUMPKIN_SEEDS)

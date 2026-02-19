@@ -45,17 +45,13 @@ import java.util.EnumSet;
 
 public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
 
-    private static final EntityDataAccessor<Boolean> DATA_IS_ON_FLOOR = SynchedEntityData.defineId(Bothriolepis.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Integer> IDLE_TIME = SynchedEntityData.defineId(Bothriolepis.class, EntityDataSerializers.INT);
-
     private static final RawAnimation SWIM_FLOOR = RawAnimation.begin().thenLoop("swim_floor");
     private static final RawAnimation SWIM_WATER = RawAnimation.begin().thenLoop("swim_water");
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");
     private static final RawAnimation LAND_MOVE = RawAnimation.begin().thenLoop("land_move");
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private int idleTimer = 0;
-    private int outOfWaterTicks = 0;
+
     private int panicTicks = 0;
 
     public Bothriolepis(EntityType<? extends WaterAnimal> pEntityType, Level pLevel) {
@@ -71,95 +67,32 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
     }
 
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_IS_ON_FLOOR, true);
-        this.entityData.define(IDLE_TIME, 0);
-    }
-
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 16.0)
-                .add(Attributes.MOVEMENT_SPEED, 0.12)
+                .add(Attributes.MOVEMENT_SPEED, 0.7D)
                 .add(Attributes.FOLLOW_RANGE, 8.0);
     }
 
     @Override
-    public boolean isAggressive() {
-        return false;
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        if (this.isInWater()) {
+            this.setSprinting(this.getMoveControl().hasWanted() &&
+                    this.getMoveControl().getSpeedModifier() >= 1.5D);
+        }
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (this.isInWater() && this.isOnSeafloor()) {
-            idleTimer++;
-        } else {
-            idleTimer = 0;
-        }
-        if (this.isInWater() && !this.isOnSeafloor()) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0, -0.02, 0));
-        }
-        if (this.isOutOfWater()) {
-            outOfWaterTicks++;
-            if (outOfWaterTicks > 20 * 30) {
-                this.hurt(this.damageSources().dryOut(), 1.0F);
+        if (!this.level().isClientSide()) {
+            if (panicTicks >= 0) {
+                panicTicks--;
             }
-        } else {
-            outOfWaterTicks = 0;
-        }
-    }
-
-    @Override
-    public void aiStep() {
-        super.aiStep();
-        if (!this.isInWater()) return;
-        if (this.isOnSeafloor()) {
-            if (this.shouldIdleOnFloor()) {
-                if (this.random.nextInt(40) == 0) {
-                    this.moveOnFloor();
-                }
-            } else {
-                this.liftOffFloor();
+            if (panicTicks == 0 && this.getLastHurtByMob() != null) {
+                this.setLastHurtByMob(null);
             }
-        }
-    }
-
-    @Override
-    public void travel(Vec3 pTravelVector) {
-        if (this.isInWater() && !this.isOnSeafloor()) {
-            this.setDeltaMovement(this.getDeltaMovement().scale(0.9));
-        } else {
-            this.setDeltaMovement(this.getDeltaMovement().multiply(0.8, 0, 0.8));
-        }
-        super.travel(pTravelVector);
-    }
-
-    public boolean isOnSeafloor() {
-        BlockPos pos = this.blockPosition();
-        BlockPos below = pos.below();
-        boolean solidBelow = level().getBlockState(below).isSolid();
-        boolean inWater = this.isInWater();
-        boolean closeToFloor = this.getY() - below.getY() <= 1.05;
-
-        return inWater && solidBelow && closeToFloor;
-    }
-
-    public void moveOnFloor() {
-        if (!this.isInWater() || !this.isOnSeafloor()) return;
-        this.setDeltaMovement(this.getRandom().triangle(0, 0.02),
-                0, this.getRandom().triangle(0, 0.02));
-    }
-
-    public boolean shouldIdleOnFloor() {
-        int max = this.isCrepuscularActive() ? 20 * 60 : 20 * 120;
-        return idleTimer < max;
-    }
-
-    public void liftOffFloor() {
-        if (this.isOnSeafloor()) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0, 0.2, 0));
         }
     }
 
@@ -175,9 +108,12 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
     public boolean hurt(DamageSource source, float amount) {
         Entity direct = source.getDirectEntity();
         boolean result = super.hurt(source, amount);
+
         if (result) {
-            this.liftOffFloor();
+            int ticks = 100 + this.random.nextInt(100);
+            this.panicTicks = ticks;
         }
+
         if (direct instanceof AbstractArrow projectile) {
             if (this.random.nextFloat() < 0.6f) {
                 Vec3 dir = this.getLookAngle().scale(1.2);
@@ -188,16 +124,6 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
             }
         }
         return result;
-    }
-
-    public boolean isCrepuscularActive() {
-        long time = this.level().getDayTime() % 24000;
-
-        boolean isDawn = time >= 22000 || time <= 2000;
-        boolean isDusk = time >= 12000 && time <= 14000;
-        boolean isRaining = this.level().isRaining();
-
-        return isDawn || isDusk || isRaining;
     }
 
     public boolean isOutOfWater() {
@@ -244,29 +170,27 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "movement", this::movePredicate));
+        controllers.add(new AnimationController<>(this, "movement", 10, this::movePredicate));
     }
 
-    protected <E extends Bothriolepis> PlayState movePredicate(final AnimationState<E> event) {
-        if (!this.isInWater()) {
+    protected <E extends Bothriolepis> PlayState movePredicate(AnimationState<E> event) {
+        if (this.onGround()) {
+            return event.setAndContinue(LAND_MOVE);
+        }
+
+        if (this.isInWater()) {
             if (this.getDeltaMovement().horizontalDistanceSqr() > 1e-6) {
-                event.setAnimation(LAND_MOVE);
-            } else {
-                event.setAnimation(IDLE);
-            }
-        } else {
-            if (this.isOnSeafloor()) {
-                if (this.getDeltaMovement().horizontalDistanceSqr() < 1e-5 && this.idleTimer > 100) {
-                    event.setAnimation(IDLE);
+                if (this.isSprinting()) {
+                    return event.setAndContinue(SWIM_WATER);
                 } else {
-                    event.setAnimation(SWIM_FLOOR);
+                    return event.setAndContinue(SWIM_FLOOR);
                 }
-            } else {
-                event.setAnimation(SWIM_WATER);
             }
         }
-        return PlayState.CONTINUE;
+
+        return event.setAndContinue(IDLE);
     }
+
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

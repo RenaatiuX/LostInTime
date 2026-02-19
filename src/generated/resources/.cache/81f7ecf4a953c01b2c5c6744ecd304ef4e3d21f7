@@ -1,9 +1,10 @@
-// 1.20.1	2026-02-06T17:07:40.9433748	Item Models: lostintime
+// 1.20.1	2026-02-15T17:42:28.9030431	Item Models: lostintime
 0570665fcef0e1f3922095a8aa98973135ded46e assets/lostintime/models/item/amber.json
 879d909212d6267838764316100b2c449321306b assets/lostintime/models/item/amethyst_catalyst.json
 89daf447e685f234deebcc2968d3f90fa3cee0df assets/lostintime/models/item/anomalocaris_fossil.json
 14b123ac2613be145a56d4e35216487de011ba10 assets/lostintime/models/item/anomalocaris_roe.json
 2c0702a05ea5fedd4159dac2f205fa5a863002d6 assets/lostintime/models/item/anomalocaris_soul_configuration.json
+3731aa803899ef3443f58ec08e864af04a251802 assets/lostintime/models/item/araucarioxylon_sapling.json
 1a11f9d57f09aec50e333c11c9912e5ff3027ad4 assets/lostintime/models/item/aspect_abundance.json
 1edcddf06fb4ec019755f3e7df0067bde4042b44 assets/lostintime/models/item/aspect_continuity.json
 169e5cacebf9d8d673af2bcaf773bf19e835abe6 assets/lostintime/models/item/aspect_differentiation.json

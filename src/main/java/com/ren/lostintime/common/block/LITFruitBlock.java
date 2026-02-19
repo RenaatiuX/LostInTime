@@ -27,12 +27,12 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class MangoFruitBlock extends CropBlock {
+public class LITFruitBlock extends CropBlock {
 
     public static final IntegerProperty AGE = BlockStateProperties.AGE_4;
     public static final IntegerProperty DISTANCE = BlockStateProperties.DISTANCE;
 
-    public MangoFruitBlock(Properties pProperties) {
+    public LITFruitBlock(Properties pProperties) {
         super(pProperties);
     }
 
@@ -149,7 +149,7 @@ public class MangoFruitBlock extends CropBlock {
         if (state.is(BlockTags.LOGS)) {
             return 0;
         } else {
-            return state.getBlock() instanceof MangoFruitBlock || state.getBlock() instanceof LeavesBlock ?
+            return state.getBlock() instanceof LITFruitBlock || state.getBlock() instanceof LeavesBlock ?
                     state.getValue(DISTANCE) : 7;
         }
     }

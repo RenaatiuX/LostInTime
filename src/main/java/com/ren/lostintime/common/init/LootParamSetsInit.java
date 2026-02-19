@@ -9,7 +9,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 import java.util.function.Consumer;
 
-public class ModLootParamSets {
+public class LootParamSetsInit {
 
     public static final LootContextParam<Float> DODO_GOLDEN_FOOD_MULTIPLIER = create("dodo_golden_multiplier");
 
