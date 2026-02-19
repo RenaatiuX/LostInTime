@@ -1,6 +1,5 @@
 package com.ren.lostintime.common.entity.creatures;
 
-import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.entity.LITAnimal;
 import com.ren.lostintime.common.entity.goal.EggBreedGoal;
@@ -58,6 +57,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -324,7 +324,6 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
                 return InteractionResult.SUCCESS;
             }else {
                 if (!level().isClientSide) {
-                    LostInTime.LOGGER.debug("triggering animation");
                     triggerAnim("reactionController", "no");
                 }
             }
@@ -717,7 +716,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
             dodo.setPecking(false);
             spawnDodoLoot();
             this.dodo.level().levelEvent(2001, dodo.getOnPos(), Block.getId(this.dodo.getBlockStateOn()));
-            dodo.peckCooldown = Config.dodoPeckCooldown;
+            //TODO add pecking cooldown
         }
 
         protected void spawnDodoLoot() {
