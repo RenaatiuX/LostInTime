@@ -87,9 +87,6 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     //zombie
     public boolean isChickenJockey;
 
-    //sleep particles
-    private int sleepParticleCooldown = 0;
-
     //Peck logic
     private BlockPos peckTarget;
     private int peckCooldown = 0;
@@ -175,25 +172,6 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         if (!this.onGround() && vec3.y < 0.0D) {
             this.setDeltaMovement(vec3.multiply(1.0D, 0.6D, 1.0D));
         }
-
-        if (this.level().isClientSide() && this.isSleeping()) {
-            spawnSleepingParticles();
-        }
-    }
-
-    private void spawnSleepingParticles() {
-        if (!this.isSleeping()) return;
-
-        if (sleepParticleCooldown > 0) {
-            sleepParticleCooldown--;
-            return;
-        }
-        sleepParticleCooldown = 40 + this.random.nextInt(40);
-
-        double x = this.getX();
-        double y = this.getY() + this.getBbHeight() + 0.15D;
-        double z = this.getZ();
-        this.level().addParticle(ParticlesInit.SLEEPING_PARTICLES.get(), x, y, z, 0f, 0.4f, 0);
     }
 
     @Override

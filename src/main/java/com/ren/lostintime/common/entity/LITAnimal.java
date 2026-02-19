@@ -2,6 +2,7 @@ package com.ren.lostintime.common.entity;
 
 import com.ren.lostintime.common.entity.util.ISleepingEntity;
 import com.ren.lostintime.common.entity.util.SleepController;
+import com.ren.lostintime.common.init.ParticlesInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
@@ -22,6 +23,9 @@ import java.util.Optional;
 public abstract class LITAnimal extends Animal {
 
     protected LazyOptional<SleepController<?>> sleepControllerOptional;
+
+    //sleep particles
+    private int sleepParticleCooldown = 0;
 
     public LITAnimal(EntityType<? extends Animal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -55,6 +59,24 @@ public abstract class LITAnimal extends Animal {
             sleepControllerOptional.ifPresent(SleepController::tick);
         }
         super.aiStep();
+        if (this.level().isClientSide() && this.isSleeping()) {
+            spawnSleepingParticles();
+        }
+    }
+
+    protected void spawnSleepingParticles() {
+        if (!this.isSleeping()) return;
+
+        if (sleepParticleCooldown > 0) {
+            sleepParticleCooldown--;
+            return;
+        }
+        sleepParticleCooldown = 40 + this.random.nextInt(40);
+
+        double x = this.getX();
+        double y = this.getY() + this.getBbHeight() + 0.15D;
+        double z = this.getZ();
+        this.level().addParticle(ParticlesInit.SLEEPING_PARTICLES.get(), x, y, z, 0f, 0.4f, 0);
     }
 
 
