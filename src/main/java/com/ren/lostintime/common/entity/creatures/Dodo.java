@@ -41,6 +41,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -55,7 +56,9 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
 public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEntity {
 
@@ -584,19 +587,36 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
             int j = i;
             BlockPos blockpos = this.dodo.blockPosition();
             BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+            List<BlockPos> candidates = new ArrayList<>();
 
+            searchLoop:
             for (int k = 0; k <= j; k = k > 0 ? -k : 1 - k) {
                 for (int l = 0; l < i; ++l) {
                     for (int i1 = 0; i1 <= l; i1 = i1 > 0 ? -i1 : 1 - i1) {
                         for (int j1 = i1 < l && i1 > -l ? l : 0; j1 <= l; j1 = j1 > 0 ? -j1 : 1 - j1) {
                             blockpos$mutableblockpos.setWithOffset(blockpos, i1, k - 1, j1);
                             if (this.dodo.isWithinRestriction(blockpos$mutableblockpos) && this.isValidTarget(this.dodo.level(), blockpos$mutableblockpos)) {
-                                this.dodo.peckTarget = blockpos$mutableblockpos;
-                                return true;
+                                candidates.add(blockpos$mutableblockpos.immutable());
+                                if (candidates.size() >= 30) break searchLoop;
                             }
                         }
                     }
                 }
+            }
+
+            if (candidates.isEmpty()) return false;
+
+            for (int attempt = 0; attempt < 5; attempt++) {
+                if (candidates.isEmpty()) break;
+                int index = this.dodo.getRandom().nextInt(candidates.size());
+                BlockPos pos = candidates.get(index);
+
+                Path path = this.dodo.getNavigation().createPath(pos, 1);
+                if (path != null && path.canReach()) {
+                    this.dodo.peckTarget = pos;
+                    return true;
+                }
+                candidates.remove(index);
             }
 
             return false;
@@ -632,6 +652,14 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
             super.tick();
             if (isReachedTarget()) {
                 dodo.setPecking(true);
+                dodo.peckTarget = null;
+            }
+        }
+
+        @Override
+        public void stop() {
+            super.stop();
+            if (!isReachedTarget()) {
                 dodo.peckTarget = null;
             }
         }
