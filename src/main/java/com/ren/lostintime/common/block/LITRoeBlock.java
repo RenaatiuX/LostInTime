@@ -1,5 +1,6 @@
 package com.ren.lostintime.common.block;
 
+import com.ren.lostintime.common.entity.AgeableWaterAnimal;
 import com.ren.lostintime.common.entity.LITAnimal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -9,8 +10,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -38,10 +38,10 @@ public class LITRoeBlock extends Block implements BucketPickup{
     private final int maxBabySpawn;
     private final int minHatchTickDelay;
     private final int maxHatchTickDelay;
-    private final Supplier<? extends EntityType> entityType;
+    private final Supplier<? extends EntityType<? extends Mob>> entityType;
     private final Supplier<? extends Item> roeBucketItem;
 
-    public LITRoeBlock(Properties pProperties, Supplier<? extends EntityType> entityType,
+    public LITRoeBlock(Properties pProperties, Supplier<? extends EntityType<? extends Mob>> entityType,
                        Supplier<? extends Item> roeBucketItem,
                        int minBabySpawn, int maxBabySpawn, int minHatchTickDelay, int maxHatchTickDelay) {
         super(pProperties);
@@ -113,7 +113,7 @@ public class LITRoeBlock extends Block implements BucketPickup{
     private void spawnBabies(ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         int i = pRandom.nextInt(minBabySpawn, maxBabySpawn);
         for(int j = 1; j <= i; ++j) {
-            LITAnimal baby = (LITAnimal) entityType.get().create(pLevel);
+            Mob baby = entityType.get().create(pLevel);
             if (baby != null) {
                 double d0 = (double)pPos.getX() + this.getRandomBabyPositionOffset(pRandom);
                 double d1 = (double)pPos.getZ() + this.getRandomBabyPositionOffset(pRandom);

@@ -1,7 +1,8 @@
 package com.ren.lostintime.common.entity.creatures;
 
 import com.ren.lostintime.common.entity.AbstractBaseFish;
-import com.ren.lostintime.common.entity.AgeableWaterAnimal;
+import com.ren.lostintime.common.init.EntityInit;
+import com.ren.lostintime.common.init.ItemInit;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -11,8 +12,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import net.minecraft.util.TimeUtil;
-import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -21,9 +20,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.entity.animal.AbstractFish;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -75,7 +72,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         return TargetingConditions.forCombat().range(12.0D).selector(this::isSuitablePrey);
     }
 
-    public Anomalocaris(EntityType<? extends WaterAnimal> pEntityType, Level pLevel) {
+    public Anomalocaris(EntityType<? extends AbstractBaseFish> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
@@ -95,6 +92,11 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
                 .add(Attributes.MOVEMENT_SPEED, 0.8F)
                 .add(Attributes.ATTACK_DAMAGE, 2.0)
                 .add(Attributes.FOLLOW_RANGE, 12);
+    }
+
+    @Override
+    public @Nullable AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
+        return EntityInit.ANOMALOCARIS.get().create(pLevel);
     }
 
     @Override
@@ -217,7 +219,6 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
             long time = this.level().getGameTime();
             float hunger = this.getHunger() - HUNGER_DECREASE_PER_TICK;
             this.setHunger(Math.max(hunger, 0.0F));
-            System.out.println("HUNGER: " + hunger);
             if (this.hasHeldItem() && !this.getCurioPlayer().equals(Util.NIL_UUID)) {
                 Player curioPlayer = ((ServerLevel) this.level()).getPlayerByUUID(this.getCurioPlayer());
                 if (curioPlayer != null && this.distanceToSqr(curioPlayer) < 16.0 && this.getCurioTicksRemaining(time) >= this.getCurioDuration()) {
@@ -295,10 +296,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     }
 
     //BREED
-    @Override
-    public @Nullable AgeableWaterAnimal getBreedOffspring(ServerLevel pLevel, AgeableWaterAnimal pOtherParent) {
-        return null;
-    }
+
 
     @Override
     public @Nullable SoundEvent getFlopSound() {
@@ -354,7 +352,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
 
     @Override
     public boolean canAttack(LivingEntity pTarget) {
-        return !this.isBaby() && this.getHunger() <= HUNGER_THRESHOLD && isSuitablePrey(pTarget);
+        return !hasGrabbedPrey() && !hasHeldItem() && !this.isBaby() && this.getHunger() <= HUNGER_THRESHOLD && isSuitablePrey(pTarget);
     }
 
     private boolean isSuitablePrey(LivingEntity target) {
@@ -362,7 +360,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     }
 
     @Override
-    protected InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
+    public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
         if (this.level().isClientSide) {
             return InteractionResult.CONSUME;
         }
@@ -385,7 +383,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
 
     @Override
     public ItemStack getBucketItemStack() {
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -430,22 +428,21 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         return this.cache;
     }
 
-    static class AnomalocarisGrabAttackGoal extends Goal {
+    static class AnomalocarisGrabAttackGoal extends MeleeAttackGoal {
 
         private final Anomalocaris anomalocaris;
         private LivingEntity target;
 
         public AnomalocarisGrabAttackGoal(Anomalocaris anomalocaris) {
+            super(anomalocaris, 1.0D, true);
             this.anomalocaris = anomalocaris;
             this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         }
 
         @Override
         public boolean canUse() {
-            this.target = this.anomalocaris.level().getNearestEntity(LivingEntity.class, anomalocaris.grabTargets(),
-                    anomalocaris, this.anomalocaris.getX(), this.anomalocaris.getY(), this.anomalocaris.getZ(),
-                    this.anomalocaris.getBoundingBox().inflate(12.0));
-            return this.target != null && this.anomalocaris.getHunger() <= HUNGER_THRESHOLD && !anomalocaris.isBaby();
+            this.target = this.anomalocaris.getTarget();
+            return this.target != null && anomalocaris.canAttack(this.target) && this.anomalocaris.getHunger() <= HUNGER_THRESHOLD && !anomalocaris.isBaby() && super.canUse();
         }
 
         @Override
@@ -461,8 +458,11 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         @Override
         public boolean canContinueToUse() {
             return !this.anomalocaris.hasGrabbedPrey()
+                    && this.anomalocaris.canAttack(this.target)
+                    && !this.anomalocaris.hasHeldItem()
                     && this.target.isAlive()
-                    && !anomalocaris.isBaby();
+                    && !anomalocaris.isBaby()
+                    && super.canContinueToUse();
         }
     }
 
@@ -498,8 +498,8 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
             }
             Vec3 up = new Vec3(0, 1, 0);
             Vec3 right = vecToPlayer.normalize().cross(up).normalize();
-            float radius = 3.0F + (float) Math.sin(this.circleTicks * 0.1F) * 1.0F;
-            Vec3 circleOffset = right.scale(radius * Math.sin(this.circleAngle)).add(0, Math.sin(this.circleTicks * 0.2F) * 0.5, 0);
+            float radius = 3.0F + Mth.sin(this.circleTicks * 0.1F);
+            Vec3 circleOffset = right.scale(radius * Math.sin(this.circleAngle)).add(0, Mth.sin(this.circleTicks * 0.2F) * 0.5, 0);
             this.anomalocaris.setDeltaMovement(this.anomalocaris.getDeltaMovement().lerp(circleOffset.normalize().scale(0.5), 0.1));
             this.circleAngle += 0.2F;
             this.circleTicks++;
