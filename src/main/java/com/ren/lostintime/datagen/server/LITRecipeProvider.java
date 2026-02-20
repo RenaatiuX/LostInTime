@@ -3,10 +3,7 @@ package com.ren.lostintime.datagen.server;
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.init.BlockInit;
 import com.ren.lostintime.common.init.ItemInit;
-import com.ren.lostintime.common.recipe.IdentificationBuilder;
-import com.ren.lostintime.common.recipe.SoulConfiguratorFuelRecipeBuilder;
-import com.ren.lostintime.common.recipe.SoulConfiguratorRecipeBuilder;
-import com.ren.lostintime.common.recipe.SoulExtractorBuilder;
+import com.ren.lostintime.common.recipe.*;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
@@ -56,6 +53,11 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
                 .fossil(ItemInit.ANOMALOCARIS_FOSSIL.get())
                 .unlockedBy("hasItem", has(ItemInit.ANOMALOCARIS_FOSSIL.get()))
                 .save(pWriter);
+        TransfiguratorRecipeBuilder.transfigurator(BlockInit.DODO_EGG.get()).processingTime(20)
+                .addFailedResult(Items.ROTTEN_FLESH, 7)
+                .addFailedResult(ItemInit.RAW_DODO.get(), 2)
+                .input(ItemInit.DODO_SOUL_CFC.get())
+                .unlockedBy("hasItem", has(ItemInit.DODO_SOUL_CFC.get())).save(pWriter);
 
     }
 

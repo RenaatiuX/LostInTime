@@ -4,6 +4,7 @@ import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.blockentity.IdentificationBE;
 import com.ren.lostintime.common.blockentity.SoulConfiguratorBE;
 import com.ren.lostintime.common.blockentity.SoulExtractorBE;
+import com.ren.lostintime.common.blockentity.TransfiguratorBE;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -24,5 +25,8 @@ public class BlockEntityInit {
 
     public static final RegistryObject<BlockEntityType<SoulConfiguratorBE>> SOUL_CONFIGURATOR = BLOCK_ENTITY_TYPES.register("soul_configurator", () ->
             BlockEntityType.Builder.of(SoulConfiguratorBE::new, BlockInit.SOUL_CONFIGURATOR.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<TransfiguratorBE>> TRANSFIGURATOR = BLOCK_ENTITY_TYPES.register("transfigurator", () ->
+            BlockEntityType.Builder.of(TransfiguratorBE::new, BlockInit.TRANSFIGURATOR.get()).build(null));
 
 }

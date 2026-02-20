@@ -4,6 +4,7 @@ import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.item.GoldenEyeItem;
 import com.ren.lostintime.common.item.GuardianSpikeItem;
 import com.ren.lostintime.common.item.RoeBucketItem;
+import com.ren.lostintime.common.item.UniversalNutrientItem;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -33,6 +34,8 @@ public class ItemInit {
     public static final RegistryObject<Item> SOUL_POWDER = registerSimple("soul_powder");
     public static final RegistryObject<Item> PANEL = registerSimple("panel");
     public static final RegistryObject<Item> REDSTONE_CHIP = registerSimple("redstone_chip");
+    public static final RegistryObject<Item> UNIVERSAL_NUTRIENT = ITEMS.register("universal_nutrient",
+            () -> new UniversalNutrientItem(new Item.Properties()));
 
     //ASPECT
     public static final RegistryObject<Item> ASPECT_DIFFERENTIATION = registerSimple("aspect_differentiation");

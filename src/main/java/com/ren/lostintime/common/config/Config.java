@@ -3,7 +3,6 @@ package com.ren.lostintime.common.config;
 import com.google.common.collect.ImmutableMap;
 import com.ren.lostintime.LostInTime;
 import net.minecraft.ResourceLocationException;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -24,6 +23,18 @@ public class Config {
 
     private static final ForgeConfigSpec.IntValue IDENTIFICATION_PROCESS_DURATION = BUILDER.push("machines").comment("defines the amount in ticks how long the identification table needs top process one item").defineInRange("identification_process_duration", 300, 1, Integer.MAX_VALUE);
 
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> TRANSFIGURATOR_TRANSLATOR_CHANCES =
+            BUILDER.comment("this defines what items can be used as transfigurator translators and their success chances").comment("Format: itemid=chance")
+                    .defineList(
+                            "dodo_golden_food_chance",
+                            ImmutableMap.<Item, Float>builder()
+                                    .put(Items.QUARTZ, 0.5f)
+                                    .put(Items.AMETHYST_SHARD, 0.85f)
+                                    .put(Items.ECHO_SHARD, 0.98f)
+                                    .build().entrySet().stream().map(e -> ForgeRegistries.ITEMS.getKey(e.getKey()) + "=" + e.getValue()).toList(),
+                            Config::validateGoldenFood
+                    );
+
     private static final ForgeConfigSpec.IntValue DODO_BREED_COOLDOWN = BUILDER.pop().push("Entities").comment("this defines how much cooldown the dodo needs after breeding in ticks").defineInRange("dodo_breed_cooldown", 6000, 1, Integer.MAX_VALUE);
     private static final ForgeConfigSpec.IntValue DODO_EGG_COOLDOWN = BUILDER.comment("this defines how much time the dodo needs after breeding until it lays an egg").defineInRange("dodo_egg_cooldown", 3000, 1, Integer.MAX_VALUE);
     private static final ForgeConfigSpec.IntValue DODO_PECK_COOLDOWN = BUILDER.comment("this defines how much time the dodo needs after pecking until it can peck again").defineInRange("dodo_peck_cooldown", 2000, 1, Integer.MAX_VALUE);
@@ -39,6 +50,7 @@ public class Config {
                                     .build().entrySet().stream().map(e -> ForgeRegistries.ITEMS.getKey(e.getKey()) + "=" + e.getValue()).toList(),
                             Config::validateGoldenFood
                     );
+
     private static final ForgeConfigSpec.BooleanValue NATURAL_SPAWNS = BUILDER.pop().push("Spawns").define("natural_spawns", true);
 
     public static final ForgeConfigSpec SPEC = BUILDER.pop().build();
@@ -49,6 +61,7 @@ public class Config {
     public static int dodoPeckCooldown;
 
     public static Map<Item, Float> goldenFoodMultipliers = ImmutableMap.of();
+    public static Map<Item, Float> transfiguratorTranslators = ImmutableMap.of();
 
     public static boolean naturalSpawns;
 
@@ -73,6 +86,22 @@ public class Config {
         }
 
         goldenFoodMultipliers = mapBuilder.build();
+
+        var chanceMapBuilder = ImmutableMap.<Item, Float>builder();
+
+        for (String entry : TRANSFIGURATOR_TRANSLATOR_CHANCES.get()) {
+            String[] split = entry.split("=");
+            ResourceLocation id = new ResourceLocation(split[0]);
+            float chance = Math.max(0f, Math.min(1f, Float.parseFloat(split[1])));
+
+            Item item = ForgeRegistries.ITEMS.getValue(id);
+            if (item != null) {
+                chanceMapBuilder.put(item, chance);
+            }
+        }
+
+        transfiguratorTranslators = chanceMapBuilder.build();
+
         dodoPeckCooldown = DODO_PECK_COOLDOWN.get();
         naturalSpawns = NATURAL_SPAWNS.get();
 
