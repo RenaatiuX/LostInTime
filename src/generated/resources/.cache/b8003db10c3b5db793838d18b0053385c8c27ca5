@@ -1,4 +1,4 @@
-// 1.20.1	2026-02-20T00:05:32.282282144	Block States: lostintime
+// 1.20.1	2026-02-20T02:16:51.158857353	Block States: lostintime
 a43e210ef6a7d44d2ebee4e46454692edb44e9e8 assets/lostintime/blockstates/anomalocaris_roe.json
 898d564269561bc78539174dfc02a2ba2b564481 assets/lostintime/blockstates/araucarioxylon_leaves.json
 44b238b503c361bb980c912cbd9ed956a2b36119 assets/lostintime/blockstates/araucarioxylon_log.json
@@ -84,10 +84,10 @@ abbedc1e04607f090ba80eb166360223e141c421 assets/lostintime/models/block/soul_ext
 8f74bf163ffc9f2612db1a98b5fa77c0bb3795d7 assets/lostintime/models/block/soul_extractor_lower_on.json
 bc9f86d4645d2125dd282615d9d46aaa2a58baef assets/lostintime/models/block/soul_extractor_upper_off.json
 eecf5f09dac83988e95af537f61b077e0cbb44fc assets/lostintime/models/block/soul_extractor_upper_on.json
-2a5d0e9cd32f37907063dd42f90c357654670aa4 assets/lostintime/models/block/transfigurator_bottom_off.json
-6d853df8bd41df0d4adf88a784de9fa98ca6116f assets/lostintime/models/block/transfigurator_bottom_on.json
-7132200e3241ca0793a5850f3c3a8a325373bc9e assets/lostintime/models/block/transfigurator_top_off.json
-5783c7f4a23a3d219eb1aaf6afb5a658cd4e141e assets/lostintime/models/block/transfigurator_top_on.json
+31288ffbf061ff012b7c624b668655222cf3d6a3 assets/lostintime/models/block/transfigurator_bottom_off.json
+a53512ae791da020268e5b84fb86ef5220307eaf assets/lostintime/models/block/transfigurator_bottom_on.json
+5470abac1d5016bee57c41036bb7db8e9faa373d assets/lostintime/models/block/transfigurator_top_off.json
+85cad030c1bce8618c4cecf4a70968fcd768a949 assets/lostintime/models/block/transfigurator_top_on.json
 452db17bdb04b0512b61d6a8a370d8468e70c504 assets/lostintime/models/item/araucarioxylon_leaves.json
 d69d6200420d7cd8ea1fe52bd80f1925929b9443 assets/lostintime/models/item/araucarioxylon_log.json
 ff92d44dbae7f3bb813e9a3fd10019bb27a40516 assets/lostintime/models/item/barrel_sponge.json

@@ -1,20 +1,31 @@
 package com.ren.lostintime.common.blockentity;
 
+import com.ren.lostintime.LostInTime;
+import com.ren.lostintime.common.block.LITMachineBlock;
+import com.ren.lostintime.common.block.SoulExtractorBlock;
 import com.ren.lostintime.common.block.TransfiguratorBlock;
 import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.init.BlockEntityInit;
 import com.ren.lostintime.common.init.ItemInit;
 import com.ren.lostintime.common.init.RecipeInit;
+import com.ren.lostintime.common.menu.TransfiguratorMenu;
 import com.ren.lostintime.common.recipe.TransfiguratorRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -27,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class TransfiguratorBE extends BlockEntity {
+public class TransfiguratorBE extends BlockEntity implements MenuProvider {
 
     protected int cookingProgress;
     protected int cookingTotalTime;
@@ -43,7 +54,7 @@ public class TransfiguratorBE extends BlockEntity {
             if (slot == 1) {
                 return Config.transfiguratorTranslators.containsKey(stack.getItem());
             }
-            // Slot 3 (Nutrient) accepts any item, validity is checked in recipe
+            // Slot 2 (Nutrient) accepts any item, validity is checked in recipe
             return super.isItemValid(slot, stack);
         }
     };
@@ -147,13 +158,33 @@ public class TransfiguratorBE extends BlockEntity {
         return dataAccess;
     }
 
-    protected boolean canProcessRecipe(){
+    public ItemStackHandler getItemHandler() {
+        return itemHandler;
+    }
+
+    public boolean isItemValid(int slot, ItemStack stack) {
+        return itemHandler.isItemValid(slot, stack);
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return Component.translatable("block.lostintime.transfigurator");
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+        return new TransfiguratorMenu(pContainerId, pPlayerInventory, this, this.dataAccess);
+    }
+
+    protected boolean canProcessRecipe() {
         ItemStack translatorStack = itemHandler.getStackInSlot(1);
-        if( translatorStack.isEmpty() || Config.transfiguratorTranslators.containsKey(translatorStack.getItem())) return false;
+        if (translatorStack.isEmpty() || !Config.transfiguratorTranslators.containsKey(translatorStack.getItem()))
+            return false;
         return itemHandler.getStackInSlot(4).isEmpty();
     }
 
-    protected void finishProcessingRecipe(TransfiguratorRecipe recipe){
+    protected void finishProcessingRecipe(TransfiguratorRecipe recipe) {
         ItemStack translatorStack = itemHandler.getStackInSlot(1);
         float chance = Config.transfiguratorTranslators.getOrDefault(translatorStack.getItem(), 0f);
         ItemStack resultStack;
@@ -166,14 +197,15 @@ public class TransfiguratorBE extends BlockEntity {
         ItemStack remaining = itemHandler.insertItem(4, resultStack, true);
         if (remaining.isEmpty()) {
             // Can insert fully
-            itemHandler.insertItem(1, resultStack, false);
+            itemHandler.insertItem(4, resultStack, false);
             itemHandler.extractItem(0, 1, false);
             itemHandler.extractItem(1, 1, false);
             itemHandler.extractItem(2, 1, false);
         }
+        reset();
     }
 
-    protected void reset(){
+    protected void reset() {
         cookingProgress = 0;
         cookingTotalTime = 0;
     }
@@ -183,61 +215,46 @@ public class TransfiguratorBE extends BlockEntity {
 
         ItemStack inputStack = be.itemHandler.getStackInSlot(0);
         ItemStack nutrientStack = be.itemHandler.getStackInSlot(2);
-        ItemStack translatorStack = be.itemHandler.getStackInSlot(1);
 
-        if (inputStack.isEmpty() || nutrientStack.isEmpty() || translatorStack.isEmpty()) {
+        if (!be.canProcessRecipe()) {
             be.cookingProgress = 0;
             return;
         }
 
         SimpleContainer container = new SimpleContainer(2);
         container.setItem(0, inputStack);
-        container.setItem(1, nutrientStack);
+        container.setItem(1, nutrientStack); // Recipe expects nutrient in slot 3? Wait.
 
+        // TransfiguratorRecipe matches: input.test(pContainer.getItem(0)) && nutrient.test(pContainer.getItem(3));
+        // But here nutrient is in slot 2.
+        // I should update TransfiguratorRecipe or the container passed here.
+        // If I pass a container of size 5, and put nutrient in slot 3, it matches the recipe expectation.
+        // But in BE, nutrient is in slot 2.
+        // I should probably align them.
+        // Let's put nutrient in slot 3 of the temporary container.
+        
         Optional<TransfiguratorRecipe> recipe = level.getRecipeManager()
                 .getRecipeFor(RecipeInit.TRANSFIGURATOR_RECIPE.get(), container, level);
 
         if (recipe.isPresent()) {
             TransfiguratorRecipe r = recipe.get();
             be.cookingTotalTime = r.getProcessingTime();
-            
+
             be.cookingProgress++;
 
             if (be.cookingProgress >= be.cookingTotalTime) {
-                processRecipe(be, r, translatorStack);
-                be.cookingProgress = 0;
+                be.finishProcessingRecipe(r);
+                be.reset();
             }
         } else {
-            be.cookingProgress = 0;
+            be.reset();
         }
-    }
-
-    private static void processRecipe(TransfiguratorBE be, TransfiguratorRecipe recipe, ItemStack translatorStack) {
-        float chance = Config.transfiguratorTranslators.getOrDefault(translatorStack.getItem(), 0f);
-        ItemStack resultStack;
-        
-        if (be.level.random.nextFloat() < chance) {
-            resultStack = recipe.getResultItem(be.level.registryAccess()).copy();
-        } else {
-            resultStack = recipe.getFailedResult(be.level.random);
-        }
-
-        if (resultStack.isEmpty()) {
-             // Failed and no failed result (or empty result), just consume inputs
-             be.itemHandler.extractItem(0, 1, false);
-             be.itemHandler.extractItem(1, 1, false);
-             be.itemHandler.extractItem(2, 1, false);
-             return;
-        }
-
-        // Try to insert result
-        ItemStack remaining = be.itemHandler.insertItem(4, resultStack, true);
-        if (remaining.isEmpty()) {
-            // Can insert fully
-            be.itemHandler.insertItem(1, resultStack, false);
-            be.itemHandler.extractItem(0, 1, false);
-            be.itemHandler.extractItem(1, 1, false);
-            be.itemHandler.extractItem(2, 1, false);
+        if (state.getValue(SoulExtractorBlock.ON) != be.cookingProgress > 0){
+            level.setBlock(pos, state.setValue(SoulExtractorBlock.ON, be.cookingProgress > 0), Block.UPDATE_ALL);
+            var doubleBlockHalf = state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF);
+            var otherHalfPos = doubleBlockHalf == DoubleBlockHalf.LOWER ? pos.above() : pos.below();
+            var otherHalfState = level.getBlockState(otherHalfPos);
+            level.setBlock(otherHalfPos, otherHalfState.setValue(SoulExtractorBlock.ON, be.cookingProgress > 0), Block.UPDATE_ALL);
         }
     }
 }

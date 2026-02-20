@@ -26,7 +26,7 @@ public class Config {
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> TRANSFIGURATOR_TRANSLATOR_CHANCES =
             BUILDER.comment("this defines what items can be used as transfigurator translators and their success chances").comment("Format: itemid=chance")
                     .defineList(
-                            "dodo_golden_food_chance",
+                            "transfigurator_translator_chances",
                             ImmutableMap.<Item, Float>builder()
                                     .put(Items.QUARTZ, 0.5f)
                                     .put(Items.AMETHYST_SHARD, 0.85f)

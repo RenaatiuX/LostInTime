@@ -4,6 +4,10 @@ import com.ren.lostintime.common.blockentity.TransfiguratorBE;
 import com.ren.lostintime.common.init.BlockEntityInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -18,12 +22,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class TransfiguratorBlock extends LITMachineBlock {
 
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
-    public static final BooleanProperty ON = BooleanProperty.create("on");
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public TransfiguratorBlock(Properties pProperties) {
@@ -32,6 +37,21 @@ public class TransfiguratorBlock extends LITMachineBlock {
                 .setValue(FACING, Direction.NORTH)
                 .setValue(ON, false)
                 .setValue(HALF, DoubleBlockHalf.LOWER));
+    }
+
+    @Override
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (pLevel.isClientSide) {
+            return InteractionResult.SUCCESS;
+        }
+        if (pState.getValue(HALF) == DoubleBlockHalf.UPPER) {
+            pPos = pPos.below();
+        }
+        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+        if (blockEntity instanceof MenuProvider && pPlayer instanceof ServerPlayer serverPlayer) {
+            NetworkHooks.openScreen(serverPlayer, (MenuProvider) blockEntity, pPos);
+        }
+        return InteractionResult.CONSUME;
     }
 
     @Override
@@ -98,6 +118,7 @@ public class TransfiguratorBlock extends LITMachineBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(HALF, FACING, ON);
+        pBuilder.add(HALF, FACING);
+        super.createBlockStateDefinition(pBuilder);
     }
 }

@@ -10,6 +10,7 @@ import com.ren.lostintime.client.render.projectile.GuardianSpikeRender;
 import com.ren.lostintime.client.screen.IdentificationScreen;
 import com.ren.lostintime.client.screen.SoulConfiguratorScreen;
 import com.ren.lostintime.client.screen.SoulExtractorScreen;
+import com.ren.lostintime.client.screen.TransfiguratorScreen;
 import com.ren.lostintime.common.entity.projectile.GuardianSpike;
 import com.ren.lostintime.common.init.EntityInit;
 import com.ren.lostintime.common.init.MenuInit;
@@ -30,6 +31,7 @@ public class ClientEvents {
         MenuScreens.register(MenuInit.IDENTIFICATION_TABLE_MENU.get(), IdentificationScreen::new);
         MenuScreens.register(MenuInit.SOUL_EXTRACTOR_MENU.get(), SoulExtractorScreen::new);
         MenuScreens.register(MenuInit.SOUL_CONFIGURATOR_MENU.get(), SoulConfiguratorScreen::new);
+        MenuScreens.register(MenuInit.TRANSFIGURATOR_MENU.get(), TransfiguratorScreen::new);
     }
 
     @SubscribeEvent

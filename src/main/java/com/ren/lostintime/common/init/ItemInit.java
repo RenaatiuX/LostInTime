@@ -49,6 +49,8 @@ public class ItemInit {
     public static final RegistryObject<Item> ASPECT_RESILIENCE = registerSimple("aspect_resilience");
 
     public static final RegistryObject<Item> ZIRCON =  registerSimple("zircon");
+    public static final RegistryObject<Item> OPAL = registerSimple("opal");
+    public static final RegistryObject<Item> SPINEL = registerSimple("spinel");
 
     //CATALYST
     public static final RegistryObject<Item> AMETHYST_CATALYST = registerSimple("amethyst_catalyst");

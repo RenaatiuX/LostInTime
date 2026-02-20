@@ -1,6 +1,7 @@
 package com.ren.lostintime.common.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.network.NetworkHooks;
 
 public abstract class LITMachineBlock extends BaseEntityBlock {
 
@@ -28,8 +30,8 @@ public abstract class LITMachineBlock extends BaseEntityBlock {
             return InteractionResult.SUCCESS;
         }
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-        if (blockEntity instanceof MenuProvider) {
-            pPlayer.openMenu((MenuProvider) blockEntity);
+        if (blockEntity instanceof MenuProvider && pPlayer instanceof ServerPlayer serverPlayer) {
+            NetworkHooks.openScreen(serverPlayer, (MenuProvider) blockEntity);
         }
         return InteractionResult.CONSUME;
     }

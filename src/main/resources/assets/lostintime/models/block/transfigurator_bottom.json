@@ -5,7 +5,6 @@
 		"0": "lostintime:block/transfigurator_side",
 		"2": "lostintime:block/transfigurator_top",
 		"3": "lostintime:block/transfigurator_bottom",
-		"4": "lostintime:block/transfigurator_side_on",
 		"particle": "lostintime:block/transfigurator_side"
 	},
 	"elements": [
@@ -87,10 +86,10 @@
 			"to": [14, 16, 14],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 16.25, 14]},
 			"faces": {
-				"north": {"uv": [2, 0, 14, 5], "texture": "#4"},
-				"east": {"uv": [2, 0, 14, 5], "texture": "#4"},
-				"south": {"uv": [2, 0, 14, 5], "texture": "#4"},
-				"west": {"uv": [2, 0, 14, 5], "texture": "#4"}
+				"north": {"uv": [2, 0, 14, 5], "texture": "#0"},
+				"east": {"uv": [2, 0, 14, 5], "texture": "#0"},
+				"south": {"uv": [2, 0, 14, 5], "texture": "#0"},
+				"west": {"uv": [2, 0, 14, 5], "texture": "#0"}
 			}
 		},
 		{

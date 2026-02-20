@@ -4,9 +4,11 @@ import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.menu.IdentificationMenu;
 import com.ren.lostintime.common.menu.SoulConfiguratorMenu;
 import com.ren.lostintime.common.menu.SoulExtractorMenu;
+import com.ren.lostintime.common.menu.TransfiguratorMenu;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -22,6 +24,8 @@ public class MenuInit {
             "soul_extractor_menu", SoulExtractorMenu::new);
     public static final RegistryObject<MenuType<SoulConfiguratorMenu>> SOUL_CONFIGURATOR_MENU = registerMenuType(
             "soul_configurator_menu", SoulConfiguratorMenu::new);
+    public static final RegistryObject<MenuType<TransfiguratorMenu>> TRANSFIGURATOR_MENU = MENUS.register(
+            "transfigurator_menu", () -> IForgeMenuType.create(TransfiguratorMenu::new));
 
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(String key, MenuType.MenuSupplier<T> factory) {
         return MENUS.register(key, () -> new MenuType<>(factory, FeatureFlags.VANILLA_SET));
