@@ -1,0 +1,7 @@
+{
+  "parent": "lostintime:block/transfigurator_bottom",
+  "render_type": "minecraft:translucent",
+  "textures": {
+    "4": "lostintime:block/transfigurator_side"
+  }
+}
