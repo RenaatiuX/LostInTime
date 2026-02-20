@@ -12,6 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -23,10 +24,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class TransfiguratorBlock extends LITMachineBlock {
+
+    private static final VoxelShape BOTTOM_SHAPE = makeBottomShape();
+    private static final VoxelShape UPPER_SHAPE = makeUpperShape();
 
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -117,8 +125,46 @@ public class TransfiguratorBlock extends LITMachineBlock {
     }
 
     @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        if (pState.getValue(HALF) == DoubleBlockHalf.LOWER)
+            return BOTTOM_SHAPE;
+        return UPPER_SHAPE;
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(HALF, FACING);
         super.createBlockStateDefinition(pBuilder);
+    }
+
+    private static VoxelShape makeBottomShape(){
+        VoxelShape shape = Shapes.empty();
+        shape = Shapes.join(shape, Shapes.box(0, 0, 0, 1, 0.3125, 1), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.0625, 0.3125, 0.0625, 0.9375, 0.6875, 0.9375), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.75, 0.6875, 0.0625, 0.9375, 1, 0.25), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.0625, 0.6875, 0.0625, 0.25, 1, 0.25), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.75, 0.6875, 0.75, 0.9375, 1, 0.9375), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.0625, 0.6875, 0.75, 0.25, 1, 0.9375), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.125, 0.6875, 0.125, 0.125, 1, 0.875), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.875, 0.6875, 0.125, 0.875, 1, 0.875), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.125, 0.6875, 0.875, 0.875, 1, 0.875), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.125, 0.6875, 0.125, 0.875, 1, 0.125), BooleanOp.OR);
+
+        return shape;
+    }
+
+    private static VoxelShape makeUpperShape(){
+        VoxelShape shape = Shapes.empty();
+        shape = Shapes.join(shape, Shapes.box(0.125, 0, 0.125, 0.875, 0.375, 0.125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.0625, 0, 0.0625, 0.25, 0.375, 0.25), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.125, 0, 0.125, 0.125, 0.375, 0.875), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.0625, 0, 0.75, 0.25, 0.375, 0.9375), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.125, 0, 0.875, 0.875, 0.375, 0.875), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.75, 0, 0.75, 0.9375, 0.375, 0.9375), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.875, 0, 0.125, 0.875, 0.375, 0.875), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.75, 0, 0.0625, 0.9375, 0.375, 0.25), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.0625, 0.375, 0.0625, 0.9375, 0.5, 0.9375), BooleanOp.OR);
+
+        return shape;
     }
 }
