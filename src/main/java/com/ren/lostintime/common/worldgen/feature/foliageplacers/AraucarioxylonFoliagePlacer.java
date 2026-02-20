@@ -29,30 +29,26 @@ public class AraucarioxylonFoliagePlacer extends FoliagePlacer {
     @Override
     protected void createFoliage(LevelSimulatedReader pLevel, FoliageSetter pBlockSetter, RandomSource pRandom, TreeConfiguration pConfig, int pMaxFreeTreeHeight, FoliageAttachment pAttachment, int pFoliageHeight, int pFoliageRadius, int pOffset) {
         BlockPos blockPos = pAttachment.pos();
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dz = -1; dz <= 1; dz++) {
-                tryPlaceLeaf(pLevel, pBlockSetter, pRandom, pConfig, blockPos.offset(dx, 0, dz));
+
+        tryPlaceLeaf(pLevel, pBlockSetter, pRandom, pConfig, blockPos);
+
+        for (Direction dir : Direction.Plane.HORIZONTAL) {
+            if (pRandom.nextFloat() < 0.60f) {
+                tryPlaceLeaf(pLevel, pBlockSetter, pRandom, pConfig, blockPos.relative(dir));
             }
         }
 
-        Direction dir = Direction.Plane.HORIZONTAL.getRandomDirection(pRandom);
-        BlockPos back = blockPos.relative(dir.getOpposite());
-
-        tryPlaceLeaf(pLevel, pBlockSetter, pRandom, pConfig, back);
-        tryPlaceLeaf(pLevel, pBlockSetter, pRandom, pConfig, back.relative(dir.getOpposite()));
-
-        if (blockPos.getY() > pMaxFreeTreeHeight * 0.7) {
-            tryPlaceLeaf(pLevel, pBlockSetter, pRandom, pConfig, blockPos.above());
-            tryPlaceLeaf(pLevel, pBlockSetter, pRandom, pConfig, blockPos.above().offset(1, 0, 0));
-            tryPlaceLeaf(pLevel, pBlockSetter, pRandom, pConfig, blockPos.above().offset(-1, 0, 0));
-            tryPlaceLeaf(pLevel, pBlockSetter, pRandom, pConfig, blockPos.above().offset(0, 0, 1));
-            tryPlaceLeaf(pLevel, pBlockSetter, pRandom, pConfig, blockPos.above().offset(0, 0, -1));
+        BlockPos branchLevel = blockPos.below();
+        for (Direction dir : Direction.Plane.HORIZONTAL) {
+            if (pRandom.nextFloat() < 0.30f) {
+                tryPlaceLeaf(pLevel, pBlockSetter, pRandom, pConfig, branchLevel.relative(dir));
+            }
         }
     }
 
     @Override
     public int foliageHeight(RandomSource pRandom, int pHeight, TreeConfiguration pConfig) {
-        return 1;
+        return 2;
     }
 
     @Override

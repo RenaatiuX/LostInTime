@@ -56,6 +56,8 @@ public class LostInTime {
             event.accept(ItemInit.SOUL_POWDER);
             event.accept(ItemInit.PANEL);
             event.accept(ItemInit.REDSTONE_CHIP);
+            event.accept(ItemInit.OPAL);
+            event.accept(ItemInit.SPINEL);
 
             event.accept(ItemInit.DEVONIAN_FOSSIL);
             event.accept(ItemInit.CAMBRIAN_FOSSIL);
@@ -71,6 +73,24 @@ public class LostInTime {
             event.accept(ItemInit.QUATERNARY_FOSSIL);
 
             event.accept(ItemInit.BOTHRIOLEPIS_FOSSIL);
+            event.accept(ItemInit.ANOMALOCARIS_FOSSIL);
+            event.accept(ItemInit.DAEODON_FOSSIL);
+            event.accept(ItemInit.DAEODON_SKULL);
+            event.accept(ItemInit.DEINONYCHUS_FOSSIL);
+            event.accept(ItemInit.DEINONYCHUS_SKULL);
+            event.accept(ItemInit.ENDOCERAS_FOSSIL);
+            event.accept(ItemInit.HYLONOMUS_FOSSIL);
+            event.accept(ItemInit.LEPTICTIDIUM_FOSSIL);
+            event.accept(ItemInit.MASTODONSAURUS_FOSSIL);
+            event.accept(ItemInit.MASTODONSAURUS_SKULL);
+            event.accept(ItemInit.PLESIOSAURUS_FOSSIL);
+            event.accept(ItemInit.PLESIOSAURUS_SKULL);
+            event.accept(ItemInit.PTERYGOTUS_FOSSIL);
+            event.accept(ItemInit.SCUTOSAURUS_FOSSIL);
+            event.accept(ItemInit.SCUTOSAURUS_SKULL);
+            event.accept(ItemInit.CLADOPHLEBIS_FOSSIL);
+            event.accept(ItemInit.CONIOPTERIS_FOSSIL);
+            event.accept(ItemInit.RED_ALGAE_FOSSIL);
             event.accept(ItemInit.DODO_FOSSIL);
             event.accept(ItemInit.DODO_SKULL);
             event.accept(ItemInit.DODO_FOSSIL_MOUNT);
@@ -115,6 +135,9 @@ public class LostInTime {
             event.accept(ItemInit.QUARTZ_CATALYST);
             event.accept(ItemInit.REDSTONE_CATALYST);
             event.accept(ItemInit.ZIRCON_CATALYST);
+            event.accept(ItemInit.AMBER_CATALYST);
+            event.accept(ItemInit.OPAL_CATALYST);
+            event.accept(ItemInit.SPINEL_CATALYST);
 
             event.accept(ItemInit.ANOMALOCARIS_SOUL_CFC);
             event.accept(ItemInit.BOTHRIOLEPIS_SOUL_CFC);
@@ -137,6 +160,29 @@ public class LostInTime {
             event.accept(ItemInit.TREE_SPONGE_VITAL_PATTERN);
             event.accept(ItemInit.VASE_SPONGE_VITAL_PATTERN);
             event.accept(ItemInit.WOOL_SPONGE_VITAL_PATTERN);
+            event.accept(ItemInit.ARAUCARIOXYLON_VITAL_PATTERN);
+            event.accept(ItemInit.CLADOPHLEBIS_VITAL_PATTERN);
+            event.accept(ItemInit.CONIOPTERIS_VITAL_PATTERN);
+            event.accept(ItemInit.COOKSONIA_VITAL_PATTERN);
+            event.accept(ItemInit.GONDWANAGARICITES_VITAL_PATTERN);
+            event.accept(ItemInit.RED_ALGAE_VITAL_PATTERN);
+            event.accept(ItemInit.TITANOSARCOLITES_VITAL_PATTERN);
+
+            event.accept(ItemInit.BEIGE_SOLUTION);
+            event.accept(ItemInit.CARMINE_SOLUTION);
+            event.accept(ItemInit.CHARTREUSE_SOLUTION);
+            event.accept(ItemInit.CINEREOUS_SOLUTION);
+            event.accept(ItemInit.DELFT_SOLUTION);
+            event.accept(ItemInit.EVERGREEN_SOLUTION);
+            event.accept(ItemInit.PERIWINKLE_SOLUTION);
+            event.accept(ItemInit.ROSE_SOLUTION);
+            event.accept(ItemInit.SHAMROCK_SOLUTION);
+            event.accept(ItemInit.TEAL_SOLUTION);
+
+            event.accept(ItemInit.FIBROUS_NUTRIENT);
+            event.accept(ItemInit.GELATINOUS_NUTRIENT);
+            event.accept(ItemInit.RICH_NUTRIENT);
+            event.accept(ItemInit.UNIVERSAL_NUTRIENT);
 
             event.accept(ItemInit.GOLDEN_EYE);
             event.accept(ItemInit.GUARDIAN_SPIKE);

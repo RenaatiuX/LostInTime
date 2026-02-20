@@ -21,9 +21,11 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -42,6 +44,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.EnumSet;
+import java.util.List;
 
 public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
 
@@ -97,31 +100,20 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
     }
 
     @Override
-    public boolean isInvulnerableTo(DamageSource source) {
-        if (source.getDirectEntity() instanceof Projectile) {
-            return true;
-        }
-        return super.isInvulnerableTo(source);
-    }
-
-    @Override
     public boolean hurt(DamageSource source, float amount) {
         Entity direct = source.getDirectEntity();
         boolean result = super.hurt(source, amount);
 
+        if (direct instanceof Projectile projectile) {
+            Vec3 bounce = projectile.getDeltaMovement().scale(-0.6D);
+            projectile.setDeltaMovement(bounce);
+            this.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 1.0F);
+            return false;
+        }
+
         if (result) {
             int ticks = 100 + this.random.nextInt(100);
             this.panicTicks = ticks;
-        }
-
-        if (direct instanceof AbstractArrow projectile) {
-            if (this.random.nextFloat() < 0.6f) {
-                Vec3 dir = this.getLookAngle().scale(1.2);
-                projectile.setDeltaMovement(dir);
-                projectile.setOwner(this);
-                this.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 1.0F);
-                return false;
-            }
         }
         return result;
     }
@@ -166,6 +158,25 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
             }
         }
         return super.mobInteract(pPlayer, pHand);
+    }
+
+    //AIR
+    @Override
+    public int getMaxAirSupply() {
+        return 600;
+    }
+
+    @Override
+    protected void handleAirSupply(int pAirSupply) {
+        if (this.isAlive() && this.isOutOfWater()) {
+            this.setAirSupply(pAirSupply - 1);
+            if (this.getAirSupply() <= -20) {
+                this.setAirSupply(0);
+                this.hurt(this.damageSources().dryOut(), 2.0F);
+            }
+        } else {
+            this.setAirSupply(this.getMaxAirSupply());
+        }
     }
 
     @Override
@@ -245,6 +256,58 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
                 }
             }
             return null;
+        }
+    }
+
+    static class EatFloorItemsGoal extends Goal {
+        private final Bothriolepis fish;
+        private ItemEntity itemEntity;
+
+        public EatFloorItemsGoal(Bothriolepis fish) {
+            this.fish = fish;
+            this.setFlags(EnumSet.of(Flag.MOVE));
+        }
+
+        @Override
+        public boolean canUse() {
+            if (!fish.isInWater()) return false;
+
+            List<ItemEntity> items = fish.level().getEntitiesOfClass(ItemEntity.class, fish.getBoundingBox()
+                            .inflate(8.0D),
+                    item -> item.getItem().isEdible() || item.getItem().is(Items.SPIDER_EYE) ||
+                            item.getItem().is(Items.ROTTEN_FLESH)
+            );
+
+            if (items.isEmpty()) return false;
+
+            this.itemEntity = items.get(0);
+            return true;
+        }
+
+        @Override
+        public void tick() {
+            if (this.itemEntity != null && this.itemEntity.isAlive()) {
+                fish.getNavigation().moveTo(this.itemEntity, 1.0D);
+
+                if (fish.distanceToSqr(this.itemEntity) < 2.5D) {
+                    ItemStack stack = this.itemEntity.getItem();
+
+                    if (stack.is(Items.COOKIE)) {
+                        fish.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 0));
+                    } else {
+                        fish.heal(2.0F);
+                        BlockPos pos = fish.blockPosition().below();
+                        if (fish.level() instanceof ServerLevel serverLevel) {
+
+                            BoneMealItem.growCrop(new ItemStack(Items.BONE_MEAL), fish.level(), pos);
+                            serverLevel.levelEvent(2005, pos, 0);
+                        }
+                    }
+
+                    this.itemEntity.discard();
+                    this.itemEntity = null;
+                }
+            }
         }
     }
 }
