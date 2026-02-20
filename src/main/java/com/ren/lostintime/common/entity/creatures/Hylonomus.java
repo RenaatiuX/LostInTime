@@ -1,9 +1,13 @@
 package com.ren.lostintime.common.entity.creatures;
 
+import com.ren.lostintime.common.init.EntityInit;
+import com.ren.lostintime.common.init.ItemInit;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
@@ -13,7 +17,11 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -41,6 +49,8 @@ public class Hylonomus extends Animal implements GeoEntity {
 
     private int panicTicks = 0;
 
+    public int eggTime = this.random.nextInt(6000) + 6000;
+
     public Hylonomus(EntityType<? extends Animal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
@@ -55,19 +65,22 @@ public class Hylonomus extends Animal implements GeoEntity {
                 return super.canUse() && !Hylonomus.this.isSleeping();
             }
         });
-        this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0D) {
+        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(3, new TemptGoal(this, 1.0D, Ingredient.of(new ItemStack(Items.SPIDER_EYE)), false));
+        this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D) {
             @Override
             public boolean canUse() {
                 return super.canUse() && !Hylonomus.this.isSleeping();
             }
         });
-        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 6.0F) {
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F) {
             @Override
             public boolean canUse() {
                 return super.canUse() && !Hylonomus.this.isSleeping();
             }
         });
-        this.goalSelector.addGoal(9, new RandomLookAroundGoal(this) {
+        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this) {
             @Override
             public boolean canUse() {
                 return super.canUse() && !Hylonomus.this.isSleeping();
@@ -95,7 +108,26 @@ public class Hylonomus extends Animal implements GeoEntity {
 
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
-        return null;
+        return EntityInit.HYLONOMUS.get().create(pLevel);
+    }
+
+    @Override
+    public boolean isFood(ItemStack pStack) {
+        return pStack.is(Items.SPIDER_EYE);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        if (pCompound.contains("EggLayTime")) {
+            this.eggTime = pCompound.getInt("EggLayTime");
+        }
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putInt("EggLayTime", this.eggTime);
     }
 
     //MOVEMENT
@@ -143,6 +175,17 @@ public class Hylonomus extends Animal implements GeoEntity {
                 this.setSleeping(shouldSleep);
                 System.out.println("Hylonomus " + this.getId() + " sleeping = " + shouldSleep);
             }
+        }
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (!this.level().isClientSide && this.isAlive() && !this.isBaby() && --this.eggTime <= 0 && !this.isSleeping()) {
+            this.playSound(SoundEvents.CHICKEN_EGG, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+            this.spawnAtLocation(ItemInit.HYLONOMUS_EGG.get());
+            this.gameEvent(GameEvent.ENTITY_PLACE);
+            this.eggTime = this.random.nextInt(6000) + 6000;
         }
     }
 

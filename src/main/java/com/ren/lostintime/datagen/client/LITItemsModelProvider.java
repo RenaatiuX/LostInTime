@@ -36,6 +36,7 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.SOUL_POWDER.get());
         simple(ItemInit.PANEL.get());
         simple(ItemInit.REDSTONE_CHIP.get());
+        simple(ItemInit.HYLONOMUS_EGG.get());
 
         simple(ItemInit.RAW_DODO.get());
         simple(ItemInit.COOKED_DODO.get());

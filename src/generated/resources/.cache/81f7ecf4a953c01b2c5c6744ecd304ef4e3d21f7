@@ -1,4 +1,4 @@
-// 1.20.1	2026-02-20T00:53:55.2913857	Item Models: lostintime
+// 1.20.1	2026-02-20T18:12:52.5350977	Item Models: lostintime
 0570665fcef0e1f3922095a8aa98973135ded46e assets/lostintime/models/item/amber.json
 1a1915f23093ff4fbded979014b60faf9fa1d93e assets/lostintime/models/item/amber_catalyst.json
 879d909212d6267838764316100b2c449321306b assets/lostintime/models/item/amethyst_catalyst.json
@@ -74,6 +74,7 @@ af7affd58910004752be8cb604091600bd28e888 assets/lostintime/models/item/golden_ey
 b88fe4aa34497e9be8c5d9570290a1960bc9f7c6 assets/lostintime/models/item/gold_catalyst.json
 60fcdba47fab343c1482fa7b790afb7b69a82f67 assets/lostintime/models/item/gondwanagaricites_vital_pattern.json
 9503bba495ea11cf6474824156381cf39bb9afdc assets/lostintime/models/item/guardian_spike.json
+0889fed767d510c6dc511cbef6974bcf7e698391 assets/lostintime/models/item/hylonomus_egg.json
 b6cb09935c85e93de208f2bb0005759b2a1292ee assets/lostintime/models/item/hylonomus_fossil.json
 3491d9b95add05fab970526c6c406a95f367ebfb assets/lostintime/models/item/hylonomus_soul_configuration.json
 cab78673a1e7f5e277ac435ede78301a0a9272e2 assets/lostintime/models/item/information_dome.json
