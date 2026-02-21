@@ -189,6 +189,7 @@ public class LostInTime {
             event.accept(ItemInit.GUARDIAN_SPIKE);
 
             event.accept(ItemInit.DODO_SPAWN_EGG);
+            event.accept(ItemInit.ENDOCERAS_SPAWN_EGG);
 
             event.accept(BlockInit.MANGO_LEAVES);
             event.accept(BlockInit.MANGO_LOG);

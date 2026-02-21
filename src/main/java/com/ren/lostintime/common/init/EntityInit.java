@@ -1,10 +1,7 @@
 package com.ren.lostintime.common.init;
 
 import com.ren.lostintime.LostInTime;
-import com.ren.lostintime.common.entity.creatures.Anomalocaris;
-import com.ren.lostintime.common.entity.creatures.Bothriolepis;
-import com.ren.lostintime.common.entity.creatures.Dodo;
-import com.ren.lostintime.common.entity.creatures.Hylonomus;
+import com.ren.lostintime.common.entity.creatures.*;
 import com.ren.lostintime.common.entity.misc.LITBoatEntity;
 import com.ren.lostintime.common.entity.projectile.GuardianSpike;
 import com.ren.lostintime.common.entity.projectile.LITThrownEgg;
@@ -30,6 +27,8 @@ public class EntityInit {
             Bothriolepis::new, 0.8F, 0.5F);
     public static final RegistryObject<EntityType<Hylonomus>> HYLONOMUS = registerMob("hylonomus",
             Hylonomus::new, 0.4F, 0.4F);
+    public static final RegistryObject<EntityType<Endoceras>> ENDOCERAS = registerMob("endoceras",
+            Endoceras::new, 1.0F, 1.0F);
 
     public static final RegistryObject<EntityType<GuardianSpike>> GUARDIAN_SPIKE = registerProjectile("guardian_spike",
             GuardianSpike::new, 0.5F, 0.5F);

@@ -1,10 +1,7 @@
 package com.ren.lostintime.common.event;
 
 import com.ren.lostintime.LostInTime;
-import com.ren.lostintime.common.entity.creatures.Anomalocaris;
-import com.ren.lostintime.common.entity.creatures.Bothriolepis;
-import com.ren.lostintime.common.entity.creatures.Dodo;
-import com.ren.lostintime.common.entity.creatures.Hylonomus;
+import com.ren.lostintime.common.entity.creatures.*;
 import com.ren.lostintime.common.entity.projectile.LITThrownEgg;
 import com.ren.lostintime.common.init.EntityInit;
 import com.ren.lostintime.common.init.ItemInit;
@@ -41,6 +38,7 @@ public class CommonEvents {
         event.put(EntityInit.ANOMALOCARIS.get(), Anomalocaris.createAttributes().build());
         event.put(EntityInit.BOTHRIOLEPIS.get(), Bothriolepis.createAttributes().build());
         event.put(EntityInit.HYLONOMUS.get(), Hylonomus.createAttributes().build());
+        event.put(EntityInit.ENDOCERAS.get(), Endoceras.createAttributes().build());
     }
 
     @SubscribeEvent

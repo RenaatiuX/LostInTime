@@ -1,4 +1,4 @@
-// 1.20.1	2026-02-20T18:12:52.5350977	Item Models: lostintime
+// 1.20.1	2026-02-21T11:58:19.1993277	Item Models: lostintime
 0570665fcef0e1f3922095a8aa98973135ded46e assets/lostintime/models/item/amber.json
 1a1915f23093ff4fbded979014b60faf9fa1d93e assets/lostintime/models/item/amber_catalyst.json
 879d909212d6267838764316100b2c449321306b assets/lostintime/models/item/amethyst_catalyst.json
@@ -66,6 +66,7 @@ a2125b55f2fef97b27efe04c23cee719d9c77cee assets/lostintime/models/item/emerald_c
 2f4898b400339bfe12f46bd6773221a8e93a9811 assets/lostintime/models/item/empty_vital_pattern.json
 e1d100bed78d3aa5721135bac0e508c79a5994a5 assets/lostintime/models/item/endoceras_fossil.json
 efb9f416530f5ded53655b7931a26f6ce506dd1e assets/lostintime/models/item/endoceras_soul_configuration.json
+63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/lostintime/models/item/endoceras_spawn_egg.json
 f31030ed0002064482854a52c8e1e37703e0464d assets/lostintime/models/item/evergreen_solution.json
 9674a069eca2e54cd9c69a9d89b81a9eaf772e05 assets/lostintime/models/item/fibrous_nutrient.json
 92edc99ad8d8a02d79cbaac2f90a83799a750e5b assets/lostintime/models/item/gelatinous_nutrient.json

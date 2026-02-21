@@ -192,6 +192,8 @@ public class ItemInit {
     //SPAWN EGG
     public static final RegistryObject<Item> DODO_SPAWN_EGG = registerSpawnEgg("dodo_spawn_egg",
             EntityInit.DODO, 3679516, 7164742);
+    public static final RegistryObject<Item> ENDOCERAS_SPAWN_EGG = registerSpawnEgg("endoceras_spawn_egg",
+            EntityInit.ENDOCERAS, 3679516, 7164742);
 
     private static RegistryObject<Item> registerSimple(final String name) {
         return ITEMS.register(name, () -> new Item(new Item.Properties()));

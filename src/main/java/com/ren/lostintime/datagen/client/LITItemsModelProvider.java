@@ -55,6 +55,7 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.GOLDEN_EYE.get());
 
         spawnEgg(ItemInit.DODO_SPAWN_EGG.get());
+        spawnEgg(ItemInit.ENDOCERAS_SPAWN_EGG.get());
 
         saplingItem(BlockInit.MANGO_SAPLING);
         saplingItem(BlockInit.ARAUCARIOXYLON_SAPLING);
