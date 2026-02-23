@@ -1,5 +1,6 @@
 package com.ren.lostintime.common.entity;
 
+import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.entity.util.ISleepingEntity;
 import com.ren.lostintime.common.entity.util.SleepController;

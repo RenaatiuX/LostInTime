@@ -1,8 +1,8 @@
 package com.ren.lostintime.common.entity.creatures;
 
 import com.ren.lostintime.common.entity.AbstractBaseFish;
+import com.ren.lostintime.common.init.AttributeInit;
 import com.ren.lostintime.common.init.EntityInit;
-import com.ren.lostintime.common.init.ItemInit;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -18,10 +18,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -43,14 +42,13 @@ import java.util.UUID;
 
 public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
 
-    //ANIMATIONS
-    protected static final RawAnimation SWIM = RawAnimation.begin().thenLoop("move.swim");
-    protected static final RawAnimation OUT_OF_WATER = RawAnimation.begin().thenLoop("move.out_of_water");
-    protected static final RawAnimation GRABBED = RawAnimation.begin().thenPlay("misc.grabbed");
-    public static final RawAnimation GRAB = RawAnimation.begin().thenPlayAndHold("misc.grab");
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    // --- Constants ---
+    private static final float HUNGER_THRESHOLD = 70.0F;
+    private static final float PREY_HEIGHT_MAX = 0.5F;
+    private static final float HUNGER_DECREASE_PER_TICK = 1.0F / 400.0F;
+    private static final float HUNGER_GAIN_PER_PREY = 30.0F;
 
-    //DATA PARAMETERS
+    // --- Data Parameters ---
     private static final EntityDataAccessor<Float> DATA_HUNGER = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<ItemStack> DATA_HELD_ITEM = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<Optional<UUID>> DATA_CURIO_PLAYER = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.OPTIONAL_UUID);
@@ -59,31 +57,33 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     private static final EntityDataAccessor<Boolean> DATA_GRABBING = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_HAS_EGG = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.BOOLEAN);
 
-    private static final float MAX_HUNGER = 100.0F;
-    private static final float HUNGER_THRESHOLD = 99.0F;
-    private static final float PREY_HEIGHT_MAX = 0.4F;
-    private static final float HUNGER_DECREASE_PER_TICK = 1.0F / 400.0F;
-    private static final float HUNGER_GAIN_PER_PREY = 10.0F;
+    // --- Animations ---
+    protected static final RawAnimation SWIM = RawAnimation.begin().thenLoop("move.swim");
+    protected static final RawAnimation OUT_OF_WATER = RawAnimation.begin().thenLoop("move.out_of_water");
+    protected static final RawAnimation GRABBED = RawAnimation.begin().thenPlay("misc.grabbed");
+    public static final RawAnimation GRAB = RawAnimation.begin().thenPlayAndHold("misc.grab");
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
+    // --- Fields ---
     private int hurtTimeCoolDown = 0;
     private int grabDamageTicks = 0;
 
-    private TargetingConditions grabTargets() {
-        return TargetingConditions.forCombat().range(12.0D).selector(this::isSuitablePrey);
-    }
-
     public Anomalocaris(EntityType<? extends AbstractBaseFish> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+        setHunger(getMaxHunger());
     }
 
+    // --- Goals & Attributes ---
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
-        this.goalSelector.addGoal(3, new CuriositySwimGoal(this));
-        this.goalSelector.addGoal(5, new AnomalocarisGrabAttackGoal(this));
-        this.goalSelector.addGoal(6, new RandomSwimmingGoal(this, 1.0D, 10));
-        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(0, new PanicGoal(this, 1.5D));
+        this.goalSelector.addGoal(1, new TryFindWaterGoal(this));
+        this.goalSelector.addGoal(2, new CuriositySwimGoal(this));
+        this.goalSelector.addGoal(3, new AnomalocarisGrabAttackGoal(this, 1.2D, true));
+        this.goalSelector.addGoal(4, new AnomalocarisSwimmingGoal(this, 1.0D, 10));
+        this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, false, this::isSuitablePrey));
     }
 
@@ -91,18 +91,15 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.8F)
                 .add(Attributes.ATTACK_DAMAGE, 2.0)
-                .add(Attributes.FOLLOW_RANGE, 12);
+                .add(Attributes.FOLLOW_RANGE, 16)
+                .add(AttributeInit.MAX_HUNGER.get());
     }
 
-    @Override
-    public @Nullable AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
-        return EntityInit.ANOMALOCARIS.get().create(pLevel);
-    }
-
+    // --- Data Sync ---
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_HUNGER, MAX_HUNGER);
+        this.entityData.define(DATA_HUNGER, 0f);
         this.entityData.define(DATA_HELD_ITEM, ItemStack.EMPTY);
         this.entityData.define(DATA_CURIO_PLAYER, Optional.empty());
         this.entityData.define(DATA_CURIO_START, 0);
@@ -139,13 +136,17 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         this.setHasEgg(tag.getBoolean("HasEgg"));
     }
 
-    //GETTER AND SETTER
+    // --- Getters & Setters ---
     public float getHunger() {
         return this.entityData.get(DATA_HUNGER);
     }
 
     public void setHunger(float hunger) {
-        this.entityData.set(DATA_HUNGER, Mth.clamp(hunger, 0.0F, MAX_HUNGER));
+        this.entityData.set(DATA_HUNGER, Mth.clamp(hunger, 0.0F, getMaxHunger()));
+    }
+
+    public float getMaxHunger() {
+        return (float) this.getAttributeValue(AttributeInit.MAX_HUNGER.get());
     }
 
     public ItemStack getHeldItem() {
@@ -161,7 +162,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     }
 
     public UUID getCurioPlayer() {
-        return this.entityData.get(DATA_CURIO_PLAYER).orElse(null);
+        return this.entityData.get(DATA_CURIO_PLAYER).orElse(Util.NIL_UUID);
     }
 
     public void setCurioPlayer(UUID pUuid) {
@@ -212,37 +213,6 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         this.entityData.set(DATA_GRABBING, grabbing);
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-        if (!this.level().isClientSide) {
-            long time = this.level().getGameTime();
-            float hunger = this.getHunger() - HUNGER_DECREASE_PER_TICK;
-            this.setHunger(Math.max(hunger, 0.0F));
-            if (this.hasHeldItem() && !this.getCurioPlayer().equals(Util.NIL_UUID)) {
-                Player curioPlayer = ((ServerLevel) this.level()).getPlayerByUUID(this.getCurioPlayer());
-                if (curioPlayer != null && this.distanceToSqr(curioPlayer) < 16.0 && this.getCurioTicksRemaining(time) >= this.getCurioDuration()) {
-                    this.dropHeldItemToPlayer(curioPlayer);
-                }
-            }
-            if (this.hurtTimeCoolDown > 0) {
-                this.hurtTimeCoolDown--;
-            }
-            if (this.isGrabbedState()) {
-                LivingEntity prey = this.getGrabbedPrey();
-                if (prey != null && ++this.grabDamageTicks % 20 == 0) {
-                    prey.hurt(this.damageSources().mobAttack(this), 0.2F);
-                    if (prey.getHealth() <= 0) {
-                        this.eatPrey(prey);
-                    }
-                }
-            }
-            if (this.isGrabbing() && !this.hasGrabbedPrey() && !this.hasHeldItem()) {
-                this.setGrabbing(false);
-            }
-        }
-    }
-
     public boolean isGrabbedState() {
         return this.hasHeldItem() || this.hasGrabbedPrey();
     }
@@ -257,69 +227,103 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         return null;
     }
 
+    public boolean hasGrabbedPrey() {
+        return getGrabbedPrey() != null;
+    }
+
+    // --- Logic ---
+    @Override
+    public void tick() {
+        super.tick();
+        if (!this.level().isClientSide) {
+            long time = this.level().getGameTime();
+
+            float hunger = this.getHunger() - HUNGER_DECREASE_PER_TICK;
+            this.setHunger(Math.max(hunger, 0.0F));
+
+            if (this.hasHeldItem() && !this.getCurioPlayer().equals(Util.NIL_UUID)) {
+                Player curioPlayer = ((ServerLevel) this.level()).getPlayerByUUID(this.getCurioPlayer());
+                if (curioPlayer != null && this.distanceToSqr(curioPlayer) < 16.0 && this.getCurioTicksRemaining(time) >= this.getCurioDuration()) {
+                    this.dropHeldItemToPlayer(curioPlayer);
+                }
+            }
+
+            if (this.hurtTimeCoolDown > 0) {
+                this.hurtTimeCoolDown--;
+            }
+
+            if (this.hasGrabbedPrey()) {
+                LivingEntity prey = this.getGrabbedPrey();
+                if (prey != null) {
+                    if (++this.grabDamageTicks % 20 == 0) {
+                        prey.hurt(this.damageSources().mobAttack(this), 0.5F);
+                    }
+                    if (prey.getHealth() <= 0 || prey.isDeadOrDying()) {
+                        this.eatPrey(prey);
+                    }
+                }
+            } else {
+                this.grabDamageTicks = 0;
+            }
+
+            if (this.isGrabbing() && !this.hasGrabbedPrey() && !this.hasHeldItem()) {
+                this.setGrabbing(false);
+            }
+        }
+    }
+
     private void eatPrey(LivingEntity prey) {
         prey.stopRiding();
-        prey.kill();
-        this.setHunger(Math.min(this.getHunger() + HUNGER_GAIN_PER_PREY, MAX_HUNGER));
-        this.heal(3.0F);
+        this.setHunger(this.getHunger() + HUNGER_GAIN_PER_PREY);
+        this.heal(5.0F);
         this.setGrabbing(false);
         this.grabDamageTicks = 0;
     }
 
     public void grabPrey(LivingEntity prey) {
-        prey.startRiding(this, true);
-        this.setGrabbing(true);
+        if (!this.hasGrabbedPrey() && !this.hasHeldItem()) {
+            prey.startRiding(this, true);
+            this.setGrabbing(true);
+        }
+    }
+
+    @Override
+    public @Nullable LivingEntity getControllingPassenger() {
+        var controllingPassenger = super.getControllingPassenger();
+        //ensure prey can never steer this entity and deactivate goals
+        if (controllingPassenger != null && getGrabbedPrey() != null && getGrabbedPrey().getId() == controllingPassenger.getId())
+            return null;
+        return controllingPassenger;
+    }
+
+    private void dropHeldItemToPlayer(Player player) {
+        if (!player.getInventory().add(this.getHeldItem())) {
+            this.spawnAtLocation(this.getHeldItem(), 0.5F);
+        }
+        this.setHeldItem(ItemStack.EMPTY);
+        this.setCurioPlayer(Util.NIL_UUID);
+        this.setCurioStart(0);
+        this.setGrabbing(false);
     }
 
     @Override
     protected void positionRider(Entity pPassenger, MoveFunction pCallback) {
         if (pPassenger instanceof LivingEntity) {
-            double yOffset = 0.0;
-            double xOffset = 0.2;
-            double zOffset = -0.5;
-            Vec3 riderPos = this.position().add(xOffset, yOffset, zOffset);
-            pPassenger.setPos(riderPos.x, riderPos.y, riderPos.z);
+            double yOffset = -0.4;
+            double rad = Math.toRadians(this.yBodyRot);
+            double dx = -Math.sin(rad) * 0.4;
+            double dz = Math.cos(rad) * 0.5;
+            pCallback.accept(pPassenger, this.getX() + dx, this.getY() + yOffset, this.getZ() + dz);
         } else {
-            super.positionRider(pPassenger);
+            super.positionRider(pPassenger, pCallback);
         }
     }
 
-    public boolean hasGrabbedPrey() {
-        return getGrabbedPrey() != null;
-    }
-
-    private void dropHeldItemToPlayer(Player player) {
-        player.getInventory().placeItemBackInInventory(this.getHeldItem());
-        this.setHeldItem(ItemStack.EMPTY);
-        this.setCurioPlayer(Util.NIL_UUID);
-        this.setCurioStart(0);
-    }
-
-    //BREED
-
+    // --- Interaction & Combat ---
 
     @Override
-    public @Nullable SoundEvent getFlopSound() {
-        return SoundEvents.COD_FLOP;
-    }
-
-    @Override
-    public boolean isFood(ItemStack stack) {
-        return stack.is(Items.COD);
-    }
-
-    @Override
-    public boolean doHurtTarget(Entity pEntity) {
-        if (pEntity instanceof LivingEntity prey && this.isSuitablePrey(prey)) {
-            this.grabPrey(prey);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean hurt(DamageSource pSource, float source) {
-        boolean hurt = super.hurt(pSource, source);
+    public boolean hurt(DamageSource pSource, float amount) {
+        boolean hurt = super.hurt(pSource, amount);
         if (hurt) {
             LivingEntity prey = this.getGrabbedPrey();
             if (prey != null) {
@@ -329,34 +333,10 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
                 this.spawnAtLocation(this.getHeldItem(), 0.5F);
                 this.setHeldItem(ItemStack.EMPTY);
             }
+            this.setGrabbing(false);
             this.hurtTimeCoolDown = 100;
-            this.setNoActionTime(100);
         }
         return hurt;
-    }
-
-    @Override
-    public boolean canBeLeashed(Player pPlayer) {
-        return true;
-    }
-
-    @Override
-    protected @Nullable SoundEvent getHurtSound(DamageSource pDamageSource) {
-        return super.getHurtSound(pDamageSource);
-    }
-
-    @Override
-    protected @Nullable SoundEvent getDeathSound() {
-        return super.getDeathSound();
-    }
-
-    @Override
-    public boolean canAttack(LivingEntity pTarget) {
-        return !hasGrabbedPrey() && !hasHeldItem() && !this.isBaby() && this.getHunger() <= HUNGER_THRESHOLD && isSuitablePrey(pTarget);
-    }
-
-    private boolean isSuitablePrey(LivingEntity target) {
-        return target.getBbHeight() < PREY_HEIGHT_MAX && target.isAlive() && !(target instanceof Player);
     }
 
     @Override
@@ -366,7 +346,8 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         }
         ItemStack stack = pPlayer.getItemInHand(pHand);
         long time = this.level().getGameTime();
-        if (!this.hasHeldItem() && !stack.isEmpty() && this.distanceToSqr(pPlayer) < 5.0) {
+
+        if (!this.hasHeldItem() && !this.hasGrabbedPrey() && !stack.isEmpty() && this.distanceToSqr(pPlayer) < 9.0) {
             ItemStack given = stack.split(1);
             this.setHeldItem(given);
             this.setGrabbing(true);
@@ -374,33 +355,59 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
             this.setCurioStart((int) time);
             return InteractionResult.SUCCESS;
         }
-        if (this.hasHeldItem() && this.getCurioPlayer().equals(pPlayer.getUUID()) && this.distanceToSqr(pPlayer) < 5.0) {
+
+        if (this.hasHeldItem() && this.distanceToSqr(pPlayer) < 9.0) {
             this.dropHeldItemToPlayer(pPlayer);
             return InteractionResult.SUCCESS;
         }
+
         return super.mobInteract(pPlayer, pHand);
     }
 
+    private boolean isSuitablePrey(LivingEntity target) {
+        return target.getBbHeight() <= PREY_HEIGHT_MAX && target.isAlive() && !(target instanceof Player) && target.isInWater();
+    }
+
+    // --- Breeding ---
     @Override
-    public ItemStack getBucketItemStack() {
-        return ItemStack.EMPTY;
+    public boolean isFood(ItemStack stack) {
+        return stack.is(Items.COD);
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose pPose, EntityDimensions pDimensions) {
-        return pDimensions.height * 0.65F;
+    public @Nullable AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
+        return EntityInit.ANOMALOCARIS.get().create(pLevel);
     }
 
+    // --- Sounds ---
+    @Override
+    public @Nullable SoundEvent getFlopSound() {
+        return SoundEvents.COD_FLOP;
+    }
+
+    @Override
+    protected @Nullable SoundEvent getHurtSound(DamageSource pDamageSource) {
+        return SoundEvents.COD_HURT;
+    }
+
+    @Override
+    protected @Nullable SoundEvent getDeathSound() {
+        return SoundEvents.COD_DEATH;
+    }
+
+    // --- Animation ---
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers
-                .add(new AnimationController<>(this, "move", 10, this::movePredicate))
-                .add(new AnimationController<>(this, "grab", 10, this::grabPredicate));
+                .add(new AnimationController<>(this, "move", 5, this::movePredicate))
+                .add(new AnimationController<>(this, "grab", 25, this::grabPredicate));
     }
 
     protected <E extends Anomalocaris> PlayState movePredicate(final AnimationState<E> event) {
         if (!this.isInWater()) {
             event.getController().setAnimation(OUT_OF_WATER);
+        } else if (event.isMoving()) {
+            event.getController().setAnimation(SWIM);
         } else {
             event.getController().setAnimation(SWIM);
         }
@@ -408,15 +415,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     }
 
     private <E extends Anomalocaris> PlayState grabPredicate(AnimationState<E> event) {
-        if (this.hasGrabbedPrey()) {
-            event.getController().setAnimation(GRABBED);
-            return PlayState.CONTINUE;
-        }
-        if (this.hasHeldItem()) {
-            event.getController().setAnimation(GRABBED);
-            return PlayState.CONTINUE;
-        }
-        if (this.isGrabbing()) {
+        if (this.hasHeldItem() || this.hasGrabbedPrey()) {
             event.getController().setAnimation(GRAB);
             return PlayState.CONTINUE;
         }
@@ -428,13 +427,19 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         return this.cache;
     }
 
-    static class AnomalocarisGrabAttackGoal extends MeleeAttackGoal {
+    @Override
+    public ItemStack getBucketItemStack() {
+        return ItemStack.EMPTY;
+    }
 
+    // --- Inner Classes (Goals) ---
+
+    static class AnomalocarisGrabAttackGoal extends MeleeAttackGoal {
         private final Anomalocaris anomalocaris;
         private LivingEntity target;
 
-        public AnomalocarisGrabAttackGoal(Anomalocaris anomalocaris) {
-            super(anomalocaris, 1.0D, true);
+        public AnomalocarisGrabAttackGoal(Anomalocaris anomalocaris, double pSpeedModifier, boolean pFollowingTargetEvenIfNotSeen) {
+            super(anomalocaris, pSpeedModifier, pFollowingTargetEvenIfNotSeen);
             this.anomalocaris = anomalocaris;
             this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         }
@@ -442,32 +447,129 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         @Override
         public boolean canUse() {
             this.target = this.anomalocaris.getTarget();
-            return this.target != null && anomalocaris.canAttack(this.target) && this.anomalocaris.getHunger() <= HUNGER_THRESHOLD && !anomalocaris.isBaby() && super.canUse();
-        }
-
-        @Override
-        public void tick() {
-            this.anomalocaris.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
-            if (this.anomalocaris.distanceToSqr(this.target) > 1.2D) {
-                this.anomalocaris.getNavigation().moveTo(this.target, 1.4D);
-            } else {
-                this.anomalocaris.doHurtTarget(this.target);
-            }
+            return this.target != null && this.target.isAlive()
+                    && this.anomalocaris.getHunger() <= HUNGER_THRESHOLD
+                    && !this.anomalocaris.hasGrabbedPrey()
+                    && !this.anomalocaris.hasHeldItem();
         }
 
         @Override
         public boolean canContinueToUse() {
-            return !this.anomalocaris.hasGrabbedPrey()
-                    && this.anomalocaris.canAttack(this.target)
-                    && !this.anomalocaris.hasHeldItem()
-                    && this.target.isAlive()
-                    && !anomalocaris.isBaby()
-                    && super.canContinueToUse();
+            return this.target != null && this.target.isAlive()
+                    && !this.anomalocaris.hasGrabbedPrey()
+                    && !this.anomalocaris.hasHeldItem();
+        }
+
+        @Override
+        protected void checkAndPerformAttack(LivingEntity pEnemy, double pDistToEnemySqr) {
+            double d0 = this.getAttackReachSqr(pEnemy);
+            if (pDistToEnemySqr <= d0 && this.getTicksUntilNextAttack() <= 0) {
+                this.resetAttackCooldown();
+                this.mob.swing(InteractionHand.MAIN_HAND);
+                this.anomalocaris.grabPrey(this.target);
+            }
+        }
+    }
+
+    static class AnomalocarisSwimmingGoal extends Goal {
+
+        public static final int DEFAULT_INTERVAL = 120;
+        protected final Anomalocaris mob;
+        protected double wantedX;
+        protected double wantedY;
+        protected double wantedZ;
+        protected final double speedModifier;
+        protected int interval;
+        protected boolean forceTrigger;
+        private final boolean checkNoActionTime;
+
+        public AnomalocarisSwimmingGoal(Anomalocaris pMob, double pSpeedModifier) {
+            this(pMob, pSpeedModifier, DEFAULT_INTERVAL);
+        }
+
+        public AnomalocarisSwimmingGoal(Anomalocaris pMob, double pSpeedModifier, int pInterval) {
+            this(pMob, pSpeedModifier, pInterval, true);
+        }
+
+        public AnomalocarisSwimmingGoal(Anomalocaris pMob, double pSpeedModifier, int pInterval, boolean pCheckNoActionTime) {
+            this.mob = pMob;
+            this.speedModifier = pSpeedModifier;
+            this.interval = pInterval;
+            this.checkNoActionTime = pCheckNoActionTime;
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE));
+        }
+
+        /**
+         * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
+         * method as well.
+         */
+        public boolean canUse() {
+            if (!this.forceTrigger) {
+                if (this.checkNoActionTime && this.mob.getNoActionTime() >= 100) {
+                    return false;
+                }
+
+                if (this.mob.getRandom().nextInt(reducedTickDelay(this.interval)) != 0) {
+                    return false;
+                }
+            }
+
+            Vec3 vec3 = this.getPosition();
+            if (vec3 == null) {
+                return false;
+            } else {
+                this.wantedX = vec3.x;
+                this.wantedY = vec3.y;
+                this.wantedZ = vec3.z;
+                this.forceTrigger = false;
+                return true;
+            }
+
+        }
+
+        @javax.annotation.Nullable
+        protected Vec3 getPosition() {
+            return BehaviorUtils.getRandomSwimmablePos(this.mob, 10, 7);
+        }
+
+        /**
+         * Returns whether an in-progress EntityAIBase should continue executing
+         */
+        public boolean canContinueToUse() {
+            return !this.mob.getNavigation().isDone();
+        }
+
+        /**
+         * Execute a one shot task or start executing a continuous task
+         */
+        public void start() {
+            this.mob.getNavigation().moveTo(this.wantedX, this.wantedY, this.wantedZ, this.speedModifier);
+        }
+
+        /**
+         * Reset the task's internal state. Called when this task is interrupted by another one
+         */
+        public void stop() {
+            this.mob.getNavigation().stop();
+            super.stop();
+        }
+
+        /**
+         * Makes task to bypass chance
+         */
+        public void trigger() {
+            this.forceTrigger = true;
+        }
+
+        /**
+         * Changes task random possibility for execution
+         */
+        public void setInterval(int pNewchance) {
+            this.interval = pNewchance;
         }
     }
 
     static class CuriositySwimGoal extends Goal {
-
         private final Anomalocaris anomalocaris;
         private Player targetPlayer;
         private int circleTicks;
@@ -485,29 +587,31 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
                 return false;
             }
             this.targetPlayer = this.anomalocaris.level().getPlayerByUUID(playerUuid);
-            return this.targetPlayer != null && this.anomalocaris.distanceToSqr(this.targetPlayer) < 16.0 &&
-                    this.anomalocaris.level().getGameTime() - this.anomalocaris.getCurioStart() < this.anomalocaris.getCurioDuration();
+            return this.targetPlayer != null && this.anomalocaris.distanceToSqr(this.targetPlayer) < 256.0;
         }
 
         @Override
         public void tick() {
-            this.anomalocaris.getLookControl().setLookAt(this.targetPlayer, 30.0F, 30.0F);
-            Vec3 vecToPlayer = this.targetPlayer.position().subtract(this.anomalocaris.position()).multiply(1, 0, 1);
-            if (vecToPlayer.lengthSqr() < 1.0E-4) {
-                return;
-            }
-            Vec3 up = new Vec3(0, 1, 0);
-            Vec3 right = vecToPlayer.normalize().cross(up).normalize();
-            float radius = 3.0F + Mth.sin(this.circleTicks * 0.1F);
-            Vec3 circleOffset = right.scale(radius * Math.sin(this.circleAngle)).add(0, Mth.sin(this.circleTicks * 0.2F) * 0.5, 0);
-            this.anomalocaris.setDeltaMovement(this.anomalocaris.getDeltaMovement().lerp(circleOffset.normalize().scale(0.5), 0.1));
-            this.circleAngle += 0.2F;
-            this.circleTicks++;
-        }
+            if (this.targetPlayer == null) return;
 
-        @Override
-        public boolean canContinueToUse() {
-            return this.canUse();
+            this.anomalocaris.getLookControl().setLookAt(this.targetPlayer, 30.0F, 30.0F);
+
+            Vec3 vecToPlayer = this.targetPlayer.position().subtract(this.anomalocaris.position());
+            vecToPlayer = new Vec3(vecToPlayer.x, 0, vecToPlayer.z);
+
+            if (vecToPlayer.lengthSqr() < 1.0E-4) return;
+
+            float radius = 4.0F;
+            Vec3 targetPos = this.targetPlayer.position().add(
+                    Math.cos(circleAngle) * radius,
+                    1.0 + Math.sin(circleTicks * 0.05) * 0.5,
+                    Math.sin(circleAngle) * radius
+            );
+
+            this.anomalocaris.getNavigation().moveTo(targetPos.x, targetPos.y, targetPos.z, 1.0D);
+
+            this.circleAngle += 0.05F;
+            this.circleTicks++;
         }
     }
 }
