@@ -50,6 +50,7 @@ public class Config {
                                     .build().entrySet().stream().map(e -> ForgeRegistries.ITEMS.getKey(e.getKey()) + "=" + e.getValue()).toList(),
                             Config::validateGoldenFood
                     );
+    private static final ForgeConfigSpec.IntValue ANOMALOCARIS_BREED_COOLDOWN = BUILDER.comment("time in ticks the anomalocaris will need at least before it can be bred again").defineInRange("anomalocaris_breed_cooldown", 6000, 1, Integer.MAX_VALUE);
 
     private static final ForgeConfigSpec.BooleanValue NATURAL_SPAWNS = BUILDER.pop().push("Spawns").define("natural_spawns", true);
 
@@ -59,6 +60,7 @@ public class Config {
     public static int dodoBreedCooldown;
     public static int dodoEggCooldown;
     public static int dodoPeckCooldown;
+    public static int anomalocarisBreedCooldown;
 
     public static Map<Item, Float> goldenFoodMultipliers = ImmutableMap.of();
     public static Map<Item, Float> transfiguratorTranslators = ImmutableMap.of();
@@ -103,6 +105,7 @@ public class Config {
         transfiguratorTranslators = chanceMapBuilder.build();
 
         dodoPeckCooldown = DODO_PECK_COOLDOWN.get();
+        anomalocarisBreedCooldown = ANOMALOCARIS_BREED_COOLDOWN.get();
         naturalSpawns = NATURAL_SPAWNS.get();
 
     }

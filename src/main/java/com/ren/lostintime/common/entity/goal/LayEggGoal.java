@@ -27,7 +27,6 @@ public class LayEggGoal<E extends AgeableMob & IEggLayer> extends MoveToBlockGoa
 
     @Override
     public boolean canContinueToUse() {
-        System.out.println("getting here");
         return animal.hasEgg() && animal.canLayEgg() && super.canContinueToUse();
     }
 

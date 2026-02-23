@@ -1,17 +1,25 @@
 package com.ren.lostintime.common.entity.creatures;
 
+import com.ren.lostintime.LostInTime;
+import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.entity.AbstractBaseFish;
 import com.ren.lostintime.common.init.AttributeInit;
+import com.ren.lostintime.common.init.BlockInit;
 import com.ren.lostintime.common.init.EntityInit;
 import net.minecraft.Util;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -21,10 +29,13 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -78,11 +89,13 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new PanicGoal(this, 1.5D));
         this.goalSelector.addGoal(1, new TryFindWaterGoal(this));
+        this.goalSelector.addGoal(2, new AnomalocarisLayEggGoal(this, 1.0D));
         this.goalSelector.addGoal(2, new CuriositySwimGoal(this));
         this.goalSelector.addGoal(3, new AnomalocarisGrabAttackGoal(this, 1.2D, true));
-        this.goalSelector.addGoal(4, new AnomalocarisSwimmingGoal(this, 1.0D, 10));
-        this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(3, new AnomalocarisBreedGoal(this, 1.2D));
+        this.goalSelector.addGoal(5, new AnomalocarisSwimmingGoal(this, 1.0D, 10));
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, false, this::isSuitablePrey));
     }
@@ -346,8 +359,9 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         }
         ItemStack stack = pPlayer.getItemInHand(pHand);
         long time = this.level().getGameTime();
+        boolean breedPredicate = this.isFood(stack) && this.canFallInLove() && this.getAge() == 0;
 
-        if (!this.hasHeldItem() && !this.hasGrabbedPrey() && !stack.isEmpty() && this.distanceToSqr(pPlayer) < 9.0) {
+        if (!breedPredicate && !this.hasHeldItem() && !this.hasGrabbedPrey() && !stack.isEmpty() && this.distanceToSqr(pPlayer) < 9.0) {
             ItemStack given = stack.split(1);
             this.setHeldItem(given);
             this.setGrabbing(true);
@@ -356,7 +370,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
             return InteractionResult.SUCCESS;
         }
 
-        if (this.hasHeldItem() && this.distanceToSqr(pPlayer) < 9.0) {
+        if (!breedPredicate && this.hasHeldItem() && this.distanceToSqr(pPlayer) < 9.0) {
             this.dropHeldItemToPlayer(pPlayer);
             return InteractionResult.SUCCESS;
         }
@@ -365,6 +379,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     }
 
     private boolean isSuitablePrey(LivingEntity target) {
+        if (target.getType() == this.getType()) return false;
         return target.getBbHeight() <= PREY_HEIGHT_MAX && target.isAlive() && !(target instanceof Player) && target.isInWater();
     }
 
@@ -612,6 +627,92 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
 
             this.circleAngle += 0.05F;
             this.circleTicks++;
+        }
+    }
+
+    static class AnomalocarisBreedGoal extends BreedGoal{
+
+        protected Anomalocaris anomalocaris;
+
+        public AnomalocarisBreedGoal(Anomalocaris pAnimal, double pSpeedModifier) {
+            super(pAnimal, pSpeedModifier);
+            this.anomalocaris = pAnimal;
+        }
+
+        public AnomalocarisBreedGoal(Anomalocaris pAnimal, double pSpeedModifier, Class<? extends Animal> pPartnerClass) {
+            super(pAnimal, pSpeedModifier, pPartnerClass);
+            this.anomalocaris = pAnimal;
+        }
+
+        @Override
+        public boolean canUse() {
+            return super.canUse() && !anomalocaris.hasEgg();
+        }
+
+        @Override
+        protected void breed() {
+            ServerPlayer serverplayer = this.animal.getLoveCause();
+            if (serverplayer == null && this.partner.getLoveCause() != null) {
+                serverplayer = this.partner.getLoveCause();
+            }
+            if (serverplayer != null) {
+                serverplayer.awardStat(Stats.ANIMALS_BRED);
+                assert this.partner != null;
+                CriteriaTriggers.BRED_ANIMALS.trigger(serverplayer, this.animal, this.partner, (AgeableMob)null);
+            }
+
+            int cooldown = Config.anomalocarisBreedCooldown + level.random.nextInt(1500) - level.random.nextInt(3000);
+
+            this.anomalocaris.setHasEgg(true);
+
+            this.animal.setAge(cooldown);
+            this.partner.setAge(cooldown);
+            this.animal.resetLove();
+            this.partner.resetLove();
+            RandomSource randomsource = this.animal.getRandom();
+            if (this.level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+                this.level.addFreshEntity(new ExperienceOrb(this.level, this.animal.getX(), this.animal.getY(), this.animal.getZ(),
+                        randomsource.nextInt(7) + 1));
+            }
+        }
+    }
+
+    static class AnomalocarisLayEggGoal extends MoveToBlockGoal {
+        private final Anomalocaris anomalocaris;
+
+        public AnomalocarisLayEggGoal(Anomalocaris anomalocaris, double speedModifier) {
+            super(anomalocaris, speedModifier, 16);
+            this.anomalocaris = anomalocaris;
+        }
+
+        @Override
+        public boolean canUse() {
+            return this.anomalocaris.hasEgg() && super.canUse();
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return super.canContinueToUse() && this.anomalocaris.hasEgg();
+        }
+
+        @Override
+        public void tick() {
+            super.tick();
+            if (this.isReachedTarget()) {
+                this.anomalocaris.level().setBlock(this.blockPos.above(), BlockInit.ANOMALOCARIS_ROE.get().defaultBlockState(), 3);
+                this.anomalocaris.setHasEgg(false);
+                this.anomalocaris.setInLoveTime(600);
+            }
+        }
+
+        @Override
+        public double acceptedDistance() {
+            return 2d;
+        }
+
+        @Override
+        protected boolean isValidTarget(net.minecraft.world.level.LevelReader pLevel, BlockPos pPos) {
+            return pLevel.getBlockState(pPos).is(Blocks.WATER) && pLevel.getBlockState(pPos.above()).isAir();
         }
     }
 }
