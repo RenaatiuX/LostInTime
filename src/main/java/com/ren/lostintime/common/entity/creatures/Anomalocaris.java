@@ -71,7 +71,6 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     // --- Animations ---
     protected static final RawAnimation SWIM = RawAnimation.begin().thenLoop("move.swim");
     protected static final RawAnimation OUT_OF_WATER = RawAnimation.begin().thenLoop("move.out_of_water");
-    protected static final RawAnimation GRABBED = RawAnimation.begin().thenPlay("misc.grabbed");
     public static final RawAnimation GRAB = RawAnimation.begin().thenPlayAndHold("misc.grab");
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -462,7 +461,8 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         @Override
         public boolean canUse() {
             this.target = this.anomalocaris.getTarget();
-            return this.target != null && this.target.isAlive()
+            return !this.anomalocaris.isBaby() &&
+                    this.target != null && this.target.isAlive()
                     && this.anomalocaris.getHunger() <= HUNGER_THRESHOLD
                     && !this.anomalocaris.hasGrabbedPrey()
                     && !this.anomalocaris.hasHeldItem();
@@ -470,7 +470,8 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
 
         @Override
         public boolean canContinueToUse() {
-            return this.target != null && this.target.isAlive()
+            return !this.anomalocaris.isBaby() &&
+                    this.target != null && this.target.isAlive()
                     && !this.anomalocaris.hasGrabbedPrey()
                     && !this.anomalocaris.hasHeldItem();
         }
