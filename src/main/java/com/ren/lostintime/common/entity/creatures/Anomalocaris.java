@@ -1,6 +1,5 @@
 package com.ren.lostintime.common.entity.creatures;
 
-import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.entity.AbstractBaseFish;
 import com.ren.lostintime.common.init.AttributeInit;
@@ -63,8 +62,6 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     private static final EntityDataAccessor<Float> DATA_HUNGER = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<ItemStack> DATA_HELD_ITEM = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<Optional<UUID>> DATA_CURIO_PLAYER = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.OPTIONAL_UUID);
-    private static final EntityDataAccessor<Integer> DATA_CURIO_START = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> DATA_LAST_FED = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_GRABBING = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_HAS_EGG = SynchedEntityData.defineId(Anomalocaris.class, EntityDataSerializers.BOOLEAN);
 
@@ -77,6 +74,9 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     // --- Fields ---
     private int hurtTimeCoolDown = 0;
     private int grabDamageTicks = 0;
+
+    private int curioFeedCooldown = 0;
+
 
     public Anomalocaris(EntityType<? extends AbstractBaseFish> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -114,8 +114,6 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         this.entityData.define(DATA_HUNGER, 0f);
         this.entityData.define(DATA_HELD_ITEM, ItemStack.EMPTY);
         this.entityData.define(DATA_CURIO_PLAYER, Optional.empty());
-        this.entityData.define(DATA_CURIO_START, 0);
-        this.entityData.define(DATA_LAST_FED, 0);
         this.entityData.define(DATA_HAS_EGG, false);
         this.entityData.define(DATA_GRABBING, false);
     }
@@ -125,11 +123,8 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         super.addAdditionalSaveData(tag);
         tag.putFloat("Hunger", this.getHunger());
         tag.put("HeldItem", this.getHeldItem().save(new CompoundTag()));
-        if (this.getCurioPlayer() != null && !this.getCurioPlayer().equals(Util.NIL_UUID)) {
-            tag.putUUID("CurioPlayer", this.getCurioPlayer());
-        }
-        tag.putInt("CurioStart", this.getCurioStart());
-        tag.putInt("LastFed", this.getLastFed());
+        this.entityData.get(DATA_CURIO_PLAYER).ifPresent(uuid -> tag.putUUID("CurioPlayer", uuid));
+        tag.putInt("curioFeedCooldown", this.curioFeedCooldown);
         tag.putBoolean("HasEgg", this.hasEgg());
     }
 
@@ -140,12 +135,14 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         this.setHeldItem(ItemStack.of(tag.getCompound("HeldItem")));
         if (tag.hasUUID("CurioPlayer")) {
             this.setCurioPlayer(tag.getUUID("CurioPlayer"));
-        } else {
-            this.setCurioPlayer(Util.NIL_UUID);
         }
-        this.setCurioStart(tag.getInt("CurioStart"));
-        this.setLastFed(tag.getInt("LastFed"));
+        this.curioFeedCooldown = tag.getInt("curioFeedCooldown");
         this.setHasEgg(tag.getBoolean("HasEgg"));
+    }
+
+    @Override
+    public boolean canBePickedUpWithBucket(Player player, InteractionHand hand) {
+        return this.isBaby();
     }
 
     // --- Getters & Setters ---
@@ -173,40 +170,12 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         return !this.getHeldItem().isEmpty();
     }
 
-    public UUID getCurioPlayer() {
-        return this.entityData.get(DATA_CURIO_PLAYER).orElse(Util.NIL_UUID);
+    public Optional<UUID> getCurioPlayer() {
+        return this.entityData.get(DATA_CURIO_PLAYER);
     }
 
-    public void setCurioPlayer(UUID pUuid) {
+    public void setCurioPlayer(@Nullable UUID pUuid) {
         this.entityData.set(DATA_CURIO_PLAYER, Optional.ofNullable(pUuid));
-    }
-
-    public int getCurioStart() {
-        return this.entityData.get(DATA_CURIO_START);
-    }
-
-    public void setCurioStart(int tick) {
-        this.entityData.set(DATA_CURIO_START, tick);
-    }
-
-    public int getLastFed() {
-        return this.entityData.get(DATA_LAST_FED);
-    }
-
-    public void setLastFed(int tick) {
-        this.entityData.set(DATA_LAST_FED, tick);
-    }
-
-    public boolean hasRecentlyFed(long now) {
-        return now - this.getLastFed() < 24000L;
-    }
-
-    public int getCurioTicksRemaining(long now) {
-        return (int) (now - this.getCurioStart());
-    }
-
-    public int getCurioDuration() {
-        return this.hasRecentlyFed(this.level().getGameTime()) ? 7200 : 4800;
     }
 
     public boolean hasEgg() {
@@ -248,15 +217,20 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     public void tick() {
         super.tick();
         if (!this.level().isClientSide) {
-            long time = this.level().getGameTime();
+            if (this.curioFeedCooldown > 0){
+                this.curioFeedCooldown--;
+            }
 
             float hunger = this.getHunger() - HUNGER_DECREASE_PER_TICK;
             this.setHunger(Math.max(hunger, 0.0F));
 
-            if (this.hasHeldItem() && !this.getCurioPlayer().equals(Util.NIL_UUID)) {
-                Player curioPlayer = ((ServerLevel) this.level()).getPlayerByUUID(this.getCurioPlayer());
-                if (curioPlayer != null && this.distanceToSqr(curioPlayer) < 16.0 && this.getCurioTicksRemaining(time) >= this.getCurioDuration()) {
-                    this.dropHeldItemToPlayer(curioPlayer);
+            if (this.hasHeldItem() && this.getCurioPlayer().isPresent()) {
+                Player curioPlayer = this.level().getPlayerByUUID(this.getCurioPlayer().get());
+                if (curioPlayer != null && this.distanceToSqr(curioPlayer) < 16.0) {
+                    if (this.curioFeedCooldown <= 0)
+                        this.dropHeldItemToPlayer(curioPlayer);
+                }else{
+                    this.setCurioPlayer(null);
                 }
             }
 
@@ -312,9 +286,8 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         if (!player.getInventory().add(this.getHeldItem())) {
             this.spawnAtLocation(this.getHeldItem(), 0.5F);
         }
+        this.setCurioPlayer(null);
         this.setHeldItem(ItemStack.EMPTY);
-        this.setCurioPlayer(Util.NIL_UUID);
-        this.setCurioStart(0);
         this.setGrabbing(false);
     }
 
@@ -365,7 +338,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
             this.setHeldItem(given);
             this.setGrabbing(true);
             this.setCurioPlayer(pPlayer.getUUID());
-            this.setCurioStart((int) time);
+            this.curioFeedCooldown = 24000;
             return InteractionResult.SUCCESS;
         }
 
@@ -598,11 +571,11 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
 
         @Override
         public boolean canUse() {
-            UUID playerUuid = this.anomalocaris.getCurioPlayer();
-            if (playerUuid.equals(Util.NIL_UUID) || !this.anomalocaris.hasHeldItem()) {
+            var playerUuidOptional = this.anomalocaris.getCurioPlayer();
+            if (playerUuidOptional.isEmpty() || !this.anomalocaris.hasHeldItem()) {
                 return false;
             }
-            this.targetPlayer = this.anomalocaris.level().getPlayerByUUID(playerUuid);
+            this.targetPlayer = this.anomalocaris.level().getPlayerByUUID(playerUuidOptional.get());
             return this.targetPlayer != null && this.anomalocaris.distanceToSqr(this.targetPlayer) < 256.0;
         }
 
@@ -631,7 +604,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         }
     }
 
-    static class AnomalocarisBreedGoal extends BreedGoal{
+    static class AnomalocarisBreedGoal extends BreedGoal {
 
         protected Anomalocaris anomalocaris;
 
@@ -659,7 +632,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
             if (serverplayer != null) {
                 serverplayer.awardStat(Stats.ANIMALS_BRED);
                 assert this.partner != null;
-                CriteriaTriggers.BRED_ANIMALS.trigger(serverplayer, this.animal, this.partner, (AgeableMob)null);
+                CriteriaTriggers.BRED_ANIMALS.trigger(serverplayer, this.animal, this.partner, (AgeableMob) null);
             }
 
             int cooldown = Config.anomalocarisBreedCooldown + level.random.nextInt(1500) - level.random.nextInt(3000);

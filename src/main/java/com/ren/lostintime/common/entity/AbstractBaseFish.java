@@ -24,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.network.ServerStatusPing;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractBaseFish extends LITWaterAnimal implements Bucketable {
@@ -95,7 +96,14 @@ public abstract class AbstractBaseFish extends LITWaterAnimal implements Bucketa
 
     @Override
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
-        return Bucketable.bucketMobPickup(pPlayer, pHand, this).orElse(super.mobInteract(pPlayer, pHand));
+        if (canBePickedUpWithBucket(pPlayer, pHand)) {
+            return Bucketable.bucketMobPickup(pPlayer, pHand, this).orElseGet(() -> super.mobInteract(pPlayer, pHand));
+        }
+        return super.mobInteract(pPlayer, pHand);
+    }
+
+    public boolean canBePickedUpWithBucket(Player player, InteractionHand hand){
+        return true;
     }
 
     @Override
