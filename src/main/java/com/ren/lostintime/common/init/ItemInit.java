@@ -35,6 +35,7 @@ public class ItemInit {
     public static final RegistryObject<Item> PANEL = registerSimple("panel");
     public static final RegistryObject<Item> REDSTONE_CHIP = registerSimple("redstone_chip");
     public static final RegistryObject<Item> HYLONOMUS_EGG =  registerEgg("hylonomus_egg", EntityInit.HYLONOMUS);
+    public static final RegistryObject<Item> ENDOCERAS_SHELL_FRAGMENT = registerSimple("endoceras_shell_fragment");
 
     //ASPECT
     public static final RegistryObject<Item> ASPECT_DIFFERENTIATION = registerSimple("aspect_differentiation");

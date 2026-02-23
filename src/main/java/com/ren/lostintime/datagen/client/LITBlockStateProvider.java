@@ -74,14 +74,17 @@ public class LITBlockStateProvider extends BlockStateProvider {
         spongeBlock(BlockInit.BARREL_SPONGE.get());
         spongeBlock(BlockInit.DEAD_BARREL_SPONGE.get());
 
-        coralPlant(BlockInit.DEAD_GLASS_SPONGE);
-        coralPlant(BlockInit.GLASS_SPONGE);
+        simplePlant(BlockInit.DEAD_GLASS_SPONGE);
+        simplePlant(BlockInit.GLASS_SPONGE);
+        simplePlant(BlockInit.CLADOPHLEBIS);
+        simplePlant(BlockInit.CONIOPTERIS);
+        simplePlant(BlockInit.COOKSONIA);
 
         doubleCoralPlant(BlockInit.DEAD_LARGE_PIPE_SPONGE);
         doubleCoralPlant(BlockInit.LARGE_PIPE_SPONGE);
     }
 
-    private void coralPlant(RegistryObject<Block> blockRO) {
+    private void simplePlant(RegistryObject<Block> blockRO) {
         Block block = blockRO.get();
         String name = blockName(block);
 

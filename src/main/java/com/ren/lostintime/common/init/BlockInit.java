@@ -43,7 +43,6 @@ public class BlockInit {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.DEAD_TUBE_CORAL_BLOCK)));
     public static final RegistryObject<Block> BARREL_SPONGE = registerBlock("barrel_sponge",
             () -> new LITSpongeBlock(DEAD_BARREL_SPONGE, true, BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL_BLOCK)));
-
     public static final RegistryObject<Block> DEAD_GLASS_SPONGE = registerBlock("dead_glass_sponge",
             () -> new BaseCoralPlantBlock(BlockBehaviour.Properties.copy(Blocks.DEAD_TUBE_CORAL)));
     public static final RegistryObject<Block> GLASS_SPONGE = registerBlock("glass_sponge",
@@ -64,11 +63,17 @@ public class BlockInit {
             () -> new BaseCoralPlantBlock(BlockBehaviour.Properties.copy(Blocks.DEAD_TUBE_CORAL)));
     public static final RegistryObject<Block> WOOL_SPONGE = registerBlock("wool_sponge",
             () -> new CoralPlantBlock(DEAD_WOOL_SPONGE.get(), BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL)));
-
     public static final RegistryObject<Block> DEAD_LARGE_PIPE_SPONGE = registerBlock("dead_large_pipe_sponge",
             () -> new LITDeadTallSpongeBlock(BlockBehaviour.Properties.copy(Blocks.DEAD_TUBE_CORAL)));
     public static final RegistryObject<Block> LARGE_PIPE_SPONGE = registerBlock("large_pipe_sponge",
             () -> new LITTallSpongeBlock(DEAD_LARGE_PIPE_SPONGE, BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL)));
+
+    public static final RegistryObject<Block> CLADOPHLEBIS = registerBlock("cladophlebis",
+            () -> new LITFernBlock(BlockBehaviour.Properties.copy(Blocks.FERN)));
+    public static final RegistryObject<Block> CONIOPTERIS = registerBlock("coniopteris",
+            () -> new LITFernBlock(BlockBehaviour.Properties.copy(Blocks.FERN)));
+    public static final RegistryObject<Block> COOKSONIA = registerBlock("cooksonia",
+            () -> new CooksoniaBlock(BlockBehaviour.Properties.copy(Blocks.FERN)));
 
     //SAPLINGS
     public static final RegistryObject<Block> MANGO_SAPLING = registerBlock("mango_sapling",
