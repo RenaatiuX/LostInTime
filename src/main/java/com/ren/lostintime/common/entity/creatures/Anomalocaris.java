@@ -18,6 +18,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
@@ -42,7 +43,7 @@ import java.util.UUID;
 public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
 
     // --- Constants ---
-    private static final float HUNGER_THRESHOLD = 99.0F;
+    private static final float HUNGER_THRESHOLD = 70.0F;
     private static final float PREY_HEIGHT_MAX = 0.5F;
     private static final float HUNGER_DECREASE_PER_TICK = 1.0F / 400.0F;
     private static final float HUNGER_GAIN_PER_PREY = 30.0F;
@@ -79,10 +80,10 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         this.goalSelector.addGoal(1, new TryFindWaterGoal(this));
         this.goalSelector.addGoal(2, new CuriositySwimGoal(this));
         this.goalSelector.addGoal(3, new AnomalocarisGrabAttackGoal(this, 1.2D, true));
-        this.goalSelector.addGoal(4, new RandomSwimmingGoal(this, 1.0D, 10));
+        this.goalSelector.addGoal(4, new AnomalocarisSwimmingGoal(this, 1.0D, 10));
         this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
-        
+
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, false, this::isSuitablePrey));
     }
 
@@ -144,7 +145,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         this.entityData.set(DATA_HUNGER, Mth.clamp(hunger, 0.0F, getMaxHunger()));
     }
 
-    public float getMaxHunger(){
+    public float getMaxHunger() {
         return (float) this.getAttributeValue(AttributeInit.MAX_HUNGER.get());
     }
 
@@ -236,7 +237,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         super.tick();
         if (!this.level().isClientSide) {
             long time = this.level().getGameTime();
-            
+
             float hunger = this.getHunger() - HUNGER_DECREASE_PER_TICK;
             this.setHunger(Math.max(hunger, 0.0F));
 
@@ -354,12 +355,12 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
             this.setCurioStart((int) time);
             return InteractionResult.SUCCESS;
         }
-        
+
         if (this.hasHeldItem() && this.distanceToSqr(pPlayer) < 9.0) {
             this.dropHeldItemToPlayer(pPlayer);
             return InteractionResult.SUCCESS;
         }
-        
+
         return super.mobInteract(pPlayer, pHand);
     }
 
@@ -399,7 +400,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers
                 .add(new AnimationController<>(this, "move", 5, this::movePredicate))
-                .add(new AnimationController<>(this, "grab", 5, this::grabPredicate).triggerableAnim("grab", GRAB));
+                .add(new AnimationController<>(this, "grab", 25, this::grabPredicate));
     }
 
     protected <E extends Anomalocaris> PlayState movePredicate(final AnimationState<E> event) {
@@ -415,7 +416,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
 
     private <E extends Anomalocaris> PlayState grabPredicate(AnimationState<E> event) {
         if (this.hasHeldItem() || this.hasGrabbedPrey()) {
-            event.getController().setAnimation(GRABBED);
+            event.getController().setAnimation(GRAB);
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -446,15 +447,15 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         @Override
         public boolean canUse() {
             this.target = this.anomalocaris.getTarget();
-            return this.target != null && this.target.isAlive() 
-                    && this.anomalocaris.getHunger() <= HUNGER_THRESHOLD 
+            return this.target != null && this.target.isAlive()
+                    && this.anomalocaris.getHunger() <= HUNGER_THRESHOLD
                     && !this.anomalocaris.hasGrabbedPrey()
                     && !this.anomalocaris.hasHeldItem();
         }
 
         @Override
         public boolean canContinueToUse() {
-            return this.target != null && this.target.isAlive() 
+            return this.target != null && this.target.isAlive()
                     && !this.anomalocaris.hasGrabbedPrey()
                     && !this.anomalocaris.hasHeldItem();
         }
@@ -466,8 +467,105 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
                 this.resetAttackCooldown();
                 this.mob.swing(InteractionHand.MAIN_HAND);
                 this.anomalocaris.grabPrey(this.target);
-                anomalocaris.triggerAnim("grab", "grab");
             }
+        }
+    }
+
+    static class AnomalocarisSwimmingGoal extends Goal {
+
+        public static final int DEFAULT_INTERVAL = 120;
+        protected final Anomalocaris mob;
+        protected double wantedX;
+        protected double wantedY;
+        protected double wantedZ;
+        protected final double speedModifier;
+        protected int interval;
+        protected boolean forceTrigger;
+        private final boolean checkNoActionTime;
+
+        public AnomalocarisSwimmingGoal(Anomalocaris pMob, double pSpeedModifier) {
+            this(pMob, pSpeedModifier, DEFAULT_INTERVAL);
+        }
+
+        public AnomalocarisSwimmingGoal(Anomalocaris pMob, double pSpeedModifier, int pInterval) {
+            this(pMob, pSpeedModifier, pInterval, true);
+        }
+
+        public AnomalocarisSwimmingGoal(Anomalocaris pMob, double pSpeedModifier, int pInterval, boolean pCheckNoActionTime) {
+            this.mob = pMob;
+            this.speedModifier = pSpeedModifier;
+            this.interval = pInterval;
+            this.checkNoActionTime = pCheckNoActionTime;
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE));
+        }
+
+        /**
+         * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
+         * method as well.
+         */
+        public boolean canUse() {
+            if (!this.forceTrigger) {
+                if (this.checkNoActionTime && this.mob.getNoActionTime() >= 100) {
+                    return false;
+                }
+
+                if (this.mob.getRandom().nextInt(reducedTickDelay(this.interval)) != 0) {
+                    return false;
+                }
+            }
+
+            Vec3 vec3 = this.getPosition();
+            if (vec3 == null) {
+                return false;
+            } else {
+                this.wantedX = vec3.x;
+                this.wantedY = vec3.y;
+                this.wantedZ = vec3.z;
+                this.forceTrigger = false;
+                return true;
+            }
+
+        }
+
+        @javax.annotation.Nullable
+        protected Vec3 getPosition() {
+            return BehaviorUtils.getRandomSwimmablePos(this.mob, 10, 7);
+        }
+
+        /**
+         * Returns whether an in-progress EntityAIBase should continue executing
+         */
+        public boolean canContinueToUse() {
+            return !this.mob.getNavigation().isDone();
+        }
+
+        /**
+         * Execute a one shot task or start executing a continuous task
+         */
+        public void start() {
+            this.mob.getNavigation().moveTo(this.wantedX, this.wantedY, this.wantedZ, this.speedModifier);
+        }
+
+        /**
+         * Reset the task's internal state. Called when this task is interrupted by another one
+         */
+        public void stop() {
+            this.mob.getNavigation().stop();
+            super.stop();
+        }
+
+        /**
+         * Makes task to bypass chance
+         */
+        public void trigger() {
+            this.forceTrigger = true;
+        }
+
+        /**
+         * Changes task random possibility for execution
+         */
+        public void setInterval(int pNewchance) {
+            this.interval = pNewchance;
         }
     }
 
@@ -495,23 +593,23 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         @Override
         public void tick() {
             if (this.targetPlayer == null) return;
-            
+
             this.anomalocaris.getLookControl().setLookAt(this.targetPlayer, 30.0F, 30.0F);
-            
+
             Vec3 vecToPlayer = this.targetPlayer.position().subtract(this.anomalocaris.position());
             vecToPlayer = new Vec3(vecToPlayer.x, 0, vecToPlayer.z);
-            
+
             if (vecToPlayer.lengthSqr() < 1.0E-4) return;
 
             float radius = 4.0F;
             Vec3 targetPos = this.targetPlayer.position().add(
-                Math.cos(circleAngle) * radius, 
-                1.0 + Math.sin(circleTicks * 0.05) * 0.5, 
-                Math.sin(circleAngle) * radius
+                    Math.cos(circleAngle) * radius,
+                    1.0 + Math.sin(circleTicks * 0.05) * 0.5,
+                    Math.sin(circleAngle) * radius
             );
 
             this.anomalocaris.getNavigation().moveTo(targetPos.x, targetPos.y, targetPos.z, 1.0D);
-            
+
             this.circleAngle += 0.05F;
             this.circleTicks++;
         }
