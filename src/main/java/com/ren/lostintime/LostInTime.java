@@ -59,6 +59,7 @@ public class LostInTime {
             event.accept(ItemInit.OPAL);
             event.accept(ItemInit.SPINEL);
             event.accept(ItemInit.HYLONOMUS_EGG);
+            event.accept(ItemInit.ENDOCERAS_SHELL_FRAGMENT);
 
             event.accept(ItemInit.DEVONIAN_FOSSIL);
             event.accept(ItemInit.CAMBRIAN_FOSSIL);
@@ -198,6 +199,9 @@ public class LostInTime {
             event.accept(BlockInit.DODO_EGG);
             event.accept(BlockInit.DEAD_BARREL_SPONGE);
             event.accept(BlockInit.BARREL_SPONGE);
+            event.accept(BlockInit.CLADOPHLEBIS);
+            event.accept(BlockInit.CONIOPTERIS);
+            event.accept(BlockInit.COOKSONIA);
             event.accept(ItemInit.BOTHRIOLEPIS_ROE);
             event.accept(ItemInit.ANOMALOCARIS_ROE);
 

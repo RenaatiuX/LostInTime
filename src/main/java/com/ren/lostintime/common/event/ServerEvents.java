@@ -55,7 +55,7 @@ public class ServerEvents {
                     20, 2, 0.02F)));
             trades.get(1).add(new LITItemTrade(
                     RandomItemStackSource.of(LITTags.Items.UNIDENTIFIED_FOSSIL, 1),
-                    null,
+                    RandomItemStackSource.empty(),
                     RandomItemStackSource.of(Items.EMERALD, 1), 12, 2, 0.02F));
 
             trades.get(2).add((pTrader, pRandom) -> new MerchantOffer(
@@ -65,11 +65,11 @@ public class ServerEvents {
 
             trades.get(3).add(new LITItemTrade(
                     RandomItemStackSource.of(Items.EMERALD, 8),
-                    null,
+                    RandomItemStackSource.empty(),
                     RandomItemStackSource.of(ItemInit.DODO_FOSSIL_MOUNT.get(), 1), 12, 2, 0.02F));
             trades.get(3).add(new LITItemTrade(
                     RandomItemStackSource.of(Items.EMERALD, 2),
-                    null,
+                    RandomItemStackSource.empty(),
                     RandomItemStackSource.of(Blocks.BONE_BLOCK.asItem(), 1), 10, 2, 0.02F));
 
             trades.get(4).add(new LITItemTrade(

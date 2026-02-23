@@ -29,6 +29,10 @@ public class RandomItemStackSource {
         return new RandomItemStackSource(null, tag, count);
     }
 
+    public static RandomItemStackSource empty() {
+        return new RandomItemStackSource(null, null, 0);
+    }
+
     public Optional<ItemStack> resolve(RandomSource random) {
         if (item != null) {
             return Optional.of(new ItemStack(item, count));
@@ -43,5 +47,4 @@ public class RandomItemStackSource {
 
         return Optional.empty();
     }
-
 }
