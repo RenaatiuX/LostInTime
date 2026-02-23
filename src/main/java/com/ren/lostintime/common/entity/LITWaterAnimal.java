@@ -168,12 +168,13 @@ public abstract class LITWaterAnimal extends LITAnimal {
         return true;
     }
 
-    public static class AgeableWaterAnimalGroupData implements SpawnGroupData {
+    public static class AgeableWaterAnimalGroupData extends AgeableMob.AgeableMobGroupData {
         private int groupSize;
         private final boolean shouldSpawnBaby;
         private final float babySpawnChance;
 
         private AgeableWaterAnimalGroupData(boolean pShouldSpawnBaby, float pBabySpawnChance) {
+            super(pShouldSpawnBaby);
             this.shouldSpawnBaby = pShouldSpawnBaby;
             this.babySpawnChance = pBabySpawnChance;
         }

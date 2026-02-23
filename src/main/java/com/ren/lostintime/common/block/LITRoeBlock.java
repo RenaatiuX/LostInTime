@@ -1,7 +1,5 @@
 package com.ren.lostintime.common.block;
 
-import com.ren.lostintime.common.entity.AgeableWaterAnimal;
-import com.ren.lostintime.common.entity.LITAnimal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

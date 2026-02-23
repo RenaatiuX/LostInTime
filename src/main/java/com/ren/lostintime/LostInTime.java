@@ -58,6 +58,7 @@ public class LostInTime {
             event.accept(ItemInit.REDSTONE_CHIP);
             event.accept(ItemInit.OPAL);
             event.accept(ItemInit.SPINEL);
+            event.accept(ItemInit.HYLONOMUS_EGG);
 
             event.accept(ItemInit.DEVONIAN_FOSSIL);
             event.accept(ItemInit.CAMBRIAN_FOSSIL);
@@ -188,6 +189,7 @@ public class LostInTime {
             event.accept(ItemInit.GUARDIAN_SPIKE);
 
             event.accept(ItemInit.DODO_SPAWN_EGG);
+            event.accept(ItemInit.ENDOCERAS_SPAWN_EGG);
 
             event.accept(BlockInit.MANGO_LEAVES);
             event.accept(BlockInit.MANGO_LOG);

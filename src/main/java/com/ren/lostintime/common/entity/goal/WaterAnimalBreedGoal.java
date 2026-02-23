@@ -1,6 +1,5 @@
 package com.ren.lostintime.common.entity.goal;
 
-import com.ren.lostintime.common.entity.AgeableWaterAnimal;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
@@ -10,9 +9,9 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 
-public class WaterAnimalBreedGoal extends Goal {
+public class WaterAnimalBreedGoal {
 
-    private static final TargetingConditions PARTNER_TARGETING = TargetingConditions.forNonCombat().range(8.0D).ignoreLineOfSight();
+    /*private static final TargetingConditions PARTNER_TARGETING = TargetingConditions.forNonCombat().range(8.0D).ignoreLineOfSight();
     protected final AgeableWaterAnimal animal;
     private final Class<? extends AgeableWaterAnimal> partnerClass;
     protected final Level level;
@@ -83,5 +82,5 @@ public class WaterAnimalBreedGoal extends Goal {
 
     protected void breed() {
         this.animal.spawnChildFromBreeding((ServerLevel)this.level, this.partner);
-    }
+    }*/
 }

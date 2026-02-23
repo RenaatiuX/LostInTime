@@ -2,10 +2,7 @@ package com.ren.lostintime.client.event;
 
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.client.particles.SleepingParticle;
-import com.ren.lostintime.client.render.entity.AnomalocarisRender;
-import com.ren.lostintime.client.render.entity.BothriolepisRender;
-import com.ren.lostintime.client.render.entity.DodoRender;
-import com.ren.lostintime.client.render.entity.HylonomusRender;
+import com.ren.lostintime.client.render.entity.*;
 import com.ren.lostintime.client.render.projectile.GuardianSpikeRender;
 import com.ren.lostintime.client.screen.IdentificationScreen;
 import com.ren.lostintime.client.screen.SoulConfiguratorScreen;
@@ -16,6 +13,7 @@ import com.ren.lostintime.common.init.EntityInit;
 import com.ren.lostintime.common.init.MenuInit;
 import com.ren.lostintime.common.init.ParticlesInit;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
@@ -40,8 +38,10 @@ public class ClientEvents {
         event.registerEntityRenderer(EntityInit.ANOMALOCARIS.get(), AnomalocarisRender::new);
         event.registerEntityRenderer(EntityInit.BOTHRIOLEPIS.get(), BothriolepisRender::new);
         event.registerEntityRenderer(EntityInit.HYLONOMUS.get(), HylonomusRender::new);
+        event.registerEntityRenderer(EntityInit.ENDOCERAS.get(), EndocerasRender::new);
 
         event.registerEntityRenderer(EntityInit.GUARDIAN_SPIKE.get(), GuardianSpikeRender::new);
+        event.registerEntityRenderer(EntityInit.LIT_THROWN_EGG.get(), ThrownItemRenderer::new);
     }
 
     @SubscribeEvent

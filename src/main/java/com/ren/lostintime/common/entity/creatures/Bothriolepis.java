@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -54,15 +55,17 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
 
     private int panicTicks = 0;
 
-    public Bothriolepis(EntityType<? extends WaterAnimal> pEntityType, Level pLevel) {
+    public Bothriolepis(EntityType<? extends AbstractBaseFish> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-        this.setMaxUpStep(1.0F);
+
     }
 
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new MoveToWaterGoal(this));
-        this.goalSelector.addGoal(1, new PanicGoal(this, 1.6D));
+        this.goalSelector.addGoal(1, new PanicGoal(this, 1.5D));
+        this.goalSelector.addGoal(3, new IdleOnFloorGoal(this));
+        this.goalSelector.addGoal(4, new BenthicWanderGoal(this));
         this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
     }
@@ -70,7 +73,7 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 16.0)
-                .add(Attributes.MOVEMENT_SPEED, 0.7D)
+                .add(Attributes.MOVEMENT_SPEED, 0.3D)
                 .add(Attributes.FOLLOW_RANGE, 8.0);
     }
 
@@ -97,9 +100,18 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
     }
 
     @Override
+    public boolean canFlop() {
+        return false;
+    }
+
+    @Override
+    public boolean floatsUp() {
+        return false;
+    }
+
+    @Override
     public boolean hurt(DamageSource source, float amount) {
         Entity direct = source.getDirectEntity();
-        boolean result = super.hurt(source, amount);
 
         if (direct instanceof Projectile projectile) {
             Vec3 bounce = projectile.getDeltaMovement().scale(-0.6D);
@@ -107,6 +119,8 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
             this.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 1.0F);
             return false;
         }
+
+        boolean result = super.hurt(source, amount);
 
         if (result) {
             int ticks = 100 + this.random.nextInt(100);
@@ -171,26 +185,32 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
         }
     }
 
+    public boolean isCrepuscularOrRaining() {
+        long time = this.level().getDayTime() % 24000;
+        boolean isDawnOrDusk = (time > 22000 || time < 2000) || (time > 11000 && time < 13000);
+        return isDawnOrDusk || this.level().isRaining();
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "movement", 10, this::movePredicate));
+        controllers.add(new AnimationController<>(this, "movement", 5, this::movePredicate));
     }
 
     protected <E extends Bothriolepis> PlayState movePredicate(AnimationState<E> event) {
-        if (this.onGround()) {
-            return event.setAndContinue(LAND_MOVE);
-        }
-
-        if (this.isInWater()) {
-            if (this.getDeltaMovement().horizontalDistanceSqr() > 1e-6) {
-                if (this.isSprinting()) {
-                    return event.setAndContinue(SWIM_WATER);
-                } else {
-                    return event.setAndContinue(SWIM_FLOOR);
-                }
+        if (!this.isInWater()) {
+            if (this.getDeltaMovement().horizontalDistanceSqr() > 1E-6) {
+                return event.setAndContinue(LAND_MOVE);
+            } else {
+                return event.setAndContinue(IDLE);
             }
         }
-
+        if (this.getDeltaMovement().horizontalDistanceSqr() > 1E-6) {
+            if (this.isSprinting()) {
+                return event.setAndContinue(SWIM_WATER);
+            } else {
+                return event.setAndContinue(SWIM_FLOOR);
+            }
+        }
         return event.setAndContinue(IDLE);
     }
 
@@ -212,7 +232,7 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
 
         public MoveToWaterGoal(Bothriolepis fish) {
             this.fish = fish;
-            this.setFlags(EnumSet.of(Flag.MOVE));
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         }
 
         @Override
@@ -224,20 +244,45 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
         }
 
         @Override
-        public void start() {
-            if (targetWater != null) {
-                fish.getNavigation().moveTo(
-                        targetWater.getX() + 0.5,
-                        targetWater.getY() + 0.5,
-                        targetWater.getZ() + 0.5,
-                        1.2D
-                );
+        public boolean canContinueToUse() {
+            return fish.isOutOfWater() && targetWater != null;
+        }
+
+        @Override
+        public void stop() {
+            if (fish.isInWater()) {
+                Vec3 look = fish.getLookAngle();
+                fish.setDeltaMovement(look.x * 0.4D, -0.2D, look.z * 0.4D);
             }
         }
 
         @Override
-        public boolean canContinueToUse() {
-            return fish.isOutOfWater() && targetWater != null;
+        public void tick() {
+            if (targetWater != null) {
+                double dx = targetWater.getX() + 0.5D - fish.getX();
+                double dz = targetWater.getZ() + 0.5D - fish.getZ();
+                double distance = Math.sqrt(dx * dx + dz * dz);
+
+                fish.getLookControl().setLookAt(targetWater.getX() + 0.5D, targetWater.getY() + 0.5D,
+                        targetWater.getZ() + 0.5D, 10.0F, (float)fish.getMaxHeadXRot());
+
+                if (distance > 0.5D) {
+                    float targetYaw = (float) (net.minecraft.util.Mth.atan2(dz, dx) * (180F / Math.PI)) - 90.0F;
+                    fish.setYRot(net.minecraft.util.Mth.approachDegrees(fish.getYRot(), targetYaw, 5.0F));
+                    fish.yBodyRot = fish.getYRot();
+
+                    if (fish.onGround()) {
+                        Vec3 currentMovement = fish.getDeltaMovement();
+                        Vec3 targetMovement = new Vec3(dx, 0, dz).normalize().scale(0.02D);
+
+                        fish.setDeltaMovement(
+                                currentMovement.x * 0.5D + targetMovement.x,
+                                currentMovement.y,
+                                currentMovement.z * 0.5D + targetMovement.z
+                        );
+                    }
+                }
+            }
         }
 
         private BlockPos findNearbyWater() {
@@ -305,6 +350,116 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
                     this.itemEntity = null;
                 }
             }
+        }
+    }
+
+    static class BenthicWanderGoal extends Goal {
+
+        private final Bothriolepis fish;
+        private double wantedX, wantedY, wantedZ;
+
+        public BenthicWanderGoal(Bothriolepis fish) {
+            this.fish = fish;
+            this.setFlags(EnumSet.of(Flag.MOVE));
+        }
+
+        @Override
+        public boolean canUse() {
+            if (!fish.isInWater() || fish.panicTicks > 0) return false;
+
+            boolean isFloating = !fish.level().getBlockState(fish.blockPosition().below()).isSolidRender(fish.level(), fish.blockPosition().below());
+            int chance = isFloating ? 5 : (fish.isCrepuscularOrRaining() ? 30 : 80);
+            if (fish.getRandom().nextInt(chance) != 0) {
+                return false;
+            }
+
+            Vec3 target = this.getBenthicPos();
+            if (target == null) {
+                return false;
+            } else {
+                this.wantedX = target.x;
+                this.wantedY = target.y;
+                this.wantedZ = target.z;
+                return true;
+            }
+        }
+
+        @Override
+        public void start() {
+            this.fish.getNavigation().moveTo(this.wantedX, this.wantedY, this.wantedZ, 0.3D);
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return !this.fish.getNavigation().isDone() && fish.panicTicks == 0;
+        }
+
+        @Nullable
+        private Vec3 getBenthicPos() {
+            RandomSource random = this.fish.getRandom();
+            for (int i = 0; i < 10; i++) {
+                int dx = random.nextInt(16) - 8;
+                int dz = random.nextInt(16) - 8;
+                int dy = random.nextInt(8) - 4;
+
+                BlockPos pos = this.fish.blockPosition().offset(dx, dy, dz);
+
+                if (!this.fish.level().getFluidState(pos).is(Fluids.WATER)) continue;
+
+                while (this.fish.level().getFluidState(pos.below()).is(Fluids.WATER) && pos.getY() > this.fish.level().getMinBuildHeight()) {
+                    pos = pos.below();
+                }
+
+                if (this.fish.level().getBlockState(pos.below()).isSolidRender(this.fish.level(), pos.below())) {
+                    return Vec3.atBottomCenterOf(pos);
+                }
+            }
+            return null;
+        }
+    }
+
+    static class IdleOnFloorGoal extends Goal {
+
+        private final Bothriolepis fish;
+        private int idleTime;
+
+        public IdleOnFloorGoal(Bothriolepis fish) {
+            this.fish = fish;
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP));
+        }
+
+        @Override
+        public boolean canUse() {
+            if (!fish.isInWater() || fish.panicTicks > 0) return false;
+
+            BlockPos pos = fish.blockPosition();
+            if (!fish.level().getBlockState(pos.below()).isSolidRender(fish.level(), pos.below())) {
+                return false;
+            }
+
+            int chance = fish.isCrepuscularOrRaining() ? 150 : 50;
+            return fish.getRandom().nextInt(chance) == 0;
+        }
+
+        @Override
+        public void start() {
+            int maxTicks = fish.isCrepuscularOrRaining() ? 1200 : 2400;
+            this.idleTime = (int) (maxTicks * 0.7) + fish.getRandom().nextInt((int) (maxTicks * 0.3));
+            fish.getNavigation().stop();
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return this.idleTime > 0 && fish.panicTicks == 0 && fish.isInWater();
+        }
+
+        @Override
+        public void tick() {
+            this.idleTime--;
+            fish.getNavigation().stop();
+            fish.setDeltaMovement(0.0D, fish.getDeltaMovement().y < 0 ? fish.getDeltaMovement().y : -0.01D, 0.0D);
+            fish.setYHeadRot(fish.yBodyRot);
+            fish.setXRot(0.0F);
         }
     }
 }

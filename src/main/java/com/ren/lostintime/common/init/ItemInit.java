@@ -3,6 +3,7 @@ package com.ren.lostintime.common.init;
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.item.GoldenEyeItem;
 import com.ren.lostintime.common.item.GuardianSpikeItem;
+import com.ren.lostintime.common.item.LITEggItem;
 import com.ren.lostintime.common.item.RoeBucketItem;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
@@ -33,6 +34,7 @@ public class ItemInit {
     public static final RegistryObject<Item> SOUL_POWDER = registerSimple("soul_powder");
     public static final RegistryObject<Item> PANEL = registerSimple("panel");
     public static final RegistryObject<Item> REDSTONE_CHIP = registerSimple("redstone_chip");
+    public static final RegistryObject<Item> HYLONOMUS_EGG =  registerEgg("hylonomus_egg", EntityInit.HYLONOMUS);
 
     //ASPECT
     public static final RegistryObject<Item> ASPECT_DIFFERENTIATION = registerSimple("aspect_differentiation");
@@ -190,9 +192,15 @@ public class ItemInit {
     //SPAWN EGG
     public static final RegistryObject<Item> DODO_SPAWN_EGG = registerSpawnEgg("dodo_spawn_egg",
             EntityInit.DODO, 3679516, 7164742);
+    public static final RegistryObject<Item> ENDOCERAS_SPAWN_EGG = registerSpawnEgg("endoceras_spawn_egg",
+            EntityInit.ENDOCERAS, 3679516, 7164742);
 
     private static RegistryObject<Item> registerSimple(final String name) {
         return ITEMS.register(name, () -> new Item(new Item.Properties()));
+    }
+
+    private static RegistryObject<Item> registerEgg(final String name, Supplier<? extends EntityType<? extends Mob>> entityType) {
+        return ITEMS.register(name, () -> new LITEggItem(new Item.Properties(), entityType));
     }
 
     public static RegistryObject<Item> registerFood(final String name, FoodProperties foodProperties) {
