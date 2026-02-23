@@ -205,6 +205,7 @@ public class LostInTime {
             event.accept(BlockInit.COOKSONIA);
             event.accept(ItemInit.BOTHRIOLEPIS_ROE);
             event.accept(ItemInit.ANOMALOCARIS_ROE);
+            event.accept(BlockInit.TITANOSARCOLITES);
 
             event.accept(ItemInit.ANOMALOCARIS_ROE_BUCKET);
             event.accept(ItemInit.BOTHRIOLEPIS_ROE_BUCKET);

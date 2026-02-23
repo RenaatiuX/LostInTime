@@ -2,6 +2,7 @@ package com.ren.lostintime.datagen.client;
 
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.block.*;
+import com.ren.lostintime.common.block.properties.TitanosarcolitesPart;
 import com.ren.lostintime.common.init.BlockInit;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
@@ -46,6 +47,8 @@ public class LITBlockStateProvider extends BlockStateProvider {
         createDodoEggModel(BlockInit.DODO_EGG.get(), SingleEggBlock.HATCH);
         createBabyRoeBlock(BlockInit.BOTHRIOLEPIS_ROE.get());
         createBabyRoeBlock(BlockInit.ANOMALOCARIS_ROE.get());
+        customParentBlock(BlockInit.TITANOSARCOLITES, "titanosarcolites_model", "0");
+        giantTitanosarcolites(BlockInit.GIANT_TITANOSARCOLITES.get());
 
         block(BlockInit.QUATERNARY_FOSSIL_BLOCK.get());
         block(BlockInit.NEOGENE_FOSSIL_BLOCK.get());
@@ -350,6 +353,68 @@ public class LITBlockStateProvider extends BlockStateProvider {
                 "_bottom"), modLoc("block/" + name + "_top"));
         simpleBlock(block, model);
         simpleBlockItem(block, model);
+    }
+
+    private void customParentBlock(RegistryObject<Block> blockRO, String customParentName, String textureKey) {
+        Block block = blockRO.get();
+        String name = blockName(block);
+        ModelFile model = models().withExistingParent(name, modLoc("block/" + customParentName))
+                .texture(textureKey, modLoc("block/" + name))
+                .texture("particle", modLoc("block/" + name))
+                .renderType("cutout");
+
+        horizontalBlock(block, model);
+        simpleBlockItem(block, model);
+    }
+
+    private void giantTitanosarcolites(Block block) {
+        String name = blockName(block);
+
+        ModelFile pincerLeft = models().withExistingParent(name + "_pincer_left",
+                        modLoc("block/giant_titanosarcolites_big_3"))
+                .texture("0", modLoc("block/titanosarcolites_big_top_lower"))
+                .texture("1", modLoc("block/titanosarcolites_big_side_upper"))
+                .renderType("cutout");
+        ModelFile pincerRight = models().withExistingParent(name + "_pincer_right",
+                        modLoc("block/giant_titanosarcolites_big_4"))
+                .texture("0", modLoc("block/titanosarcolites_big_top_lower"))
+                .texture("1", modLoc("block/titanosarcolites_big_side_upper"))
+                .renderType("cutout");
+
+        ModelFile baseLeft = models().withExistingParent(name + "_base_left",
+                        modLoc("block/giant_titanosarcolites_big_2"))
+                .texture("0", modLoc("block/titanosarcolites_big_top_upper"))
+                .texture("1", modLoc("block/titanosarcolites_big_side_upper"))
+                .texture("particle", modLoc("block/titanosarcolites_big_top_upper"))
+                .renderType("cutout");
+
+        ModelFile baseRight = models().withExistingParent(name + "_base_right",
+                        modLoc("block/giant_titanosarcolites_big_2"))
+                .texture("0", modLoc("block/titanosarcolites_big_top_upper"))
+                .texture("1", modLoc("block/titanosarcolites_big_side_upper"))
+                .texture("particle", modLoc("block/titanosarcolites_big_top_upper"))
+                .renderType("cutout");
+
+        getVariantBuilder(block).forAllStates(state -> {
+            TitanosarcolitesPart part = state.getValue(GiantTitanosarcolitesBlock.PART);
+            Direction facing = state.getValue(GiantTitanosarcolitesBlock.FACING);
+
+            ModelFile model = switch (part) {
+                case PINCER_LEFT -> pincerLeft;
+                case PINCER_RIGHT -> pincerRight;
+                case BASE_LEFT -> baseLeft;
+                case BASE_RIGHT -> baseRight;
+            };
+
+            int yRot = (int) facing.toYRot();
+
+            return ConfiguredModel.builder()
+                    .modelFile(model)
+                    .rotationY(yRot)
+                    .build();
+        });
+
+        simpleBlockItem(block, baseLeft);
     }
 
     protected void block(Block block, ModelFile model) {

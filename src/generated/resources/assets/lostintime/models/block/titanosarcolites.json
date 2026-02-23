@@ -1,0 +1,8 @@
+{
+  "parent": "lostintime:block/titanosarcolites_model",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "0": "lostintime:block/titanosarcolites",
+    "particle": "lostintime:block/titanosarcolites"
+  }
+}

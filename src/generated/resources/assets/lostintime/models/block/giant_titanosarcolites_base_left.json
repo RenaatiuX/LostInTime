@@ -1,0 +1,9 @@
+{
+  "parent": "lostintime:block/giant_titanosarcolites_big_2",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "0": "lostintime:block/titanosarcolites_big_top_upper",
+    "1": "lostintime:block/titanosarcolites_big_side_upper",
+    "particle": "lostintime:block/titanosarcolites_big_top_upper"
+  }
+}

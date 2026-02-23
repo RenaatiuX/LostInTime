@@ -67,13 +67,16 @@ public class BlockInit {
             () -> new LITDeadTallSpongeBlock(BlockBehaviour.Properties.copy(Blocks.DEAD_TUBE_CORAL)));
     public static final RegistryObject<Block> LARGE_PIPE_SPONGE = registerBlock("large_pipe_sponge",
             () -> new LITTallSpongeBlock(DEAD_LARGE_PIPE_SPONGE, BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL)));
-
     public static final RegistryObject<Block> CLADOPHLEBIS = registerBlock("cladophlebis",
             () -> new LITFernBlock(BlockBehaviour.Properties.copy(Blocks.FERN)));
     public static final RegistryObject<Block> CONIOPTERIS = registerBlock("coniopteris",
             () -> new LITFernBlock(BlockBehaviour.Properties.copy(Blocks.FERN)));
     public static final RegistryObject<Block> COOKSONIA = registerBlock("cooksonia",
             () -> new CooksoniaBlock(BlockBehaviour.Properties.copy(Blocks.FERN)));
+    public static final RegistryObject<Block> TITANOSARCOLITES = registerBlock("titanosarcolites",
+            () -> new TitanosarcolitesBlock(BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL_BLOCK)));
+    public static final RegistryObject<Block> GIANT_TITANOSARCOLITES = registerBlock("giant_titanosarcolites",
+            () -> new GiantTitanosarcolitesBlock(BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL_BLOCK)));
 
     //SAPLINGS
     public static final RegistryObject<Block> MANGO_SAPLING = registerBlock("mango_sapling",
