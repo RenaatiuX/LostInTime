@@ -1,5 +1,6 @@
 package com.ren.lostintime.common.blockentity;
 
+import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.block.SoulExtractorBlock;
 import com.ren.lostintime.common.init.BlockEntityInit;
 import com.ren.lostintime.common.init.ItemInit;
@@ -89,6 +90,15 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
         this.processTime = BASE_PROCESS_TIME;
     }
 
+    protected IItemHandlerModifiable createInventory(){
+        return new ItemStackHandler(9){
+            @Override
+            protected void onContentsChanged(int slot) {
+                SoulExtractorBE.this.setChanged();
+            }
+        };
+    }
+
     protected List<ItemStack> getCurrentPossibleWasteItems() {
         List<ItemStack> list = new ArrayList<>(3);
         if (currentResidue <= 9) {
@@ -150,15 +160,16 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
     //basically check for outputs etc
     protected boolean canProcess(SoulExtractorRecipe recipe) {
         if (level == null) return false;
+        LostInTime.LOGGER.debug("tried to process at least until here");
 
         ItemStack output = recipe.getResultItem(level.registryAccess());
-        if (!ItemHandlerHelper.insertItemStacked(this.output.orElseThrow(IllegalStateException::new), output, true).isEmpty())
+        if (this.output.map(i -> !ItemHandlerHelper.insertItemStacked(i, output, true).isEmpty()).orElse(true))
             return false;
 
         var wasteList = getCurrentPossibleWasteItems();
         for (var item : wasteList) {
             //when those items cant be added to the residue, even if it may be ok because of chances, this will block it never the less
-            if (!ItemHandlerHelper.insertItemStacked(residue.orElseThrow(IllegalAccessError::new), item, true).isEmpty())
+            if (this.residue.map(i -> !ItemHandlerHelper.insertItemStacked(i, item, true).isEmpty()).orElse(true))
                 return false;
         }
         return true;

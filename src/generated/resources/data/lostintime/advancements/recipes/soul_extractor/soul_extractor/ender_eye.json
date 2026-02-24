@@ -1,0 +1,22 @@
+{
+  "criteria": {
+    "has_ender_perl": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:ender_pearl"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_ender_perl"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

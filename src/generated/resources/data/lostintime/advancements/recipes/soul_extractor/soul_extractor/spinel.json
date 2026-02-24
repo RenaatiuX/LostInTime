@@ -1,0 +1,22 @@
+{
+  "criteria": {
+    "has_chorus_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:chorus_plant"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_chorus_block"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

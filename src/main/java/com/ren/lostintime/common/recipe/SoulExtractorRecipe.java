@@ -57,7 +57,6 @@ public class SoulExtractorRecipe implements Recipe<SoulExtractorRecipeContainer>
                 list.add(stack);
         }
         //only the allowed amount of inputs is allowed inside the input inventory
-        if (list.size() != inputs.size()) return false;
         Set<Integer> indicesBlacklisted = new TreeSet<>();
         for (Ingredient ingredient : inputs) {
             for (int i = 0; i < list.size(); i++) {
@@ -69,8 +68,9 @@ public class SoulExtractorRecipe implements Recipe<SoulExtractorRecipeContainer>
                     break;
                 }
             }
-            if (indicesBlacklisted.size() != inputs.size()) return false;
+
         }
+        if (indicesBlacklisted.size() != inputs.size()) return false;
         if (!soulSource.test(pContainer.getSoulSource())) {
             return false;
         }
