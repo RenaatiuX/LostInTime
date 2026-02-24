@@ -13,10 +13,11 @@ import java.util.Set;
 
 public class LITLootTableProvider extends LootTableProvider {
 
-    public LITLootTableProvider(PackOutput output) {
-        super(output, Set.of(), List.of(
-                new SubProviderEntry(ModEntityLoot::new, LootContextParamSets.ENTITY),
+    public LITLootTableProvider(PackOutput pOutput) {
+        super(pOutput, Set.of(), List.of(
+                new SubProviderEntry(ModBlockLoot::new, LootContextParamSets.BLOCK),
                 new SubProviderEntry(DodoPeckLoot::new, LootParamSetsInit.DODO_PECK),
-                new SubProviderEntry(ModBlockLoot::new, LootContextParamSets.BLOCK)));
+                new SubProviderEntry(ModEntityLoot::new, LootContextParamSets.ENTITY)
+        ));
     }
 }

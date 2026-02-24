@@ -25,6 +25,10 @@ public class ModBlockLoot extends BlockLootSubProvider {
     @Override
     protected void generate() {
         dropSelf(BlockInit.CRETACEOUS_FOSSIL_BLOCK.get());
+        this.dropSelf(BlockInit.IDENTIFICATION_TABLE.get());
+        this.dropSelf(BlockInit.SOUL_EXTRACTOR.get());
+        this.dropSelf(BlockInit.SOUL_CONFIGURATOR.get());
+        this.dropSelf(BlockInit.TRANSFIGURATOR.get());
     }
 
     protected void dropSelfWithContents(Block block) {

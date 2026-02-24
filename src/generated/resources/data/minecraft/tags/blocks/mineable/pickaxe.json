@@ -1,5 +1,8 @@
 {
   "values": [
-    "lostintime:cretaceous_fossil_block"
+    "lostintime:cretaceous_fossil_block",
+    "lostintime:soul_extractor",
+    "lostintime:soul_configurator",
+    "lostintime:transfigurator"
   ]
 }

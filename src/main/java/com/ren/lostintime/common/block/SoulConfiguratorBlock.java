@@ -13,7 +13,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -35,7 +37,12 @@ public class SoulConfiguratorBlock extends LITMachineBlock {
 
     public SoulConfiguratorBlock(Properties pProperties) {
         super(pProperties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(PART, Part.MAIN).setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any().setValue(PART, Part.MAIN).setValue(FACING, Direction.NORTH).setValue(ON, false));
+    }
+
+    @Override
+    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
+        return super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
     }
 
     @Override
@@ -44,6 +51,32 @@ public class SoulConfiguratorBlock extends LITMachineBlock {
             return new SoulConfiguratorBE(pPos, pState);
         }
         return null;
+    }
+
+    @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
+        if (!pState.is(pNewState.getBlock())) {
+            Part part = pState.getValue(PART);
+            Direction facing = pState.getValue(FACING);
+
+            if (part == Part.MAIN) {
+                BlockPos topPos = pPos.above();
+                BlockPos sidePos = pPos.relative(facing.getClockWise());
+                removePart(pLevel, topPos);
+                removePart(pLevel, sidePos);
+            } else {
+                removePart(pLevel, part.getMainPos(pPos, facing));
+            }
+        }
+        super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
+    }
+
+    private void removePart(Level level, BlockPos pos) {
+        BlockState state = level.getBlockState(pos);
+        if (state.is(this)) {
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 35);
+            level.levelEvent(2001, pos, Block.getId(state));
+        }
     }
 
     @Override
@@ -90,27 +123,6 @@ public class SoulConfiguratorBlock extends LITMachineBlock {
         }
 
         return this.defaultBlockState().setValue(PART, Part.MAIN).setValue(FACING, direction);
-    }
-
-    @Override
-    public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
-        if (pLevel.isClientSide) return;
-        Direction facing = pState.getValue(FACING);
-        Part part = pState.getValue(PART);
-
-        BlockPos mainPos = part.getMainPos(pPos, facing);
-
-        BlockPos topPos = mainPos.above();
-        BlockPos sidePos = mainPos.relative(facing.getClockWise());
-
-        pLevel.destroyBlock(topPos, false);
-        pLevel.destroyBlock(sidePos, false);
-
-        if (part != Part.MAIN) {
-            pLevel.destroyBlock(mainPos, !pPlayer.isCreative());
-        }
-
-        super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
     }
 
     @Override

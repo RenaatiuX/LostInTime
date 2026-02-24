@@ -95,33 +95,22 @@ public class TransfiguratorBlock extends LITMachineBlock {
     }
 
     @Override
-    public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
-        DoubleBlockHalf half = pState.getValue(HALF);
-        BlockPos otherPos = half == DoubleBlockHalf.LOWER ? pPos.above() : pPos.below();
-        BlockState otherState = pLevel.getBlockState(otherPos);
-
-        if (otherState.is(this) && otherState.getValue(HALF) != half) {
-            pLevel.destroyBlock(otherPos, !pPlayer.isCreative());
-        }
-        super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
+    public BlockState updateShape(BlockState state, Direction dir, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+        return super.updateShape(state, dir, neighborState, level, pos, neighborPos);
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction dir, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
-        DoubleBlockHalf half = state.getValue(HALF);
-        if (dir == Direction.UP && half == DoubleBlockHalf.LOWER) {
-            if (!neighborState.is(this)) {
-                return Blocks.AIR.defaultBlockState();
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
+        if (!pState.is(pNewState.getBlock())) {
+            DoubleBlockHalf half = pState.getValue(HALF);
+            BlockPos otherPos = half == DoubleBlockHalf.LOWER ? pPos.above() : pPos.below();
+            BlockState otherState = pLevel.getBlockState(otherPos);
+            if (otherState.is(this) && otherState.getValue(HALF) != half) {
+                pLevel.setBlock(otherPos, Blocks.AIR.defaultBlockState(), 35);
+                pLevel.levelEvent(2001, otherPos, Block.getId(otherState));
             }
         }
-
-        if (dir == Direction.DOWN && half == DoubleBlockHalf.UPPER) {
-            if (!neighborState.is(this)) {
-                return Blocks.AIR.defaultBlockState();
-            }
-        }
-
-        return super.updateShape(state, dir, neighborState, level, pos, neighborPos);
+        super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
     }
 
     @Override

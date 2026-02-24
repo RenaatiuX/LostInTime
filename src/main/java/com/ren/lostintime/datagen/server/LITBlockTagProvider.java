@@ -61,7 +61,19 @@ public class LITBlockTagProvider extends BlockTagsProvider {
                 .add(Blocks.SAND)
                 .add(Blocks.GRAVEL);
 
-        pickaxe(BlockInit.CRETACEOUS_FOSSIL_BLOCK);
+        pickaxe(BlockInit.CRETACEOUS_FOSSIL_BLOCK,
+                BlockInit.SOUL_EXTRACTOR,
+                BlockInit.SOUL_CONFIGURATOR,
+                BlockInit.TRANSFIGURATOR);
+
+        tag(BlockTags.MINEABLE_WITH_AXE)
+                .add(BlockInit.IDENTIFICATION_TABLE.get());
+
+        tag(BlockTags.NEEDS_IRON_TOOL)
+                .add(BlockInit.IDENTIFICATION_TABLE.get())
+                .add(BlockInit.SOUL_EXTRACTOR.get())
+                .add(BlockInit.SOUL_CONFIGURATOR.get())
+                .add(BlockInit.TRANSFIGURATOR.get());
     }
 
     public void pickaxe(Supplier<? extends Block>... blocks) {

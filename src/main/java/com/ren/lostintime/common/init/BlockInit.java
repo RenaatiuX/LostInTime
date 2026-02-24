@@ -27,15 +27,15 @@ public class BlockInit {
 
     //Machines
     public static final RegistryObject<Block> IDENTIFICATION_TABLE = registerBlock("identification_table",
-            () -> new IdentificationTableBlock(BlockBehaviour.Properties.copy(Blocks.CRAFTING_TABLE)));
+            () -> new IdentificationTableBlock(BlockBehaviour.Properties.copy(Blocks.CRAFTING_TABLE).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> SOUL_EXTRACTOR = registerBlock("soul_extractor",
-            () -> new SoulExtractorBlock(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE).noOcclusion()
+            () -> new SoulExtractorBlock(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE).requiresCorrectToolForDrops().noOcclusion()
                     .lightLevel(state -> state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) ==
                             DoubleBlockHalf.UPPER && state.getValue(SoulExtractorBlock.ON) ? 10 : 0)));
     public static final RegistryObject<Block> SOUL_CONFIGURATOR = registerBlock("soul_configurator",
-            () -> new SoulConfiguratorBlock(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE).noOcclusion().lightLevel(s -> s.getValue(SoulConfiguratorBlock.PART) == SoulConfiguratorBlock.Part.TOP && s.getValue(LITMachineBlock.ON) ? 10 : 0)));
+            () -> new SoulConfiguratorBlock(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE).requiresCorrectToolForDrops().noOcclusion().lightLevel(s -> s.getValue(SoulConfiguratorBlock.PART) == SoulConfiguratorBlock.Part.TOP && s.getValue(LITMachineBlock.ON) ? 10 : 0)));
     public static final RegistryObject<Block> TRANSFIGURATOR = registerBlock("transfigurator",
-            () -> new TransfiguratorBlock(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE).noOcclusion()
+            () -> new TransfiguratorBlock(BlockBehaviour.Properties.copy(Blocks.SMITHING_TABLE).requiresCorrectToolForDrops().noOcclusion()
                     .lightLevel(state -> state.getValue(TransfiguratorBlock.HALF) == DoubleBlockHalf.UPPER && state.getValue(TransfiguratorBlock.ON) ? 10 : 0)));
 
     //Environment
