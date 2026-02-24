@@ -1,0 +1,16 @@
+package com.ren.lostintime.client.model;
+
+import com.ren.lostintime.LostInTime;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.resources.ResourceLocation;
+
+public class ModModelLayers {
+    public static final ModelLayerLocation TRANSFIGURATOR_EGG = new ModelLayerLocation(
+            new ResourceLocation(LostInTime.MODID, "transfigurator_egg"), "main");
+    public static final ModelLayerLocation TRANSFIGURATOR_EGG_2 = new ModelLayerLocation(
+            new ResourceLocation(LostInTime.MODID, "transfigurator_egg_2"), "main");
+    public static final ModelLayerLocation TRANSFIGURATOR_EMBRYO = new ModelLayerLocation(
+            new ResourceLocation(LostInTime.MODID, "transfigurator_embryo"), "main");
+    public static final ModelLayerLocation TRANSFIGURATOR_PLANT = new ModelLayerLocation(
+            new ResourceLocation(LostInTime.MODID, "transfigurator_plant"), "main");
+}

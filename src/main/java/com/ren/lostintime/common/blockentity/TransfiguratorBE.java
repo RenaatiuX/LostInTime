@@ -1,12 +1,9 @@
 package com.ren.lostintime.common.blockentity;
 
-import com.ren.lostintime.LostInTime;
-import com.ren.lostintime.common.block.LITMachineBlock;
 import com.ren.lostintime.common.block.SoulExtractorBlock;
 import com.ren.lostintime.common.block.TransfiguratorBlock;
 import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.init.BlockEntityInit;
-import com.ren.lostintime.common.init.ItemInit;
 import com.ren.lostintime.common.init.RecipeInit;
 import com.ren.lostintime.common.menu.TransfiguratorMenu;
 import com.ren.lostintime.common.recipe.TransfiguratorRecipe;
@@ -14,6 +11,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -42,6 +42,7 @@ public class TransfiguratorBE extends BlockEntity implements MenuProvider {
 
     protected int cookingProgress;
     protected int cookingTotalTime;
+    private TransfiguratorRecipe.Type currentType;
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(5) {
         @Override
@@ -118,6 +119,9 @@ public class TransfiguratorBE extends BlockEntity implements MenuProvider {
         pTag.put("Inventory", itemHandler.serializeNBT());
         pTag.putInt("CookingProgress", cookingProgress);
         pTag.putInt("CookingTotalTime", cookingTotalTime);
+        if (currentType != null) {
+            pTag.putInt("Type", currentType.ordinal());
+        }
     }
 
     @Override
@@ -126,6 +130,11 @@ public class TransfiguratorBE extends BlockEntity implements MenuProvider {
         itemHandler.deserializeNBT(pTag.getCompound("Inventory"));
         cookingProgress = pTag.getInt("CookingProgress");
         cookingTotalTime = pTag.getInt("CookingTotalTime");
+        if (pTag.contains("Type")) {
+            currentType = TransfiguratorRecipe.Type.values()[pTag.getInt("Type")];
+        } else {
+            currentType = null;
+        }
     }
 
     @Override
@@ -154,6 +163,16 @@ public class TransfiguratorBE extends BlockEntity implements MenuProvider {
         return super.getCapability(cap, side);
     }
 
+    @Override
+    public CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
     public ContainerData getDataAccess() {
         return dataAccess;
     }
@@ -164,6 +183,10 @@ public class TransfiguratorBE extends BlockEntity implements MenuProvider {
 
     public boolean isItemValid(int slot, ItemStack stack) {
         return itemHandler.isItemValid(slot, stack);
+    }
+
+    public TransfiguratorRecipe.Type getCurrentType() {
+        return currentType;
     }
 
     @Override
@@ -208,6 +231,11 @@ public class TransfiguratorBE extends BlockEntity implements MenuProvider {
     protected void reset() {
         cookingProgress = 0;
         cookingTotalTime = 0;
+        if (currentType != null) {
+            currentType = null;
+            setChanged();
+            if (level != null) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, TransfiguratorBE be) {
@@ -239,6 +267,12 @@ public class TransfiguratorBE extends BlockEntity implements MenuProvider {
         if (recipe.isPresent()) {
             TransfiguratorRecipe r = recipe.get();
             be.cookingTotalTime = r.getProcessingTime();
+
+            if (be.currentType != r.getProcessingType()) {
+                be.currentType = r.getProcessingType();
+                be.setChanged();
+                level.sendBlockUpdated(pos, state, state, 3);
+            }
 
             be.cookingProgress++;
 

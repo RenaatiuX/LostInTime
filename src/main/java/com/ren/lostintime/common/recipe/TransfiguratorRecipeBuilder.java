@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 public class TransfiguratorRecipeBuilder implements RecipeBuilder {
 
     private final ItemStack result;
+    private final TransfiguratorRecipe.Type type;
     private Ingredient input = Ingredient.EMPTY;
     private Ingredient nutrient = Ingredient.of(ItemInit.UNIVERSAL_NUTRIENT.get());
     private final List<TransfiguratorRecipe.WeightedItem> failedResults = new ArrayList<>();
@@ -31,16 +32,17 @@ public class TransfiguratorRecipeBuilder implements RecipeBuilder {
     private String group;
     private final Advancement.Builder advancement = Advancement.Builder.recipeAdvancement();
 
-    public TransfiguratorRecipeBuilder(ItemStack result) {
+    public TransfiguratorRecipeBuilder(ItemStack result, TransfiguratorRecipe.Type type) {
         this.result = result;
+        this.type = type;
     }
 
-    public static TransfiguratorRecipeBuilder transfigurator(ItemLike result) {
-        return new TransfiguratorRecipeBuilder(new ItemStack(result));
+    public static TransfiguratorRecipeBuilder transfigurator(ItemLike result, TransfiguratorRecipe.Type type) {
+        return new TransfiguratorRecipeBuilder(new ItemStack(result), type);
     }
 
-    public static TransfiguratorRecipeBuilder transfigurator(ItemLike result, int count) {
-        return new TransfiguratorRecipeBuilder(new ItemStack(result, count));
+    public static TransfiguratorRecipeBuilder transfigurator(ItemLike result, int count, TransfiguratorRecipe.Type type) {
+        return new TransfiguratorRecipeBuilder(new ItemStack(result, count), type);
     }
 
     public TransfiguratorRecipeBuilder input(Ingredient input) {
@@ -109,7 +111,7 @@ public class TransfiguratorRecipeBuilder implements RecipeBuilder {
         if (advancement.getCriteria().isEmpty()) {
             // Warn or add default criteria?
         }
-        pFinishedRecipeConsumer.accept(new Result(pRecipeId, group, input, nutrient, failedResults, result, processingTime, advancement));
+        pFinishedRecipeConsumer.accept(new Result(pRecipeId, group, input, nutrient, failedResults, result, processingTime, type, advancement));
     }
 
     public static class Result implements FinishedRecipe {
@@ -120,9 +122,10 @@ public class TransfiguratorRecipeBuilder implements RecipeBuilder {
         private final List<TransfiguratorRecipe.WeightedItem> failedResults;
         private final ItemStack result;
         private final int processingTime;
+        private final TransfiguratorRecipe.Type type;
         private final Advancement.Builder advancement;
 
-        public Result(ResourceLocation id, String group, Ingredient input, Ingredient nutrient, List<TransfiguratorRecipe.WeightedItem> failedResults, ItemStack result, int processingTime, Advancement.Builder advancement) {
+        public Result(ResourceLocation id, String group, Ingredient input, Ingredient nutrient, List<TransfiguratorRecipe.WeightedItem> failedResults, ItemStack result, int processingTime, TransfiguratorRecipe.Type type, Advancement.Builder advancement) {
             this.id = id;
             this.group = group;
             this.input = input;
@@ -130,6 +133,7 @@ public class TransfiguratorRecipeBuilder implements RecipeBuilder {
             this.failedResults = failedResults;
             this.result = result;
             this.processingTime = processingTime;
+            this.type = type;
             this.advancement = advancement;
         }
 
@@ -148,6 +152,7 @@ public class TransfiguratorRecipeBuilder implements RecipeBuilder {
             }
             pJson.add("result", resultObj);
             pJson.addProperty("processing_time", processingTime);
+            pJson.addProperty("processingType", type.getSerializedName());
 
             if (!failedResults.isEmpty()) {
                 JsonArray failedArray = new JsonArray();

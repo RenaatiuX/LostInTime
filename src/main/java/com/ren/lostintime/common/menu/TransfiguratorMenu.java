@@ -113,7 +113,7 @@ public class TransfiguratorMenu extends AbstractContainerMenu {
         ItemStack sourceStack = slot.getItem();
         ItemStack copyStack = sourceStack.copy();
 
-        if (index < 5) { // BE Slots (0-3) -> Player Inventory
+        if (index < 5) { // BE Slots (0-4) -> Player Inventory
             if (!this.moveItemStackTo(sourceStack, 5, 40, true)) {
                 return ItemStack.EMPTY;
             }

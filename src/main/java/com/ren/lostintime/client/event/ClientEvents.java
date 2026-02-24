@@ -2,13 +2,17 @@ package com.ren.lostintime.client.event;
 
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.client.particles.SleepingParticle;
+import com.ren.lostintime.client.model.ModModelLayers;
+import com.ren.lostintime.client.model.blockentities.*;
 import com.ren.lostintime.client.render.entity.*;
 import com.ren.lostintime.client.render.projectile.GuardianSpikeRender;
+import com.ren.lostintime.client.renderer.TransfiguratorBERenderer;
 import com.ren.lostintime.client.screen.IdentificationScreen;
 import com.ren.lostintime.client.screen.SoulConfiguratorScreen;
 import com.ren.lostintime.client.screen.SoulExtractorScreen;
 import com.ren.lostintime.client.screen.TransfiguratorScreen;
 import com.ren.lostintime.common.entity.projectile.GuardianSpike;
+import com.ren.lostintime.common.init.BlockEntityInit;
 import com.ren.lostintime.common.init.EntityInit;
 import com.ren.lostintime.common.init.MenuInit;
 import com.ren.lostintime.common.init.ParticlesInit;
@@ -42,6 +46,16 @@ public class ClientEvents {
 
         event.registerEntityRenderer(EntityInit.GUARDIAN_SPIKE.get(), GuardianSpikeRender::new);
         event.registerEntityRenderer(EntityInit.LIT_THROWN_EGG.get(), ThrownItemRenderer::new);
+
+        event.registerBlockEntityRenderer(BlockEntityInit.TRANSFIGURATOR.get(), TransfiguratorBERenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(ModModelLayers.TRANSFIGURATOR_EGG, TransfiguratorEgg::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.TRANSFIGURATOR_EGG_2, TransfiguratorEgg2::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.TRANSFIGURATOR_EMBRYO, TransfiguratorEmbryo::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.TRANSFIGURATOR_PLANT, TransfiguratorPlant::createBodyLayer);
     }
 
     @SubscribeEvent

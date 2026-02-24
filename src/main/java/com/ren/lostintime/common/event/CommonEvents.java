@@ -1,8 +1,10 @@
 package com.ren.lostintime.common.event;
 
 import com.ren.lostintime.LostInTime;
+import com.ren.lostintime.client.renderer.TransfiguratorBERenderer;
 import com.ren.lostintime.common.entity.creatures.*;
 import com.ren.lostintime.common.entity.projectile.LITThrownEgg;
+import com.ren.lostintime.common.init.BlockEntityInit;
 import com.ren.lostintime.common.init.EntityInit;
 import com.ren.lostintime.common.init.ItemInit;
 import com.ren.lostintime.common.item.LITEggItem;
@@ -15,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

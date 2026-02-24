@@ -357,7 +357,7 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
                 .fossil(ItemInit.ANOMALOCARIS_FOSSIL.get())
                 .unlockedBy("hasItem", has(ItemInit.ANOMALOCARIS_FOSSIL.get()))
                 .save(pWriter);
-        TransfiguratorRecipeBuilder.transfigurator(BlockInit.DODO_EGG.get())
+        TransfiguratorRecipeBuilder.transfigurator(BlockInit.DODO_EGG.get(), TransfiguratorRecipe.Type.EGG)
                 .addFailedResult(Items.ROTTEN_FLESH, 7)
                 .addFailedResult(ItemInit.RAW_DODO.get(), 2)
                 .input(ItemInit.DODO_SOUL_CFC.get())

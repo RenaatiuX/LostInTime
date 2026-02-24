@@ -2,13 +2,16 @@ package com.ren.lostintime.client.model.blockentities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.ren.lostintime.LostInTime;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 
 public class TransfiguratorPlant extends Model {
+    public static final ResourceLocation TEXTURE = new ResourceLocation(LostInTime.MODID, "textures/entity/blockentities/transfigurator_plant.png");
 
     private final ModelPart root;
 
@@ -29,6 +32,6 @@ public class TransfiguratorPlant extends Model {
 
     @Override
     public void renderToBuffer(PoseStack pPoseStack, VertexConsumer pBuffer, int pPackedLight, int pPackedOverlay, float pRed, float pGreen, float pBlue, float pAlpha) {
-
+        root.render(pPoseStack, pBuffer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha);
     }
 }

@@ -7,6 +7,7 @@ import com.ren.lostintime.common.init.RecipeInit;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class TransfiguratorRecipe implements Recipe<Container> {
 
@@ -28,14 +30,16 @@ public class TransfiguratorRecipe implements Recipe<Container> {
     private final List<WeightedItem> failedResults;
     private final ItemStack result;
     private final int processingTime;
+    private final Type type;
 
-    public TransfiguratorRecipe(ResourceLocation id, Ingredient input, Ingredient nutrient, List<WeightedItem> failedResults, ItemStack result, int processingTime) {
+    public TransfiguratorRecipe(ResourceLocation id, Ingredient input, Ingredient nutrient, List<WeightedItem> failedResults, ItemStack result, int processingTime, Type type) {
         this.id = id;
         this.input = input;
         this.nutrient = nutrient;
         this.failedResults = failedResults;
         this.result = result;
         this.processingTime = processingTime;
+        this.type = type;
     }
 
     @Override
@@ -90,6 +94,10 @@ public class TransfiguratorRecipe implements Recipe<Container> {
         return processingTime;
     }
 
+    public Type getProcessingType() {
+        return type;
+    }
+
     public ItemStack getFailedResult(RandomSource random) {
         if (failedResults.isEmpty()) return ItemStack.EMPTY;
         int totalWeight = failedResults.stream().mapToInt(WeightedItem::weight).sum();
@@ -107,6 +115,15 @@ public class TransfiguratorRecipe implements Recipe<Container> {
     public record WeightedItem(ItemStack stack, int weight) {
     }
 
+    public enum Type implements StringRepresentable {
+        EGG, EMBRYO, PLANT;
+
+        @Override
+        public String getSerializedName() {
+            return name().toLowerCase(Locale.ROOT);
+        }
+    }
+
     public static class Serializer implements RecipeSerializer<TransfiguratorRecipe> {
 
         @Override
@@ -115,6 +132,7 @@ public class TransfiguratorRecipe implements Recipe<Container> {
             Ingredient nutrient = Ingredient.fromJson(pSerializedRecipe.get("nutrient"));
             ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(pSerializedRecipe, "result"));
             int processingTime = GsonHelper.getAsInt(pSerializedRecipe, "processing_time", 200);
+            Type type = Type.valueOf(GsonHelper.getAsString(pSerializedRecipe, "processingType").toUpperCase(Locale.ROOT));
             
             List<WeightedItem> failedResults = new ArrayList<>();
             if (pSerializedRecipe.has("failed_results")) {
@@ -127,7 +145,7 @@ public class TransfiguratorRecipe implements Recipe<Container> {
                 }
             }
 
-            return new TransfiguratorRecipe(pRecipeId, input, nutrient, failedResults, result, processingTime);
+            return new TransfiguratorRecipe(pRecipeId, input, nutrient, failedResults, result, processingTime, type);
         }
 
         @Override
@@ -136,6 +154,7 @@ public class TransfiguratorRecipe implements Recipe<Container> {
             Ingredient nutrient = Ingredient.fromNetwork(pBuffer);
             ItemStack result = pBuffer.readItem();
             int processingTime = pBuffer.readVarInt();
+            Type type = pBuffer.readEnum(Type.class);
             
             int failedCount = pBuffer.readVarInt();
             List<WeightedItem> failedResults = new ArrayList<>(failedCount);
@@ -145,7 +164,7 @@ public class TransfiguratorRecipe implements Recipe<Container> {
                 failedResults.add(new WeightedItem(stack, weight));
             }
 
-            return new TransfiguratorRecipe(pRecipeId, input, nutrient, failedResults, result, processingTime);
+            return new TransfiguratorRecipe(pRecipeId, input, nutrient, failedResults, result, processingTime, type);
         }
 
         @Override
@@ -154,6 +173,7 @@ public class TransfiguratorRecipe implements Recipe<Container> {
             pRecipe.nutrient.toNetwork(pBuffer);
             pBuffer.writeItem(pRecipe.result);
             pBuffer.writeVarInt(pRecipe.processingTime);
+            pBuffer.writeEnum(pRecipe.type);
             
             pBuffer.writeVarInt(pRecipe.failedResults.size());
             for (WeightedItem item : pRecipe.failedResults) {
