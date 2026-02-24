@@ -74,9 +74,9 @@ public class BlockInit {
     public static final RegistryObject<Block> COOKSONIA = registerBlock("cooksonia",
             () -> new CooksoniaBlock(BlockBehaviour.Properties.copy(Blocks.FERN)));
     public static final RegistryObject<Block> TITANOSARCOLITES = registerBlock("titanosarcolites",
-            () -> new TitanosarcolitesBlock(BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL_BLOCK)));
+            () -> new TitanosarcolitesBlock(BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL_BLOCK).noOcclusion()));
     public static final RegistryObject<Block> GIANT_TITANOSARCOLITES = registerBlock("giant_titanosarcolites",
-            () -> new GiantTitanosarcolitesBlock(BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL_BLOCK)));
+            () -> new GiantTitanosarcolitesBlock(BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL_BLOCK).noOcclusion()));
 
     //SAPLINGS
     public static final RegistryObject<Block> MANGO_SAPLING = registerBlock("mango_sapling",

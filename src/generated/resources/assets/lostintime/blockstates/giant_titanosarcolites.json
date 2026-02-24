@@ -2,123 +2,131 @@
   "variants": {
     "facing=east,part=base_left,waterlogged=false": {
       "model": "lostintime:block/giant_titanosarcolites_base_left",
-      "y": 270
+      "y": 360
     },
     "facing=east,part=base_left,waterlogged=true": {
       "model": "lostintime:block/giant_titanosarcolites_base_left",
-      "y": 270
+      "y": 360
     },
     "facing=east,part=base_right,waterlogged=false": {
       "model": "lostintime:block/giant_titanosarcolites_base_right",
-      "y": 270
+      "y": 450
     },
     "facing=east,part=base_right,waterlogged=true": {
       "model": "lostintime:block/giant_titanosarcolites_base_right",
-      "y": 270
+      "y": 450
     },
     "facing=east,part=pincer_left,waterlogged=false": {
       "model": "lostintime:block/giant_titanosarcolites_pincer_left",
-      "y": 270
+      "y": 450
     },
     "facing=east,part=pincer_left,waterlogged=true": {
       "model": "lostintime:block/giant_titanosarcolites_pincer_left",
-      "y": 270
+      "y": 450
     },
     "facing=east,part=pincer_right,waterlogged=false": {
       "model": "lostintime:block/giant_titanosarcolites_pincer_right",
-      "y": 270
+      "y": 450
     },
     "facing=east,part=pincer_right,waterlogged=true": {
       "model": "lostintime:block/giant_titanosarcolites_pincer_right",
-      "y": 270
+      "y": 450
     },
     "facing=north,part=base_left,waterlogged=false": {
       "model": "lostintime:block/giant_titanosarcolites_base_left",
-      "y": 180
+      "y": 270
     },
     "facing=north,part=base_left,waterlogged=true": {
       "model": "lostintime:block/giant_titanosarcolites_base_left",
-      "y": 180
+      "y": 270
     },
     "facing=north,part=base_right,waterlogged=false": {
       "model": "lostintime:block/giant_titanosarcolites_base_right",
-      "y": 180
+      "y": 360
     },
     "facing=north,part=base_right,waterlogged=true": {
       "model": "lostintime:block/giant_titanosarcolites_base_right",
-      "y": 180
+      "y": 360
     },
     "facing=north,part=pincer_left,waterlogged=false": {
       "model": "lostintime:block/giant_titanosarcolites_pincer_left",
-      "y": 180
+      "y": 360
     },
     "facing=north,part=pincer_left,waterlogged=true": {
       "model": "lostintime:block/giant_titanosarcolites_pincer_left",
-      "y": 180
+      "y": 360
     },
     "facing=north,part=pincer_right,waterlogged=false": {
       "model": "lostintime:block/giant_titanosarcolites_pincer_right",
-      "y": 180
+      "y": 360
     },
     "facing=north,part=pincer_right,waterlogged=true": {
       "model": "lostintime:block/giant_titanosarcolites_pincer_right",
-      "y": 180
+      "y": 360
     },
     "facing=south,part=base_left,waterlogged=false": {
-      "model": "lostintime:block/giant_titanosarcolites_base_left"
+      "model": "lostintime:block/giant_titanosarcolites_base_left",
+      "y": 90
     },
     "facing=south,part=base_left,waterlogged=true": {
-      "model": "lostintime:block/giant_titanosarcolites_base_left"
+      "model": "lostintime:block/giant_titanosarcolites_base_left",
+      "y": 90
     },
     "facing=south,part=base_right,waterlogged=false": {
-      "model": "lostintime:block/giant_titanosarcolites_base_right"
+      "model": "lostintime:block/giant_titanosarcolites_base_right",
+      "y": 180
     },
     "facing=south,part=base_right,waterlogged=true": {
-      "model": "lostintime:block/giant_titanosarcolites_base_right"
+      "model": "lostintime:block/giant_titanosarcolites_base_right",
+      "y": 180
     },
     "facing=south,part=pincer_left,waterlogged=false": {
-      "model": "lostintime:block/giant_titanosarcolites_pincer_left"
+      "model": "lostintime:block/giant_titanosarcolites_pincer_left",
+      "y": 180
     },
     "facing=south,part=pincer_left,waterlogged=true": {
-      "model": "lostintime:block/giant_titanosarcolites_pincer_left"
+      "model": "lostintime:block/giant_titanosarcolites_pincer_left",
+      "y": 180
     },
     "facing=south,part=pincer_right,waterlogged=false": {
-      "model": "lostintime:block/giant_titanosarcolites_pincer_right"
+      "model": "lostintime:block/giant_titanosarcolites_pincer_right",
+      "y": 180
     },
     "facing=south,part=pincer_right,waterlogged=true": {
-      "model": "lostintime:block/giant_titanosarcolites_pincer_right"
+      "model": "lostintime:block/giant_titanosarcolites_pincer_right",
+      "y": 180
     },
     "facing=west,part=base_left,waterlogged=false": {
       "model": "lostintime:block/giant_titanosarcolites_base_left",
-      "y": 90
+      "y": 180
     },
     "facing=west,part=base_left,waterlogged=true": {
       "model": "lostintime:block/giant_titanosarcolites_base_left",
-      "y": 90
+      "y": 180
     },
     "facing=west,part=base_right,waterlogged=false": {
       "model": "lostintime:block/giant_titanosarcolites_base_right",
-      "y": 90
+      "y": 270
     },
     "facing=west,part=base_right,waterlogged=true": {
       "model": "lostintime:block/giant_titanosarcolites_base_right",
-      "y": 90
+      "y": 270
     },
     "facing=west,part=pincer_left,waterlogged=false": {
       "model": "lostintime:block/giant_titanosarcolites_pincer_left",
-      "y": 90
+      "y": 270
     },
     "facing=west,part=pincer_left,waterlogged=true": {
       "model": "lostintime:block/giant_titanosarcolites_pincer_left",
-      "y": 90
+      "y": 270
     },
     "facing=west,part=pincer_right,waterlogged=false": {
       "model": "lostintime:block/giant_titanosarcolites_pincer_right",
-      "y": 90
+      "y": 270
     },
     "facing=west,part=pincer_right,waterlogged=true": {
       "model": "lostintime:block/giant_titanosarcolites_pincer_right",
-      "y": 90
+      "y": 270
     }
   }
 }

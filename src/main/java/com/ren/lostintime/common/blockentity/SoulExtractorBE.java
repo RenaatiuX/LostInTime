@@ -160,7 +160,6 @@ public class SoulExtractorBE extends BlockEntity implements MenuProvider {
     //basically check for outputs etc
     protected boolean canProcess(SoulExtractorRecipe recipe) {
         if (level == null) return false;
-        LostInTime.LOGGER.debug("tried to process at least until here");
 
         ItemStack output = recipe.getResultItem(level.registryAccess());
         if (this.output.map(i -> !ItemHandlerHelper.insertItemStacked(i, output, true).isEmpty()).orElse(true))

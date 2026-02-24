@@ -33,7 +33,7 @@ public class GiantTitanosarcolitesBlock extends Block implements SimpleWaterlogg
     public GiantTitanosarcolitesBlock(Properties pProperties) {
         super(pProperties);
         this.registerDefaultState(this.stateDefinition.any()
-                .setValue(WATERLOGGED, true)
+                .setValue(WATERLOGGED, false)
                 .setValue(FACING, Direction.NORTH)
                 .setValue(PART, TitanosarcolitesPart.BASE_LEFT));
     }

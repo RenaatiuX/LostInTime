@@ -421,6 +421,11 @@ public class LITBlockStateProvider extends BlockStateProvider {
 
             int yRot = (int) facing.toYRot();
 
+            yRot += switch (part) {
+                case PINCER_LEFT, PINCER_RIGHT, BASE_RIGHT -> 180;
+                case BASE_LEFT -> 90;
+            };
+
             return ConfiguredModel.builder()
                     .modelFile(model)
                     .rotationY(yRot)

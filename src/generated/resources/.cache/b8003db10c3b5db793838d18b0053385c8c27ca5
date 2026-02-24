@@ -1,4 +1,4 @@
-// 1.20.1	2026-02-24T01:06:51.3976984	Block States: lostintime
+// 1.20.1	2026-02-24T15:44:39.138743317	Block States: lostintime
 a43e210ef6a7d44d2ebee4e46454692edb44e9e8 assets/lostintime/blockstates/anomalocaris_roe.json
 535842655677c684c1876f75049e6db559f58907 assets/lostintime/blockstates/araucarioxylon_button.json
 a146ee632370a92918567c906d985a5f320c7347 assets/lostintime/blockstates/araucarioxylon_door.json
@@ -31,7 +31,7 @@ c2de858c00507bf3228add9ae64103b9a8a51236 assets/lostintime/blockstates/deepslate
 1a51b7a287bbc5149d7e152f27d45c4f13f22cf6 assets/lostintime/blockstates/deepslate_silurian_fossil_block.json
 dd2b009a6286d612a19e0b4738ebc3bf85bda9d9 assets/lostintime/blockstates/deepslate_triassic_fossil_block.json
 3cc98f80002a21457de13fb68d0f786138354273 assets/lostintime/blockstates/dodo_egg.json
-dfa88982efb15888f8f7fadc94520d6a06f89256 assets/lostintime/blockstates/giant_titanosarcolites.json
+fe3ea5714cd736a38eb3586b05cef1d992834b63 assets/lostintime/blockstates/giant_titanosarcolites.json
 4b8d6157093eda2f84affed76b96e5325600d03b assets/lostintime/blockstates/glass_sponge.json
 085dc199bfce656405cccc44925a55fa52791125 assets/lostintime/blockstates/identification_table.json
 45901e9830f64ff12f0a29e93a8a7a9b184eca82 assets/lostintime/blockstates/large_pipe_sponge.json
