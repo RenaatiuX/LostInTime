@@ -76,6 +76,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     private int grabDamageTicks = 0;
 
     private int curioFeedCooldown = 0;
+    private int curioSwimWithPlayerCooldown = 0;
 
 
     public Anomalocaris(EntityType<? extends AbstractBaseFish> pEntityType, Level pLevel) {
@@ -89,7 +90,8 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         this.goalSelector.addGoal(0, new PanicGoal(this, 1.5D));
         this.goalSelector.addGoal(1, new TryFindWaterGoal(this));
         this.goalSelector.addGoal(2, new AnomalocarisLayEggGoal(this, 1.0D));
-        this.goalSelector.addGoal(2, new CuriositySwimGoal(this));
+        this.goalSelector.addGoal(2, new AnomalocarisSwimWithPlayerGoal(this, 1.0D));
+        this.goalSelector.addGoal(2, new AnomalocarisGiveItemGoal(this, 1.2D));
         this.goalSelector.addGoal(3, new AnomalocarisGrabAttackGoal(this, 1.2D, true));
         this.goalSelector.addGoal(3, new AnomalocarisBreedGoal(this, 1.2D));
         this.goalSelector.addGoal(5, new AnomalocarisSwimmingGoal(this, 1.0D, 10));
@@ -125,6 +127,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         tag.put("HeldItem", this.getHeldItem().save(new CompoundTag()));
         this.entityData.get(DATA_CURIO_PLAYER).ifPresent(uuid -> tag.putUUID("CurioPlayer", uuid));
         tag.putInt("curioFeedCooldown", this.curioFeedCooldown);
+        tag.putInt("curioSwimWithPlayerCooldown", this.curioSwimWithPlayerCooldown);
         tag.putBoolean("HasEgg", this.hasEgg());
     }
 
@@ -137,6 +140,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
             this.setCurioPlayer(tag.getUUID("CurioPlayer"));
         }
         this.curioFeedCooldown = tag.getInt("curioFeedCooldown");
+        this.curioSwimWithPlayerCooldown = tag.getInt("curioSwimWithPlayerCooldown");
         this.setHasEgg(tag.getBoolean("HasEgg"));
     }
 
@@ -175,6 +179,10 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     }
 
     public void setCurioPlayer(@Nullable UUID pUuid) {
+        if (!this.level().isClientSide && pUuid != null){
+            this.curioSwimWithPlayerCooldown = this.curioFeedCooldown > 0 ? 7200 : 4800;
+            //this.curioSwimWithPlayerCooldown = this.curioFeedCooldown > 0 ? 200 : 100;
+        }
         this.entityData.set(DATA_CURIO_PLAYER, Optional.ofNullable(pUuid));
     }
 
@@ -220,19 +228,12 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
             if (this.curioFeedCooldown > 0){
                 this.curioFeedCooldown--;
             }
+            if (this.curioSwimWithPlayerCooldown > 0){
+                this.curioSwimWithPlayerCooldown--;
+            }
 
             float hunger = this.getHunger() - HUNGER_DECREASE_PER_TICK;
             this.setHunger(Math.max(hunger, 0.0F));
-
-            if (this.hasHeldItem() && this.getCurioPlayer().isPresent()) {
-                Player curioPlayer = this.level().getPlayerByUUID(this.getCurioPlayer().get());
-                if (curioPlayer != null && this.distanceToSqr(curioPlayer) < 16.0) {
-                    if (this.curioFeedCooldown <= 0)
-                        this.dropHeldItemToPlayer(curioPlayer);
-                }else{
-                    this.setCurioPlayer(null);
-                }
-            }
 
             if (this.hurtTimeCoolDown > 0) {
                 this.hurtTimeCoolDown--;
@@ -291,14 +292,24 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         this.setGrabbing(false);
     }
 
+    protected void dropHeldItem(){
+        this.spawnAtLocation(this.getHeldItem(), 0.5F);
+        this.setHeldItem(ItemStack.EMPTY);
+        this.setGrabbing(false);
+    }
+
     @Override
     protected void positionRider(Entity pPassenger, MoveFunction pCallback) {
         if (pPassenger instanceof LivingEntity) {
             double yOffset = -0.4;
-            double rad = Math.toRadians(this.yBodyRot);
-            double dx = -Math.sin(rad) * 0.4;
-            double dz = Math.cos(rad) * 0.5;
-            pCallback.accept(pPassenger, this.getX() + dx, this.getY() + yOffset, this.getZ() + dz);
+            double forwardOffset = 0.5;
+            double pitch = Math.toRadians(this.getXRot());
+            double yaw = Math.toRadians(this.yBodyRot);
+            double yRotated = yOffset * Math.cos(pitch) - forwardOffset * Math.sin(pitch);
+            double zRotated = yOffset * Math.sin(pitch) + forwardOffset * Math.cos(pitch);
+            double dx = -zRotated * Math.sin(yaw);
+            double dz = zRotated * Math.cos(yaw);
+            pCallback.accept(pPassenger, this.getX() + dx, this.getY() + yRotated, this.getZ() + dz);
         } else {
             super.positionRider(pPassenger, pCallback);
         }
@@ -315,8 +326,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
                 prey.stopRiding();
             }
             if (this.hasHeldItem()) {
-                this.spawnAtLocation(this.getHeldItem(), 0.5F);
-                this.setHeldItem(ItemStack.EMPTY);
+                this.dropHeldItem();
             }
             this.setGrabbing(false);
             this.hurtTimeCoolDown = 100;
@@ -330,10 +340,9 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
             return InteractionResult.CONSUME;
         }
         ItemStack stack = pPlayer.getItemInHand(pHand);
-        long time = this.level().getGameTime();
         boolean breedPredicate = this.isFood(stack) && this.canFallInLove() && this.getAge() == 0;
 
-        if (!breedPredicate && !this.hasHeldItem() && !this.hasGrabbedPrey() && !stack.isEmpty() && this.distanceToSqr(pPlayer) < 9.0) {
+        if (!breedPredicate && !this.hasHeldItem() && !this.hasGrabbedPrey() && !stack.isEmpty() && !isBaby() && canGiveItemToPlayer(pPlayer)) {
             ItemStack given = stack.split(1);
             this.setHeldItem(given);
             this.setGrabbing(true);
@@ -342,12 +351,17 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
             return InteractionResult.SUCCESS;
         }
 
-        if (!breedPredicate && this.hasHeldItem() && this.distanceToSqr(pPlayer) < 9.0) {
+        if (!breedPredicate && this.hasHeldItem() && canGiveItemToPlayer(pPlayer)) {
             this.dropHeldItemToPlayer(pPlayer);
             return InteractionResult.SUCCESS;
         }
 
         return super.mobInteract(pPlayer, pHand);
+    }
+
+    protected boolean canGiveItemToPlayer(LivingEntity player){
+        //currently a distance of 3 blocks is accepted
+        return this.distanceToSqr(player) < 9.0;
     }
 
     private boolean isSuitablePrey(LivingEntity target) {
@@ -558,52 +572,6 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         }
     }
 
-    static class CuriositySwimGoal extends Goal {
-        private final Anomalocaris anomalocaris;
-        private Player targetPlayer;
-        private int circleTicks;
-        private float circleAngle = 0.0F;
-
-        public CuriositySwimGoal(Anomalocaris anomalocaris) {
-            this.anomalocaris = anomalocaris;
-            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
-        }
-
-        @Override
-        public boolean canUse() {
-            var playerUuidOptional = this.anomalocaris.getCurioPlayer();
-            if (playerUuidOptional.isEmpty() || !this.anomalocaris.hasHeldItem()) {
-                return false;
-            }
-            this.targetPlayer = this.anomalocaris.level().getPlayerByUUID(playerUuidOptional.get());
-            return this.targetPlayer != null && this.anomalocaris.distanceToSqr(this.targetPlayer) < 256.0;
-        }
-
-        @Override
-        public void tick() {
-            if (this.targetPlayer == null) return;
-
-            this.anomalocaris.getLookControl().setLookAt(this.targetPlayer, 30.0F, 30.0F);
-
-            Vec3 vecToPlayer = this.targetPlayer.position().subtract(this.anomalocaris.position());
-            vecToPlayer = new Vec3(vecToPlayer.x, 0, vecToPlayer.z);
-
-            if (vecToPlayer.lengthSqr() < 1.0E-4) return;
-
-            float radius = 4.0F;
-            Vec3 targetPos = this.targetPlayer.position().add(
-                    Math.cos(circleAngle) * radius,
-                    1.0 + Math.sin(circleTicks * 0.05) * 0.5,
-                    Math.sin(circleAngle) * radius
-            );
-
-            this.anomalocaris.getNavigation().moveTo(targetPos.x, targetPos.y, targetPos.z, 1.0D);
-
-            this.circleAngle += 0.05F;
-            this.circleTicks++;
-        }
-    }
-
     static class AnomalocarisBreedGoal extends BreedGoal {
 
         protected Anomalocaris anomalocaris;
@@ -650,6 +618,8 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
             }
         }
     }
+    
+    
 
     static class AnomalocarisLayEggGoal extends MoveToBlockGoal {
         private final Anomalocaris anomalocaris;
@@ -687,6 +657,119 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         @Override
         protected boolean isValidTarget(net.minecraft.world.level.LevelReader pLevel, BlockPos pPos) {
             return pLevel.getBlockState(pPos).is(Blocks.WATER) && pLevel.getBlockState(pPos.above()).isAir();
+        }
+    }
+
+    static class AnomalocarisSwimWithPlayerGoal extends Goal {
+        private final Anomalocaris anomalocaris;
+        private final double speedModifier;
+        @Nullable
+        private Player player;
+
+        AnomalocarisSwimWithPlayerGoal(Anomalocaris pAnomalocaris, double pSpeedModifier) {
+            this.anomalocaris = pAnomalocaris;
+            this.speedModifier = pSpeedModifier;
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            var playerUuidOptional = this.anomalocaris.getCurioPlayer();
+            if (playerUuidOptional.isEmpty()) {
+                return false;
+            }
+            this.player = this.anomalocaris.level().getPlayerByUUID(playerUuidOptional.get());
+            return this.player != null && this.player.isSwimming() && this.anomalocaris.distanceToSqr(this.player) < 256.0D;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return this.player != null && this.player.isSwimming() && this.anomalocaris.distanceToSqr(this.player) < 256.0D && this.anomalocaris.getCurioPlayer().isPresent()
+                    && this.anomalocaris.curioSwimWithPlayerCooldown >= 0;
+        }
+
+        @Override
+        public void stop() {
+            this.player = null;
+            this.anomalocaris.getNavigation().stop();
+        }
+
+        @Override
+        public void tick() {
+            assert this.player != null;
+            this.anomalocaris.getLookControl().setLookAt(this.player, (float) (this.anomalocaris.getMaxHeadYRot() + 20), (float) this.anomalocaris.getMaxHeadXRot());
+            if (this.anomalocaris.distanceToSqr(this.player) < 6.25D) {
+                this.anomalocaris.getNavigation().stop();
+            } else {
+                this.anomalocaris.getNavigation().moveTo(this.player, this.speedModifier);
+            }
+        }
+    }
+
+    static class AnomalocarisGiveItemGoal extends Goal {
+        private final Anomalocaris anomalocaris;
+        private final double speedModifier;
+        @Nullable
+        private Player targetPlayer;
+        private int failTicks;
+
+        public AnomalocarisGiveItemGoal(Anomalocaris pAnomalocaris, double pSpeedModifier) {
+            this.anomalocaris = pAnomalocaris;
+            this.speedModifier = pSpeedModifier;
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            if (!this.anomalocaris.hasHeldItem() || this.anomalocaris.curioSwimWithPlayerCooldown > 0) {
+                return false;
+            }
+            Optional<UUID> playerUuid = this.anomalocaris.getCurioPlayer();
+            if (playerUuid.isPresent()) {
+                this.targetPlayer = this.anomalocaris.level().getPlayerByUUID(playerUuid.get());
+                return this.targetPlayer != null && this.targetPlayer.isAlive() && !this.targetPlayer.isSpectator();
+            }
+            return false;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return this.canUse();
+        }
+
+        @Override
+        public void start() {
+            this.failTicks = 0;
+        }
+
+        @Override
+        public void stop() {
+            this.targetPlayer = null;
+            this.anomalocaris.getNavigation().stop();
+        }
+
+        @Override
+        public void tick() {
+            if (this.targetPlayer != null) {
+                this.anomalocaris.getLookControl().setLookAt(this.targetPlayer, 10.0F, (float) this.anomalocaris.getMaxHeadXRot());
+
+                if (this.anomalocaris.canGiveItemToPlayer(this.targetPlayer)) {
+                    this.anomalocaris.dropHeldItemToPlayer(this.targetPlayer);
+                } else {
+                    if (!this.anomalocaris.getNavigation().moveTo(this.targetPlayer, this.speedModifier)) {
+                        this.failTicks++;
+                    } else if (this.anomalocaris.getNavigation().isStuck()) {
+                        this.failTicks++;
+                    } else if (this.failTicks > 0) {
+                        this.failTicks--;
+                    }
+                }
+
+                if (this.failTicks >= 100) {
+                    this.anomalocaris.dropHeldItem();
+                    this.anomalocaris.setCurioPlayer(null);
+                }
+            }
         }
     }
 }
