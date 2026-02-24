@@ -183,8 +183,52 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.GELATINOUS_NUTRIENT.get());
         simple(ItemInit.RICH_NUTRIENT.get());
         simple(ItemInit.UNIVERSAL_NUTRIENT.get());
+
+        simpleBlockItem(BlockInit.ARAUCARIOXYLON_DOOR);
+
+        fenceItem(BlockInit.ARAUCARIOXYLON_FENCE, BlockInit.ARAUCARIOXYLON_PLANKS);
+        buttonItem(BlockInit.ARAUCARIOXYLON_BUTTON, BlockInit.ARAUCARIOXYLON_PLANKS);
+        wallItem(BlockInit.ARAUCARIOXYLON_WALL, BlockInit.ARAUCARIOXYLON_PLANKS);
+
+        evenSimplerBlockItem(BlockInit.ARAUCARIOXYLON_STAIRS);
+        evenSimplerBlockItem(BlockInit.ARAUCARIOXYLON_SLAB);
+        evenSimplerBlockItem(BlockInit.ARAUCARIOXYLON_PRESSURE_PLATE);
+        evenSimplerBlockItem(BlockInit.ARAUCARIOXYLON_FENCE_GATE);
+
+        trapdoorItem(BlockInit.ARAUCARIOXYLON_TRAPDOOR);
     }
 
+    public void evenSimplerBlockItem(RegistryObject<Block> block) {
+        this.withExistingParent(LostInTime.MODID + ":" + ForgeRegistries.BLOCKS.getKey(block.get()).getPath(),
+                modLoc("block/" + ForgeRegistries.BLOCKS.getKey(block.get()).getPath()));
+    }
+
+    public void trapdoorItem(RegistryObject<Block> block) {
+        this.withExistingParent(ForgeRegistries.BLOCKS.getKey(block.get()).getPath(),
+                modLoc("block/" + ForgeRegistries.BLOCKS.getKey(block.get()).getPath() + "_bottom"));
+    }
+
+    public void fenceItem(RegistryObject<Block> block, RegistryObject<Block> baseBlock) {
+        this.withExistingParent(ForgeRegistries.BLOCKS.getKey(block.get()).getPath(), mcLoc("block/fence_inventory"))
+                .texture("texture",  new ResourceLocation(LostInTime.MODID, "block/" + ForgeRegistries.BLOCKS.getKey(baseBlock.get()).getPath()));
+    }
+
+    public void buttonItem(RegistryObject<Block> block, RegistryObject<Block> baseBlock) {
+        this.withExistingParent(ForgeRegistries.BLOCKS.getKey(block.get()).getPath(), mcLoc("block/button_inventory"))
+                .texture("texture",  new ResourceLocation(LostInTime.MODID, "block/" + ForgeRegistries.BLOCKS.getKey(baseBlock.get()).getPath()));
+    }
+
+    public void wallItem(RegistryObject<Block> block, RegistryObject<Block> baseBlock) {
+        this.withExistingParent(ForgeRegistries.BLOCKS.getKey(block.get()).getPath(), mcLoc("block/wall_inventory"))
+                .texture("wall",  new ResourceLocation(LostInTime.MODID, "block/" + ForgeRegistries.BLOCKS.getKey(baseBlock.get()).getPath()));
+    }
+
+    private ItemModelBuilder simpleBlockItem(RegistryObject<Block> item) {
+        return withExistingParent(item.getId().getPath(),
+                new ResourceLocation("item/generated")).texture("layer0",
+                new ResourceLocation(LostInTime.MODID,"item/" + item.getId().getPath()));
+    }
+    
     private void simple(Item... items) {
         for (Item item : items) {
             getBuilder(itemName(item)).parent(generated).texture("layer0", "item/" + itemName(item));

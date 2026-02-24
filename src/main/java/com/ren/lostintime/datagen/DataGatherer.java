@@ -33,8 +33,8 @@ public class DataGatherer {
         gen.addProvider(event.includeServer(), new LITBiomeTags(output, provider, helper));
 
         //CLIENT
-        gen.addProvider(event.includeClient(), new LITItemsModelProvider(output, helper));
         gen.addProvider(event.includeClient(), new LITBlockStateProvider(output, helper));
+        gen.addProvider(event.includeClient(), new LITItemsModelProvider(output, helper));
         gen.addProvider(event.includeClient(), new LITLanguageProvider(output));
     }
 }

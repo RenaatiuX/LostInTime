@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "lostintime:block/araucarioxylon_planks",
+    "side": "lostintime:block/araucarioxylon_planks",
+    "top": "lostintime:block/araucarioxylon_planks"
+  }
+}

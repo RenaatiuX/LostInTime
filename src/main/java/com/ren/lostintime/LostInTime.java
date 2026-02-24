@@ -197,6 +197,22 @@ public class LostInTime {
             event.accept(BlockInit.MANGO_LOG);
             event.accept(BlockInit.MANGO_SAPLING);
             event.accept(BlockInit.ARAUCARIOXYLON_SAPLING);
+            event.accept(BlockInit.ARAUCARIOXYLON_LEAVES);
+            event.accept(BlockInit.ARAUCARIOXYLON_LOG);
+            event.accept(BlockInit.ARAUCARIOXYLON_PLANKS);
+
+            event.accept(BlockInit.ARAUCARIOXYLON_STAIRS.get());
+            event.accept(BlockInit.ARAUCARIOXYLON_SLAB.get());
+            event.accept(BlockInit.ARAUCARIOXYLON_BUTTON.get());
+            event.accept(BlockInit.ARAUCARIOXYLON_PRESSURE_PLATE.get());
+
+            event.accept(BlockInit.ARAUCARIOXYLON_FENCE.get());
+            event.accept(BlockInit.ARAUCARIOXYLON_FENCE_GATE.get());
+            event.accept(BlockInit.ARAUCARIOXYLON_WALL.get());
+
+            event.accept(BlockInit.ARAUCARIOXYLON_DOOR.get());
+            event.accept(BlockInit.ARAUCARIOXYLON_TRAPDOOR.get());
+
             event.accept(BlockInit.DODO_EGG);
             event.accept(BlockInit.DEAD_BARREL_SPONGE);
             event.accept(BlockInit.BARREL_SPONGE);

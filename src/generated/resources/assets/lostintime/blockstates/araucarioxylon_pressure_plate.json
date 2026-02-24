@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "lostintime:block/araucarioxylon_pressure_plate"
+    },
+    "powered=true": {
+      "model": "lostintime:block/araucarioxylon_pressure_plate_down"
+    }
+  }
+}

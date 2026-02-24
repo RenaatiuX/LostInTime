@@ -7,8 +7,7 @@ import com.ren.lostintime.common.init.BlockInit;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
@@ -38,12 +37,26 @@ public class LITBlockStateProvider extends BlockStateProvider {
         blockItem(BlockInit.ARAUCARIOXYLON_LOG);
         leavesBlock(BlockInit.ARAUCARIOXYLON_LEAVES);
         saplingBlock(BlockInit.ARAUCARIOXYLON_SAPLING);
+        block(BlockInit.ARAUCARIOXYLON_PLANKS.get());
 
         leavesBlock(BlockInit.MANGO_LEAVES);
         saplingBlock(BlockInit.MANGO_SAPLING);
         stageBlock(BlockInit.MANGO_FRUIT_LEAVES.get(), LITFruitBlock.AGE, true);
         blockItem(BlockInit.MANGO_FRUIT_LEAVES);
 
+        stairsBlock(((StairBlock) BlockInit.ARAUCARIOXYLON_STAIRS.get()), blockTexture(BlockInit.ARAUCARIOXYLON_PLANKS.get()));
+        slabBlock(((SlabBlock) BlockInit.ARAUCARIOXYLON_SLAB.get()), blockTexture(BlockInit.ARAUCARIOXYLON_PLANKS.get()), blockTexture(BlockInit.ARAUCARIOXYLON_PLANKS.get()));
+
+        buttonBlock(((ButtonBlock) BlockInit.ARAUCARIOXYLON_BUTTON.get()), blockTexture(BlockInit.ARAUCARIOXYLON_PLANKS.get()));
+        pressurePlateBlock(((PressurePlateBlock) BlockInit.ARAUCARIOXYLON_PRESSURE_PLATE.get()), blockTexture(BlockInit.ARAUCARIOXYLON_PLANKS.get()));
+
+        fenceBlock(((FenceBlock) BlockInit.ARAUCARIOXYLON_FENCE.get()), blockTexture(BlockInit.ARAUCARIOXYLON_PLANKS.get()));
+        fenceGateBlock(((FenceGateBlock) BlockInit.ARAUCARIOXYLON_FENCE_GATE.get()), blockTexture(BlockInit.ARAUCARIOXYLON_PLANKS.get()));
+        wallBlock(((WallBlock) BlockInit.ARAUCARIOXYLON_WALL.get()), blockTexture(BlockInit.ARAUCARIOXYLON_PLANKS.get()));
+
+        doorBlockWithRenderType(((DoorBlock) BlockInit.ARAUCARIOXYLON_DOOR.get()), modLoc("block/araucarioxylon_door_bottom"), modLoc("block/araucarioxylon_door_top"), "cutout");
+        trapdoorBlockWithRenderType(((TrapDoorBlock) BlockInit.ARAUCARIOXYLON_TRAPDOOR.get()), modLoc("block/araucarioxylon_trapdoor"), true, "cutout");
+        
         createDodoEggModel(BlockInit.DODO_EGG.get(), SingleEggBlock.HATCH);
         createBabyRoeBlock(BlockInit.BOTHRIOLEPIS_ROE.get());
         createBabyRoeBlock(BlockInit.ANOMALOCARIS_ROE.get());

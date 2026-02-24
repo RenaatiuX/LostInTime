@@ -45,6 +45,13 @@ public class LITBlockTagProvider extends BlockTagsProvider {
                 .add(BlockInit.MANGO_FRUIT_LEAVES.get())
                 .add(BlockInit.ARAUCARIOXYLON_LEAVES.get());
 
+        tag(BlockTags.FENCES)
+                .add(BlockInit.ARAUCARIOXYLON_FENCE.get());
+        tag(BlockTags.FENCE_GATES)
+                .add(BlockInit.ARAUCARIOXYLON_FENCE_GATE.get());
+        tag(BlockTags.WALLS)
+                .add(BlockInit.ARAUCARIOXYLON_WALL.get());
+
         tag(LITTags.Blocks.DODO_SOILS)
                 .add(Blocks.GRASS_BLOCK)
                 .add(Blocks.DIRT)

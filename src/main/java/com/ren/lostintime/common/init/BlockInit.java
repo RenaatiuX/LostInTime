@@ -5,16 +5,16 @@ import com.ren.lostintime.common.block.*;
 import com.ren.lostintime.common.worldgen.fossil.FossilEra;
 import com.ren.lostintime.common.worldgen.tree.trees.AraucarioxylonTreeGrower;
 import com.ren.lostintime.common.worldgen.tree.trees.MangoTreeGrower;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -99,8 +99,35 @@ public class BlockInit {
             () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LOG).strength(3F)));
 
     //PLANKS
-    /*public static final RegistryObject<Block> ARAUCARIOXYLON_PLANKS = registerBlock("araucarioxylon_planks",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));*/
+    public static final RegistryObject<Block> ARAUCARIOXYLON_PLANKS = registerBlock("araucarioxylon_planks",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
+
+    //DOOR
+    public static final RegistryObject<Block> ARAUCARIOXYLON_DOOR = registerBlock("araucarioxylon_door",
+            () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS), BlockSetType.OAK));
+
+    public static final RegistryObject<Block> ARAUCARIOXYLON_STAIRS = registerBlock("araucarioxylon_stairs",
+            () -> new StairBlock(() -> ARAUCARIOXYLON_PLANKS.get().defaultBlockState(),
+                    BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
+
+    public static final RegistryObject<Block> ARAUCARIOXYLON_SLAB = registerBlock("araucarioxylon_slab",
+            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
+
+    public static final RegistryObject<Block> ARAUCARIOXYLON_BUTTON = registerBlock("araucarioxylon_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.OAK_BUTTON), BlockSetType.OAK, 30, true));
+
+    public static final RegistryObject<Block> ARAUCARIOXYLON_PRESSURE_PLATE = registerBlock("araucarioxylon_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS),
+                    BlockSetType.OAK));
+
+    public static final RegistryObject<Block> ARAUCARIOXYLON_FENCE = registerBlock("araucarioxylon_fence",
+            () -> new FenceBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
+    public static final RegistryObject<Block> ARAUCARIOXYLON_FENCE_GATE = registerBlock("araucarioxylon_fence_gate",
+            () -> new FenceGateBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS), WoodType.OAK));
+    public static final RegistryObject<Block> ARAUCARIOXYLON_WALL = registerBlock("araucarioxylon_wall",
+            () -> new WallBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
+    public static final RegistryObject<Block> ARAUCARIOXYLON_TRAPDOOR = registerBlock("araucarioxylon_trapdoor",
+            () -> new TrapDoorBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).noOcclusion(), BlockSetType.OAK));
 
     //EGGS
     public static final RegistryObject<Block> DODO_EGG = registerBlock("dodo_egg",

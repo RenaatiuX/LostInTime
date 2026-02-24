@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "lostintime:block/araucarioxylon_slab"
+    },
+    "type=double": {
+      "model": "lostintime:block/araucarioxylon_planks"
+    },
+    "type=top": {
+      "model": "lostintime:block/araucarioxylon_slab_top"
+    }
+  }
+}
