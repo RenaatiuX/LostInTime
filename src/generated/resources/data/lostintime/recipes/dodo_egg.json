@@ -20,7 +20,7 @@
   "nutrient": {
     "item": "lostintime:universal_nutrient"
   },
-  "processingType": "embryo",
+  "processingType": "egg",
   "processing_time": 200,
   "result": {
     "item": "lostintime:dodo_egg"

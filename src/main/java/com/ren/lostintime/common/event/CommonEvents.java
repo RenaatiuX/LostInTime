@@ -33,8 +33,6 @@ public class CommonEvents {
             dispenser();
         });
     }
-
-    //TODO change this name to CommonEvents cause without specifying a side this will be executed on both, the client and server side which is also required for the entity attributes
     @SubscribeEvent
     public static void registerAttr(EntityAttributeCreationEvent event) {
         event.put(EntityInit.DODO.get(), Dodo.createAttributes().build());
@@ -47,6 +45,7 @@ public class CommonEvents {
     @SubscribeEvent
     public static void registerSpawnRules(SpawnPlacementRegisterEvent event){
         event.register(EntityInit.DODO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Dodo::checkLITAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(EntityInit.ANOMALOCARIS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.OCEAN_FLOOR, Anomalocaris::checkAnomalocarisSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
 
     private static void dispenser() {

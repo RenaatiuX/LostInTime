@@ -9,6 +9,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.SpawnData;
 import net.minecraft.world.level.biome.Biomes;
@@ -26,6 +27,7 @@ public class LITBiomesModifiers {
 
     public static final ResourceKey<BiomeModifier> ADD_FOSSILS = registerKey("add_fossils");
     public static final ResourceKey<BiomeModifier> DODO_SPAWN = registerKey("dodo_spawn");
+    public static final ResourceKey<BiomeModifier> ANOMALOCARIS_SPAWN = registerKey("anomalocaris_spawn");
 
     public static void bootstrap(BootstapContext<BiomeModifier> context) {
         var placed = context.lookup(Registries.PLACED_FEATURE);
@@ -39,6 +41,10 @@ public class LITBiomesModifiers {
                         biomes.getOrThrow(BiomeTags.IS_OVERWORLD), fossils, GenerationStep.Decoration.UNDERGROUND_ORES));
         context.register(DODO_SPAWN, new ForgeBiomeModifiers.AddSpawnsBiomeModifier(biomes.getOrThrow(LITTags.Biomes.DODO_CAN_SPAWN), List.of(
                 new MobSpawnSettings.SpawnerData(EntityInit.DODO.get(), 20, 1, 4)
+        )));
+
+        context.register(ANOMALOCARIS_SPAWN, new ForgeBiomeModifiers.AddSpawnsBiomeModifier(biomes.getOrThrow(LITTags.Biomes.ANOMALOCARIS_CAN_SPAWN), List.of(
+                new MobSpawnSettings.SpawnerData(EntityInit.ANOMALOCARIS.get(), 15, 1, 3)
         )));
     }
 

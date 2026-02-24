@@ -18,5 +18,6 @@ public class LITBiomeTags extends BiomeTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         tag(LITTags.Biomes.DODO_CAN_SPAWN).add(Biomes.BAMBOO_JUNGLE, Biomes.JUNGLE, Biomes.SPARSE_JUNGLE);
+        tag(LITTags.Biomes.ANOMALOCARIS_CAN_SPAWN).add(Biomes.WARM_OCEAN, Biomes.LUKEWARM_OCEAN, Biomes.DEEP_LUKEWARM_OCEAN);
     }
 }

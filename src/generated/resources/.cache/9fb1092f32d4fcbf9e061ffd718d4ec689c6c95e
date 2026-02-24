@@ -1,4 +1,4 @@
-// 1.20.1	2026-02-24T17:49:49.046537004	Recipes
+// 1.20.1	2026-02-24T18:07:48.957400362	Recipes
 a5cbec91d05cc5c6e8aaefc650a6ff9b965b242d data/lostintime/advancements/recipes/dodo_egg.json
 334e226d286d4f776663fc970162381466eb1e6d data/lostintime/advancements/recipes/food/cooked_dodo.json
 f4abb2e811999d9ceef51f5781ec5bedc062bd92 data/lostintime/advancements/recipes/food/cooked_dodo_from_campfire_cooking.json
@@ -15,7 +15,7 @@ c741f13fd35c6cd43575575c9cdf778975f2af5d data/lostintime/advancements/recipes/so
 67150f15b100c2d8b96a45f3f30158bfbe6fe2cc data/lostintime/recipes/cooked_dodo.json
 a23ee9df1bbfa16e0debe6d06e9f5073128bbd6e data/lostintime/recipes/cooked_dodo_from_campfire_cooking.json
 39246b66267526baea0415b252bb2de67462510e data/lostintime/recipes/cooked_dodo_from_smoking.json
-43f0520531168c5ed5906abbfab2fbe479693125 data/lostintime/recipes/dodo_egg.json
+53dfb9256565a13785ae810df678a0e1a5978d97 data/lostintime/recipes/dodo_egg.json
 32850b831e1c92bada7a4811ebb51f8f72e042b4 data/lostintime/recipes/identification/cambrian_fossil.json
 07abc810b5532e102e59e8831641b16586b77f76 data/lostintime/recipes/identification/carboniferous_fossil.json
 23de262dccc907e739a229a48e08f31fe1627669 data/lostintime/recipes/identification/cretaceous_fossil.json
