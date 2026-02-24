@@ -1,13 +1,18 @@
 package com.ren.lostintime.common.block;
 
 import com.ren.lostintime.common.block.properties.TitanosarcolitesPart;
+import com.ren.lostintime.common.init.BlockInit;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -19,9 +24,15 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.Map;
 
 public class GiantTitanosarcolitesBlock extends Block implements SimpleWaterloggedBlock {
 
@@ -29,6 +40,13 @@ public class GiantTitanosarcolitesBlock extends Block implements SimpleWaterlogg
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<TitanosarcolitesPart> PART = EnumProperty.create("part",
             TitanosarcolitesPart.class);
+
+    private static final Map<TitanosarcolitesPart, EnumMap<Direction, VoxelShape>> SHAPES = Util.make(new EnumMap<>(TitanosarcolitesPart.class), part ->{
+        part.put(TitanosarcolitesPart.BASE_LEFT, createRotatedShape(Direction.NORTH, makeBaseShape()));
+        part.put(TitanosarcolitesPart.BASE_RIGHT, createRotatedShape(Direction.NORTH, makeBaseShape()));
+        part.put(TitanosarcolitesPart.PINCER_LEFT, createRotatedShape(Direction.NORTH, makeLeftPincerShape()));
+        part.put(TitanosarcolitesPart.PINCER_RIGHT, createRotatedShape(Direction.NORTH, makeRightPincerShape()));
+    });
 
     public GiantTitanosarcolitesBlock(Properties pProperties) {
         super(pProperties);
@@ -49,6 +67,49 @@ public class GiantTitanosarcolitesBlock extends Block implements SimpleWaterlogg
     }
 
     @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return SHAPES.getOrDefault(pState.getValue(PART), new EnumMap<>(Direction.class)).getOrDefault(pState.getValue(FACING), Shapes.block());
+    }
+
+    @Override
+    public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
+        Direction forward = pState.getValue(FACING);
+        Direction right = forward.getCounterClockWise();
+
+        BlockPos baseRight = pPos.relative(right);
+        BlockPos pincerLeft = pPos.relative(forward);
+        BlockPos pincerRight = pPos.relative(forward).relative(right);
+
+        return canPlacePart(pLevel, baseRight) &&
+                canPlacePart(pLevel, pincerLeft) &&
+                canPlacePart(pLevel, pincerRight);
+    }
+
+    @Override
+    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
+        Direction forward = pState.getValue(FACING);
+        Direction right = forward.getCounterClockWise();
+
+        BlockPos baseRight = pPos.relative(right);
+        BlockPos pincerLeft = pPos.relative(forward);
+        BlockPos pincerRight = pPos.relative(forward).relative(right);
+
+        if (canPlacePart(pLevel, baseRight) &&
+                canPlacePart(pLevel, pincerLeft) &&
+                canPlacePart(pLevel, pincerRight)) {
+
+            boolean hasWater = pState.getValue(WATERLOGGED);
+            BlockState giantBase = BlockInit.GIANT_TITANOSARCOLITES.get().defaultBlockState()
+                    .setValue(GiantTitanosarcolitesBlock.FACING, forward)
+                    .setValue(GiantTitanosarcolitesBlock.WATERLOGGED, hasWater);
+
+            pLevel.setBlock(baseRight, giantBase.setValue(GiantTitanosarcolitesBlock.PART, TitanosarcolitesPart.BASE_RIGHT), 3);
+            pLevel.setBlock(pincerLeft, giantBase.setValue(GiantTitanosarcolitesBlock.PART, TitanosarcolitesPart.PINCER_LEFT), 3);
+            pLevel.setBlock(pincerRight, giantBase.setValue(GiantTitanosarcolitesBlock.PART, TitanosarcolitesPart.PINCER_RIGHT), 3);
+        }
+    }
+
+    @Override
     public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
         if (pState.getValue(WATERLOGGED)) {
             pLevel.scheduleTick(pPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
@@ -61,7 +122,6 @@ public class GiantTitanosarcolitesBlock extends Block implements SimpleWaterlogg
 
     private BlockPos getBaseLeftPos(BlockPos pos, BlockState state) {
         Direction forward = state.getValue(FACING);
-        Direction right = forward.getCounterClockWise();
         Direction left = forward.getClockWise();
         Direction back = forward.getOpposite();
 
@@ -71,6 +131,11 @@ public class GiantTitanosarcolitesBlock extends Block implements SimpleWaterlogg
             case PINCER_LEFT -> pos.relative(back);
             case PINCER_RIGHT -> pos.relative(left).relative(back);
         };
+    }
+
+    private boolean canPlacePart(LevelReader level, BlockPos pos) {
+        BlockState state = level.getBlockState(pos);
+        return state.canBeReplaced() || state.is(Blocks.WATER);
     }
 
     private boolean isStructureIntact(LevelAccessor level, BlockPos pos, BlockState state) {
@@ -93,14 +158,6 @@ public class GiantTitanosarcolitesBlock extends Block implements SimpleWaterlogg
         return stateAtPos.is(this) &&
                 stateAtPos.getValue(FACING) == referenceState.getValue(FACING) &&
                 stateAtPos.getValue(PART) == expectedPart;
-    }
-
-    @Override
-    public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
-        if (!pLevel.isClientSide && !pPlayer.isCreative()) {
-
-            super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
-        }
     }
 
     @Override
@@ -137,5 +194,39 @@ public class GiantTitanosarcolitesBlock extends Block implements SimpleWaterlogg
         return this.defaultBlockState()
                 .setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER)
                 .setValue(FACING, facing);
+    }
+
+    private static EnumMap<Direction, VoxelShape> createRotatedShape(Direction from, VoxelShape shape){
+        return Util.make(new EnumMap<>(Direction.class), m -> {
+            for (Direction dir : Direction.Plane.HORIZONTAL) {
+                m.put(dir, TitanosarcolitesBlock.rotateShape(from, dir, shape));
+            }
+        });
+    }
+
+
+    private static VoxelShape makeBaseShape(){
+        VoxelShape shape = Shapes.empty();
+        shape = Shapes.join(shape, Shapes.box(0, 0, 0, 1, 0.4375, 1), BooleanOp.OR);
+
+        return shape;
+    }
+
+    private static VoxelShape makeLeftPincerShape(){
+        VoxelShape shape = Shapes.empty();
+        shape = Shapes.join(shape, Shapes.box(0.5, 0, 0, 1, 0.25, 1), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.0625, 0.00625, 0.25, 0.4375, 0.00625, 0.5), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.0625, 0, 0, 0.5, 0.125, 0.25), BooleanOp.OR);
+
+        return shape;
+    }
+
+    private static VoxelShape makeRightPincerShape(){
+        VoxelShape shape = Shapes.empty();
+        shape = Shapes.join(shape, Shapes.box(0, 0, 0, 0.5, 0.25, 1), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.5625, 0.00625, 0.25, 0.9375, 0.00625, 0.5), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.5, 0, 0, 0.9375, 0.125, 0.25), BooleanOp.OR);
+
+        return shape;
     }
 }
