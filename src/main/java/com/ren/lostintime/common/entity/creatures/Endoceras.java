@@ -1,5 +1,7 @@
 package com.ren.lostintime.common.entity.creatures;
 
+import com.google.common.collect.ImmutableList;
+import com.mojang.serialization.Dynamic;
 import com.ren.lostintime.common.entity.LITAnimal;
 import com.ren.lostintime.common.entity.LITWaterAnimal;
 import com.ren.lostintime.common.init.ItemInit;
@@ -10,13 +12,16 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.sensing.Sensor;
+import net.minecraft.world.entity.ai.sensing.SensorType;
+import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -36,29 +41,46 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity {
     //MULTIPART
     private final EndocerasPart[] parts;
     public final EndocerasPart headPart;
-    public final EndocerasPart bodyPart1;
-    public final EndocerasPart bodyPart2;
-    public final EndocerasPart bodyPart3;
-    public final EndocerasPart tailPart;
     private int shellDropTicker = 0;
+
+    protected static final ImmutableList<SensorType<? extends Sensor<? super Endoceras>>> SENSOR_TYPES = ImmutableList.of(
+            SensorType.NEAREST_LIVING_ENTITIES,
+            SensorType.NEAREST_PLAYERS,
+            SensorType.HURT_BY
+    );
+
+    protected static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(
+            MemoryModuleType.LOOK_TARGET,
+            MemoryModuleType.WALK_TARGET,
+            MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
+            MemoryModuleType.PATH,
+            MemoryModuleType.NEAREST_LIVING_ENTITIES,
+            MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
+            MemoryModuleType.NEAREST_PLAYERS,
+            MemoryModuleType.NEAREST_VISIBLE_PLAYER,
+            MemoryModuleType.ATTACK_TARGET,
+            MemoryModuleType.HURT_BY,
+            MemoryModuleType.HURT_BY_ENTITY,
+            MemoryModuleType.AVOID_TARGET
+    );
 
     public Endoceras(EntityType<? extends LITAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-        this.headPart = new EndocerasPart(this, "head", 1.8F, 1.8F);
-        this.bodyPart1 = new EndocerasPart(this, "body", 2.0F, 2.0F);
-        this.bodyPart2 = new EndocerasPart(this, "body", 2.0F, 2.0F);
-        this.bodyPart3 = new EndocerasPart(this, "body", 2.0F, 2.0F);
-        this.tailPart = new EndocerasPart(this, "tail", 1.5F, 1.5F);
+        this.headPart = new EndocerasPart(this, "head", 1.0F, 1.0F);
 
-        this.parts = new EndocerasPart[]{this.headPart, this.bodyPart1, this.bodyPart2, this.bodyPart3, this.tailPart};
+        this.parts = new EndocerasPart[]{this.headPart,
+                new EndocerasPart(this, "body", 1.0F, 1.0F),
+                new EndocerasPart(this, "body", 1.0F, 1.0F),
+                new EndocerasPart(this, "body", 1.0F, 1.0F),
+                new EndocerasPart(this, "body", 1.0F, 1.0F),
+                new EndocerasPart(this, "body", 1.0F, 1.0F),
+                new EndocerasPart(this, "body", 1.0F, 1.0F)
+        };
     }
 
     @Override
     protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(6, new RandomSwimmingGoal(this, 1.0D, 10));
-        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        // Brain system handles goals
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -66,6 +88,11 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity {
                 .add(Attributes.MAX_HEALTH, 80.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.7D)
                 .add(Attributes.ATTACK_DAMAGE, 8.0D);
+    }
+
+    @Override
+    public boolean shouldRender(double pX, double pY, double pZ) {
+        return super.shouldRender(pX, pY, pZ);
     }
 
     //MULTIPART
@@ -100,24 +127,32 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity {
     public void aiStep() {
         super.aiStep();
         if (!this.level().isClientSide() && this.isAlive()) {
-            shellDropTicker++;
+            if (shellDropTicker > 0)
+                shellDropTicker--;
 
             if (shellDropTicker >= 3600) {
                 if (this.horizontalCollision) {
                     if (this.random.nextFloat() < 0.2F) {
-                        //this.spawnAtLocation(ItemInit.ENDOCERAS_SHELL_FRAGMENT.get());
-                        shellDropTicker = 0;
+                        this.spawnAtLocation(ItemInit.ENDOCERAS_SHELL_FRAGMENT.get());
+                        shellDropTicker = 3400;
                     }
                 }
             }
         }
 
-        float f = this.yBodyRot * ((float)Math.PI / 180F);
-        float sin = Mth.sin(f);
-        float cos = Mth.cos(f);
+        float yRotRad = Mth.DEG_TO_RAD * this.yBodyRot;
+        float sinY = Mth.sin(yRotRad);
+        float cosY = Mth.cos(yRotRad);
 
-        this.movePart(this.bodyPart1, 0.0D, 0.0D, 0.0D);
-        this.movePart(this.headPart, (double)(-sin * 2.0F), 0.0D, (double)(cos * 2.0F));
+        double dx = -sinY;
+        double dz = cosY;
+        double spacing = 1.1D;
+
+        this.movePart(this.headPart, dx * 1.1D, 0, dz * 1.1D);
+        for (int i = 1; i < this.parts.length; i++) {
+            var part = this.parts[i];
+            this.movePart(part, dx * -spacing * (i - 1), 0, dz * -spacing * (i - 1));
+        }
     }
 
     private void movePart(EndocerasPart part, double offsetX, double offsetY, double offsetZ) {
@@ -151,6 +186,11 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity {
     }
 
     @Override
+    public @NotNull AABB getBoundingBoxForCulling() {
+        return super.getBoundingBoxForCulling().inflate(2);
+    }
+
+    @Override
     public @Nullable SoundEvent getFlopSound() {
         return SoundEvents.COD_FLOP;
     }
@@ -158,6 +198,48 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity {
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
         return null;
+    }
+
+    @Override
+    protected Brain.Provider<Endoceras> brainProvider() {
+        return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
+    }
+
+    @Override
+    protected Brain<?> makeBrain(Dynamic<?> pDynamic) {
+        Brain<Endoceras> brain = this.brainProvider().makeBrain(pDynamic);
+        EndocerasAi.initBrain(brain);
+        return brain;
+    }
+
+    public boolean isTargetable(LivingEntity target) {
+        return isSuitablePrey(target) && Sensor.isEntityAttackable(this, target);
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        this.tickBrain();
+        super.customServerAiStep();
+    }
+
+    protected void tickBrain() {
+        Brain<Endoceras> brain = this.getBrain();
+        brain.tick((ServerLevel) this.level(), this);
+        brain.setActiveActivityToFirstValid(ImmutableList.of(Activity.AVOID, Activity.FIGHT, Activity.IDLE));
+    }
+
+    public boolean isSuitablePrey(LivingEntity entity) {
+        return entity.getBbWidth() <= 0.9F && entity.getBbHeight() <= 0.9F && entity.isInWater();
+    }
+
+    @Override
+    public boolean canAttack(LivingEntity pTarget) {
+        return this.isSuitablePrey(pTarget) && super.canAttack(pTarget);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Brain<Endoceras> getBrain() {
+        return (Brain<Endoceras>) super.getBrain();
     }
 
     @Override
