@@ -1,12 +1,12 @@
 {
   "type": "lostintime:identification_recipe",
   "input": {
-    "item": "lostintime:quaternary_fossil"
+    "item": "lostintime:deepslate_triassic_fossil_block"
   },
   "outputs": [
     {
       "item": "lostintime:amber",
-      "weight": 0.25
+      "weight": 0.125
     },
     {
       "item": "minecraft:bone",
@@ -17,8 +17,8 @@
       "weight": 33.0
     },
     {
-      "item": "minecraft:cobblestone",
-      "weight": 15.0
+      "item": "minecraft:cobbled_deepslate",
+      "weight": 30.0
     },
     {
       "item": "lostintime:dead_barrel_sponge",
@@ -49,14 +49,6 @@
       "weight": 25.0
     },
     {
-      "item": "lostintime:dodo_fossil",
-      "weight": 25.0
-    },
-    {
-      "item": "lostintime:dodo_skull",
-      "weight": 5.0
-    },
-    {
       "item": "minecraft:gold_nugget",
       "maxCount": 2,
       "minCount": 1,
@@ -73,12 +65,12 @@
       "weight": 10.0
     },
     {
-      "item": "minecraft:nautilus_shell",
-      "weight": 1.0
+      "item": "lostintime:mastodonsaurus_fossil",
+      "weight": 25.0
     },
     {
-      "item": "minecraft:skeleton_skull",
-      "weight": 1.0
+      "item": "lostintime:mastodonsaurus_skull",
+      "weight": 5.0
     }
   ]
 }

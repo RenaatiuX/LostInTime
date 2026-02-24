@@ -1,0 +1,17 @@
+{
+  "type": "lostintime:soul_extractor_recipe",
+  "inputs": [
+    {
+      "item": "minecraft:ender_pearl"
+    }
+  ],
+  "residue_on_success": 2,
+  "result": {
+    "chance": 1.0,
+    "count": 1,
+    "item": "minecraft:ender_eye"
+  },
+  "soul_source": {
+    "item": "lostintime:soul_ash"
+  }
+}

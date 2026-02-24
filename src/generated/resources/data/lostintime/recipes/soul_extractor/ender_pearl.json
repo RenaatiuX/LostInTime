@@ -1,0 +1,19 @@
+{
+  "type": "lostintime:soul_extractor_recipe",
+  "inputs": [
+    {
+      "item": "minecraft:slime_ball"
+    },
+    {
+      "item": "minecraft:egg"
+    }
+  ],
+  "result": {
+    "chance": 1.0,
+    "count": 2,
+    "item": "minecraft:ender_pearl"
+  },
+  "soul_source": {
+    "tag": "minecraft:soul_fire_base_blocks"
+  }
+}

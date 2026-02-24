@@ -1,12 +1,12 @@
 {
   "type": "lostintime:identification_recipe",
   "input": {
-    "item": "lostintime:quaternary_fossil"
+    "item": "lostintime:permian_fossil"
   },
   "outputs": [
     {
       "item": "lostintime:amber",
-      "weight": 0.25
+      "weight": 0.125
     },
     {
       "item": "minecraft:bone",
@@ -22,39 +22,31 @@
     },
     {
       "item": "lostintime:dead_barrel_sponge",
-      "weight": 1.25
+      "weight": 2.5
     },
     {
       "item": "lostintime:dead_glass_sponge",
-      "weight": 1.25
+      "weight": 2.5
     },
     {
       "item": "lostintime:dead_pipe_sponge",
-      "weight": 1.25
+      "weight": 2.5
     },
     {
       "item": "lostintime:dead_tree_sponge",
-      "weight": 1.25
+      "weight": 2.5
     },
     {
       "item": "lostintime:dead_vase_sponge",
-      "weight": 1.25
+      "weight": 2.5
     },
     {
       "item": "lostintime:dead_wool_sponge",
-      "weight": 1.25
+      "weight": 2.5
     },
     {
       "item": "minecraft:dirt",
       "weight": 25.0
-    },
-    {
-      "item": "lostintime:dodo_fossil",
-      "weight": 25.0
-    },
-    {
-      "item": "lostintime:dodo_skull",
-      "weight": 5.0
     },
     {
       "item": "minecraft:gold_nugget",
@@ -73,12 +65,12 @@
       "weight": 10.0
     },
     {
-      "item": "minecraft:nautilus_shell",
-      "weight": 1.0
+      "item": "lostintime:scutosaurus_fossil",
+      "weight": 25.0
     },
     {
-      "item": "minecraft:skeleton_skull",
-      "weight": 1.0
+      "item": "lostintime:scutosaurus_skull",
+      "weight": 5.0
     }
   ]
 }

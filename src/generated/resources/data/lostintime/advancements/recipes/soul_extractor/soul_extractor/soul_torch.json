@@ -1,0 +1,22 @@
+{
+  "criteria": {
+    "has_torch": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:torch"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_torch"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

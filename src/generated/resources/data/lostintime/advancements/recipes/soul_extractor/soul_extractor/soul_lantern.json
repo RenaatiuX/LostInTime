@@ -1,0 +1,22 @@
+{
+  "criteria": {
+    "has_lantern": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:lantern"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_lantern"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

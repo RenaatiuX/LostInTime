@@ -8,12 +8,14 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +30,7 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
 
     @Override
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> pWriter) {
-        cookingFood("cooked_dodo", ItemInit.RAW_DODO.get(), ItemInit.COOKED_DODO.get(),0.35F, pWriter);
+        cookingFood("cooked_dodo", ItemInit.RAW_DODO.get(), ItemInit.COOKED_DODO.get(), 0.35F, pWriter);
 
         // Quaternary
         addFossilRecipe(pWriter, ItemInit.QUATERNARY_FOSSIL.get(), false, builder -> builder
@@ -295,6 +297,7 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
                 .addOutput(BlockInit.DEAD_WOOL_SPONGE.get(), 2.5)
         );
 
+        //I DON'T QUITE UNDERSTAND THE FIRST RECIPE
         soulExtract(ItemInit.ASPECT_EMERGENCE.get())
                 .addInput(Ingredient.of(ItemInit.SOUL_GRUME.get()))
                 .soulSource(Ingredient.of(ItemInit.ECTOPLASM.get()))
@@ -302,6 +305,49 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
                 .chance(0.25f)
                 .residueOnSuccess(3)
                 .unlockedBy("has_soul_blob", has(ItemInit.SOUL_GRUME.get()))
+                .save(pWriter);
+
+        soulExtract(Items.SOUL_CAMPFIRE)
+                .addInput(Ingredient.of(Items.CAMPFIRE))
+                .soulSource(Ingredient.of(ItemTags.SOUL_FIRE_BASE_BLOCKS))
+                .unlockedBy("has_campfire", has(Blocks.CAMPFIRE))
+                .save(pWriter);
+        soulExtract(Items.SOUL_LANTERN)
+                .addInput(Ingredient.of(Items.LANTERN))
+                .soulSource(Ingredient.of(ItemTags.SOUL_FIRE_BASE_BLOCKS))
+                .unlockedBy("has_lantern", has(Blocks.LANTERN))
+                .save(pWriter);
+        soulExtract(Items.SOUL_TORCH)
+                .addInput(Ingredient.of(Items.TORCH))
+                .soulSource(Ingredient.of(ItemTags.SOUL_FIRE_BASE_BLOCKS))
+                .unlockedBy("has_torch", has(Blocks.TORCH))
+                .save(pWriter);
+
+        soulExtract(Items.CRYING_OBSIDIAN)
+                .addInput(Ingredient.of(Items.OBSIDIAN))
+                .soulSource(Ingredient.of(ItemTags.SOUL_FIRE_BASE_BLOCKS))
+                .unlockedBy("has_obsidian", has(Blocks.OBSIDIAN))
+                .save(pWriter);
+
+        soulExtract(new ItemStack(Items.ENDER_PEARL, 2))
+                .addInput(Ingredient.of(Items.SLIME_BALL))
+                .addInput(Ingredient.of(Items.EGG))
+                .soulSource(Ingredient.of(ItemTags.SOUL_FIRE_BASE_BLOCKS))
+                .unlockedBy("has_slime_ball", has(Items.SLIME_BALL))
+                .unlockedBy("has_egg", has(Items.EGG))
+                .save(pWriter);
+
+        soulExtract(Items.ENDER_EYE)
+                .addInput(Ingredient.of(Items.ENDER_PEARL))
+                .soulSource(Ingredient.of(ItemInit.SOUL_ASH.get()))
+                .residueOnSuccess(2)
+                .unlockedBy("has_ender_perl", has(Items.ENDER_PEARL))
+                .save(pWriter);
+
+        soulExtract(ItemInit.SPINEL.get())
+                .addInput(Ingredient.of(Items.ENDER_PEARL, Items.CHORUS_PLANT, Items.POPPED_CHORUS_FRUIT, Items.PURPUR_BLOCK, Items.SHULKER_SHELL))
+                .soulSource(Ingredient.of(ItemTags.SOUL_FIRE_BASE_BLOCKS))
+                .unlockedBy("has_chorus_block", has(Blocks.CHORUS_PLANT))
                 .save(pWriter);
 
         SoulConfiguratorFuelRecipeBuilder.fuelRecipe(ItemInit.SOUL_POWDER.get(), 300).save(pWriter, new ResourceLocation(LostInTime.MODID, "soul_powder_fuel"));
@@ -321,7 +367,7 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
 
     private void addFossilRecipe(Consumer<FinishedRecipe> pWriter, ItemLike input, boolean isDeepslate, Consumer<IdentificationBuilder> builderConsumer) {
         IdentificationBuilder builder = identify(input);
-        
+
         // Common outputs
         if (isDeepslate) {
             builder.addOutput(Items.COBBLED_DEEPSLATE, 30);
@@ -335,7 +381,7 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
 
         // Specific outputs
         builderConsumer.accept(builder);
-        
+
         builder.save(pWriter);
     }
 
@@ -352,7 +398,7 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
                 .save(consumer, namePrefix + "_from_smoking");
     }
 
-    public void machineRecipes(Consumer<FinishedRecipe> pWriter){
+    public void machineRecipes(Consumer<FinishedRecipe> pWriter) {
         /*
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, BlockInit.SOUL_CONFIGURATOR.get())
                 .define('I', ItemInit.INFORMATION_DOME.get())
@@ -371,6 +417,10 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
 
     public SoulExtractorBuilder soulExtract(ItemLike result) {
         return new SoulExtractorBuilder(new ItemStack(result));
+    }
+
+    public SoulExtractorBuilder soulExtract(ItemStack resultStack) {
+        return new SoulExtractorBuilder(resultStack);
     }
 
 }

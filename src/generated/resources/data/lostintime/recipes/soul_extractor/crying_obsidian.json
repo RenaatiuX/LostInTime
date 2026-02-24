@@ -1,0 +1,16 @@
+{
+  "type": "lostintime:soul_extractor_recipe",
+  "inputs": [
+    {
+      "item": "minecraft:obsidian"
+    }
+  ],
+  "result": {
+    "chance": 1.0,
+    "count": 1,
+    "item": "minecraft:crying_obsidian"
+  },
+  "soul_source": {
+    "tag": "minecraft:soul_fire_base_blocks"
+  }
+}
