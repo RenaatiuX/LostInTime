@@ -10,9 +10,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 
+import java.awt.*;
+
 public class SoulExtractorScreen extends AbstractContainerScreen<SoulExtractorMenu> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(LostInTime.MODID, "textures/gui/soul_extractor.png");
+    private static final Rectangle RESIDUE_RECTANGLE = new Rectangle(72, 9, 52, 13);
 
     // arrow dimensions 47x16
     //arrow position 75x26
@@ -42,6 +45,16 @@ public class SoulExtractorScreen extends AbstractContainerScreen<SoulExtractorMe
         if (menu.getResidue() > 0){
             int width = Math.round(Mth.map(menu.getResidue(), 0f, SoulExtractorBE.MAX_RESIDUE, 0f, 52f));
             pGuiGraphics.blit(TEXTURE, x + 72, y + 9, 176, 0, width, 13);
+        }
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+        super.renderTooltip(pGuiGraphics, pX, pY);
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
+        if (RESIDUE_RECTANGLE.contains(pX - x, pY - y)){
+            pGuiGraphics.renderTooltip(this.font, Component.translatable(LostInTime.MODID + ".tooltip.residue", menu.getResidue(), SoulExtractorBE.MAX_RESIDUE), pX, pY);
         }
     }
 

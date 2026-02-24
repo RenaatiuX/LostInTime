@@ -56,6 +56,10 @@
   "block.lostintime.tree_sponge": "Tree Sponge",
   "block.lostintime.vase_sponge": "Vase Sponge",
   "block.lostintime.wool_sponge": "Wool Sponge",
+  "container.lostintime.identification_table": "Identification Table",
+  "container.lostintime.soul_configurator": "Soul Configurator",
+  "container.lostintime.soul_extractor": "Soul Extractor",
+  "container.lostintime.transfigurator": "Transfigurator",
   "item.lostintime.amber": "Amber",
   "item.lostintime.amber_catalyst": "Amber Catalyst",
   "item.lostintime.amethyst_catalyst": "Amethyst Catalyst",
@@ -189,5 +193,7 @@
   "item.lostintime.vase_sponge_vital_pattern": "Vase Sponge Vital Pattern",
   "item.lostintime.wool_sponge_vital_pattern": "Wool Sponge Vital Pattern",
   "item.lostintime.zircon": "Zircon",
-  "item.lostintime.zircon_catalyst": "Zircon Catalyst"
+  "item.lostintime.zircon_catalyst": "Zircon Catalyst",
+  "itemGroup.lostintime": "Lost In Time",
+  "lostintime.tooltip.residue": "Residue: %s / %s"
 }
