@@ -3,6 +3,7 @@ package com.ren.lostintime.common.entity.creatures;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
+import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.entity.ai.FindWaterEggLayingSpot;
 import com.ren.lostintime.common.entity.ai.PregnantAnimalLove;
 import com.ren.lostintime.common.entity.util.IEggLayerAnimal;
@@ -39,25 +40,24 @@ public class EndocerasAi {
         ));
 
         brain.addActivity(Activity.IDLE, ImmutableList.of(
-                Pair.of(0, StartAttacking.create(Endoceras::findNearestValidAttackTarget)),
-                Pair.of(1, RandomStroll.swim(1.0f))
+                Pair.of(0, new PregnantAnimalLove(EntityInit.ENDOCERAS.get(), 1.1f)),
+                Pair.of(1, StartAttacking.create(Endoceras::findNearestValidAttackTarget)),
+                Pair.of(2, RandomStroll.swim(1.0f))
         ));
 
         brain.addActivityAndRemoveMemoriesWhenStopped(ActivitInit.GRAB_PREY.get(), ImmutableList.of(
                         Pair.of(0, SetWalkTargetFromAttackTargetIfTargetOutOfReach.create(1.2F)),
                         Pair.of(1, StopAttackingIfTargetInvalid.create()),
                         Pair.of(2, makeGrabAttack())
-                ), ImmutableSet.of(Pair.of(MemoryModuleType.ATTACK_TARGET, MemoryStatus.VALUE_PRESENT), Pair.of(MemoryModuleType.HURT_BY, MemoryStatus.VALUE_ABSENT)),
+                ), ImmutableSet.of(Pair.of(MemoryModuleType.ATTACK_TARGET, MemoryStatus.VALUE_PRESENT), Pair.of(MemoryModuleType.HURT_BY, MemoryStatus.VALUE_ABSENT), Pair.of(MemoryModuleType.IS_PREGNANT, MemoryStatus.VALUE_ABSENT)),
                 ImmutableSet.of(MemoryModuleType.ATTACK_TARGET));
 
 
         brain.addActivityAndRemoveMemoriesWhenStopped(ActivitInit.MATING.get(), ImmutableList.of(
-                        Pair.of(0, new PregnantAnimalLove(EntityInit.ENDOCERAS.get(), 1.1f)),
                         Pair.of(1, new FindWaterEggLayingSpot<>(16, 1.0f)),
                         Pair.of(2, layEggWhenPossible())
-
-                ), ImmutableSet.of(Pair.of(MemoryModuleInit.IN_LOVE.get(), MemoryStatus.VALUE_PRESENT)),
-                ImmutableSet.of(MemoryModuleInit.IN_LOVE.get(), MemoryModuleType.BREED_TARGET, MemoryModuleType.IS_PREGNANT));
+                ), ImmutableSet.of(Pair.of(MemoryModuleType.IS_PREGNANT, MemoryStatus.VALUE_PRESENT)),
+                ImmutableSet.of(MemoryModuleType.BREED_TARGET, MemoryModuleType.IS_PREGNANT));
 
         //avoiding player at all costs when having a grabbed prey, otherwise will just random swim
         brain.addActivityAndRemoveMemoriesWhenStopped(ActivitInit.HURT_GRABBED_PREY.get(), ImmutableList.of(
@@ -136,14 +136,12 @@ public class EndocerasAi {
                             for (Direction direction : Direction.values()) {
                                 BlockPos directionRelative = blockpos.relative(direction);
                                 if (entity.canLayEgg(level, entity, directionRelative)) {
-                                    if (level.getBlockState(directionRelative).isAir()) {
-                                        BlockState blockstate = entity.getEggState(level, entity, directionRelative);
-                                        level.setBlock(directionRelative, blockstate, 3);
-                                        level.gameEvent(GameEvent.BLOCK_PLACE, directionRelative, GameEvent.Context.of(entity, blockstate));
-                                        level.playSound((Player) null, entity, entity.getEggLaySound(level, entity, directionRelative), SoundSource.BLOCKS, 1.0F, 1.0F);
-                                        pregnant.erase();
-                                        return true;
-                                    }
+                                    BlockState blockstate = entity.getEggState(level, entity, directionRelative);
+                                    level.setBlock(directionRelative, blockstate, 3);
+                                    level.gameEvent(GameEvent.BLOCK_PLACE, directionRelative, GameEvent.Context.of(entity, blockstate));
+                                    level.playSound((Player) null, entity, entity.getEggLaySound(level, entity, directionRelative), SoundSource.BLOCKS, 1.0F, 1.0F);
+                                    pregnant.erase();
+                                    return true;
                                 }
                             }
                         }

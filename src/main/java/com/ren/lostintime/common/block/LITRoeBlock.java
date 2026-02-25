@@ -6,12 +6,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -19,7 +21,12 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BucketPickup;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.RailShape;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -28,7 +35,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class LITRoeBlock extends Block implements BucketPickup{
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
+
+public class LITRoeBlock extends Block implements BucketPickup, SimpleWaterloggedBlock {
 
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.5D, 16.0D);
 
@@ -38,10 +47,19 @@ public class LITRoeBlock extends Block implements BucketPickup{
     private final int maxHatchTickDelay;
     private final Supplier<? extends EntityType<? extends Mob>> entityType;
     private final Supplier<? extends Item> roeBucketItem;
+    private final boolean canBePlacedUnderWater;
+
 
     public LITRoeBlock(Properties pProperties, Supplier<? extends EntityType<? extends Mob>> entityType,
                        Supplier<? extends Item> roeBucketItem,
                        int minBabySpawn, int maxBabySpawn, int minHatchTickDelay, int maxHatchTickDelay) {
+        this(pProperties, entityType, roeBucketItem, minBabySpawn, maxBabySpawn, minHatchTickDelay, maxHatchTickDelay, false);
+    }
+
+
+    public LITRoeBlock(Properties pProperties, Supplier<? extends EntityType<? extends Mob>> entityType,
+                       Supplier<? extends Item> roeBucketItem,
+                       int minBabySpawn, int maxBabySpawn, int minHatchTickDelay, int maxHatchTickDelay, boolean canBePlacedUnderWater) {
         super(pProperties);
         this.entityType = entityType;
         this.roeBucketItem = roeBucketItem;
@@ -49,6 +67,12 @@ public class LITRoeBlock extends Block implements BucketPickup{
         this.maxBabySpawn = maxBabySpawn;
         this.minHatchTickDelay = minHatchTickDelay;
         this.maxHatchTickDelay = maxHatchTickDelay;
+        this.canBePlacedUnderWater = canBePlacedUnderWater;
+    }
+
+    @Override
+    public boolean canPlaceLiquid(BlockGetter pLevel, BlockPos pPos, BlockState pState, Fluid pFluid) {
+        return canBePlacedUnderWater && SimpleWaterloggedBlock.super.canPlaceLiquid(pLevel, pPos, pState, pFluid);
     }
 
     @Override
@@ -72,6 +96,9 @@ public class LITRoeBlock extends Block implements BucketPickup{
 
     @Override
     public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
+        if (pState.getValue(WATERLOGGED)) {
+            pLevel.scheduleTick(pPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
+        }
         return !this.canSurvive(pState, pLevel, pPos) ? Blocks.AIR.defaultBlockState() :
                 super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
     }
@@ -95,6 +122,10 @@ public class LITRoeBlock extends Block implements BucketPickup{
     private boolean mayPlaceOn(BlockGetter pLevel, BlockPos pPos) {
         FluidState fluidstate = pLevel.getFluidState(pPos);
         FluidState fluidstate1 = pLevel.getFluidState(pPos.above());
+        if (canBePlacedUnderWater){
+            var state = pLevel.getBlockState(pPos);
+            return fluidstate1.is(FluidTags.WATER) && state.isFaceSturdy(pLevel, pPos, Direction.UP);
+        }
         return fluidstate.getType() == Fluids.WATER && fluidstate1.getType() == Fluids.EMPTY;
     }
 
@@ -123,6 +154,12 @@ public class LITRoeBlock extends Block implements BucketPickup{
         }
     }
 
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
+        super.createBlockStateDefinition(pBuilder);
+        pBuilder.add(WATERLOGGED);
+    }
+
     private double getRandomBabyPositionOffset(RandomSource pRandom) {
         return Mth.clamp(pRandom.nextDouble(), 0.1, 0.9);
     }
@@ -136,5 +173,16 @@ public class LITRoeBlock extends Block implements BucketPickup{
     @Override
     public Optional<SoundEvent> getPickupSound() {
         return Optional.of(SoundEvents.BUCKET_FILL);
+    }
+
+    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+        FluidState fluidstate = pContext.getLevel().getFluidState(pContext.getClickedPos());
+        boolean flag = fluidstate.getType() == Fluids.WATER;
+        BlockState blockstate = super.defaultBlockState();
+        return blockstate.setValue(WATERLOGGED,flag);
+    }
+
+    public FluidState getFluidState(BlockState pState) {
+        return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
     }
 }

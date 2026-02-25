@@ -31,6 +31,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
@@ -64,8 +65,7 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
     protected static final ImmutableList<SensorType<? extends Sensor<? super Endoceras>>> SENSOR_TYPES = ImmutableList.of(
             SensorType.NEAREST_LIVING_ENTITIES,
             SensorType.NEAREST_PLAYERS,
-            SensorType.HURT_BY,
-            SensorTypeInit.IN_LOVE_SENSOR.get()
+            SensorType.HURT_BY
     );
 
     protected static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(
@@ -84,7 +84,6 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
             MemoryModuleType.AVOID_TARGET,
             MemoryModuleType.BREED_TARGET,
             MemoryModuleType.IS_PREGNANT,
-            MemoryModuleInit.IN_LOVE.get(),
             MemoryModuleInit.GRABBED_PREY.get()
     );
 
@@ -274,7 +273,7 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
     protected void tickBrain() {
         Brain<Endoceras> brain = this.getBrain();
         brain.tick((ServerLevel) this.level(), this);
-        brain.setActiveActivityToFirstValid(ImmutableList.of(ActivitInit.HURT_GRABBED_PREY.get(), ActivitInit.GRAB_PREY.get(), Activity.IDLE));
+        brain.setActiveActivityToFirstValid(ImmutableList.of(ActivitInit.HURT_GRABBED_PREY.get(),ActivitInit.MATING.get(), ActivitInit.GRAB_PREY.get(), Activity.IDLE));
     }
 
     public boolean isSuitablePrey(LivingEntity entity) {
@@ -325,6 +324,6 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
 
     @Override
     public BlockState getEggState(ServerLevel level, Animal entity, BlockPos pos) {
-        return Blocks.BEDROCK.defaultBlockState();
+        return BlockInit.ENDOCERAS_EGG.get().defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, true);
     }
 }

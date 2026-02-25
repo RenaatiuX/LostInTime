@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.init.*;
 import com.ren.lostintime.datagen.DataGatherer;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -42,6 +43,10 @@ public class LostInTime {
 
         TrunkPlacerTypeInit.TRUNK_PLACER.register(modEventBus);
         FoliagePlacerTypeInit.FOLIAGE_PLACER.register(modEventBus);
+
+        MemoryModuleInit.MEMORY_MODULE_TYPES.register(modEventBus);
+        SensorTypeInit.SENSOR_TYPES.register(modEventBus);
+        ActivitInit.ACTIVITIES.register(modEventBus);
 
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }

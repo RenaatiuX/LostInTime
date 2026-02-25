@@ -135,7 +135,7 @@ public class BlockInit {
                     EntityInit.DODO, BlockTags.DIRT));
     public static final RegistryObject<Block> ENDOCERAS_EGG = BLOCKS.register("endoceras_eggs",
             () -> new LITRoeBlock(BlockBehaviour.Properties.copy(Blocks.FROGSPAWN), EntityInit.ENDOCERAS,
-                    ItemInit.ENDOCERAS_EGGS_BUCKET, 1, 2, 10000, 32000));
+                    ItemInit.ENDOCERAS_EGGS_BUCKET, 1, 2, 10000, 32000, true));
     public static final RegistryObject<Block> BOTHRIOLEPIS_ROE = BLOCKS.register("bothriolepis_roe",
             () -> new LITRoeBlock(BlockBehaviour.Properties.copy(Blocks.FROGSPAWN), EntityInit.BOTHRIOLEPIS,
                     ItemInit.BOTHRIOLEPIS_ROE_BUCKET, 1, 3, 8000, 24000));

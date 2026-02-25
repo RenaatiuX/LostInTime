@@ -1,6 +1,7 @@
 package com.ren.lostintime.common.entity.ai;
 
 import com.google.common.collect.ImmutableMap;
+import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.entity.util.IEggLayerAnimal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
