@@ -221,10 +221,13 @@ public class LostInTime {
             event.accept(BlockInit.COOKSONIA);
             event.accept(ItemInit.BOTHRIOLEPIS_ROE);
             event.accept(ItemInit.ANOMALOCARIS_ROE);
+            event.accept(ItemInit.ENDOCERAS_EGGS);
             event.accept(BlockInit.TITANOSARCOLITES);
 
             event.accept(ItemInit.ANOMALOCARIS_ROE_BUCKET);
             event.accept(ItemInit.BOTHRIOLEPIS_ROE_BUCKET);
+            event.accept(ItemInit.ENDOCERAS_EGGS_BUCKET);
+
 
             event.accept(BlockInit.QUATERNARY_FOSSIL_BLOCK);
             event.accept(BlockInit.NEOGENE_FOSSIL_BLOCK);

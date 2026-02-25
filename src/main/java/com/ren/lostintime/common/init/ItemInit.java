@@ -180,10 +180,14 @@ public class ItemInit {
             () -> new PlaceOnWaterBlockItem(BlockInit.BOTHRIOLEPIS_ROE.get(), new Item.Properties()));
     public static final RegistryObject<Item> ANOMALOCARIS_ROE = ITEMS.register("anomalocaris_roe",
             () -> new PlaceOnWaterBlockItem(BlockInit.ANOMALOCARIS_ROE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> ENDOCERAS_EGGS = ITEMS.register("endoceras_eggs",
+            () -> new PlaceOnWaterBlockItem(BlockInit.ENDOCERAS_EGG.get(), new Item.Properties()));
 
     //BUCKETS
     public static final RegistryObject<Item> BOTHRIOLEPIS_ROE_BUCKET = ITEMS.register("bothriolepis_roe_bucket",
             () -> new RoeBucketItem(BlockInit.BOTHRIOLEPIS_ROE, () -> SoundEvents.BUCKET_EMPTY, new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ENDOCERAS_EGGS_BUCKET = ITEMS.register("endoceras_eggs_bucket",
+            () -> new RoeBucketItem(BlockInit.ENDOCERAS_EGG, () -> SoundEvents.BUCKET_EMPTY, new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ANOMALOCARIS_ROE_BUCKET = ITEMS.register("anomalocaris_roe_bucket",
             () -> new RoeBucketItem(BlockInit.ANOMALOCARIS_ROE, () -> SoundEvents.BUCKET_EMPTY, new Item.Properties().stacksTo(1)));
 
