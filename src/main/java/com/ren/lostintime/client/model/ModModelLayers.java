@@ -13,4 +13,6 @@ public class ModModelLayers {
             new ResourceLocation(LostInTime.MODID, "transfigurator_embryo"), "main");
     public static final ModelLayerLocation TRANSFIGURATOR_PLANT = new ModelLayerLocation(
             new ResourceLocation(LostInTime.MODID, "transfigurator_plant"), "main");
+    public static final ModelLayerLocation DODO_LAYER = new ModelLayerLocation(
+            new ResourceLocation(LostInTime.MODID, "dodo_skeleton"), "main");
 }

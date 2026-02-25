@@ -1,10 +1,12 @@
 package com.ren.lostintime.client.event;
 
 import com.ren.lostintime.LostInTime;
+import com.ren.lostintime.client.model.skeleton.DodoSkeleton;
 import com.ren.lostintime.client.particles.SleepingParticle;
 import com.ren.lostintime.client.model.ModModelLayers;
 import com.ren.lostintime.client.model.blockentities.*;
 import com.ren.lostintime.client.render.entity.*;
+import com.ren.lostintime.client.render.entity.skeleton.SkeletonRenderer;
 import com.ren.lostintime.client.render.projectile.GuardianSpikeRender;
 import com.ren.lostintime.client.renderer.TransfiguratorBERenderer;
 import com.ren.lostintime.client.screen.IdentificationScreen;
@@ -47,6 +49,8 @@ public class ClientEvents {
         event.registerEntityRenderer(EntityInit.GUARDIAN_SPIKE.get(), GuardianSpikeRender::new);
         event.registerEntityRenderer(EntityInit.LIT_THROWN_EGG.get(), ThrownItemRenderer::new);
 
+        event.registerEntityRenderer(EntityInit.LIT_SKELETON.get(), SkeletonRenderer::new);
+
         event.registerBlockEntityRenderer(BlockEntityInit.TRANSFIGURATOR.get(), TransfiguratorBERenderer::new);
     }
 
@@ -56,6 +60,8 @@ public class ClientEvents {
         event.registerLayerDefinition(ModModelLayers.TRANSFIGURATOR_EGG_2, TransfiguratorEgg2::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.TRANSFIGURATOR_EMBRYO, TransfiguratorEmbryo::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.TRANSFIGURATOR_PLANT, TransfiguratorPlant::createBodyLayer);
+
+        event.registerLayerDefinition(ModModelLayers.DODO_LAYER, DodoSkeleton::createBodyLayer);
     }
 
     @SubscribeEvent

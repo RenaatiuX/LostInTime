@@ -1,10 +1,7 @@
 package com.ren.lostintime.common.init;
 
 import com.ren.lostintime.LostInTime;
-import com.ren.lostintime.common.item.GoldenEyeItem;
-import com.ren.lostintime.common.item.GuardianSpikeItem;
-import com.ren.lostintime.common.item.LITEggItem;
-import com.ren.lostintime.common.item.RoeBucketItem;
+import com.ren.lostintime.common.item.*;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -27,14 +24,14 @@ public class ItemInit {
     public static final RegistryObject<Item> GUARDIAN_SPIKE = ITEMS.register("guardian_spike",
             () -> new GuardianSpikeItem(new Item.Properties().stacksTo(16)));
     public static final RegistryObject<Item> ECTOPLASM = registerSimple("ectoplasm");
-    public static final RegistryObject<Item> SOUL_ASH =  registerSimple("soul_ash");
-    public static final RegistryObject<Item> SOUL_GRUME =  registerSimple("soul_grume");
-    public static final RegistryObject<Item> EMPTY_VITAL_PATTERN =  registerSimple("empty_vital_pattern");
+    public static final RegistryObject<Item> SOUL_ASH = registerSimple("soul_ash");
+    public static final RegistryObject<Item> SOUL_GRUME = registerSimple("soul_grume");
+    public static final RegistryObject<Item> EMPTY_VITAL_PATTERN = registerSimple("empty_vital_pattern");
     public static final RegistryObject<Item> INFORMATION_DOME = registerSimple("information_dome");
     public static final RegistryObject<Item> SOUL_POWDER = registerSimple("soul_powder");
     public static final RegistryObject<Item> PANEL = registerSimple("panel");
     public static final RegistryObject<Item> REDSTONE_CHIP = registerSimple("redstone_chip");
-    public static final RegistryObject<Item> HYLONOMUS_EGG =  registerEgg("hylonomus_egg", EntityInit.HYLONOMUS);
+    public static final RegistryObject<Item> HYLONOMUS_EGG = registerEgg("hylonomus_egg", EntityInit.HYLONOMUS);
     public static final RegistryObject<Item> ENDOCERAS_SHELL_FRAGMENT = registerSimple("endoceras_shell_fragment");
 
     //ASPECT
@@ -51,7 +48,7 @@ public class ItemInit {
     public static final RegistryObject<Item> ASPECT_REFINEMENT = registerSimple("aspect_refinement");
     public static final RegistryObject<Item> ASPECT_RESILIENCE = registerSimple("aspect_resilience");
 
-    public static final RegistryObject<Item> ZIRCON =  registerSimple("zircon");
+    public static final RegistryObject<Item> ZIRCON = registerSimple("zircon");
     public static final RegistryObject<Item> OPAL = registerSimple("opal");
     public static final RegistryObject<Item> SPINEL = registerSimple("spinel");
 
@@ -83,8 +80,8 @@ public class ItemInit {
     public static final RegistryObject<Item> JURASSIC_FOSSIL = registerSimple("jurassic_fossil");
     public static final RegistryObject<Item> CRETACEOUS_FOSSIL = registerSimple("cretaceous_fossil");
     public static final RegistryObject<Item> PALEOGENE_FOSSIL = registerSimple("paleogene_fossil");
-    public static final RegistryObject<Item> NEOGENE_FOSSIL =  registerSimple("neogene_fossil");
-    public static final RegistryObject<Item> QUATERNARY_FOSSIL =  registerSimple("quaternary_fossil");
+    public static final RegistryObject<Item> NEOGENE_FOSSIL = registerSimple("neogene_fossil");
+    public static final RegistryObject<Item> QUATERNARY_FOSSIL = registerSimple("quaternary_fossil");
 
     //CONFIGURATION
     public static final RegistryObject<Item> ANOMALOCARIS_SOUL_CFC = registerSimple("anomalocaris_soul_configuration");
@@ -136,7 +133,7 @@ public class ItemInit {
     public static final RegistryObject<Item> UNIVERSAL_NUTRIENT = registerSimple("universal_nutrient");
 
     public static final RegistryObject<Item> DODO_FOSSIL = registerSimple("dodo_fossil");
-    public static final RegistryObject<Item> DODO_SKULL =  registerSimple("dodo_skull");
+    public static final RegistryObject<Item> DODO_SKULL = registerSimple("dodo_skull");
     public static final RegistryObject<Item> BOTHRIOLEPIS_FOSSIL = registerSimple("bothriolepis_fossil");
     public static final RegistryObject<Item> ANOMALOCARIS_FOSSIL = registerSimple("anomalocaris_fossil");
     public static final RegistryObject<Item> DAEODON_FOSSIL = registerSimple("daeodon_fossil");
@@ -145,7 +142,7 @@ public class ItemInit {
     public static final RegistryObject<Item> DEINONYCHUS_SKULL = registerSimple("deinonychus_skull");
     public static final RegistryObject<Item> ENDOCERAS_FOSSIL = registerSimple("endoceras_fossil");
     public static final RegistryObject<Item> HYLONOMUS_FOSSIL = registerSimple("hylonomus_fossil");
-    public static final RegistryObject<Item> LEPTICTIDIUM_FOSSIL= registerSimple("leptictidium_fossil");
+    public static final RegistryObject<Item> LEPTICTIDIUM_FOSSIL = registerSimple("leptictidium_fossil");
     public static final RegistryObject<Item> MASTODONSAURUS_FOSSIL = registerSimple("mastodonsaurus_fossil");
     public static final RegistryObject<Item> MASTODONSAURUS_SKULL = registerSimple("mastodonsaurus_skull");
     public static final RegistryObject<Item> PLESIOSAURUS_FOSSIL = registerSimple("plesiosaurus_fossil");
@@ -157,7 +154,7 @@ public class ItemInit {
     public static final RegistryObject<Item> CONIOPTERIS_FOSSIL = registerSimple("coniopteris_fossil");
     public static final RegistryObject<Item> RED_ALGAE_FOSSIL = registerSimple("red_algae_fossil");
 
-    public static final RegistryObject<Item> DODO_FOSSIL_MOUNT = registerSimple("dodo_fossil_mount");
+    public static final RegistryObject<Item> DODO_FOSSIL_MOUNT = registerFossilItem("dodo_fossil_mount", "dodo");
     public static final RegistryObject<Item> EMPTY_SKELETON_MOUNT = registerSimple("empty_skeleton_mount");
 
     //EQUIP
@@ -173,8 +170,8 @@ public class ItemInit {
     public static final RegistryObject<Item> COOKED_BOTHRIOLEPIS = registerFood("cooked_bothriolepis", FoodInit.COOKED_BOTHRIOLEPIS);
     public static final RegistryObject<Item> RAW_DAEODON = registerFood("raw_daeodon", FoodInit.RAW_DAEODON);
     public static final RegistryObject<Item> COOKED_DAEODON = registerFood("cooked_daeodon", FoodInit.COOKED_DAEODON);
-    public static final RegistryObject<Item> RAW_ENDOCERAS = registerFood("raw_endoceras",  FoodInit.RAW_ENDOCERAS);
-    public static final RegistryObject<Item> COOKED_ENDOCERAS = registerFood("cooked_endoceras",  FoodInit.COOKED_ENDOCERAS);
+    public static final RegistryObject<Item> RAW_ENDOCERAS = registerFood("raw_endoceras", FoodInit.RAW_ENDOCERAS);
+    public static final RegistryObject<Item> COOKED_ENDOCERAS = registerFood("cooked_endoceras", FoodInit.COOKED_ENDOCERAS);
 
     public static final RegistryObject<Item> MANGO = registerFood("mango", FoodInit.MANGO);
 
@@ -198,6 +195,10 @@ public class ItemInit {
 
     private static RegistryObject<Item> registerSimple(final String name) {
         return ITEMS.register(name, () -> new Item(new Item.Properties()));
+    }
+
+    private static RegistryObject<Item> registerFossilItem(final String name, String skeletonType) {
+        return ITEMS.register(name, () -> new SkeletonPlacerItem(new Item.Properties(), skeletonType));
     }
 
     private static RegistryObject<Item> registerEgg(final String name, Supplier<? extends EntityType<? extends Mob>> entityType) {

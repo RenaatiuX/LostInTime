@@ -5,6 +5,7 @@ import com.ren.lostintime.common.entity.creatures.*;
 import com.ren.lostintime.common.entity.misc.LITBoatEntity;
 import com.ren.lostintime.common.entity.projectile.GuardianSpike;
 import com.ren.lostintime.common.entity.projectile.LITThrownEgg;
+import com.ren.lostintime.common.entity.skeleton.FossilEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -36,6 +37,9 @@ public class EntityInit {
             LITThrownEgg::new, 0.25F, 0.25F);
     public static final RegistryObject<EntityType<LITBoatEntity>> LIT_BOAT = registerMiscEntity("lit_boat",
             LITBoatEntity::new, 1.375F, 0.5625F);
+
+    public static final RegistryObject<EntityType<FossilEntity>> LIT_SKELETON =
+            registerMiscEntity("lit_skeleton", FossilEntity::new, 1.0f, 1.5f);
 
     public static <T extends Projectile> RegistryObject<EntityType<T>> registerProjectile(String name, EntityType.EntityFactory<T> entity,
                                                                                           float width, float height) {
