@@ -59,7 +59,7 @@ public class LITBlockStateProvider extends BlockStateProvider {
         
         createDodoEggModel(BlockInit.DODO_EGG.get(), SingleEggBlock.HATCH);
         createBabyRoeBlock(BlockInit.BOTHRIOLEPIS_ROE.get());
-        createBabyRoeBlock(BlockInit.ENDOCERAS_EGG.get());
+        createCrossRoeBlock(BlockInit.ENDOCERAS_EGG.get());
         createBabyRoeBlock(BlockInit.ANOMALOCARIS_ROE.get());
         customParentBlock(BlockInit.TITANOSARCOLITES, "titanosarcolites_model", "0");
         giantTitanosarcolites(BlockInit.GIANT_TITANOSARCOLITES.get());
@@ -202,6 +202,12 @@ public class LITBlockStateProvider extends BlockStateProvider {
                 .texture("particle", resourceBlock(blockName(block)))
                 .renderType("cutout");
 
+        simpleBlock(block, modelFile);
+    }
+
+    private void createCrossRoeBlock(Block block) {
+        String name = blockName(block);
+        ModelFile modelFile = models().cross(name, modLoc("block/" + name)).renderType("cutout");
         simpleBlock(block, modelFile);
     }
 
