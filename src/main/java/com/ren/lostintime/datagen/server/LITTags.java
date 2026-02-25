@@ -19,6 +19,7 @@ public class LITTags {
         public static final TagKey<Item> DODO_FOOD = tag("dodo_food");
 
         public static final TagKey<Item> ANOMALOCARIS_BREEDABLE_FOOD = tag("anomalocaris_breedable_food");
+        public static final TagKey<Item> ENDOCERAS_BREEDABLE_FOOD = tag("endoceras_breedable_food");
 
         public static TagKey<Item> tag(String name){
             return TagKey.create(Registries.ITEM, new ResourceLocation(LostInTime.MODID, name));

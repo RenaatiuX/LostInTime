@@ -1,5 +1,7 @@
 package com.ren.lostintime.client.render.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.ren.lostintime.client.model.EndocerasModel;
 import com.ren.lostintime.common.entity.creatures.Endoceras;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -14,6 +16,14 @@ public class EndocerasRender extends GeoEntityRenderer<Endoceras> {
     public EndocerasRender(EntityRendererProvider.Context renderManager) {
         super(renderManager, new EndocerasModel());
         this.shadowRadius = 0.5F;
+    }
+
+    @Override
+    public void render(Endoceras entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        poseStack.pushPose();
+        poseStack.mulPose(Axis.YP.rotationDegrees(180));
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+        poseStack.popPose();
     }
 
     /*@Override

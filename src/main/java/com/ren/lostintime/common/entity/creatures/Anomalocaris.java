@@ -5,6 +5,7 @@ import com.ren.lostintime.common.entity.AbstractBaseFish;
 import com.ren.lostintime.common.init.AttributeInit;
 import com.ren.lostintime.common.init.BlockInit;
 import com.ren.lostintime.common.init.EntityInit;
+import com.ren.lostintime.datagen.server.LITTags;
 import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -375,7 +376,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     // --- Breeding ---
     @Override
     public boolean isFood(ItemStack stack) {
-        return stack.is(Items.COD);
+        return stack.is(LITTags.Items.ANOMALOCARIS_BREEDABLE_FOOD);
     }
 
     @Override
