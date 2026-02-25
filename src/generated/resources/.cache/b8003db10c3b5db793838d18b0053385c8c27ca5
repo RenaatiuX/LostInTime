@@ -1,4 +1,4 @@
-// 1.20.1	2026-02-25T17:12:51.7502664	Block States: lostintime
+// 1.20.1	2026-02-25T17:38:52.31399	Block States: lostintime
 a43e210ef6a7d44d2ebee4e46454692edb44e9e8 assets/lostintime/blockstates/anomalocaris_roe.json
 535842655677c684c1876f75049e6db559f58907 assets/lostintime/blockstates/araucarioxylon_button.json
 a146ee632370a92918567c906d985a5f320c7347 assets/lostintime/blockstates/araucarioxylon_door.json
@@ -105,7 +105,7 @@ aa20abfbc28fb90079f000db8a9e4fb5dc8acb3d assets/lostintime/models/block/deepslat
 04d57b8e2415f141a843c41b069d854d50441560 assets/lostintime/models/block/dodo_egg_not_cracked.json
 a43ce965f39d90f19bf6a7ad5fab9e8a638fd33b assets/lostintime/models/block/dodo_egg_slightly_cracked.json
 a93cb001f47ff664501b58b27d39b4d8d3d3718f assets/lostintime/models/block/dodo_egg_very_cracked.json
-bb9fd7ac2d595c7c2bd70d47fef73c554b588ff6 assets/lostintime/models/block/endoceras_eggs.json
+a4d3751a9833913dce0c1e1736c067b772381d08 assets/lostintime/models/block/endoceras_eggs.json
 9fb7c00db1d7c2ee10fa625446c459feb0d14531 assets/lostintime/models/block/giant_titanosarcolites_base_left.json
 9fb7c00db1d7c2ee10fa625446c459feb0d14531 assets/lostintime/models/block/giant_titanosarcolites_base_right.json
 42056ec8b6176c405ba99eb285f83b918926be43 assets/lostintime/models/block/giant_titanosarcolites_pincer_left.json

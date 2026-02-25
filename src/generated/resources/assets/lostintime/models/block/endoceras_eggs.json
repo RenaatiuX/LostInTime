@@ -1,8 +1,7 @@
 {
-  "parent": "lostintime:block/template_roe",
+  "parent": "minecraft:block/cross",
   "render_type": "minecraft:cutout",
   "textures": {
-    "particle": "lostintime:block/endoceras_eggs",
-    "texture": "lostintime:block/endoceras_eggs"
+    "cross": "lostintime:block/endoceras_eggs"
   }
 }
