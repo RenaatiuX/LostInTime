@@ -59,13 +59,8 @@ public class RoeBucketItem extends Item {
                 level.playSound(null, placePos, getEmptySound(), SoundSource.BLOCKS, 1.0F, 1.0F);
 
                 if (!player.getAbilities().instabuild) {
-                    stack.shrink(1);
-                    ItemStack emptyBucket = new ItemStack(Items.BUCKET);
-                    if (!player.addItem(emptyBucket)) {
-                        player.drop(emptyBucket, false);
-                    }
+                    return InteractionResultHolder.success(new ItemStack(Items.BUCKET));
                 }
-
                 return InteractionResultHolder.success(stack);
             }
         }
