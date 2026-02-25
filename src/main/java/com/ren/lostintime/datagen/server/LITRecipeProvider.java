@@ -14,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
@@ -30,7 +31,7 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
 
     @Override
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> pWriter) {
-        cookingFood("cooked_dodo", ItemInit.RAW_DODO.get(), ItemInit.COOKED_DODO.get(), 0.35F, pWriter);
+       smeltingRecipes(pWriter);
 
         // Quaternary
         addFossilRecipe(pWriter, ItemInit.QUATERNARY_FOSSIL.get(), false, builder -> builder
@@ -406,6 +407,13 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
 
          */
     }
+
+    public void smeltingRecipes(Consumer<FinishedRecipe> pWriter){
+        cookingFood("cooked_dodo", ItemInit.RAW_DODO.get(), ItemInit.COOKED_DODO.get(), 0.35F, pWriter);
+        cookingFood("cooked_endoceras", ItemInit.RAW_ENDOCERAS.get(), ItemInit.COOKED_ENDOCERAS.get(), 0.35F, pWriter);
+    }
+
+
 
     private IdentificationBuilder identify(ItemLike item) {
         return new IdentificationBuilder(LostInTime.MODID, item);

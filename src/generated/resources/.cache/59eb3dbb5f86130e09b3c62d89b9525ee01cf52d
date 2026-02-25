@@ -1,4 +1,4 @@
-// 1.20.1	2026-02-24T16:28:47.309477274	Loot Tables
+// 1.20.1	2026-02-25T18:23:37.754566699	Loot Tables
 16fbc73e533736c0a20d815b370f459ae1498dc6 data/lostintime/loot_tables/blocks/cretaceous_fossil_block.json
 041963ab85ae58d491e0f38a8da99076f956b020 data/lostintime/loot_tables/blocks/identification_table.json
 8ef3b5cf5fd41c74aaa77f983de0e30b4f6442ed data/lostintime/loot_tables/blocks/soul_configurator.json
@@ -6,3 +6,4 @@
 4cb9d43e543dddf55b8410d35f5bd69f104c7787 data/lostintime/loot_tables/blocks/transfigurator.json
 68e05ee144f3864987f99d0d413b06b1dd0e9338 data/lostintime/loot_tables/dodo/pecking.json
 03684f8ddb8d4b5a2b8958ed4d71e27bb263e9b4 data/lostintime/loot_tables/entities/dodo.json
+36308d054e706a3d057b39dfa63e5aa3ac25a036 data/lostintime/loot_tables/entities/endoceras.json

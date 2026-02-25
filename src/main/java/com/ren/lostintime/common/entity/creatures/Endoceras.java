@@ -265,6 +265,17 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
     }
 
     @Override
+    public boolean canCollideWith(Entity pEntity) {
+        return super.canCollideWith(pEntity);
+    }
+
+    @Override
+    protected void ageBoundaryReached() {
+        super.ageBoundaryReached();
+        this.spawnAtLocation(new ItemStack(ItemInit.ENDOCERAS_SHELL_FRAGMENT.get(), this.level().random.nextIntBetweenInclusive(1, 3)));
+    }
+
+    @Override
     protected void customServerAiStep() {
         this.tickBrain();
         super.customServerAiStep();
