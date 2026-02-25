@@ -36,9 +36,6 @@ public class LostInTime {
         VillagerInit.VILLAGER_PROFESSIONS.register(modEventBus);
         EnchantmentInit.ENCHANTMENTS.register(modEventBus);
         AttributeInit.ATTRIBUTES.register(modEventBus);
-        MemoryModuleInit.MEMORY_MODULE_TYPES.register(modEventBus);
-        SensorTypeInit.SENSOR_TYPES.register(modEventBus);
-        ActivitInit.ACTIVITIES.register(modEventBus);
 
         LootConditionsInit.LOOT_CONDITIONS.register(modEventBus);
         LootConditionsInit.LOOT_POOL_ENTRIES.register(modEventBus);
@@ -200,14 +197,37 @@ public class LostInTime {
             event.accept(BlockInit.MANGO_LOG);
             event.accept(BlockInit.MANGO_SAPLING);
             event.accept(BlockInit.ARAUCARIOXYLON_SAPLING);
+            event.accept(BlockInit.ARAUCARIOXYLON_LEAVES);
+            event.accept(BlockInit.ARAUCARIOXYLON_LOG);
+            event.accept(BlockInit.ARAUCARIOXYLON_PLANKS);
+
+            event.accept(BlockInit.ARAUCARIOXYLON_STAIRS.get());
+            event.accept(BlockInit.ARAUCARIOXYLON_SLAB.get());
+            event.accept(BlockInit.ARAUCARIOXYLON_BUTTON.get());
+            event.accept(BlockInit.ARAUCARIOXYLON_PRESSURE_PLATE.get());
+
+            event.accept(BlockInit.ARAUCARIOXYLON_FENCE.get());
+            event.accept(BlockInit.ARAUCARIOXYLON_FENCE_GATE.get());
+            event.accept(BlockInit.ARAUCARIOXYLON_WALL.get());
+
+            event.accept(BlockInit.ARAUCARIOXYLON_DOOR.get());
+            event.accept(BlockInit.ARAUCARIOXYLON_TRAPDOOR.get());
+
             event.accept(BlockInit.DODO_EGG);
             event.accept(BlockInit.DEAD_BARREL_SPONGE);
             event.accept(BlockInit.BARREL_SPONGE);
+            event.accept(BlockInit.CLADOPHLEBIS);
+            event.accept(BlockInit.CONIOPTERIS);
+            event.accept(BlockInit.COOKSONIA);
             event.accept(ItemInit.BOTHRIOLEPIS_ROE);
             event.accept(ItemInit.ANOMALOCARIS_ROE);
+            event.accept(ItemInit.ENDOCERAS_EGGS);
+            event.accept(BlockInit.TITANOSARCOLITES);
 
             event.accept(ItemInit.ANOMALOCARIS_ROE_BUCKET);
             event.accept(ItemInit.BOTHRIOLEPIS_ROE_BUCKET);
+            event.accept(ItemInit.ENDOCERAS_EGGS_BUCKET);
+
 
             event.accept(BlockInit.QUATERNARY_FOSSIL_BLOCK);
             event.accept(BlockInit.NEOGENE_FOSSIL_BLOCK);
@@ -237,4 +257,6 @@ public class LostInTime {
             event.accept(BlockInit.LARGE_PIPE_SPONGE);
         }
     }
+
+
 }

@@ -59,6 +59,7 @@ public class LITBlockStateProvider extends BlockStateProvider {
         
         createDodoEggModel(BlockInit.DODO_EGG.get(), SingleEggBlock.HATCH);
         createBabyRoeBlock(BlockInit.BOTHRIOLEPIS_ROE.get());
+        createBabyRoeBlock(BlockInit.ENDOCERAS_EGG.get());
         createBabyRoeBlock(BlockInit.ANOMALOCARIS_ROE.get());
         customParentBlock(BlockInit.TITANOSARCOLITES, "titanosarcolites_model", "0");
         giantTitanosarcolites(BlockInit.GIANT_TITANOSARCOLITES.get());
