@@ -20,6 +20,7 @@ Your priority is maintaining compatibility with the target Forge version and fol
 1. **Source Lookup:** Primary source is `src/main/java`.
 2. **Generated/Built Sources:** If a class (like a Forge internal or a multi-part entity) is missing, look in:
     - `build/fg_cache/net/net/minecraftforge/forge/`
+3. **Sync Protocol:** Before modifying any file, the agent must perform a read_file operation to ensure the local version matches the agent's internal state. If the file has changed, the agent must incorporate the user's manual changes into the new plan.
 
 ## Architecture & Rules
 1. **Registry Pattern:** Always use `DeferredRegister` for Blocks, Items, and Entities. Do not use legacy `@ObjectHolder`.

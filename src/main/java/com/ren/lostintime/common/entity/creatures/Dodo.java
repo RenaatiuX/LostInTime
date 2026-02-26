@@ -288,9 +288,9 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
     @Override
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
-        if (!isSleeping() && !isPecking() && peckCooldown >= 0) {
+        if (!isSleeping() && !isPecking() && peckCooldown <= 0) {
             var stack = pPlayer.getItemInHand(pHand);
-            if (canEatPeckFood(stack)) {
+            if (!isBaby() && canEatPeckFood(stack)) {
                 feedPeckItem(stack);
                 if (!pPlayer.getAbilities().instabuild) {
                     stack.shrink(1);
@@ -468,7 +468,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
         @Override
         public boolean canUse() {
-            if (dodo.isSleeping() || dodo.isPecking() || dodo.hasEgg() || dodo.peckCooldown > 0) return false;
+            if (dodo.isBaby() || dodo.isSleeping() || dodo.isPecking() || dodo.hasEgg() || dodo.peckCooldown > 0) return false;
             return super.canUse();
         }
 
@@ -520,7 +520,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
         @Override
         public boolean canUse() {
-            if (dodo.peckTarget != null || !dodo.fedPeckingFood || dodo.isPecking() || dodo.isSleeping() || dodo.hasEgg() || dodo.peckCooldown > 0)
+            if (dodo.isBaby() || dodo.peckTarget != null || !dodo.fedPeckingFood || dodo.isPecking() || dodo.isSleeping() || dodo.hasEgg() || dodo.peckCooldown > 0)
                 return false;
             return true;
         }
@@ -615,12 +615,12 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
         @Override
         public boolean canUse() {
-            return !dodo.isPecking() && !dodo.isSleeping() && !dodo.hasEgg() && dodo.peckTarget != null && super.canUse();
+            return !dodo.isBaby() && !dodo.isPecking() && !dodo.isSleeping() && !dodo.hasEgg() && dodo.peckTarget != null && super.canUse();
         }
 
         @Override
         public boolean canContinueToUse() {
-            return !dodo.isPecking() && !dodo.isSleeping() && !dodo.hasEgg() && dodo.peckTarget != null && super.canContinueToUse();
+            return !dodo.isBaby() && !dodo.isPecking() && !dodo.isSleeping() && !dodo.hasEgg() && dodo.peckTarget != null && super.canContinueToUse();
         }
 
         @Override
@@ -665,7 +665,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
         @Override
         public boolean canUse() {
-            return dodo.peckCooldown <= 0 && dodo.isPecking();
+            return !dodo.isBaby() && dodo.peckCooldown <= 0 && dodo.isPecking();
         }
 
         @Override
