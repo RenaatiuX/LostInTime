@@ -13,7 +13,7 @@ import software.bernie.geckolib.model.data.EntityModelData;
 public class DodoModel extends DefaultedEntityGeoModel<Dodo> {
 
     public DodoModel() {
-        super(new ResourceLocation(LostInTime.MODID, "dodo"));
+        super(ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "dodo"));
     }
 
     @Override

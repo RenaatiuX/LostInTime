@@ -8,6 +8,6 @@ import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 public class HylonomusModel extends DefaultedEntityGeoModel<Hylonomus> {
 
     public HylonomusModel() {
-        super(new ResourceLocation(LostInTime.MODID, "hylonomus"));
+        super(ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "hylonomus"));
     }
 }

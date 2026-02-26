@@ -7,6 +7,6 @@ import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 
 public class EndocerasModel extends DefaultedEntityGeoModel<Endoceras> {
     public EndocerasModel() {
-        super(new ResourceLocation(LostInTime.MODID, "endoceras"));
+        super(ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "endoceras"));
     }
 }

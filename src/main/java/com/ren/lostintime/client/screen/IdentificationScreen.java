@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class IdentificationScreen extends AbstractContainerScreen<IdentificationMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LostInTime.MODID, "textures/gui/identification.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/gui/identification.png");
 
     public IdentificationScreen(IdentificationMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

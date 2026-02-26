@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class TransfiguratorScreen extends AbstractContainerScreen<TransfiguratorMenu> {
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation(LostInTime.MODID, "textures/gui/transfigurator.png");
+            ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/gui/transfigurator.png");
 
     public TransfiguratorScreen(TransfiguratorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

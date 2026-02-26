@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class SoulConfiguratorScreen extends AbstractContainerScreen<SoulConfiguratorMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LostInTime.MODID, "textures/gui/soul_configurator.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/gui/soul_configurator.png");
 
     public SoulConfiguratorScreen(SoulConfiguratorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

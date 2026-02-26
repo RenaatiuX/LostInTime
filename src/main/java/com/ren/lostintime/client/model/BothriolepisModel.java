@@ -8,6 +8,6 @@ import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 public class BothriolepisModel extends DefaultedEntityGeoModel<Bothriolepis> {
 
     public BothriolepisModel() {
-        super(new ResourceLocation(LostInTime.MODID, "bothriolepis"));
+        super(ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "bothriolepis"));
     }
 }

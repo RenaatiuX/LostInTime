@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
 public class TransfiguratorEgg2 extends Model {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(LostInTime.MODID, "textures/entity/blockentities/transfigurator_egg2.png");
+    public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/entity/blockentities/transfigurator_egg2.png");
 
     private final ModelPart root;
 
