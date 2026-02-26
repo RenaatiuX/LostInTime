@@ -142,6 +142,17 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
     public @Nullable EndocerasPart[] getParts() {
         return parts;
     }
+
+    @Override
+    public void setPos(double pX, double pY, double pZ) {
+        super.setPos(pX, pY, pZ);
+        if (this.parts != null) {
+            for (EndocerasPart part : this.parts) {
+                part.setPos(pX, pY, pZ);
+            }
+        }
+    }
+
     //
 
     @Override
@@ -392,10 +403,11 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
 
     public static boolean checkEndocerasSpawnRules(EntityType<Endoceras> pEntityType, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
         boolean isDeepEnough = pPos.getY() <= 55;
-        boolean inWater = pLevel.getFluidState(pPos.below()).is(FluidTags.WATER) && pLevel.getBlockState(pPos.above()).is(Blocks.WATER);
+        boolean inWater = pLevel.getFluidState(pPos).is(FluidTags.WATER) && pLevel.getFluidState(pPos.above()).is(FluidTags.WATER);
         if (pSpawnType == MobSpawnType.SPAWN_EGG) {
             return inWater;
         }
+        System.out.println("[ENDOCERAS SPAWN TEST] trying on Y=" + pPos.getY() + " | Deep: " + isDeepEnough + " | Is water: " + inWater);
         return isDeepEnough && inWater;
     }
 }
