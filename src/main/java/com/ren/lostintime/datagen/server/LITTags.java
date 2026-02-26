@@ -8,6 +8,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 
+import java.util.Objects;
+
 public class LITTags {
 
     public static class Items{
@@ -22,7 +24,7 @@ public class LITTags {
         public static final TagKey<Item> ENDOCERAS_BREEDABLE_FOOD = tag("endoceras_breedable_food");
 
         public static TagKey<Item> tag(String name){
-            return TagKey.create(Registries.ITEM, new ResourceLocation(LostInTime.MODID, name));
+            return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, name));
         }
     }
 
@@ -31,7 +33,7 @@ public class LITTags {
         public static final TagKey<Block> DODO_SOILS = tag("dodo_soils");
 
         public static TagKey<Block> tag(String name){
-            return TagKey.create(Registries.BLOCK, new ResourceLocation(LostInTime.MODID, name));
+            return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, name));
         }
     }
 
@@ -42,7 +44,7 @@ public class LITTags {
         public static final TagKey<Biome> ENDOCERAS_CAN_SPAWN = tag("endoceras_can_spawn");
 
         public static TagKey<Biome> tag(String name){
-            return TagKey.create(Registries.BIOME, new ResourceLocation(LostInTime.MODID, name));
+            return TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, name));
         }
     }
 

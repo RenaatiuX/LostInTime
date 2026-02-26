@@ -40,7 +40,7 @@ public class RecipeInit {
         return new RecipeType<T>() {
             @Override
             public String toString() {
-                return new ResourceLocation(LostInTime.MODID, name).toString();
+                return ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, name).toString();
             }
         };
     }

@@ -208,7 +208,7 @@ public class SoulConfiguratorRecipeBuilder implements RecipeBuilder {
         public @Nullable ResourceLocation getAdvancementId() {
             if (data.advancement.getCriteria().isEmpty())
                 return null;
-            return new ResourceLocation(id.getNamespace(),
+            return ResourceLocation.fromNamespaceAndPath(id.getNamespace(),
                     "recipes/soul_extractor/" + id.getPath());
         }
     }

@@ -89,7 +89,7 @@ public class SoulExtractorBuilder implements RecipeBuilder {
     @Override
     public void save(Consumer<FinishedRecipe> pFinishedRecipeConsumer, String pRecipeId) {
         ResourceLocation resourceLocation = getRecipeId();
-        ResourceLocation resourceLocation2 = new ResourceLocation(pRecipeId);
+        ResourceLocation resourceLocation2 = ResourceLocation.parse(pRecipeId);
         if (resourceLocation2.equals(resourceLocation)) {
             throw new IllegalStateException("Recipe " + pRecipeId + " should remove its 'save' argument as it is equal to default one");
         } else {
@@ -107,7 +107,7 @@ public class SoulExtractorBuilder implements RecipeBuilder {
     }
 
     protected ResourceLocation getRecipeId() {
-        return new ResourceLocation(
+        return ResourceLocation.fromNamespaceAndPath(
                 LostInTime.MODID, "soul_extractor/" + ForgeRegistries.ITEMS.getKey(result.getItem()).getPath());
     }
 
@@ -182,7 +182,7 @@ public class SoulExtractorBuilder implements RecipeBuilder {
         public @Nullable ResourceLocation getAdvancementId() {
             if (criteria.getCriteria().isEmpty())
                 return null;
-            return new ResourceLocation(id.getNamespace(),
+            return ResourceLocation.fromNamespaceAndPath(id.getNamespace(),
                     "recipes/soul_extractor/" + id.getPath());
         }
     }

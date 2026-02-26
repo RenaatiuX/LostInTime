@@ -53,6 +53,7 @@ public abstract class LITWaterAnimal extends LITAnimal {
         return MobType.WATER;
     }
 
+    @Override
     public boolean checkSpawnObstruction(LevelReader pLevel) {
         return pLevel.isUnobstructed(this);
     }

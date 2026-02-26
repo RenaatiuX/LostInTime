@@ -78,7 +78,7 @@ public class Config {
 
         for (String entry : DODO_GOLDEN_FOOD.get()) {
             String[] split = entry.split("=");
-            ResourceLocation id = new ResourceLocation(split[0]);
+            ResourceLocation id = ResourceLocation.parse(split[0]);
             float multiplier = Math.max(1f, Float.parseFloat(split[1]));
 
             Item item = ForgeRegistries.ITEMS.getValue(id);
@@ -93,7 +93,7 @@ public class Config {
 
         for (String entry : TRANSFIGURATOR_TRANSLATOR_CHANCES.get()) {
             String[] split = entry.split("=");
-            ResourceLocation id = new ResourceLocation(split[0]);
+            ResourceLocation id = ResourceLocation.parse(split[0]);
             float chance = Math.max(0f, Math.min(1f, Float.parseFloat(split[1])));
 
             Item item = ForgeRegistries.ITEMS.getValue(id);
@@ -119,7 +119,7 @@ public class Config {
         // Validate item id
         ResourceLocation id;
         try {
-            id = new ResourceLocation(split[0]);
+            id = ResourceLocation.parse(split[0]);
         } catch (ResourceLocationException e) {
             return false;
         }

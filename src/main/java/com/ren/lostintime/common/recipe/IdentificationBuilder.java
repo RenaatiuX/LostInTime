@@ -80,7 +80,8 @@ public class IdentificationBuilder implements RecipeBuilder {
     @Override
     public void save(Consumer<FinishedRecipe> pFinishedRecipeConsumer, String pRecipeId) {
         ResourceLocation resourceLocation = getRecipeId();
-        ResourceLocation resourceLocation2 = new ResourceLocation(pRecipeId);
+        ResourceLocation resourceLocation2 = ResourceLocation.tryParse(pRecipeId);
+        assert resourceLocation2 != null;
         if (resourceLocation2.equals(resourceLocation)) {
             throw new IllegalStateException("Recipe " + pRecipeId + " should remove its 'save' argument as it is equal to default one");
         } else {
@@ -96,9 +97,9 @@ public class IdentificationBuilder implements RecipeBuilder {
 
     protected ResourceLocation getRecipeId() {
         if (itemInput != null) {
-            return new ResourceLocation(modId, "identification/" + ForgeRegistries.ITEMS.getKey(itemInput.asItem()).getPath());
+            return ResourceLocation.tryBuild(modId, "identification/" + ForgeRegistries.ITEMS.getKey(itemInput.asItem()).getPath());
         } else if (tagInput != null) {
-            return new ResourceLocation(modId, "identification/" + tagInput.location().getPath());
+            return ResourceLocation.tryBuild(modId, "identification/" + tagInput.location().getPath());
         }
         return ForgeRegistries.ITEMS.getKey(Items.ENDER_PEARL);
     }

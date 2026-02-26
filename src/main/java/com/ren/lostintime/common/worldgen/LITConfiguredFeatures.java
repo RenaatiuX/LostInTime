@@ -70,7 +70,7 @@ public class LITConfiguredFeatures {
         //FOSSIL
         for (FossilEra era : FossilEra.values()) {
             ResourceKey<ConfiguredFeature<?, ?>> key = ResourceKey.create(Registries.CONFIGURED_FEATURE,
-                    new ResourceLocation(LostInTime.MODID, "fossil/" + era.name().toLowerCase()));
+                    ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "fossil/" + era.name().toLowerCase()));
 
             FOSSIL_KEYS.put(era, key);
 
@@ -93,7 +93,7 @@ public class LITConfiguredFeatures {
     }
 
     private static ResourceKey<ConfiguredFeature<?, ?>> registerKey(String name) {
-        return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(LostInTime.MODID, name));
+        return ResourceKey.create(Registries.CONFIGURED_FEATURE, ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, name));
     }
 
     private static <FC extends FeatureConfiguration, F extends Feature<FC>> void register(BootstapContext<ConfiguredFeature<?, ?>> context,

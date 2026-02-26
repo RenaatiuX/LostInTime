@@ -55,7 +55,7 @@ public class RandomTagEntryLoot extends LootPoolSingletonContainer {
 
         @Override
         protected @NotNull RandomTagEntryLoot deserialize(JsonObject pObject, JsonDeserializationContext pContext, int pWeight, int pQuality, LootItemCondition[] pConditions, LootItemFunction[] pFunctions) {
-            ResourceLocation $$6 = new ResourceLocation(GsonHelper.getAsString(pObject, "name"));
+            ResourceLocation $$6 = ResourceLocation.parse(GsonHelper.getAsString(pObject, "name"));
             TagKey<Item> $$7 = TagKey.create(Registries.ITEM, $$6);
             return new RandomTagEntryLoot($$7, pWeight, pQuality, pConditions, pFunctions);
         }

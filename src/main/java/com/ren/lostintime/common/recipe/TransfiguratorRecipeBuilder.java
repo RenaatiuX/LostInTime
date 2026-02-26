@@ -188,7 +188,7 @@ public class TransfiguratorRecipeBuilder implements RecipeBuilder {
 
         @Override
         public @Nullable ResourceLocation getAdvancementId() {
-            return new ResourceLocation(id.getNamespace(), "recipes/" + id.getPath());
+            return ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "recipes/" + id.getPath());
         }
     }
 }

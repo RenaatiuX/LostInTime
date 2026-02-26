@@ -19,10 +19,10 @@ public class LootParamSetsInit {
 
 
     public static LootContextParamSet register(String name, Consumer<LootContextParamSet.Builder> builder){
-        return LootContextParamSets.register(new ResourceLocation(LostInTime.MODID, name).toString(), builder);
+        return LootContextParamSets.register(ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, name).toString(), builder);
     }
 
     public static <T> LootContextParam<T> create(String name){
-        return new LootContextParam<>(new ResourceLocation(LostInTime.MODID, name));
+        return new LootContextParam<>(ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, name));
     }
 }

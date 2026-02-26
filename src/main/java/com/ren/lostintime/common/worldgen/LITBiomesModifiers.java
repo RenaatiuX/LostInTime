@@ -22,6 +22,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class LITBiomesModifiers {
 
@@ -45,15 +46,15 @@ public class LITBiomesModifiers {
                 new MobSpawnSettings.SpawnerData(EntityInit.DODO.get(), 20, 1, 4)
         )));
         context.register(ANOMALOCARIS_SPAWN, new ForgeBiomeModifiers.AddSpawnsBiomeModifier(biomes.getOrThrow(LITTags.Biomes.ANOMALOCARIS_CAN_SPAWN), List.of(
-                new MobSpawnSettings.SpawnerData(EntityInit.ANOMALOCARIS.get(), 15, 1, 3)
+                new MobSpawnSettings.SpawnerData(EntityInit.ANOMALOCARIS.get(), 100, 1, 3)
         )));
         context.register(ENDOCERAS_SPAWN, new ForgeBiomeModifiers.AddSpawnsBiomeModifier(
                 biomes.getOrThrow(LITTags.Biomes.ENDOCERAS_CAN_SPAWN), List.of(
-                new MobSpawnSettings.SpawnerData(EntityInit.ENDOCERAS.get(), 25, 1, 2)
+                new MobSpawnSettings.SpawnerData(EntityInit.ENDOCERAS.get(), 100, 1, 2)
         )));
     }
 
     private static ResourceKey<BiomeModifier> registerKey(String name) {
-        return ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, new ResourceLocation(LostInTime.MODID, name));
+        return ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, Objects.requireNonNull(ResourceLocation.tryBuild(LostInTime.MODID, name)));
     }
 }

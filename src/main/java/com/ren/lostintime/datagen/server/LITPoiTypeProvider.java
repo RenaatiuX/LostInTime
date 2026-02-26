@@ -20,6 +20,6 @@ public class LITPoiTypeProvider extends PoiTypeTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         tag(PoiTypeTags.ACQUIRABLE_JOB_SITE)
-                .addOptional(new ResourceLocation(LostInTime.MODID, "identification_poi"));
+                .addOptional(ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "identification_poi"));
     }
 }

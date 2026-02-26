@@ -19,7 +19,7 @@ Your priority is maintaining compatibility with the target Forge version and fol
 ## Context & Lookup Rules
 1. **Source Lookup:** Primary source is `src/main/java`.
 2. **Generated/Built Sources:** If a class (like a Forge internal or a multi-part entity) is missing, look in:
-    - `build/fg_cache/[forge_version]/`
+    - `build/fg_cache/net/net/minecraftforge/forge/`
 
 ## Architecture & Rules
 1. **Registry Pattern:** Always use `DeferredRegister` for Blocks, Items, and Entities. Do not use legacy `@ObjectHolder`.

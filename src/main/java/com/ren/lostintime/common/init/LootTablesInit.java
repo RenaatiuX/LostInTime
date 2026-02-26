@@ -6,5 +6,5 @@ import net.minecraft.resources.ResourceLocation;
 public class LootTablesInit {
 
 
-    public static final ResourceLocation DODO_PECK_LOOT = new ResourceLocation(LostInTime.MODID, "dodo/pecking");
+    public static final ResourceLocation DODO_PECK_LOOT = ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "dodo/pecking");
 }

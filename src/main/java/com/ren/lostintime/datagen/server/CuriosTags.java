@@ -14,7 +14,7 @@ public class CuriosTags {
         public static final TagKey<Item> BELT_SLOT_TAG = curiousTag(CuriousSlotInit.BELT_SLOT);
 
         public static TagKey<Item> curiousTag(String name){
-            return TagKey.create(Registries.ITEM, new ResourceLocation(CuriosApi.MODID, name));
+            return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(CuriosApi.MODID, name));
         }
     }
 

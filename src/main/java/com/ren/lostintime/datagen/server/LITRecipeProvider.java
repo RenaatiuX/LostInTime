@@ -21,6 +21,7 @@ import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class LITRecipeProvider extends RecipeProvider implements IConditionBuilder {
@@ -351,7 +352,7 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_chorus_block", has(Blocks.CHORUS_PLANT))
                 .save(pWriter);
 
-        SoulConfiguratorFuelRecipeBuilder.fuelRecipe(ItemInit.SOUL_POWDER.get(), 300).save(pWriter, new ResourceLocation(LostInTime.MODID, "soul_powder_fuel"));
+        SoulConfiguratorFuelRecipeBuilder.fuelRecipe(ItemInit.SOUL_POWDER.get(), 300).save(pWriter, Objects.requireNonNull(ResourceLocation.tryBuild(LostInTime.MODID, "soul_powder_fuel")));
         SoulConfiguratorRecipeBuilder.recipe(ItemInit.ANOMALOCARIS_SOUL_CFC.get(), ItemInit.EMPTY_SOUL_CFC.get())
                 .aspect(ItemInit.ASPECT_EMERGENCE.get())
                 .bindingMaterial(ItemInit.EMPTY_SOUL_CFC.get())
@@ -387,7 +388,7 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
     }
 
     private static void cookingFood(String name, ItemLike ingredient, ItemLike result, float experience, Consumer<FinishedRecipe> consumer) {
-        String namePrefix = new ResourceLocation(LostInTime.MODID, name).toString();
+        String namePrefix = ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, name).toString();
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(ingredient), RecipeCategory.FOOD, result, experience, 200)
                 .unlockedBy(name, InventoryChangeTrigger.TriggerInstance.hasItems(ingredient))
                 .save(consumer);

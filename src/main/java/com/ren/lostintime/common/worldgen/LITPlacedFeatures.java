@@ -26,7 +26,7 @@ public class LITPlacedFeatures {
 
         for (FossilEra era : FossilEra.values()) {
             ResourceKey<PlacedFeature> key = ResourceKey.create(Registries.PLACED_FEATURE,
-                            new ResourceLocation(LostInTime.MODID, "fossil/" + era.name().toLowerCase()));
+                            ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "fossil/" + era.name().toLowerCase()));
 
             PLACED_KEYS.put(era, key);
 
@@ -39,7 +39,7 @@ public class LITPlacedFeatures {
     }
 
     private static ResourceKey<PlacedFeature> registerKey(String name) {
-        return ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(LostInTime.MODID, name));
+        return ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, name));
     }
 
     private static void register(BootstapContext<PlacedFeature> context, ResourceKey<PlacedFeature> key,
