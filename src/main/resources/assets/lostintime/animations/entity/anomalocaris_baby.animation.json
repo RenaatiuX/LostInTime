@@ -1,7 +1,7 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.anomalocaris.swim": {
+		"move.swim": {
 			"loop": true,
 			"animation_length": 2,
 			"bones": {
@@ -75,7 +75,7 @@
 				}
 			}
 		},
-		"animation.anomalocaris.outofwater": {
+		"move.out_of_water": {
 			"loop": true,
 			"animation_length": 2,
 			"bones": {
@@ -151,7 +151,7 @@
 				}
 			}
 		},
-		"animation.anomalocaris.outofwater2": {
+		"move.out_of_water_2": {
 			"loop": true,
 			"animation_length": 2,
 			"bones": {
@@ -227,7 +227,7 @@
 				}
 			}
 		},
-		"animation.anomalocaris.grab": {
+		"misc.grab": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 0.25,
 			"bones": {

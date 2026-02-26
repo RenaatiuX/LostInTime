@@ -29,6 +29,11 @@ public class AnomalocarisModel extends DefaultedEntityGeoModel<Anomalocaris> {
     }
 
     @Override
+    public ResourceLocation getTextureResource(Anomalocaris animatable) {
+        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/entity/anomalocaris_baby.png") : super.getTextureResource(animatable);
+    }
+
+    @Override
     public ResourceLocation getModelResource(Anomalocaris animatable) {
         return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "geo/entity/anomalocaris_baby.geo.json") : super.getModelResource(animatable);
     }
