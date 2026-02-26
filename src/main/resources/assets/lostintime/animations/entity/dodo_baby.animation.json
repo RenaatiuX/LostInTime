@@ -1,7 +1,7 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.dodo.idle": {
+		"misc.idle": {
 			"loop": true,
 			"animation_length": 2,
 			"bones": {
@@ -22,7 +22,7 @@
 				}
 			}
 		},
-		"animation.dodo.flap": {
+		"misc.flap": {
 			"loop": true,
 			"animation_length": 2,
 			"bones": {
@@ -63,7 +63,7 @@
 				}
 			}
 		},
-		"animation.dodo.walk": {
+		"move.walk": {
 			"loop": true,
 			"animation_length": 2,
 			"bones": {
@@ -138,7 +138,7 @@
 				}
 			}
 		},
-		"animation.dodo.run": {
+		"move.run": {
 			"loop": true,
 			"animation_length": 0.5,
 			"bones": {
@@ -231,7 +231,7 @@
 				}
 			}
 		},
-		"animation.dodo.peck": {
+		"misc.peck": {
 			"animation_length": 1.375,
 			"bones": {
 				"body": {
@@ -303,7 +303,7 @@
 				}
 			}
 		},
-		"animation.dodo.sleep": {
+		"misc.sleep": {
 			"loop": true,
 			"animation_length": 8,
 			"bones": {
@@ -350,7 +350,7 @@
 				}
 			}
 		},
-		"animation.dodo.no": {
+		"misc.no": {
 			"animation_length": 1.5,
 			"bones": {
 				"neck": {

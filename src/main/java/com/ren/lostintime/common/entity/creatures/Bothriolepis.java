@@ -4,20 +4,28 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
+import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.entity.AbstractBaseFish;
+import com.ren.lostintime.common.entity.ai.RandomStrollUtils;
+import com.ren.lostintime.common.entity.ai.WaterAnimalPanic;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.behavior.*;
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.sensing.SensorType;
@@ -26,6 +34,7 @@ import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -47,8 +56,8 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
 
     public Bothriolepis(EntityType<? extends AbstractBaseFish> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-        this.moveControl = new SmoothSwimmingMoveControl(this, 85, 10,
-                0.1F, 0.5F, false);
+        //this.moveControl = new SmoothSwimmingMoveControl(this, 85, 10,
+        //        0.1F, 0.5F, false);
         this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
         this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 0.0F);
     }
@@ -111,7 +120,27 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
 
     @Override
     public boolean floatsUp() {
-        return false;
+        return true;
+    }
+
+    public boolean isOnOceanFloor() {
+        BlockPos pos = this.blockPosition();
+        return this.level().getFluidState(pos).is(FluidTags.WATER) && this.level().getBlockState(pos.below()).isSolid();
+    }
+
+    @Override
+    public void travel(Vec3 pTravelVector) {
+        if (this.isEffectiveAi() && this.isInWater()) {
+            if (this.getBrain().hasMemoryValue(MemoryModuleType.IS_PANICKING)) {
+                super.travel(pTravelVector);
+            } else {
+                this.moveRelative(this.getSpeed(), pTravelVector);
+                this.move(MoverType.SELF, this.getDeltaMovement());
+                this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.08D, 0.0D));
+            }
+        } else {
+            super.travel(pTravelVector);
+        }
     }
 
     @Override
@@ -136,6 +165,7 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
 
         initCoreActivity(brain);
         initIdleActivity(brain);
+        initPanicActivity(brain);
 
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
@@ -153,13 +183,12 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
         this.level().getProfiler().push("bothriolepisBrain");
         this.getBrain().tick((ServerLevel) this.level(), this);
         this.level().getProfiler().pop();
-        this.getBrain().setActiveActivityToFirstValid(ImmutableList.of(Activity.IDLE));
+        this.getBrain().setActiveActivityToFirstValid(ImmutableList.of(Activity.PANIC, Activity.IDLE));
         super.customServerAiStep();
     }
 
     private void initCoreActivity(Brain<Bothriolepis> brain) {
         brain.addActivity(Activity.CORE, 0, ImmutableList.of(
-                new AnimalPanic(3.5F),
                 new LookAtTargetSink(45, 90),
                 new MoveToTargetSink()
         ));
@@ -167,10 +196,32 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
 
     private void initIdleActivity(Brain<Bothriolepis> brain) {
         brain.addActivity(Activity.IDLE, ImmutableList.of(
-                Pair.of(0, SetEntityLookTargetSometimes.create(EntityType.PLAYER, 6.0F, UniformInt.of(30, 60))),
-                Pair.of(1, RandomStroll.swim(0.5F)),
-                Pair.of(2, RandomStroll.stroll(0.15F, false))
+                Pair.of(0, TryFindWater.create(10, 1.0f)),
+                Pair.of(1, new RunOne<>(ImmutableList.of(Pair.of(SetEntityLookTarget.create(EntityType.PLAYER, 6.0F), 1), Pair.of(new DoNothing(30, 60), 1)))),
+                Pair.of(2, BehaviorBuilder.triggerIf(Bothriolepis::shouldStroll, RandomStrollUtils.swimOceanFloor(1.4f)))
         ));
+
+    }
+
+    private void initPanicActivity(Brain<Bothriolepis> brain) {
+        brain.addActivityWithConditions(Activity.PANIC, ImmutableList.of(
+                        Pair.of(0, new WaterAnimalPanic<>(4F, RandomStrollUtils::getTargetSwimPos))
+                ), ImmutableSet.of(
+                        Pair.of(MemoryModuleType.HURT_BY, MemoryStatus.VALUE_PRESENT)
+                )
+        );
+
+    }
+
+    public boolean isCrepuscular() {
+        long time = level().getDayTime() % 24000;
+        boolean isDawnOrDusk = (time >= 23000 || time < 1000) || (time >= 12000 && time < 13000);
+        boolean isRaining = level().isRaining();
+        return isDawnOrDusk || isRaining;
+    }
+
+    private boolean shouldStroll() {
+        return isCrepuscular() || level().random.nextInt(200) == 0;
     }
 
     @Override
