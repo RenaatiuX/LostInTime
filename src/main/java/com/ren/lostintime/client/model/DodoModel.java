@@ -41,4 +41,19 @@ public class DodoModel extends DefaultedEntityGeoModel<Dodo> {
 
         }
     }
+
+    @Override
+    public ResourceLocation getTextureResource(Dodo animatable) {
+        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/entity/dodo_baby.png") : super.getTextureResource(animatable);
+    }
+
+    @Override
+    public ResourceLocation getModelResource(Dodo animatable) {
+        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "geo/entity/dodo_baby.geo.json") : super.getModelResource(animatable);
+    }
+
+    @Override
+    public ResourceLocation getAnimationResource(Dodo animatable) {
+        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "animations/entity/dodo_baby.animation.json") : super.getAnimationResource(animatable);
+    }
 }
