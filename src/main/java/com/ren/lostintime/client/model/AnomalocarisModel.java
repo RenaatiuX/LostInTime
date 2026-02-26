@@ -14,7 +14,7 @@ import software.bernie.geckolib.model.data.EntityModelData;
 public class AnomalocarisModel extends DefaultedEntityGeoModel<Anomalocaris> {
 
     public AnomalocarisModel() {
-        super(new ResourceLocation(LostInTime.MODID, "anomalocaris"));
+        super(ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "anomalocaris"));
     }
 
     @Override
@@ -30,11 +30,11 @@ public class AnomalocarisModel extends DefaultedEntityGeoModel<Anomalocaris> {
 
     @Override
     public ResourceLocation getModelResource(Anomalocaris animatable) {
-        return animatable.isBaby() ? new ResourceLocation(LostInTime.MODID, "geo/entity/anomalocaris_baby.geo.json") : super.getModelResource(animatable);
+        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "geo/entity/anomalocaris_baby.geo.json") : super.getModelResource(animatable);
     }
 
     @Override
     public ResourceLocation getAnimationResource(Anomalocaris animatable) {
-        return animatable.isBaby() ? new ResourceLocation(LostInTime.MODID, "animations/entity/anomalocaris_baby.animation.json") : super.getAnimationResource(animatable);
+        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "animations/entity/anomalocaris_baby.animation.json") : super.getAnimationResource(animatable);
     }
 }

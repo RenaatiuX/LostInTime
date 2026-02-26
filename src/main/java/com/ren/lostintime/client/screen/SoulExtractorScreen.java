@@ -14,7 +14,7 @@ import java.awt.*;
 
 public class SoulExtractorScreen extends AbstractContainerScreen<SoulExtractorMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LostInTime.MODID, "textures/gui/soul_extractor.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/gui/soul_extractor.png");
     private static final Rectangle RESIDUE_RECTANGLE = new Rectangle(72, 9, 52, 13);
 
     // arrow dimensions 47x16

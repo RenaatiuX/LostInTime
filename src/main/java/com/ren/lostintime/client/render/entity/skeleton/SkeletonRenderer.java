@@ -26,7 +26,7 @@ public class SkeletonRenderer extends EntityRenderer<FossilEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(FossilEntity pEntity) {
-        return new ResourceLocation(LostInTime.MODID, "textures/entity/skeleton/" + pEntity.getSkeletonType() + "_skeleton.png");
+        return ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/entity/skeleton/" + pEntity.getSkeletonType() + "_skeleton.png");
     }
 
     @Override

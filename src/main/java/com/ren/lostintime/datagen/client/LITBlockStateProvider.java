@@ -459,6 +459,6 @@ public class LITBlockStateProvider extends BlockStateProvider {
     }
 
     public ResourceLocation resourceBlock(String path) {
-        return new ResourceLocation(LostInTime.MODID, "block/" + path);
+        return ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "block/" + path);
     }
 }
