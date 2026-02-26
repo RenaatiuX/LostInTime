@@ -32,6 +32,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -144,8 +145,8 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
     }
 
     @Override
-    public void setPos(double pX, double pY, double pZ) {
-        super.setPos(pX, pY, pZ);
+    public void moveTo(double pX, double pY, double pZ, float pYRot, float pXRot) {
+        super.moveTo(pX, pY, pZ, pYRot, pXRot);
         if (this.parts != null) {
             for (EndocerasPart part : this.parts) {
                 part.setPos(pX, pY, pZ);
@@ -153,6 +154,15 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
         }
     }
 
+    @Override
+    public boolean checkSpawnObstruction(LevelReader pLevel) {
+        if (this.parts != null) {
+            for (EndocerasPart part : this.parts) {
+                part.setPos(this.getX(), this.getY(), this.getZ());
+            }
+        }
+        return super.checkSpawnObstruction(pLevel);
+    }
     //
 
     @Override

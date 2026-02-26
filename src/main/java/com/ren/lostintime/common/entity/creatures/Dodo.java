@@ -400,14 +400,14 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         SpawnGroupData data = super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
 
         if (!pLevel.isClientSide() && !this.isBaby() && this.random.nextFloat() < 0.05F) {
-            spawnChickenJockey((ServerLevel) pLevel);
+            spawnChickenJockey(pLevel);
         }
 
         return data;
     }
 
-    private void spawnChickenJockey(ServerLevel world) {
-        Zombie babyZombie = EntityType.ZOMBIE.create(world);
+    private void spawnChickenJockey(ServerLevelAccessor world) {
+        Zombie babyZombie = EntityType.ZOMBIE.create(world.getLevel());
         if (babyZombie != null) {
             babyZombie.setBaby(true);
             babyZombie.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
