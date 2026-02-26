@@ -1,7 +1,8 @@
-// 1.20.1	2026-02-24T18:07:48.957050934	Registries
+// 1.20.1	2026-02-26T01:07:59.9638627	Registries
 ce9df49a01c04a1c69071244fa4a21139c79dff5 data/lostintime/forge/biome_modifier/add_fossils.json
 2162905615f55c55795e7648db1dbbe38b48da0a data/lostintime/forge/biome_modifier/anomalocaris_spawn.json
 392a27323f845d6973d54bf1f2fda6ecb004082d data/lostintime/forge/biome_modifier/dodo_spawn.json
+9a81dfa000b46fe822e32267735559ecf99e802f data/lostintime/forge/biome_modifier/endoceras_spawn.json
 9281685b774cfa2ee741bc4eb097f4a197663126 data/lostintime/worldgen/configured_feature/araucarioxylon_tree.json
 db618ff049de94630877198ec7e72e1a4bbd742d data/lostintime/worldgen/configured_feature/fossil/cambrian.json
 c213a1cb3176599996254e5581ad411dc34ccc09 data/lostintime/worldgen/configured_feature/fossil/carboniferous.json

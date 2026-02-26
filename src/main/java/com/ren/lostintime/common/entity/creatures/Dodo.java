@@ -399,7 +399,7 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         SpawnGroupData data = super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
 
-        if (!this.level().isClientSide() && !this.isBaby() && this.random.nextFloat() < 0.05F) {
+        if (!pLevel.isClientSide() && !this.isBaby() && this.random.nextFloat() < 0.05F) {
             spawnChickenJockey((ServerLevel) pLevel);
         }
 

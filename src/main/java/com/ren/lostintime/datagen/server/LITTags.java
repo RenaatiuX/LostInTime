@@ -39,6 +39,7 @@ public class LITTags {
 
         public static final TagKey<Biome> DODO_CAN_SPAWN = tag("dodo_can_spawn");
         public static final TagKey<Biome> ANOMALOCARIS_CAN_SPAWN = tag("anomalocaris_can_spawn");
+        public static final TagKey<Biome> ENDOCERAS_CAN_SPAWN = tag("endoceras_can_spawn");
 
         public static TagKey<Biome> tag(String name){
             return TagKey.create(Registries.BIOME, new ResourceLocation(LostInTime.MODID, name));

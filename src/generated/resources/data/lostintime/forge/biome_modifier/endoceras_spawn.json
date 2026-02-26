@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "#lostintime:endoceras_can_spawn",
+  "spawners": {
+    "type": "lostintime:endoceras",
+    "maxCount": 2,
+    "minCount": 1,
+    "weight": 25
+  }
+}

@@ -98,6 +98,7 @@ public class EndocerasAi {
                     if (prey.isAlive()) {
                         cooldown.setWithExpiry(true, attackCooldown);
                         entity.doHurtTarget(prey);
+                        entity.swing(InteractionHand.MAIN_HAND);
                         return true;
                     } else {
                         return false;
@@ -150,6 +151,4 @@ public class EndocerasAi {
                     });
         });
     }
-
-
 }

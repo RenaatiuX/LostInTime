@@ -46,6 +46,7 @@ public class CommonEvents {
     public static void registerSpawnRules(SpawnPlacementRegisterEvent event){
         event.register(EntityInit.DODO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Dodo::checkLITAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(EntityInit.ANOMALOCARIS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.OCEAN_FLOOR, Anomalocaris::checkAnomalocarisSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(EntityInit.ENDOCERAS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.OCEAN_FLOOR, Endoceras::checkEndocerasSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
 
     private static void dispenser() {

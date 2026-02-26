@@ -11,11 +11,14 @@ import com.ren.lostintime.common.init.*;
 import com.ren.lostintime.datagen.server.LITTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
@@ -29,11 +32,13 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -54,13 +59,14 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
     protected static final RawAnimation SWIM = RawAnimation.begin().thenLoop("animation.endoceras.swim");
     protected static final RawAnimation BEACHED = RawAnimation.begin().thenLoop("animation.endoceras.beached");
     protected static final RawAnimation GRAB = RawAnimation.begin().thenPlayAndHold("animation.endoceras.grab");
-    public static final RawAnimation EAT = RawAnimation.begin().thenPlayAndHold("animation.endoceras.eat");
+    public static final RawAnimation EAT = RawAnimation.begin().thenPlay("animation.endoceras.eat");
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     //MULTIPART
     private final EndocerasPart[] parts;
     public final EndocerasPart headPart;
-    private int shellDropTicker = 0;
+    private int propulsionCooldown = 3600;
+    private int propulsionDuration = 0;
 
     protected static final ImmutableList<SensorType<? extends Sensor<? super Endoceras>>> SENSOR_TYPES = ImmutableList.of(
             SensorType.NEAREST_LIVING_ENTITIES,
@@ -150,17 +156,54 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
     public void aiStep() {
         super.aiStep();
         if (!this.level().isClientSide() && this.isAlive()) {
-            if (shellDropTicker > 0)
-                shellDropTicker--;
+            if (propulsionCooldown > 0) {
+                propulsionCooldown--;
+            } else if (this.isInWater()) {
+                if (this.random.nextInt(60) == 0) {
+                    Vec3 look = this.getLookAngle();
+                    double force = 1.2D;
 
-            if (shellDropTicker >= 3600) {
-                if (this.horizontalCollision) {
-                    if (this.random.nextFloat() < 0.2F) {
-                        this.spawnAtLocation(ItemInit.ENDOCERAS_SHELL_FRAGMENT.get());
-                        shellDropTicker = 3400;
+                    this.setDeltaMovement(this.getDeltaMovement().add(look.x * force, look.y * force, look.z * force));
+                    this.hasImpulse = true;
+
+                    this.playSound(SoundEvents.SQUID_SQUIRT, 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
+
+                    if (this.level() instanceof ServerLevel serverLevel) {
+                        serverLevel.sendParticles(ParticleTypes.BUBBLE_COLUMN_UP,
+                                this.getX(), this.getY() + this.getBbHeight() / 2.0D, this.getZ(),
+                                20,
+                                this.getBbWidth() / 2.0D, this.getBbHeight() / 2.0D, this.getBbWidth() / 2.0D, // Dispersión XYZ
+                                0.1D);
                     }
+
+                    propulsionCooldown = 3600 + this.random.nextInt(600);
+                    propulsionDuration = 30;
                 }
             }
+
+            System.out.println("IMPULSE COOLDOWN: " + propulsionCooldown);
+
+            if (propulsionDuration > 0) {
+                propulsionDuration--;
+
+                if (this.level() instanceof ServerLevel serverLevel && this.tickCount % 2 == 0) {
+                    serverLevel.sendParticles(ParticleTypes.BUBBLE,
+                            this.getX(), this.getY() + this.getBbHeight() / 2.0D, this.getZ(),
+                            3,
+                            0.2D, 0.2D, 0.2D,
+                            0.05D);
+                }
+                if (this.horizontalCollision) {
+                    if (this.random.nextFloat() < 0.2F) {
+                        System.out.println("SPAWNING FRAGMENT" + this.random.nextFloat());
+                        this.spawnAtLocation(ItemInit.ENDOCERAS_SHELL_FRAGMENT.get());
+                        this.playSound(SoundEvents.TURTLE_EGG_CRACK, 1.0F, 1.0F);
+                    }
+                    propulsionDuration = 0;
+                }
+            }
+
+            System.out.println("IMPULSE DURATION: " + propulsionDuration);
         }
 
         float yRotRad = Mth.DEG_TO_RAD * this.yBodyRot;
@@ -284,7 +327,7 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
     protected void tickBrain() {
         Brain<Endoceras> brain = this.getBrain();
         brain.tick((ServerLevel) this.level(), this);
-        brain.setActiveActivityToFirstValid(ImmutableList.of(ActivitInit.HURT_GRABBED_PREY.get(),ActivitInit.MATING.get(), ActivitInit.GRAB_PREY.get(), Activity.IDLE));
+        brain.setActiveActivityToFirstValid(ImmutableList.of(ActivitInit.HURT_GRABBED_PREY.get(), ActivitInit.MATING.get(), ActivitInit.GRAB_PREY.get(), Activity.IDLE));
     }
 
     public boolean isSuitablePrey(LivingEntity entity) {
@@ -305,6 +348,7 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", 10, this::movePredicate));
+        controllers.add(new AnimationController<>(this, "attack_controller", 0, this::attackPredicate));
     }
 
     private PlayState movePredicate(AnimationState<Endoceras> state) {
@@ -319,6 +363,14 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
             state.getController().setAnimation(SWIM);
         }
         return PlayState.CONTINUE;
+    }
+
+    private PlayState attackPredicate(AnimationState<Endoceras> state) {
+        if (this.swinging) {
+            state.getController().setAnimation(EAT);
+            return PlayState.CONTINUE;
+        }
+        return PlayState.STOP;
     }
 
     @Override
@@ -336,5 +388,14 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
     @Override
     public BlockState getEggState(ServerLevel level, Animal entity, BlockPos pos) {
         return BlockInit.ENDOCERAS_EGG.get().defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, true);
+    }
+
+    public static boolean checkEndocerasSpawnRules(EntityType<Endoceras> pEntityType, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+        boolean isDeepEnough = pPos.getY() <= 55;
+        boolean inWater = pLevel.getFluidState(pPos.below()).is(FluidTags.WATER) && pLevel.getBlockState(pPos.above()).is(Blocks.WATER);
+        if (pSpawnType == MobSpawnType.SPAWN_EGG) {
+            return inWater;
+        }
+        return isDeepEnough && inWater;
     }
 }

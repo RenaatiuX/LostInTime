@@ -28,6 +28,7 @@ public class LITBiomesModifiers {
     public static final ResourceKey<BiomeModifier> ADD_FOSSILS = registerKey("add_fossils");
     public static final ResourceKey<BiomeModifier> DODO_SPAWN = registerKey("dodo_spawn");
     public static final ResourceKey<BiomeModifier> ANOMALOCARIS_SPAWN = registerKey("anomalocaris_spawn");
+    public static final ResourceKey<BiomeModifier> ENDOCERAS_SPAWN = registerKey("endoceras_spawn");
 
     public static void bootstrap(BootstapContext<BiomeModifier> context) {
         var placed = context.lookup(Registries.PLACED_FEATURE);
@@ -39,12 +40,16 @@ public class LITBiomesModifiers {
 
         context.register(ADD_FOSSILS, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(
                         biomes.getOrThrow(BiomeTags.IS_OVERWORLD), fossils, GenerationStep.Decoration.UNDERGROUND_ORES));
+
         context.register(DODO_SPAWN, new ForgeBiomeModifiers.AddSpawnsBiomeModifier(biomes.getOrThrow(LITTags.Biomes.DODO_CAN_SPAWN), List.of(
                 new MobSpawnSettings.SpawnerData(EntityInit.DODO.get(), 20, 1, 4)
         )));
-
         context.register(ANOMALOCARIS_SPAWN, new ForgeBiomeModifiers.AddSpawnsBiomeModifier(biomes.getOrThrow(LITTags.Biomes.ANOMALOCARIS_CAN_SPAWN), List.of(
                 new MobSpawnSettings.SpawnerData(EntityInit.ANOMALOCARIS.get(), 15, 1, 3)
+        )));
+        context.register(ENDOCERAS_SPAWN, new ForgeBiomeModifiers.AddSpawnsBiomeModifier(
+                biomes.getOrThrow(LITTags.Biomes.ENDOCERAS_CAN_SPAWN), List.of(
+                new MobSpawnSettings.SpawnerData(EntityInit.ENDOCERAS.get(), 25, 1, 2)
         )));
     }
 
