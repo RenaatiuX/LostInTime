@@ -46,11 +46,11 @@ public class LITBiomesModifiers {
                 new MobSpawnSettings.SpawnerData(EntityInit.DODO.get(), 20, 1, 4)
         )));
         context.register(ANOMALOCARIS_SPAWN, new ForgeBiomeModifiers.AddSpawnsBiomeModifier(biomes.getOrThrow(LITTags.Biomes.ANOMALOCARIS_CAN_SPAWN), List.of(
-                new MobSpawnSettings.SpawnerData(EntityInit.ANOMALOCARIS.get(), 100, 1, 3)
+                new MobSpawnSettings.SpawnerData(EntityInit.ANOMALOCARIS.get(), 15, 1, 3)
         )));
         context.register(ENDOCERAS_SPAWN, new ForgeBiomeModifiers.AddSpawnsBiomeModifier(
                 biomes.getOrThrow(LITTags.Biomes.ENDOCERAS_CAN_SPAWN), List.of(
-                new MobSpawnSettings.SpawnerData(EntityInit.ENDOCERAS.get(), 100, 1, 2)
+                new MobSpawnSettings.SpawnerData(EntityInit.ENDOCERAS.get(), 10, 1, 2)
         )));
     }
 
