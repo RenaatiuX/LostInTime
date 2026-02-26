@@ -16,6 +16,11 @@ Your priority is maintaining compatibility with the target Forge version and fol
 - **Refresh Dependencies:** `./gradlew --refresh-dependencies`
 - **Gen IDE Runs:** `./gradlew genIntellijRuns` (or `genEclipseRuns`)
 
+## Context & Lookup Rules
+1. **Source Lookup:** Primary source is `src/main/java`.
+2. **Generated/Built Sources:** If a class (like a Forge internal or a multi-part entity) is missing, look in:
+    - `build/fg_cache/[forge_version]/`
+
 ## Architecture & Rules
 1. **Registry Pattern:** Always use `DeferredRegister` for Blocks, Items, and Entities. Do not use legacy `@ObjectHolder`.
 2. **Event Bus:** Distinguish between the **Mod Event Bus** (setup, registry) and the **Forge Event Bus** (gameplay events like `PlayerInteractEvent`).
