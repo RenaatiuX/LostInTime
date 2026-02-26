@@ -29,9 +29,11 @@ import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
@@ -96,6 +98,7 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
 
     public Endoceras(EntityType<? extends LITAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+        LostInTime.LOGGER.debug("Creating an Endoceras");
         this.headPart = new EndocerasPart(this, "head", 1.0F, 1.0F);
 
         this.parts = new EndocerasPart[]{this.headPart,
@@ -108,21 +111,11 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
         };
     }
 
-    @Override
-    protected void registerGoals() {
-        // Brain system handles goals
-    }
-
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 80.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.7D)
                 .add(Attributes.ATTACK_DAMAGE, 0.5D);
-    }
-
-    @Override
-    public boolean shouldRender(double pX, double pY, double pZ) {
-        return super.shouldRender(pX, pY, pZ);
     }
 
     //MULTIPART
@@ -145,8 +138,8 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
     }
 
     @Override
-    public void moveTo(double pX, double pY, double pZ, float pYRot, float pXRot) {
-        super.moveTo(pX, pY, pZ, pYRot, pXRot);
+    public void setPos(double pX, double pY, double pZ) {
+        super.setPos(pX, pY, pZ);
         if (this.parts != null) {
             for (EndocerasPart part : this.parts) {
                 part.setPos(pX, pY, pZ);
@@ -154,15 +147,8 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
         }
     }
 
-    @Override
-    public boolean checkSpawnObstruction(LevelReader pLevel) {
-        if (this.parts != null) {
-            for (EndocerasPart part : this.parts) {
-                part.setPos(this.getX(), this.getY(), this.getZ());
-            }
-        }
-        return super.checkSpawnObstruction(pLevel);
-    }
+
+
     //
 
     @Override
@@ -186,7 +172,7 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
 
                     this.setDeltaMovement(this.getDeltaMovement().add(look.x * force, look.y * force, look.z * force));
                     this.hasImpulse = true;
-
+                    LostInTime.LOGGER.debug("[IMPULSE]");
                     this.playSound(SoundEvents.SQUID_SQUIRT, 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
 
                     if (this.level() instanceof ServerLevel serverLevel) {
@@ -202,8 +188,6 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
                 }
             }
 
-            System.out.println("IMPULSE COOLDOWN: " + propulsionCooldown);
-
             if (propulsionDuration > 0) {
                 propulsionDuration--;
 
@@ -216,15 +200,12 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
                 }
                 if (this.horizontalCollision) {
                     if (this.random.nextFloat() < 0.2F) {
-                        System.out.println("SPAWNING FRAGMENT" + this.random.nextFloat());
                         this.spawnAtLocation(ItemInit.ENDOCERAS_SHELL_FRAGMENT.get());
                         this.playSound(SoundEvents.TURTLE_EGG_CRACK, 1.0F, 1.0F);
                     }
                     propulsionDuration = 0;
                 }
             }
-
-            System.out.println("IMPULSE DURATION: " + propulsionDuration);
         }
 
         float yRotRad = Mth.DEG_TO_RAD * this.yBodyRot;
@@ -329,11 +310,6 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
     }
 
     @Override
-    public boolean canCollideWith(Entity pEntity) {
-        return super.canCollideWith(pEntity);
-    }
-
-    @Override
     protected void ageBoundaryReached() {
         super.ageBoundaryReached();
         this.spawnAtLocation(new ItemStack(ItemInit.ENDOCERAS_SHELL_FRAGMENT.get(), this.level().random.nextIntBetweenInclusive(1, 3)));
@@ -409,15 +385,5 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
     @Override
     public BlockState getEggState(ServerLevel level, Animal entity, BlockPos pos) {
         return BlockInit.ENDOCERAS_EGG.get().defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, true);
-    }
-
-    public static boolean checkEndocerasSpawnRules(EntityType<Endoceras> pEntityType, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        boolean isDeepEnough = pPos.getY() <= 55;
-        boolean inWater = pLevel.getFluidState(pPos).is(FluidTags.WATER) && pLevel.getFluidState(pPos.above()).is(FluidTags.WATER);
-        if (pSpawnType == MobSpawnType.SPAWN_EGG) {
-            return inWater;
-        }
-        System.out.println("[ENDOCERAS SPAWN TEST] trying on Y=" + pPos.getY() + " | Deep: " + isDeepEnough + " | Is water: " + inWater);
-        return isDeepEnough && inWater;
     }
 }

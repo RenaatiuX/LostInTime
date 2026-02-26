@@ -437,16 +437,6 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
         return ItemStack.EMPTY;
     }
 
-    public static boolean checkAnomalocarisSpawnRules(EntityType<?> pType, LevelAccessor pLevel, MobSpawnType pReason, BlockPos pPos, RandomSource pRandom) {
-        return Config.naturalSpawns && checkSurfaceWaterAnimalSpawnRules(pType, pLevel, pReason, pPos, pRandom);
-    }
-
-    public static boolean checkSurfaceWaterAnimalSpawnRules(EntityType<?> pWaterAnimal, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        int i = pLevel.getSeaLevel();
-        int j = i - 13;
-        return pPos.getY() >= j && pPos.getY() <= i && pLevel.getFluidState(pPos.below()).is(FluidTags.WATER) && pLevel.getBlockState(pPos.above()).is(Blocks.WATER);
-    }
-
     // --- Inner Classes (Goals) ---
 
     static class AnomalocarisGrabAttackGoal extends MeleeAttackGoal {

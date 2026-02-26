@@ -2,6 +2,7 @@ package com.ren.lostintime.common.event;
 
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.client.renderer.TransfiguratorBERenderer;
+import com.ren.lostintime.common.entity.LITWaterAnimal;
 import com.ren.lostintime.common.entity.creatures.*;
 import com.ren.lostintime.common.entity.projectile.LITThrownEgg;
 import com.ren.lostintime.common.init.BlockEntityInit;
@@ -12,6 +13,7 @@ import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -45,8 +47,8 @@ public class CommonEvents {
     @SubscribeEvent
     public static void registerSpawnRules(SpawnPlacementRegisterEvent event){
         event.register(EntityInit.DODO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Dodo::checkLITAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(EntityInit.ANOMALOCARIS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.OCEAN_FLOOR, Anomalocaris::checkAnomalocarisSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(EntityInit.ENDOCERAS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.OCEAN_FLOOR, Endoceras::checkEndocerasSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(EntityInit.ANOMALOCARIS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, LITWaterAnimal::checkWaterLITSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(EntityInit.ENDOCERAS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, LITWaterAnimal::checkWaterLITSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
 
     private static void dispenser() {
