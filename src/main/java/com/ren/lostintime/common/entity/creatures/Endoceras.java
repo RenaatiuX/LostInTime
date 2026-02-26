@@ -118,11 +118,6 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
                 .add(Attributes.ATTACK_DAMAGE, 0.5D);
     }
 
-    @Override
-    public boolean shouldRender(double pX, double pY, double pZ) {
-        return super.shouldRender(pX, pY, pZ);
-    }
-
     //MULTIPART
     @Override
     public void setId(int pId) {
