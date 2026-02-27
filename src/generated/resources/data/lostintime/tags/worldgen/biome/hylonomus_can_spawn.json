@@ -1,0 +1,16 @@
+{
+  "values": [
+    "minecraft:bamboo_jungle",
+    "minecraft:cherry_grove",
+    "minecraft:dark_forest",
+    "#minecraft:is_taiga",
+    "#minecraft:is_savanna",
+    "#minecraft:is_jungle",
+    "#minecraft:is_beach",
+    "minecraft:desert",
+    "minecraft:badlands",
+    "minecraft:snowy_plains",
+    "minecraft:ice_spikes",
+    "minecraft:frozen_river"
+  ]
+}

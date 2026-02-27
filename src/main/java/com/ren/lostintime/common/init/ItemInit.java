@@ -8,6 +8,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.PlaceOnWaterBlockItem;
+import net.minecraft.world.item.Tiers;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -160,6 +161,12 @@ public class ItemInit {
     //EQUIP
     public static final RegistryObject<Item> GOLDEN_EYE = ITEMS.register("golden_eye",
             () -> new GoldenEyeItem(new Item.Properties()));
+    public static final RegistryObject<Item> IRON_KNIFE = ITEMS.register("iron_knife",
+            () -> new KnifeItem(Tiers.IRON, 1, -1.2F,
+                    new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> DIAMOND_KNIFE = ITEMS.register("diamond_knife",
+            () -> new KnifeItem(Tiers.DIAMOND, 1, -1.2F,
+                    new Item.Properties().stacksTo(1)));
 
     //FOOD
     public static final RegistryObject<Item> RAW_DODO = registerFood("raw_dodo", FoodInit.RAW_DODO);

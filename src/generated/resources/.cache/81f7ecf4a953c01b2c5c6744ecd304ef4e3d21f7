@@ -1,4 +1,4 @@
-// 1.20.1	2026-02-25T17:12:51.757093	Item Models: lostintime
+// 1.20.1	2026-02-27T01:11:03.830473	Item Models: lostintime
 0570665fcef0e1f3922095a8aa98973135ded46e assets/lostintime/models/item/amber.json
 1a1915f23093ff4fbded979014b60faf9fa1d93e assets/lostintime/models/item/amber_catalyst.json
 879d909212d6267838764316100b2c449321306b assets/lostintime/models/item/amethyst_catalyst.json
@@ -62,6 +62,7 @@ c92560f12e1dba2b6f3ced304b5ac11aef9f7ba9 assets/lostintime/models/item/daeodon_s
 42909286a63b411ff391cd2b36e5928494390be5 assets/lostintime/models/item/deinonychus_soul_configuration.json
 afcf95e7e795ae370ce3843fec6891b394b6c798 assets/lostintime/models/item/delft_solution.json
 39dc454b5a524d3d25dd619660235442462936d3 assets/lostintime/models/item/devonian_fossil.json
+853529a04a082874f4946e4b89ae23494dd2fdff assets/lostintime/models/item/diamond_knife.json
 e35fe5ed570cadaa48e0daf5324b372edc1b9703 assets/lostintime/models/item/dodo_egg.json
 2fd9d5c671331fb0f17017783c96198997711305 assets/lostintime/models/item/dodo_fossil.json
 85d11763defe6ef33ca8e7f968a9e90719c2bc5f assets/lostintime/models/item/dodo_fossil_mount.json
@@ -92,6 +93,7 @@ b6cb09935c85e93de208f2bb0005759b2a1292ee assets/lostintime/models/item/hylonomus
 3491d9b95add05fab970526c6c406a95f367ebfb assets/lostintime/models/item/hylonomus_soul_configuration.json
 cab78673a1e7f5e277ac435ede78301a0a9272e2 assets/lostintime/models/item/information_dome.json
 942904871acf8501a202ef8c3348a80713811fcc assets/lostintime/models/item/iron_catalyst.json
+3c9c914585ff51002d5e545977db49f9e4555388 assets/lostintime/models/item/iron_knife.json
 a3e2b819bd3665bba60e097012ce18ac49a7a8f0 assets/lostintime/models/item/jurassic_fossil.json
 02e39b17ac05832821d63b2ae7d7b059ba5d40ab assets/lostintime/models/item/lapis_lazuli_catalyst.json
 70455edc979cf4c7c5a95de3472f8949751aa53d assets/lostintime/models/item/leptictidium_fossil.json

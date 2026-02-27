@@ -30,6 +30,7 @@ public class LITBiomesModifiers {
     public static final ResourceKey<BiomeModifier> DODO_SPAWN = registerKey("dodo_spawn");
     public static final ResourceKey<BiomeModifier> ANOMALOCARIS_SPAWN = registerKey("anomalocaris_spawn");
     public static final ResourceKey<BiomeModifier> ENDOCERAS_SPAWN = registerKey("endoceras_spawn");
+    public static final ResourceKey<BiomeModifier> HYLONOMUS_SPAWN = registerKey("hylonomus_spawn");
 
     public static void bootstrap(BootstapContext<BiomeModifier> context) {
         var placed = context.lookup(Registries.PLACED_FEATURE);
@@ -51,6 +52,10 @@ public class LITBiomesModifiers {
         context.register(ENDOCERAS_SPAWN, new ForgeBiomeModifiers.AddSpawnsBiomeModifier(
                 biomes.getOrThrow(LITTags.Biomes.ENDOCERAS_CAN_SPAWN), List.of(
                 new MobSpawnSettings.SpawnerData(EntityInit.ENDOCERAS.get(), 10, 1, 2)
+        )));
+        context.register(HYLONOMUS_SPAWN, new ForgeBiomeModifiers.AddSpawnsBiomeModifier(
+                biomes.getOrThrow(LITTags.Biomes.HYLONOMUS_CAN_SPAWN), List.of(
+                new MobSpawnSettings.SpawnerData(EntityInit.HYLONOMUS.get(), 15, 1, 3)
         )));
     }
 

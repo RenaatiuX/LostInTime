@@ -49,6 +49,7 @@ public class CommonEvents {
         event.register(EntityInit.DODO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Dodo::checkLITAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(EntityInit.ANOMALOCARIS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, LITWaterAnimal::checkWaterLITSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(EntityInit.ENDOCERAS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, LITWaterAnimal::checkWaterLITSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(EntityInit.HYLONOMUS.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Hylonomus::checkHylonomusSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
 
     private static void dispenser() {

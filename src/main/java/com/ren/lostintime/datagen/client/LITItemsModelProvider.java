@@ -54,6 +54,8 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(BlockInit.DODO_EGG.get());
 
         simple(ItemInit.GOLDEN_EYE.get());
+        handheld(ItemInit.IRON_KNIFE.get());
+        handheld(ItemInit.DIAMOND_KNIFE.get());
 
         spawnEgg(ItemInit.DODO_SPAWN_EGG.get());
         spawnEgg(ItemInit.ENDOCERAS_SPAWN_EGG.get());
