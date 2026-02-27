@@ -1,6 +1,5 @@
 package com.ren.lostintime.common.entity.ai;
 
-import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.entity.util.IEggLayerAnimal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -61,7 +60,7 @@ public class BrainAiUtils {
                         BlockPos blockpos1 = null;
                         BlockPos blockpos2 = p_259212_.blockPosition();
 
-                        for(BlockPos blockpos3 : BlockPos.withinManhattan(blockpos2, range, range, range)) {
+                        for (BlockPos blockpos3 : BlockPos.withinManhattan(blockpos2, range, range, range)) {
                             if (blockpos3.getX() != blockpos2.getX() || blockpos3.getZ() != blockpos2.getZ()) {
                                 BlockState blockstate = p_259212_.level().getBlockState(blockpos3.above());
                                 BlockState blockstate1 = p_259212_.level().getBlockState(blockpos3);
