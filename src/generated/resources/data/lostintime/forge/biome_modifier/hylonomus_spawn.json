@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "#lostintime:hylonomus_can_spawn",
+  "spawners": {
+    "type": "lostintime:hylonomus",
+    "maxCount": 3,
+    "minCount": 1,
+    "weight": 15
+  }
+}

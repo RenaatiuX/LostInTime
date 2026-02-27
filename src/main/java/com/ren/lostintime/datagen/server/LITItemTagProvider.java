@@ -65,6 +65,14 @@ public class LITItemTagProvider extends ItemTagsProvider {
         tag(LITTags.Items.DODO_FOOD).addTags(LITTags.Items.SEEDS);
         tag(LITTags.Items.ANOMALOCARIS_BREEDABLE_FOOD).add(Items.COD);
         tag(LITTags.Items.ENDOCERAS_BREEDABLE_FOOD).add(Items.COD);
+        tag(LITTags.Items.HYLONOMUS_BREEDABLE_FOOD)
+                .add(Items.BEEF, Items.COOKED_BEEF)
+                .add(Items.PORKCHOP, Items.COOKED_PORKCHOP)
+                .add(Items.MUTTON, Items.COOKED_MUTTON)
+                .add(Items.CHICKEN, Items.COOKED_CHICKEN)
+                .add(Items.RABBIT, Items.COOKED_RABBIT)
+                .add(Items.ROTTEN_FLESH)
+                .add(Items.SPIDER_EYE);
 
         makeBothriolepisFood();
     }

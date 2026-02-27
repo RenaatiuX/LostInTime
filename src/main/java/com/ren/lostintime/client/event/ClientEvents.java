@@ -8,6 +8,7 @@ import com.ren.lostintime.client.model.blockentities.*;
 import com.ren.lostintime.client.render.entity.*;
 import com.ren.lostintime.client.render.entity.skeleton.SkeletonRenderer;
 import com.ren.lostintime.client.render.projectile.GuardianSpikeRender;
+import com.ren.lostintime.client.render.projectile.ThrownKnifeRenderer;
 import com.ren.lostintime.client.renderer.TransfiguratorBERenderer;
 import com.ren.lostintime.client.screen.IdentificationScreen;
 import com.ren.lostintime.client.screen.SoulConfiguratorScreen;
@@ -48,6 +49,7 @@ public class ClientEvents {
 
         event.registerEntityRenderer(EntityInit.GUARDIAN_SPIKE.get(), GuardianSpikeRender::new);
         event.registerEntityRenderer(EntityInit.LIT_THROWN_EGG.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(EntityInit.THROWN_KNIFE.get(), ThrownKnifeRenderer::new);
 
         event.registerEntityRenderer(EntityInit.LIT_SKELETON.get(), SkeletonRenderer::new);
 

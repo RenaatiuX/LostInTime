@@ -22,7 +22,8 @@ public class LITTags {
 
         public static final TagKey<Item> ANOMALOCARIS_BREEDABLE_FOOD = tag("anomalocaris_breedable_food");
         public static final TagKey<Item> ENDOCERAS_BREEDABLE_FOOD = tag("endoceras_breedable_food");
-        public static final TagKey<Item> BOTHRIOLEPIS_FOOD = tag("botheriolepis_food");
+        public static final TagKey<Item> HYLONOMUS_BREEDABLE_FOOD = tag("hylonomus_breedable_food");
+        public static final TagKey<Item> BOTHRIOLEPIS_FOOD = tag("bothrilepis_food");
 
         public static TagKey<Item> tag(String name){
             return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, name));
@@ -43,6 +44,7 @@ public class LITTags {
         public static final TagKey<Biome> DODO_CAN_SPAWN = tag("dodo_can_spawn");
         public static final TagKey<Biome> ANOMALOCARIS_CAN_SPAWN = tag("anomalocaris_can_spawn");
         public static final TagKey<Biome> ENDOCERAS_CAN_SPAWN = tag("endoceras_can_spawn");
+        public static final TagKey<Biome> HYLONOMUS_CAN_SPAWN = tag("hylonomus_can_spawn");
 
         public static TagKey<Biome> tag(String name){
             return TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, name));

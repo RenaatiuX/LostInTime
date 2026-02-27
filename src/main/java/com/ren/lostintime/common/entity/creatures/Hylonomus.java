@@ -1,17 +1,25 @@
 package com.ren.lostintime.common.entity.creatures;
 
+import com.ren.lostintime.common.entity.enums.HylonomusVariant;
 import com.ren.lostintime.common.init.EntityInit;
 import com.ren.lostintime.common.init.ItemInit;
+import com.ren.lostintime.datagen.server.LITTags;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -20,7 +28,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +52,8 @@ public class Hylonomus extends Animal implements GeoEntity {
 
     private static final EntityDataAccessor<Boolean> DATA_SLEEPING =
             SynchedEntityData.defineId(Hylonomus.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> DATA_VARIANT =
+            SynchedEntityData.defineId(Hylonomus.class, EntityDataSerializers.INT);
 
     //ANIMATION
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");
@@ -49,7 +64,6 @@ public class Hylonomus extends Animal implements GeoEntity {
 
     private int panicTicks = 0;
 
-    public int eggTime = this.random.nextInt(6000) + 6000;
 
     public Hylonomus(EntityType<? extends Animal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -59,28 +73,36 @@ public class Hylonomus extends Animal implements GeoEntity {
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new PanicGoal(this, 1.6D) {
+        this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, LivingEntity.class, 6.0F, 1.5D, 2.0D, (entity) -> {
+            return !(entity instanceof Hylonomus);
+        }) {
             @Override
             public boolean canUse() {
                 return super.canUse() && !Hylonomus.this.isSleeping();
             }
         });
-        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(3, new TemptGoal(this, 1.0D, Ingredient.of(new ItemStack(Items.SPIDER_EYE)), false));
-        this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.1D));
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D) {
+        this.goalSelector.addGoal(2, new PanicGoal(this, 1.6D) {
             @Override
             public boolean canUse() {
                 return super.canUse() && !Hylonomus.this.isSleeping();
             }
         });
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F) {
+        this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, Ingredient.of(LITTags.Items.HYLONOMUS_BREEDABLE_FOOD), false));
+        this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D) {
             @Override
             public boolean canUse() {
                 return super.canUse() && !Hylonomus.this.isSleeping();
             }
         });
-        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this) {
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !Hylonomus.this.isSleeping();
+            }
+        });
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this) {
             @Override
             public boolean canUse() {
                 return super.canUse() && !Hylonomus.this.isSleeping();
@@ -89,13 +111,14 @@ public class Hylonomus extends Animal implements GeoEntity {
     }
 
     public static AttributeSupplier.@NotNull Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 2.0D).add(Attributes.MOVEMENT_SPEED, 0.2F);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 4.0D).add(Attributes.MOVEMENT_SPEED, 0.2F);
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_SLEEPING, false);
+        this.entityData.define(DATA_VARIANT, HylonomusVariant.STRIPPED.getId());
     }
 
     public boolean isSleeping() {
@@ -106,28 +129,59 @@ public class Hylonomus extends Animal implements GeoEntity {
         this.entityData.set(DATA_SLEEPING, sleeping);
     }
 
+    public HylonomusVariant getVariant() {
+        return HylonomusVariant.byId(this.entityData.get(DATA_VARIANT));
+    }
+
+    public void setVariant(HylonomusVariant variant) {
+        this.entityData.set(DATA_VARIANT, variant.getId());
+    }
+
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
-        return EntityInit.HYLONOMUS.get().create(pLevel);
+        /*Hylonomus baby = EntityInit.HYLONOMUS.get().create(pLevel);
+        if (baby != null) {
+            baby.setVariant(this.getVariant());
+        }
+        return baby;*/
+        return null;
+    }
+
+    @Override
+    public void spawnChildFromBreeding(ServerLevel pLevel, Animal pMate) {
+        ItemStack eggStack = new ItemStack(ItemInit.HYLONOMUS_EGG.get());
+        eggStack.getOrCreateTag().putInt("Variant", this.getVariant().getId());
+
+        this.spawnAtLocation(eggStack);
+        this.playSound(SoundEvents.CHICKEN_EGG, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+
+        this.setAge(6000);
+        pMate.setAge(6000);
+        this.resetLove();
+        pMate.resetLove();
+        pLevel.broadcastEntityEvent(this, (byte)18);
+        if (pLevel.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+            pLevel.addFreshEntity(new ExperienceOrb(pLevel, this.getX(), this.getY(), this.getZ(), this.random.nextInt(7) + 1));
+        }
     }
 
     @Override
     public boolean isFood(ItemStack pStack) {
-        return pStack.is(Items.SPIDER_EYE);
+        return pStack.is(LITTags.Items.HYLONOMUS_BREEDABLE_FOOD);
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        if (pCompound.contains("EggLayTime")) {
-            this.eggTime = pCompound.getInt("EggLayTime");
+        if (pCompound.contains("Variant")) {
+            this.setVariant(HylonomusVariant.byId(pCompound.getInt("Variant")));
         }
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        pCompound.putInt("EggLayTime", this.eggTime);
+        pCompound.putInt("Variant", this.getVariant().getId());
     }
 
     //MOVEMENT
@@ -178,19 +232,61 @@ public class Hylonomus extends Animal implements GeoEntity {
         }
     }
 
-    @Override
-    public void aiStep() {
-        super.aiStep();
-        if (!this.level().isClientSide && this.isAlive() && !this.isBaby() && --this.eggTime <= 0 && !this.isSleeping()) {
-            this.playSound(SoundEvents.CHICKEN_EGG, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-            this.spawnAtLocation(ItemInit.HYLONOMUS_EGG.get());
-            this.gameEvent(GameEvent.ENTITY_PLACE);
-            this.eggTime = this.random.nextInt(6000) + 6000;
-        }
-    }
 
     private boolean isInPanic() {
         return panicTicks > 0;
+    }
+
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+        Holder<Biome> biome = pLevel.getBiome(this.blockPosition());
+
+        if (biome.is(Biomes.BAMBOO_JUNGLE) || biome.is(Biomes.CHERRY_GROVE) || biome.is(Biomes.DARK_FOREST)) {
+            this.setVariant(HylonomusVariant.LEAF);
+        } else if (biome.is(BiomeTags.IS_TAIGA)) {
+            this.setVariant(HylonomusVariant.ROCK);
+        } else if (biome.is(BiomeTags.IS_SAVANNA)) {
+            this.setVariant(HylonomusVariant.RUSTY);
+        } else if (biome.is(BiomeTags.IS_JUNGLE)) {
+            this.setVariant(HylonomusVariant.SPOTTED);
+        } else if (biome.is(BiomeTags.IS_BEACH)) {
+            this.setVariant(HylonomusVariant.STELAR);
+        } else {
+            this.setVariant(HylonomusVariant.STRIPPED);
+        }
+
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    }
+
+    //TODO JUST DEBUG
+    @Override
+    public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
+        ItemStack itemstack = pPlayer.getItemInHand(pHand);
+
+        if (itemstack.is(Items.STICK) && !this.level().isClientSide) {
+            int nextId = this.getVariant().getId() + 1;
+            if (nextId >= HylonomusVariant.values().length) {
+                nextId = 0;
+            }
+            this.setVariant(HylonomusVariant.byId(nextId));
+            return InteractionResult.SUCCESS;
+        }
+
+        return super.mobInteract(pPlayer, pHand);
+    }
+
+    public static boolean checkHylonomusSpawnRules(EntityType<Hylonomus> pEntityType, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+        if (pSpawnType == MobSpawnType.SPAWN_EGG) {
+            return true;
+        }
+        boolean isLightEnough = pLevel.getRawBrightness(pPos, 0) > 8;
+
+        BlockState blockBelow = pLevel.getBlockState(pPos.below());
+        boolean isValidBlock = blockBelow.is(BlockTags.ANIMALS_SPAWNABLE_ON)
+                || blockBelow.is(BlockTags.SAND)
+                || blockBelow.is(BlockTags.DIRT);
+
+        return isLightEnough && isValidBlock;
     }
 
     @Override

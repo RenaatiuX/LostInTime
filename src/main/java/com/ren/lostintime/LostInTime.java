@@ -66,6 +66,8 @@ public class LostInTime {
             event.accept(ItemInit.SPINEL);
             event.accept(ItemInit.HYLONOMUS_EGG);
             event.accept(ItemInit.ENDOCERAS_SHELL_FRAGMENT);
+            event.accept(ItemInit.IRON_KNIFE);
+            event.accept(ItemInit.DIAMOND_KNIFE);
 
             event.accept(ItemInit.DEVONIAN_FOSSIL);
             event.accept(ItemInit.CAMBRIAN_FOSSIL);
