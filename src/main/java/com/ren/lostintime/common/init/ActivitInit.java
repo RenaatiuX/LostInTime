@@ -13,6 +13,8 @@ public class ActivitInit {
     public static final RegistryObject<Activity> HURT_GRABBED_PREY = register("hurt_grabbed_prey");
     public static final RegistryObject<Activity> GRAB_PREY = register("grab_prey");
     public static final RegistryObject<Activity> MATING = register("mating");
+    public static final RegistryObject<Activity> CATCH_ITEM = register("catch_item");
+    public static final RegistryObject<Activity> FIND_WATER = register("find_water");
 
 
     public static RegistryObject<Activity> register(String name){

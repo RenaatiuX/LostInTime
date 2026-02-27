@@ -81,6 +81,32 @@ public class RandomStrollUtils {
         return targetPos;
     }
 
+    /**
+     * Finds the nearest water position within a given range.
+     *
+     * @param mob    The mob searching for water.
+     * @param range  The search radius.
+     * @return A {@link Vec3} representing the center of the nearest water block, or null if none found.
+     */
+    @Nullable
+    public static Vec3 findNearestWaterPos(PathfinderMob mob, int range) {
+        BlockPos mobPos = mob.blockPosition();
+        BlockPos nearestWater = null;
+        double minDistanceSqr = Double.MAX_VALUE;
+
+        for (BlockPos pos : BlockPos.betweenClosed(mobPos.offset(-range, -range, -range), mobPos.offset(range, range, range))) {
+            if (mob.level().getFluidState(pos).is(FluidTags.WATER)) {
+                double distanceSqr = mobPos.distSqr(pos);
+                if (distanceSqr < minDistanceSqr) {
+                    minDistanceSqr = distanceSqr;
+                    nearestWater = pos.immutable();
+                }
+            }
+        }
+
+        return nearestWater != null ? Vec3.atCenterOf(nearestWater) : null;
+    }
+
     @Nullable
     public static Vec3 getOceanFloorTargetPos(PathfinderMob mob) {
         Vec3 currentBestPos = null;

@@ -51,8 +51,9 @@ public class Config {
                             Config::validateGoldenFood
                     );
     private static final ForgeConfigSpec.IntValue ANOMALOCARIS_BREED_COOLDOWN = BUILDER.comment("time in ticks the anomalocaris will need at least before it can be bred again").defineInRange("anomalocaris_breed_cooldown", 6000, 1, Integer.MAX_VALUE);
+    private static final ForgeConfigSpec.IntValue BOTHRIOLEPIS_ITEM_PICKUP_COOLDOWN = BUILDER.comment("time in ticks the bothriolepis will need at least before it can pick up an item again").defineInRange("bothriolepis_item_pickup_cooldown", 6000, 1, Integer.MAX_VALUE);
 
-    private static final ForgeConfigSpec.BooleanValue NATURAL_SPAWNS = BUILDER.pop().push("Spawns").define("natural_spawns", true);
+    private static final ForgeConfigSpec.BooleanValue NATURAL_SPAWNS = BUILDER.pop().push("Spawns").comment("whether the entities should naturally be generated into the world").define("natural_spawns", true);
 
     public static final ForgeConfigSpec SPEC = BUILDER.pop().build();
 
@@ -61,6 +62,7 @@ public class Config {
     public static int dodoEggCooldown;
     public static int dodoPeckCooldown;
     public static int anomalocarisBreedCooldown;
+    public static int bothriolepisItemPickupCooldown;
 
     public static Map<Item, Float> goldenFoodMultipliers = ImmutableMap.of();
     public static Map<Item, Float> transfiguratorTranslators = ImmutableMap.of();
@@ -106,6 +108,7 @@ public class Config {
 
         dodoPeckCooldown = DODO_PECK_COOLDOWN.get();
         anomalocarisBreedCooldown = ANOMALOCARIS_BREED_COOLDOWN.get();
+        bothriolepisItemPickupCooldown = BOTHRIOLEPIS_ITEM_PICKUP_COOLDOWN.get();
         naturalSpawns = NATURAL_SPAWNS.get();
 
     }
