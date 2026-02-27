@@ -6,6 +6,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.entity.AbstractBaseFish;
+import com.ren.lostintime.common.entity.ai.NoJumpControl;
 import com.ren.lostintime.common.entity.ai.RandomStrollUtils;
 import com.ren.lostintime.common.entity.ai.WaterAnimalPanic;
 import net.minecraft.core.BlockPos;
@@ -17,12 +18,15 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.behavior.*;
 import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder;
+import net.minecraft.world.entity.ai.control.LookControl;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
@@ -35,6 +39,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -58,6 +63,9 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
         super(pEntityType, pLevel);
         //this.moveControl = new SmoothSwimmingMoveControl(this, 85, 10,
         //        0.1F, 0.5F, false);
+        this.moveControl = new MoveControl(this);
+        this.lookControl = new LookControl(this);
+        this.jumpControl = new NoJumpControl(this);
         this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
         this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 0.0F);
     }
@@ -66,6 +74,7 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
         return AbstractFish.createAttributes()
                 .add(Attributes.MAX_HEALTH, 16.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
+                .add(ForgeMod.STEP_HEIGHT_ADDITION.get(), 1D)
                 .add(Attributes.FOLLOW_RANGE, 32.0D);
     }
 
@@ -120,7 +129,7 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
 
     @Override
     public boolean floatsUp() {
-        return true;
+        return false;
     }
 
     public boolean isOnOceanFloor() {
@@ -129,18 +138,8 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
     }
 
     @Override
-    public void travel(Vec3 pTravelVector) {
-        if (this.isEffectiveAi() && this.isInWater()) {
-            if (this.getBrain().hasMemoryValue(MemoryModuleType.IS_PANICKING)) {
-                super.travel(pTravelVector);
-            } else {
-                this.moveRelative(this.getSpeed(), pTravelVector);
-                this.move(MoverType.SELF, this.getDeltaMovement());
-                this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.08D, 0.0D));
-            }
-        } else {
-            super.travel(pTravelVector);
-        }
+    public boolean canSwim() {
+        return this.getBrain().hasMemoryValue(MemoryModuleType.IS_PANICKING);
     }
 
     @Override
@@ -196,19 +195,21 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity {
 
     private void initIdleActivity(Brain<Bothriolepis> brain) {
         brain.addActivity(Activity.IDLE, ImmutableList.of(
-                Pair.of(0, TryFindWater.create(10, 1.0f)),
+                Pair.of(0, TryFindWater.create(10, 1f)),
                 Pair.of(1, new RunOne<>(ImmutableList.of(Pair.of(SetEntityLookTarget.create(EntityType.PLAYER, 6.0F), 1), Pair.of(new DoNothing(30, 60), 1)))),
-                Pair.of(2, BehaviorBuilder.triggerIf(Bothriolepis::shouldStroll, RandomStrollUtils.swimOceanFloor(1.4f)))
+                Pair.of(2, BehaviorBuilder.triggerIf(Bothriolepis::shouldStroll, RandomStrollUtils.swimOceanFloor(1.7f)))
         ));
 
     }
 
     private void initPanicActivity(Brain<Bothriolepis> brain) {
-        brain.addActivityWithConditions(Activity.PANIC, ImmutableList.of(
-                        Pair.of(0, new WaterAnimalPanic<>(4F, RandomStrollUtils::getTargetSwimPos))
+        brain.addActivityAndRemoveMemoriesWhenStopped(Activity.PANIC, ImmutableList.of(
+                        Pair.of(0, new WaterAnimalPanic<>(1.9F, RandomStrollUtils::getPanicPosInWater))
                 ), ImmutableSet.of(
                         Pair.of(MemoryModuleType.HURT_BY, MemoryStatus.VALUE_PRESENT)
-                )
+                ),
+                //ensure panicking and walk target is erased so when the panicking is over it wont sped around anymore
+                ImmutableSet.of(MemoryModuleType.IS_PANICKING, MemoryModuleType.WALK_TARGET)
         );
 
     }

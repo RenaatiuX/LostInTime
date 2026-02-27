@@ -2,11 +2,14 @@ package com.ren.lostintime.common.entity.ai;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.behavior.OneShot;
 import net.minecraft.world.entity.ai.behavior.RandomStroll;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -14,8 +17,68 @@ import org.jetbrains.annotations.Nullable;
 public class RandomStrollUtils {
     private static final int[][] SWIM_XY_DISTANCE_TIERS = new int[][]{{1, 1}, {3, 3}, {5, 5}, {6, 5}, {7, 7}, {10, 7}};
 
+    /**
+     * Creates a behavior that makes a mob stroll along the ocean floor.
+     *
+     * @param pSpeedModifier The speed multiplier for the mob's movement.
+     * @return A {@link OneShot} behavior for ocean floor strolling.
+     */
     public static OneShot<PathfinderMob> swimOceanFloor(float pSpeedModifier) {
         return RandomStroll.strollFlyOrSwim(pSpeedModifier, RandomStrollUtils::getOceanFloorTargetPos, Entity::isInWaterOrBubble);
+    }
+    
+    /**
+     * Calculates a position for a mob to flee to when panicked in water.
+     * this also will avoid the entity if it got hit recently
+     *
+     * @param mob The mob that is panicking.
+     * @return A {@link Vec3} representing the target position, or null if none found.
+     */
+    @Nullable
+    public static Vec3 getPanicPosInWater(PathfinderMob mob){
+        var hurtByEntity = mob.getBrain().getMemory(MemoryModuleType.HURT_BY_ENTITY);
+        if (hurtByEntity.isPresent()){
+             Vec3 hurtPos = hurtByEntity.get().position();
+             Vec3 fleeDir = mob.position().subtract(hurtPos).normalize();
+             return getWeightedRandomPos(mob, fleeDir, 10, 0.8f);
+        }
+        return getTargetSwimPos(mob);
+    }
+
+
+    /**
+     * Generates a random position biased towards a specific direction.
+     *
+     * @param mob       The mob for which the position is being calculated.
+     * @param direction The target direction to bias towards.
+     * @param radius    The distance from the mob's current position.
+     * @param weight    The strength of the bias (0.0 to 1.0).
+     * @return A {@link Vec3} representing the biased random position, or null if the position is not in water.
+     */
+    @Nullable
+    public static Vec3 getWeightedRandomPos(PathfinderMob mob, Vec3 direction, int radius, float weight) {
+        RandomSource random = mob.getRandom();
+
+        // Generate a random direction
+        double x = (random.nextDouble() * 2.0 - 1.0);
+        double y = (random.nextDouble() * 2.0 - 1.0);
+        double z = (random.nextDouble() * 2.0 - 1.0);
+        Vec3 randomDir = new Vec3(x, y, z).normalize();
+
+        // Bias towards the target direction
+        Vec3 biasedDir = randomDir.lerp(direction, weight).normalize();
+
+        // Scale by radius
+        Vec3 targetPos = mob.position().add(biasedDir.scale(radius));
+
+        // Check if valid (e.g. in water if mob is water creature)
+        BlockPos blockPos = BlockPos.containing(targetPos);
+        if (!mob.level().getFluidState(blockPos).is(FluidTags.WATER)) {
+             // Try to find water nearby or return null/fallback
+             return null;
+        }
+
+        return targetPos;
     }
 
     @Nullable
