@@ -3,6 +3,7 @@ package com.ren.lostintime.common.entity.ai;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -52,6 +53,8 @@ public class WaterAnimalPanic<E extends PathfinderMob> extends Behavior<E> {
 
     @Override
     protected boolean checkExtraStartConditions(ServerLevel pLevel, E pOwner) {
+        if (pOwner.getBrain().getMemory(MemoryModuleType.HURT_BY).map(d -> d.is(DamageTypeTags.IS_DROWNING)).orElse(false))
+            return false;
         return this.shouldPanic.test(pOwner);
     }
 

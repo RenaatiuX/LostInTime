@@ -9,7 +9,9 @@ import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -72,8 +74,16 @@ public class LITItemTagProvider extends ItemTagsProvider {
                 .add(Items.ROTTEN_FLESH)
                 .add(Items.SPIDER_EYE);
 
-
+        makeBothriolepisFood();
     }
 
+    private void makeBothriolepisFood(){
+        var tagBuilder = tag(LITTags.Items.BOTHRIOLEPIS_FOOD);
 
+        for (var item : ForgeRegistries.ITEMS.getValues()){
+            if (item.getFoodProperties() != null && item != Items.COOKIE)
+                tagBuilder.add(item);
+        }
+        tagBuilder.add(Items.SPIDER_EYE);
+    }
 }
