@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 import com.ren.lostintime.LostInTime;
+import com.ren.lostintime.common.entity.ai.BrainAiUtils;
 import com.ren.lostintime.common.entity.ai.FindWaterEggLayingSpot;
 import com.ren.lostintime.common.entity.ai.PregnantAnimalLove;
 import com.ren.lostintime.common.entity.util.IEggLayerAnimal;
@@ -55,7 +56,7 @@ public class EndocerasAi {
 
         brain.addActivityAndRemoveMemoriesWhenStopped(ActivitInit.MATING.get(), ImmutableList.of(
                         Pair.of(1, new FindWaterEggLayingSpot<>(16, 1.0f)),
-                        Pair.of(2, layEggWhenPossible())
+                        Pair.of(2, BrainAiUtils.layEggWhenPossible())
                 ), ImmutableSet.of(Pair.of(MemoryModuleType.IS_PREGNANT, MemoryStatus.VALUE_PRESENT)),
                 ImmutableSet.of(MemoryModuleType.BREED_TARGET, MemoryModuleType.IS_PREGNANT));
 
@@ -122,31 +123,6 @@ public class EndocerasAi {
                             }
                             return true;
                         }
-                        return false;
-                    });
-        });
-    }
-
-    public static <E extends Animal & IEggLayerAnimal> OneShot<E> layEggWhenPossible() {
-        return BehaviorBuilder.create((context) -> {
-            return context.group(context.registered(MemoryModuleType.IS_PREGNANT)).apply(context, pregnant ->
-                    (level, entity, gameTime) -> {
-                        if (entity.isInWater() && !entity.onGround()) {
-                            BlockPos blockpos = entity.blockPosition().below();
-
-                            for (Direction direction : Direction.values()) {
-                                BlockPos directionRelative = blockpos.relative(direction);
-                                if (entity.canLayEgg(level, entity, directionRelative)) {
-                                    BlockState blockstate = entity.getEggState(level, entity, directionRelative);
-                                    level.setBlock(directionRelative, blockstate, 3);
-                                    level.gameEvent(GameEvent.BLOCK_PLACE, directionRelative, GameEvent.Context.of(entity, blockstate));
-                                    level.playSound((Player) null, entity, entity.getEggLaySound(level, entity, directionRelative), SoundSource.BLOCKS, 1.0F, 1.0F);
-                                    pregnant.erase();
-                                    return true;
-                                }
-                            }
-                        }
-
                         return false;
                     });
         });

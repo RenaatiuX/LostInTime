@@ -2,8 +2,8 @@ package com.ren.lostintime.common.recipe;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.CriterionTriggerInstance;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -26,21 +26,28 @@ import java.util.function.Consumer;
 public class IdentificationBuilder implements RecipeBuilder {
 
     protected final String modId;
-    protected final ItemLike itemInput;
-    protected final TagKey<Item> tagInput;
+    protected final Ingredient input;
+    protected final ResourceLocation defaultId;
     protected final NavigableMap<ItemHolder, Double> weightedOutputs = new TreeMap<>();
     public double total;
+    private final Advancement.Builder advancement = Advancement.Builder.recipeAdvancement();
 
     public IdentificationBuilder(String modId, ItemLike itemInput) {
         this.modId = modId;
-        this.itemInput = itemInput;
-        this.tagInput = null;
+        this.input = Ingredient.of(itemInput);
+        this.defaultId = ResourceLocation.fromNamespaceAndPath(modId, "identification/" + ForgeRegistries.ITEMS.getKey(itemInput.asItem()).getPath());
     }
 
     public IdentificationBuilder(String modId, TagKey<Item> tagInput) {
         this.modId = modId;
-        this.itemInput = null;
-        this.tagInput = tagInput;
+        this.input = Ingredient.of(tagInput);
+        this.defaultId = ResourceLocation.fromNamespaceAndPath(modId, "identification/" + tagInput.location().getPath());
+    }
+
+    public IdentificationBuilder(String modId, Ingredient input, String name) {
+        this.modId = modId;
+        this.input = input;
+        this.defaultId = ResourceLocation.fromNamespaceAndPath(modId, "identification/" + name);
     }
 
     public IdentificationBuilder addOutput(ItemLike itemLike, double weight) {
@@ -59,6 +66,7 @@ public class IdentificationBuilder implements RecipeBuilder {
 
     @Override
     public RecipeBuilder unlockedBy(String pCriterionName, CriterionTriggerInstance pCriterionTrigger) {
+        this.advancement.addCriterion(pCriterionName, pCriterionTrigger);
         return this;
     }
 
@@ -81,8 +89,7 @@ public class IdentificationBuilder implements RecipeBuilder {
     public void save(Consumer<FinishedRecipe> pFinishedRecipeConsumer, String pRecipeId) {
         ResourceLocation resourceLocation = getRecipeId();
         ResourceLocation resourceLocation2 = ResourceLocation.tryParse(pRecipeId);
-        assert resourceLocation2 != null;
-        if (resourceLocation2.equals(resourceLocation)) {
+        if (resourceLocation2 != null && resourceLocation2.equals(resourceLocation)) {
             throw new IllegalStateException("Recipe " + pRecipeId + " should remove its 'save' argument as it is equal to default one");
         } else {
             save(pFinishedRecipeConsumer, resourceLocation2);
@@ -91,17 +98,11 @@ public class IdentificationBuilder implements RecipeBuilder {
 
     @Override
     public void save(Consumer<FinishedRecipe> pFinishedRecipeConsumer, ResourceLocation pRecipeId) {
-        pFinishedRecipeConsumer.accept(new Result(pRecipeId, itemInput != null ? Ingredient.of(itemInput) :
-                Ingredient.of(tagInput), weightedOutputs));
+        pFinishedRecipeConsumer.accept(new Result(pRecipeId, input, weightedOutputs, advancement));
     }
 
     protected ResourceLocation getRecipeId() {
-        if (itemInput != null) {
-            return ResourceLocation.tryBuild(modId, "identification/" + ForgeRegistries.ITEMS.getKey(itemInput.asItem()).getPath());
-        } else if (tagInput != null) {
-            return ResourceLocation.tryBuild(modId, "identification/" + tagInput.location().getPath());
-        }
-        return ForgeRegistries.ITEMS.getKey(Items.ENDER_PEARL);
+        return defaultId;
     }
 
     public static class Result implements FinishedRecipe {
@@ -109,11 +110,13 @@ public class IdentificationBuilder implements RecipeBuilder {
         private final ResourceLocation id;
         private final Ingredient ingredient;
         private final NavigableMap<ItemHolder, Double> weightedOutputs;
+        private final Advancement.Builder advancement;
 
-        protected Result(ResourceLocation id, Ingredient ingredient, NavigableMap<ItemHolder, Double> weightedOutputs) {
+        protected Result(ResourceLocation id, Ingredient ingredient, NavigableMap<ItemHolder, Double> weightedOutputs, Advancement.Builder advancement) {
             this.id = id;
             this.ingredient = ingredient;
             this.weightedOutputs = weightedOutputs;
+            this.advancement = advancement;
         }
 
         @Override
@@ -149,12 +152,12 @@ public class IdentificationBuilder implements RecipeBuilder {
 
         @Override
         public @Nullable JsonObject serializeAdvancement() {
-            return null;
+            return advancement.getCriteria().isEmpty() ? null : advancement.serializeToJson();
         }
 
         @Override
         public @Nullable ResourceLocation getAdvancementId() {
-            return null;
+            return advancement.getCriteria().isEmpty() ? null : ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "recipes/" + id.getPath());
         }
     }
 
