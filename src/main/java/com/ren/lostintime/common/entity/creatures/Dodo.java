@@ -66,7 +66,6 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     private static final EntityDataAccessor<Boolean> PECKING = SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> HAS_EGG = SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> LAYING_EGG = SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
 
     public static final RawAnimation IDLE = RawAnimation.begin().thenLoop("misc.idle");
     public static final RawAnimation FLAP = RawAnimation.begin().thenLoop("misc.flap");
@@ -201,7 +200,6 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
         this.entityData.define(PECKING, false);
         this.entityData.define(HAS_EGG, false);
         this.entityData.define(LAYING_EGG, false);
-        this.entityData.define(SLEEPING, false);
     }
 
     @Override
@@ -248,17 +246,6 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
 
     public void setChickenJockey(boolean pIsChickenJockey) {
         this.isChickenJockey = pIsChickenJockey;
-    }
-
-    //Sleep
-    @Override
-    public boolean isSleeping() {
-        return this.entityData.get(SLEEPING);
-    }
-
-    @Override
-    public void setSleeping(boolean sleeping) {
-        this.entityData.set(SLEEPING, sleeping);
     }
 
     @Override

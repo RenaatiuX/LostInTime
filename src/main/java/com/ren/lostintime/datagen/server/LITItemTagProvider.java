@@ -73,6 +73,7 @@ public class LITItemTagProvider extends ItemTagsProvider {
                 .add(Items.RABBIT, Items.COOKED_RABBIT)
                 .add(Items.ROTTEN_FLESH)
                 .add(Items.SPIDER_EYE);
+        tag(LITTags.Items.DAEODON_CONTROL_ITEMS).add(Items.BONE);
 
         makeBothriolepisFood();
     }

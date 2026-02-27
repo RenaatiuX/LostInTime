@@ -21,4 +21,9 @@ public class MemoryModuleInit {
     public static final RegistryObject<MemoryModuleType<List<BlockPos>>> VISIBLE_BLOCKS = MEMORY_MODULE_TYPES.register("visible_blocks", () -> new MemoryModuleType<>(Optional.empty()));
     public static final RegistryObject<MemoryModuleType<LivingEntity>> GRABBED_PREY = MEMORY_MODULE_TYPES.register("grabbed_prey", () -> new MemoryModuleType<>(Optional.empty()));
     public static final RegistryObject<MemoryModuleType<Unit>> IN_LOVE = MEMORY_MODULE_TYPES.register("in_love", () -> new MemoryModuleType<>(Optional.of(Codec.unit(Unit.INSTANCE))));
+    public static final RegistryObject<MemoryModuleType<Unit>> IS_SLEEPING = MEMORY_MODULE_TYPES.register("is_sleeping", () -> new MemoryModuleType<>(Optional.of(Codec.unit(Unit.INSTANCE))));
+    public static final RegistryObject<MemoryModuleType<Unit>> IS_SITTING = MEMORY_MODULE_TYPES.register("is_sitting", () -> new MemoryModuleType<>(Optional.of(Codec.unit(Unit.INSTANCE))));
+    public static final RegistryObject<MemoryModuleType<Unit>> SIT_ORDER = MEMORY_MODULE_TYPES.register("sit_order", () -> new MemoryModuleType<>(Optional.of(Codec.unit(Unit.INSTANCE))));
+    public static final RegistryObject<MemoryModuleType<Unit>> FOLLOW_ORDER = MEMORY_MODULE_TYPES.register("follow_order", () -> new MemoryModuleType<>(Optional.of(Codec.unit(Unit.INSTANCE))));
+    public static final RegistryObject<MemoryModuleType<Unit>> WANDER_ORDER = MEMORY_MODULE_TYPES.register("wander_order", () -> new MemoryModuleType<>(Optional.of(Codec.unit(Unit.INSTANCE))));
 }

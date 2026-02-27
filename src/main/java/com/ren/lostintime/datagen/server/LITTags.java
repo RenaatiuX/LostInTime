@@ -24,6 +24,7 @@ public class LITTags {
         public static final TagKey<Item> ENDOCERAS_BREEDABLE_FOOD = tag("endoceras_breedable_food");
         public static final TagKey<Item> HYLONOMUS_BREEDABLE_FOOD = tag("hylonomus_breedable_food");
         public static final TagKey<Item> BOTHRIOLEPIS_FOOD = tag("bothrilepis_food");
+        public static final TagKey<Item> DAEODON_CONTROL_ITEMS = tag("daeodon_control_items");
 
         public static TagKey<Item> tag(String name){
             return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, name));

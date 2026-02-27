@@ -1,11 +1,13 @@
 package com.ren.lostintime.common.entity;
 
-import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.entity.util.ISleepingEntity;
 import com.ren.lostintime.common.entity.util.SleepController;
 import com.ren.lostintime.common.init.ParticlesInit;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -20,9 +22,10 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 
-public abstract class LITAnimal extends Animal {
+public abstract class LITAnimal extends Animal implements ISleepingEntity {
+
+    public static final EntityDataAccessor<Boolean> IS_SLEEPING = SynchedEntityData.defineId(LITAnimal.class, EntityDataSerializers.BOOLEAN);
 
     protected LazyOptional<SleepController<?>> sleepControllerOptional;
 
@@ -33,6 +36,9 @@ public abstract class LITAnimal extends Animal {
         super(pEntityType, pLevel);
         var sleepController = getSleepController();
         this.sleepControllerOptional = LazyOptional.of(sleepController == null ? null : () -> sleepController);
+        if (sleepController != null) {
+            this.entityData.define(IS_SLEEPING, false);
+        }
     }
 
     /**
@@ -53,6 +59,18 @@ public abstract class LITAnimal extends Animal {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean isSleeping() {
+        return this.sleepControllerOptional.isPresent() ? this.entityData.get(IS_SLEEPING) : super.isSleeping();
+    }
+
+    @Override
+    public void setSleeping(boolean sleeping) {
+        if (this.sleepControllerOptional.isPresent()) {
+            this.entityData.set(IS_SLEEPING, sleeping);
+        }
     }
 
     @Override
