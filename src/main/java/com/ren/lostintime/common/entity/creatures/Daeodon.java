@@ -1,5 +1,6 @@
 package com.ren.lostintime.common.entity.creatures;
 
+import com.ren.lostintime.common.entity.enums.DaeodonAggression;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -24,6 +25,9 @@ public class Daeodon extends TamableAnimal implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private int temper;
+    private DaeodonAggression currentAggression = DaeodonAggression.NONE;
+    private int hungerTicks = 0;
+    private int aggressionCooldown = 0;
 
     public Daeodon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
