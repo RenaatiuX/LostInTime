@@ -31,6 +31,8 @@ public class EntityInit {
             Hylonomus::new, 0.4F, 0.4F);
     public static final RegistryObject<EntityType<Endoceras>> ENDOCERAS = registerWaterMob("endoceras",
             Endoceras::new, 1.0F, 1.0F);
+    public static final RegistryObject<EntityType<Daeodon>> DAEODON = registerMob("daeodon",
+            Daeodon::new, 1.2F, 1.5F);
 
     public static final RegistryObject<EntityType<GuardianSpike>> GUARDIAN_SPIKE = registerProjectile("guardian_spike",
             GuardianSpike::new, 0.5F, 0.5F);

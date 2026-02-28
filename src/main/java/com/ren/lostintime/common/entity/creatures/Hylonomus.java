@@ -258,23 +258,6 @@ public class Hylonomus extends Animal implements GeoEntity {
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 
-    //TODO JUST DEBUG
-    @Override
-    public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
-        ItemStack itemstack = pPlayer.getItemInHand(pHand);
-
-        if (itemstack.is(Items.STICK) && !this.level().isClientSide) {
-            int nextId = this.getVariant().getId() + 1;
-            if (nextId >= HylonomusVariant.values().length) {
-                nextId = 0;
-            }
-            this.setVariant(HylonomusVariant.byId(nextId));
-            return InteractionResult.SUCCESS;
-        }
-
-        return super.mobInteract(pPlayer, pHand);
-    }
-
     public static boolean checkHylonomusSpawnRules(EntityType<Hylonomus> pEntityType, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
         if (pSpawnType == MobSpawnType.SPAWN_EGG) {
             return true;
@@ -306,7 +289,7 @@ public class Hylonomus extends Animal implements GeoEntity {
             event.getController().setAnimationSpeed(1.0D);
             return PlayState.CONTINUE;
         }
-        if (event.isMoving()) {
+        if (this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6) {
             if (this.isSprinting()) {
                 event.getController().setAnimation(RUN);
                 event.getController().setAnimationSpeed(2.3D);

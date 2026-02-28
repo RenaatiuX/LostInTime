@@ -1,7 +1,8 @@
-// 1.20.1	2026-02-27T18:13:20.8216032	Tags for minecraft:item mod id lostintime
+// 1.20.1	2026-02-28T18:44:32.6066684	Tags for minecraft:item mod id lostintime
 5dabbd9fe865bf02cde0af2e71236559d417151a data/curios/tags/items/belt.json
 315678b2cd4c6e30ffa4f08c310e7562a8187101 data/lostintime/tags/items/anomalocaris_breedable_food.json
 3a54f5b428c5fc24783512ef7dbc09f2e97f9b71 data/lostintime/tags/items/bothrilepis_food.json
+243f2dab6ef46a493d12775f6f28baf7b72922cf data/lostintime/tags/items/daeodon_control_items.json
 a5d0160a13f5ba4eeee604277edbe84032c9b1df data/lostintime/tags/items/dodo_food.json
 315678b2cd4c6e30ffa4f08c310e7562a8187101 data/lostintime/tags/items/endoceras_breedable_food.json
 c2988c46f55e67e0680f37518a0ad9b3a9f78e64 data/lostintime/tags/items/fruits.json

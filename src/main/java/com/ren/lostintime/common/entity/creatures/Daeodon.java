@@ -36,6 +36,10 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Optional;
@@ -44,6 +48,15 @@ public class Daeodon extends LITTamableAnimal implements GeoEntity {
 
     private static final EntityDataAccessor<Float> DATA_HUNGER = SynchedEntityData.defineId(Daeodon.class, EntityDataSerializers.FLOAT);
 
+    //ANIMATION
+    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");
+    private static final RawAnimation SLEEP = RawAnimation.begin().thenLoop("sleep");
+    private static final RawAnimation WALK = RawAnimation.begin().thenLoop("walk");
+    private static final RawAnimation RUN = RawAnimation.begin().thenLoop("run");
+    private static final RawAnimation CHASE = RawAnimation.begin().thenLoop("chase");
+    private static final RawAnimation SIT = RawAnimation.begin().thenLoop("sit");
+    private static final RawAnimation ATTACK = RawAnimation.begin().thenPlay("attack");
+    private static final RawAnimation IMPOSING = RawAnimation.begin().thenPlay("imposing");
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private int temper;
@@ -51,7 +64,7 @@ public class Daeodon extends LITTamableAnimal implements GeoEntity {
     private int hungerTicks = 0;
     private int aggressionCooldown = 0;
 
-    public Daeodon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
+    public Daeodon(EntityType<? extends LITTamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.setMaxUpStep(1.0F);
         this.setHunger(getMaxHunger());
@@ -99,7 +112,6 @@ public class Daeodon extends LITTamableAnimal implements GeoEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_FLAGS_ID, (byte) 0);
         this.entityData.define(DATA_HUNGER, 200.0F);
     }
 
@@ -250,12 +262,35 @@ public class Daeodon extends LITTamableAnimal implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 5, this::predicate));
+    }
 
+    //ANIMATION
+    private <T extends Daeodon> PlayState predicate(final @NotNull AnimationState<T> event) {
+        if (this.isSleeping()) {
+            event.getController().setAnimation(SLEEP);
+            event.getController().setAnimationSpeed(1.0D);
+            return PlayState.CONTINUE;
+        }
+        if (this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6) {
+            if (this.isSprinting()) {
+                event.getController().setAnimation(RUN);
+                event.getController().setAnimationSpeed(2.3D);
+            } else {
+                event.getController().setAnimation(WALK);
+                event.getController().setAnimationSpeed(1.5D);
+            }
+            return PlayState.CONTINUE;
+        }
+
+        event.getController().setAnimation(IDLE);
+        event.getController().setAnimationSpeed(1.0D);
+        return PlayState.CONTINUE;
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return null;
+        return this.cache;
     }
 
     @Override

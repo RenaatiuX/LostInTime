@@ -1,0 +1,174 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 4,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "daeodon",
+					"pivot": [0, 29, 19]
+				},
+				{
+					"name": "body",
+					"parent": "daeodon",
+					"pivot": [0, 29, 19]
+				},
+				{
+					"name": "neck",
+					"parent": "body",
+					"pivot": [0, 34, -12]
+				},
+				{
+					"name": "neck_f",
+					"parent": "neck",
+					"pivot": [0, 34, -12],
+					"cubes": [
+						{"origin": [-4.5, 19, -20], "size": [9, 15, 8], "uv": [94, 105]}
+					]
+				},
+				{
+					"name": "head",
+					"parent": "neck_f",
+					"pivot": [0, 33, -20]
+				},
+				{
+					"name": "head_f",
+					"parent": "head",
+					"pivot": [0, 33, -20],
+					"cubes": [
+						{"origin": [-3, 25, -39], "size": [6, 6, 11], "uv": [0, 16]},
+						{"origin": [-3, 23.125, -39], "size": [6, 2, 11], "inflate": -0.125, "uv": [36, 0]},
+						{"origin": [-5, 25, -28], "size": [10, 8, 8], "uv": [0, 0]},
+						{"origin": [3, 26, -29], "size": [4, 3, 6], "uv": [32, 54]},
+						{"origin": [-7, 26, -29], "size": [4, 3, 6], "uv": [32, 54], "mirror": true}
+					]
+				},
+				{
+					"name": "right_eyelid",
+					"parent": "head_f",
+					"pivot": [-3.5, 31, -28.1],
+					"cubes": [
+						{"origin": [-4, 30, -28.1], "size": [1, 1, 0], "uv": [70, 68]}
+					]
+				},
+				{
+					"name": "left_eyelid",
+					"parent": "head_f",
+					"pivot": [3.5, 31, -28.1],
+					"cubes": [
+						{"origin": [3, 30, -28.1], "size": [1, 1, 0], "uv": [70, 68], "mirror": true}
+					]
+				},
+				{
+					"name": "jaw",
+					"parent": "head_f",
+					"pivot": [2, 25, -20]
+				},
+				{
+					"name": "jaw_f",
+					"parent": "jaw",
+					"pivot": [2, 25, -20],
+					"cubes": [
+						{"origin": [-5, 19, -28], "size": [10, 2, 8], "uv": [0, 70]},
+						{"origin": [-5, 21, -28], "size": [10, 4, 8], "uv": [0, 33]},
+						{"origin": [-4.5, 24, -27], "size": [9, 7, 7], "inflate": -0.1, "pivot": [0.5, 26, -25], "rotation": [-27.5, 0, 0], "uv": [96, 89]},
+						{"origin": [-3, 22, -39], "size": [6, 3, 11], "uv": [34, 16]},
+						{"origin": [-3, 19, -35], "size": [6, 3, 7], "uv": [67, 48]},
+						{"origin": [-3, 24.875, -39], "size": [6, 2, 11], "inflate": -0.125, "uv": [36, 30]}
+					]
+				},
+				{
+					"name": "left_ear",
+					"parent": "head_f",
+					"pivot": [5, 31, -23],
+					"rotation": [0, 0, 15],
+					"cubes": [
+						{"origin": [5, 31, -24], "size": [0, 3, 2], "uv": [32, 45]}
+					]
+				},
+				{
+					"name": "right_ear",
+					"parent": "head_f",
+					"pivot": [-5, 31, -23],
+					"rotation": [0, 0, -15],
+					"cubes": [
+						{"origin": [-5, 31, -24], "size": [0, 3, 2], "uv": [32, 45], "mirror": true}
+					]
+				},
+				{
+					"name": "left_arm",
+					"parent": "body",
+					"pivot": [8.5, 15, -8],
+					"cubes": [
+						{"origin": [8.5, 0, -9], "size": [3, 17, 4], "uv": [114, 29]}
+					]
+				},
+				{
+					"name": "right_arm",
+					"parent": "body",
+					"pivot": [-8.5, 15, -8],
+					"cubes": [
+						{"origin": [-11.5, 0, -9], "size": [3, 17, 4], "uv": [114, 29], "mirror": true}
+					]
+				},
+				{
+					"name": "tail",
+					"parent": "body",
+					"pivot": [0, 28, 19],
+					"cubes": [
+						{"origin": [0, 21, 19], "size": [0, 7, 4], "uv": [86, 27]}
+					]
+				},
+				{
+					"name": "body_f",
+					"parent": "body",
+					"pivot": [0, 29, 19],
+					"cubes": [
+						{"origin": [-9.5, 13, -12], "size": [19, 24, 17], "uv": [0, 87]},
+						{"origin": [-2.5, 37, -12], "size": [5, 3, 2], "uv": [0, 96]},
+						{"origin": [-6.5, 14, 5], "size": [13, 15, 14], "uv": [74, 0]}
+					]
+				},
+				{
+					"name": "left_leg",
+					"parent": "daeodon",
+					"pivot": [5.5, 18, 18],
+					"cubes": [
+						{"origin": [4.5, 8, 12], "size": [5, 12, 8], "uv": [102, 51]}
+					]
+				},
+				{
+					"name": "left_leg2",
+					"parent": "left_leg",
+					"pivot": [4.5, 8, 21],
+					"cubes": [
+						{"origin": [4.5, 0, 17], "size": [3, 8, 4], "uv": [98, 30]}
+					]
+				},
+				{
+					"name": "right_leg",
+					"parent": "daeodon",
+					"pivot": [-5.5, 18, 18],
+					"cubes": [
+						{"origin": [-9.5, 8, 12], "size": [5, 12, 8], "uv": [102, 51], "mirror": true}
+					]
+				},
+				{
+					"name": "right_leg2",
+					"parent": "right_leg",
+					"pivot": [-4.5, 8, 21],
+					"cubes": [
+						{"origin": [-7.5, 0, 17], "size": [3, 8, 4], "uv": [98, 30], "mirror": true}
+					]
+				}
+			]
+		}
+	]
+}

@@ -42,6 +42,7 @@ public class CommonEvents {
         event.put(EntityInit.BOTHRIOLEPIS.get(), Bothriolepis.createAttributes().build());
         event.put(EntityInit.HYLONOMUS.get(), Hylonomus.createAttributes().build());
         event.put(EntityInit.ENDOCERAS.get(), Endoceras.createAttributes().build());
+        event.put(EntityInit.DAEODON.get(), Daeodon.createAttributes().build());
     }
 
     @SubscribeEvent
@@ -50,6 +51,7 @@ public class CommonEvents {
         event.register(EntityInit.ANOMALOCARIS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, LITWaterAnimal::checkWaterLITSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(EntityInit.ENDOCERAS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, LITWaterAnimal::checkWaterLITSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(EntityInit.HYLONOMUS.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Hylonomus::checkHylonomusSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(EntityInit.DAEODON.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Daeodon::checkLITAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
 
     private static void dispenser() {

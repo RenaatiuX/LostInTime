@@ -1,6 +1,7 @@
-// 1.20.1	2026-02-27T18:13:20.8186051	Registries
+// 1.20.1	2026-02-28T18:45:37.4417618	Registries
 ce9df49a01c04a1c69071244fa4a21139c79dff5 data/lostintime/forge/biome_modifier/add_fossils.json
 2162905615f55c55795e7648db1dbbe38b48da0a data/lostintime/forge/biome_modifier/anomalocaris_spawn.json
+1e9bbe0e3ea8e62e423190c90886de3c24473b66 data/lostintime/forge/biome_modifier/daeodon_spawn.json
 392a27323f845d6973d54bf1f2fda6ecb004082d data/lostintime/forge/biome_modifier/dodo_spawn.json
 ec10588ef6cca75b65bba02701357ff923beb878 data/lostintime/forge/biome_modifier/endoceras_spawn.json
 7e3ae0387fe4ff253495d42216d64ea9edabac96 data/lostintime/forge/biome_modifier/hylonomus_spawn.json
