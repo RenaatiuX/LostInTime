@@ -61,6 +61,8 @@
   "container.lostintime.soul_configurator": "Soul Configurator",
   "container.lostintime.soul_extractor": "Soul Extractor",
   "container.lostintime.transfigurator": "Transfigurator",
+  "death.attack.bleeding": "%1$s bled to death",
+  "death.attack.bleeding.player": "%1$s bled to death while trying to escape %2$s",
   "item.lostintime.amber": "Amber",
   "item.lostintime.amber_catalyst": "Amber Catalyst",
   "item.lostintime.amethyst_catalyst": "Amethyst Catalyst",

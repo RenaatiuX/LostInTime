@@ -2,6 +2,8 @@ package com.ren.lostintime.client.event;
 
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.client.model.skeleton.DodoSkeleton;
+import com.ren.lostintime.client.particles.BleedingDropletParticle;
+import com.ren.lostintime.client.particles.BleedingStreamParticle;
 import com.ren.lostintime.client.particles.SleepingParticle;
 import com.ren.lostintime.client.model.ModModelLayers;
 import com.ren.lostintime.client.model.blockentities.*;
@@ -14,7 +16,6 @@ import com.ren.lostintime.client.screen.IdentificationScreen;
 import com.ren.lostintime.client.screen.SoulConfiguratorScreen;
 import com.ren.lostintime.client.screen.SoulExtractorScreen;
 import com.ren.lostintime.client.screen.TransfiguratorScreen;
-import com.ren.lostintime.common.entity.projectile.GuardianSpike;
 import com.ren.lostintime.common.init.BlockEntityInit;
 import com.ren.lostintime.common.init.EntityInit;
 import com.ren.lostintime.common.init.MenuInit;
@@ -71,5 +72,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void registerParticleProvider(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(ParticlesInit.SLEEPING_PARTICLES.get(), SleepingParticle.Factory::new);
+        event.registerSpriteSet(ParticlesInit.BLEEDING_DROPLET.get(), BleedingDropletParticle.Provider::new);
+        event.registerSpriteSet(ParticlesInit.BLEEDING_STREAM.get(), BleedingStreamParticle.Provider::new);
     }
 }

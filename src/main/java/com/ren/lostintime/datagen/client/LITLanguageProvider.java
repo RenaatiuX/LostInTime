@@ -21,5 +21,8 @@ public class LITLanguageProvider extends LanguageProvider{
         add("container.lostintime.identification_table", "Identification Table");
         add("itemGroup.lostintime", "Lost In Time");
         add("lostintime.tooltip.residue", "Residue: %s / %s");
+
+        add("death.attack.bleeding", "%1$s bled to death");
+        add("death.attack.bleeding.player", "%1$s bled to death while trying to escape %2$s");
     }
 }

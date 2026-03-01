@@ -4,6 +4,7 @@ import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.worldgen.LITBiomesModifiers;
 import com.ren.lostintime.common.worldgen.LITConfiguredFeatures;
 import com.ren.lostintime.common.worldgen.LITPlacedFeatures;
+import com.ren.lostintime.datagen.server.loot.LITDamageTypes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
@@ -19,7 +20,8 @@ public class LITWorldGenProvider extends DatapackBuiltinEntriesProvider {
     public static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
             .add(Registries.CONFIGURED_FEATURE, LITConfiguredFeatures::bootstrap)
             .add(Registries.PLACED_FEATURE, LITPlacedFeatures::bootstrap)
-            .add(ForgeRegistries.Keys.BIOME_MODIFIERS, LITBiomesModifiers::bootstrap);
+            .add(ForgeRegistries.Keys.BIOME_MODIFIERS, LITBiomesModifiers::bootstrap)
+            .add(Registries.DAMAGE_TYPE, LITDamageTypes::bootstrap);
 
     public LITWorldGenProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, BUILDER, Set.of(LostInTime.MODID));

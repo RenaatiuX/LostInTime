@@ -1,8 +1,9 @@
-package com.ren.lostintime.common.entity.creatures;
+package com.ren.lostintime.common.entity.ai;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
+import com.ren.lostintime.common.entity.creatures.Daeodon;
 import com.ren.lostintime.common.init.MemoryModuleInit;
 import com.ren.lostintime.common.init.SensorTypeInit;
 import net.minecraft.world.entity.EntityType;

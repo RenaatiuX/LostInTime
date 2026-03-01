@@ -1,19 +1,12 @@
-package com.ren.lostintime.common.entity.creatures;
+package com.ren.lostintime.common.entity.ai;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
-import com.ren.lostintime.LostInTime;
-import com.ren.lostintime.common.entity.ai.BrainAiUtils;
-import com.ren.lostintime.common.entity.ai.FindWaterEggLayingSpot;
-import com.ren.lostintime.common.entity.ai.PregnantAnimalLove;
-import com.ren.lostintime.common.entity.util.IEggLayerAnimal;
+import com.ren.lostintime.common.entity.creatures.Endoceras;
 import com.ren.lostintime.common.init.ActivitInit;
 import com.ren.lostintime.common.init.EntityInit;
 import com.ren.lostintime.common.init.MemoryModuleInit;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.Brain;
@@ -21,11 +14,7 @@ import net.minecraft.world.entity.ai.behavior.*;
 import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.schedule.Activity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 
 import java.util.Optional;
 

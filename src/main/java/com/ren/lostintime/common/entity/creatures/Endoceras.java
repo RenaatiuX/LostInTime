@@ -1,11 +1,11 @@
 package com.ren.lostintime.common.entity.creatures;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Streams;
 import com.mojang.serialization.Dynamic;
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.entity.LITAnimal;
 import com.ren.lostintime.common.entity.LITWaterAnimal;
+import com.ren.lostintime.common.entity.ai.EndocerasAi;
 import com.ren.lostintime.common.entity.util.IEggLayerAnimal;
 import com.ren.lostintime.common.init.*;
 import com.ren.lostintime.datagen.server.LITTags;
@@ -16,9 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
@@ -29,14 +27,9 @@ import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
@@ -53,7 +46,6 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAnimal {

@@ -1,7 +1,6 @@
 package com.ren.lostintime.common.entity.creatures;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.serialization.Dynamic;
 import com.ren.lostintime.common.entity.LITAnimal;
 import com.ren.lostintime.common.entity.LITWaterAnimal;
 import net.minecraft.server.level.ServerLevel;

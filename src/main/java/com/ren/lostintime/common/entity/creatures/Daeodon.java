@@ -2,6 +2,7 @@ package com.ren.lostintime.common.entity.creatures;
 
 import com.mojang.serialization.Dynamic;
 import com.ren.lostintime.common.entity.LITTamableAnimal;
+import com.ren.lostintime.common.entity.ai.DaeodonAi;
 import com.ren.lostintime.common.entity.enums.DaeodonAggression;
 import com.ren.lostintime.common.entity.util.SleepController;
 import com.ren.lostintime.common.init.AttributeInit;

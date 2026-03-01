@@ -37,6 +37,7 @@ public class LostInTime {
         VillagerInit.VILLAGER_PROFESSIONS.register(modEventBus);
         EnchantmentInit.ENCHANTMENTS.register(modEventBus);
         AttributeInit.ATTRIBUTES.register(modEventBus);
+        MobEffectInit.MOB_EFFECTS.register(modEventBus);
 
         LootConditionsInit.LOOT_CONDITIONS.register(modEventBus);
         LootConditionsInit.LOOT_POOL_ENTRIES.register(modEventBus);

@@ -15,4 +15,10 @@ public class ParticlesInit {
     public static final RegistryObject<SimpleParticleType> SLEEPING_PARTICLES =
             PARTICLE_TYPE.register("sleeping", () -> new SimpleParticleType(true));
 
+    public static final RegistryObject<SimpleParticleType> BLEEDING_DROPLET =
+            PARTICLE_TYPE.register("bleeding_droplet", () -> new SimpleParticleType(false));
+
+    public static final RegistryObject<SimpleParticleType> BLEEDING_STREAM =
+            PARTICLE_TYPE.register("bleeding_stream", () -> new SimpleParticleType(false));
+
 }
