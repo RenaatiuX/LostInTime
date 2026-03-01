@@ -2,7 +2,7 @@ package com.ren.lostintime.client.render.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import com.ren.lostintime.client.model.EndocerasModel;
+import com.ren.lostintime.client.model.entities.EndocerasModel;
 import com.ren.lostintime.common.entity.creatures.Endoceras;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

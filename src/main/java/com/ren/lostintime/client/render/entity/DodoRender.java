@@ -1,7 +1,7 @@
 package com.ren.lostintime.client.render.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.ren.lostintime.client.model.DodoModel;
+import com.ren.lostintime.client.model.entities.DodoModel;
 import com.ren.lostintime.common.entity.creatures.Dodo;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

@@ -1,6 +1,6 @@
 package com.ren.lostintime.client.render.entity;
 
-import com.ren.lostintime.client.model.BothriolepisModel;
+import com.ren.lostintime.client.model.entities.BothriolepisModel;
 import com.ren.lostintime.common.entity.creatures.Bothriolepis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

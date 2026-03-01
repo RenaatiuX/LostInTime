@@ -1,7 +1,7 @@
 package com.ren.lostintime.client.render.entity;
 
 import com.ren.lostintime.LostInTime;
-import com.ren.lostintime.client.model.DaeodonModel;
+import com.ren.lostintime.client.model.entities.DaeodonModel;
 import com.ren.lostintime.client.render.layers.LITEyesLayer;
 import com.ren.lostintime.common.entity.creatures.Daeodon;
 import net.minecraft.client.renderer.MultiBufferSource;

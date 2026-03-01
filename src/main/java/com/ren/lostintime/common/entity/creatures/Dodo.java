@@ -61,7 +61,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEntity {
+public class Dodo extends LITAnimal implements GeoEntity, IEggLayer {
 
     private static final EntityDataAccessor<Boolean> PECKING = SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> HAS_EGG = SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
@@ -356,11 +356,6 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEn
     @Override
     protected void playStepSound(BlockPos pPos, BlockState pState) {
         this.playSound(SoundEvents.CHICKEN_STEP, 0.15F, 1.0F);
-    }
-
-    @Override
-    protected PathNavigation createNavigation(Level pLevel) {
-        return super.createNavigation(pLevel);
     }
 
     @Override

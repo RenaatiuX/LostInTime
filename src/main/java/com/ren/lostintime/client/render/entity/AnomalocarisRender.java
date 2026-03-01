@@ -1,6 +1,6 @@
 package com.ren.lostintime.client.render.entity;
 
-import com.ren.lostintime.client.model.AnomalocarisModel;
+import com.ren.lostintime.client.model.entities.AnomalocarisModel;
 import com.ren.lostintime.client.render.layers.AnomalocarisItemLayer;
 import com.ren.lostintime.common.entity.creatures.Anomalocaris;
 import net.minecraft.client.renderer.MultiBufferSource;

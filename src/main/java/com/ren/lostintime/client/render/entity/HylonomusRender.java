@@ -1,6 +1,6 @@
 package com.ren.lostintime.client.render.entity;
 
-import com.ren.lostintime.client.model.HylonomusModel;
+import com.ren.lostintime.client.model.entities.HylonomusModel;
 import com.ren.lostintime.common.entity.creatures.Hylonomus;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

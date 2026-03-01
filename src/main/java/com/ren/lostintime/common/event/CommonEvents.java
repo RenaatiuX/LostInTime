@@ -43,6 +43,7 @@ public class CommonEvents {
         event.put(EntityInit.HYLONOMUS.get(), Hylonomus.createAttributes().build());
         event.put(EntityInit.ENDOCERAS.get(), Endoceras.createAttributes().build());
         event.put(EntityInit.DAEODON.get(), Daeodon.createAttributes().build());
+        event.put(EntityInit.LEPTICTIDIUM.get(), Leptictidium.createAttributes().build());
     }
 
     @SubscribeEvent

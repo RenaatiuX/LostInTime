@@ -1,10 +1,9 @@
-package com.ren.lostintime.client.model;
+package com.ren.lostintime.client.model.entities;
 
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.entity.creatures.Hylonomus;
 import com.ren.lostintime.common.entity.enums.HylonomusVariant;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.core.animation.Animation;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 
 public class HylonomusModel extends DefaultedEntityGeoModel<Hylonomus> {

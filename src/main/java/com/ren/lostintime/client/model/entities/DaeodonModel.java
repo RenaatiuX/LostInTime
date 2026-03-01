@@ -1,4 +1,4 @@
-package com.ren.lostintime.client.model;
+package com.ren.lostintime.client.model.entities;
 
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.entity.creatures.Daeodon;
