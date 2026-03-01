@@ -4,13 +4,17 @@ import com.ren.lostintime.common.util.BitUtils;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
@@ -18,6 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.Team;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,8 +42,41 @@ public abstract class LITTamableAnimal extends LITAnimal implements OwnableEntit
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_FLAGS_ID, (byte)0);
+        this.entityData.define(DATA_FLAGS_ID, (byte) 0);
         this.entityData.define(DATA_OWNERUUID_ID, Optional.empty());
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putByte("data_flags", this.entityData.get(DATA_FLAGS_ID));
+        if (this.getOwnerUUID() != null) {
+            pCompound.putUUID("Owner", this.getOwnerUUID());
+        }
+
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        this.entityData.set(DATA_FLAGS_ID, pCompound.getByte("data_flags"));
+
+        UUID uuid;
+        if (pCompound.hasUUID("Owner")) {
+            uuid = pCompound.getUUID("Owner");
+        } else {
+            String s = pCompound.getString("Owner");
+            uuid = OldUsersConverter.convertMobOwnerIfNecessary(Objects.requireNonNull(this.getServer()), s);
+        }
+
+        if (uuid != null) {
+            try {
+                this.setOwnerUUID(uuid);
+                this.setTame(true);
+            } catch (Throwable throwable) {
+                this.setTame(false);
+            }
+        }
     }
 
     protected void spawnTamingParticles(boolean pTamed) {
@@ -47,7 +85,7 @@ public abstract class LITTamableAnimal extends LITAnimal implements OwnableEntit
             particleoptions = ParticleTypes.SMOKE;
         }
 
-        for(int i = 0; i < 7; ++i) {
+        for (int i = 0; i < 7; ++i) {
             double d0 = this.random.nextGaussian() * 0.02D;
             double d1 = this.random.nextGaussian() * 0.02D;
             double d2 = this.random.nextGaussian() * 0.02D;
@@ -62,14 +100,14 @@ public abstract class LITTamableAnimal extends LITAnimal implements OwnableEntit
 
     public void setTame(boolean pTamed) {
         byte flags = this.entityData.get(DATA_FLAGS_ID);
-        this.entityData.set(DATA_FLAGS_ID,  BitUtils.setBit(flags, 0, pTamed));
+        this.entityData.set(DATA_FLAGS_ID, BitUtils.setBit(flags, 0, pTamed));
     }
 
     public void tame(Player pPlayer) {
         this.setTame(true);
         this.setOwnerUUID(pPlayer.getUUID());
         if (pPlayer instanceof ServerPlayer) {
-            CriteriaTriggers.TAME_ANIMAL.trigger((ServerPlayer)pPlayer, this);
+            CriteriaTriggers.TAME_ANIMAL.trigger((ServerPlayer) pPlayer, this);
         }
 
     }
@@ -140,6 +178,7 @@ public abstract class LITTamableAnimal extends LITAnimal implements OwnableEntit
     public boolean wantsToAttack(LivingEntity pTarget, LivingEntity pOwner) {
         return true;
     }
+
     /**
      * Called when the mob's health reaches 0.
      */

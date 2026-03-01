@@ -3,9 +3,11 @@ package com.ren.lostintime.common.entity.ai;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
+import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.entity.creatures.Daeodon;
 import com.ren.lostintime.common.init.MemoryModuleInit;
 import com.ren.lostintime.common.init.SensorTypeInit;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.*;
@@ -22,6 +24,7 @@ public class DaeodonAi {
             MemoryModuleType.LOOK_TARGET,
             MemoryModuleType.WALK_TARGET,
             MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
+            MemoryModuleType.PATH,
 
             MemoryModuleType.NEAREST_LIVING_ENTITIES,
             MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
@@ -54,9 +57,19 @@ public class DaeodonAi {
         initFightActivity(brain);
 
 
-
+        brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
+        brain.setDefaultActivity(Activity.IDLE);
+        brain.useDefaultActivity();
 
         return brain;
+    }
+
+    public static void tickBrain(Daeodon daeodon, Brain<Daeodon> brain){
+
+        brain.tick((ServerLevel) daeodon.level(), daeodon);
+        brain.setActiveActivityToFirstValid(ImmutableList.of(Activity.FIGHT, Activity.IDLE));
+
+        LostInTime.LOGGER.debug("move target value : {}", brain.getMemory(MemoryModuleType.WALK_TARGET).orElse(null));
     }
 
     public static void initIdleActivity(Brain<Daeodon> brain) {

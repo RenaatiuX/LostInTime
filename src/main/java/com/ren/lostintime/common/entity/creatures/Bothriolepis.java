@@ -269,7 +269,6 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity, IEggLay
         this.level().getProfiler().pop();
         this.getBrain().setActiveActivityToFirstValid(ImmutableList.of(Activity.PANIC, ActivitInit.FIND_WATER.get(), ActivitInit.MATING.get(), ActivitInit.CATCH_ITEM.get(), Activity.IDLE));
         super.customServerAiStep();
-        LostInTime.LOGGER.debug("current activity: {}", this.getBrain().getActiveNonCoreActivity());
     }
 
     private void initCoreActivity(Brain<Bothriolepis> brain) {

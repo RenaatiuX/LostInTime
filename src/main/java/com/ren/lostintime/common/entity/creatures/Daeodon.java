@@ -6,6 +6,7 @@ import com.ren.lostintime.common.entity.ai.DaeodonAi;
 import com.ren.lostintime.common.entity.enums.DaeodonAggression;
 import com.ren.lostintime.common.entity.util.SleepController;
 import com.ren.lostintime.common.init.AttributeInit;
+import com.ren.lostintime.common.init.EntityInit;
 import com.ren.lostintime.common.init.MemoryModuleInit;
 import com.ren.lostintime.common.util.BitUtils;
 import com.ren.lostintime.datagen.server.LITTags;
@@ -31,6 +32,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -116,6 +118,16 @@ public class Daeodon extends LITTamableAnimal implements GeoEntity {
         this.entityData.define(DATA_HUNGER, 200.0F);
     }
 
+    public @NotNull Brain<Daeodon> getBrain() {
+        return (Brain<Daeodon>) super.getBrain();
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        DaeodonAi.tickBrain(this, this.getBrain());
+        super.customServerAiStep();
+    }
+
     @Override
     protected Brain<?> makeBrain(Dynamic<?> pDynamic) {
         return DaeodonAi.initBrain(this, brainProvider().makeBrain(pDynamic));
@@ -180,7 +192,7 @@ public class Daeodon extends LITTamableAnimal implements GeoEntity {
                     this.setTarget(null);
 
                     this.playSound(SoundEvents.WOLF_AMBIENT, 1.0F, 1.0F);
-                }else {
+                } else {
                     if (!level().isClientSide) {
                         this.setAllowWandering(!this.allowedToWander());
                     }
@@ -192,6 +204,9 @@ public class Daeodon extends LITTamableAnimal implements GeoEntity {
             }
 
             if (itemstack.isEmpty() && !this.isOrderedToSit()) {
+                if (pPlayer.hasImpulse){
+                    pPlayer.hasImpulse = false;
+                }
                 pPlayer.startRiding(this);
                 return InteractionResult.SUCCESS;
             }
@@ -211,6 +226,45 @@ public class Daeodon extends LITTamableAnimal implements GeoEntity {
         if (pPassenger instanceof Player player && !this.isTame()) {
             this.tameTick(player);
         }
+        if (this.hasPassenger(pPassenger)) {
+            double d0 = this.getY() + this.getPassengersRidingOffset() + pPassenger.getMyRidingOffset() + 1f;
+            double forwardOffset = 0; // Adjust this value for forward offset
+            double yaw = Math.toRadians(this.yBodyRot);
+            double dx = -Math.sin(yaw) * forwardOffset;
+            double dz = Math.cos(yaw) * forwardOffset;
+            pCallback.accept(pPassenger, this.getX() + dx, d0, this.getZ() + dz);
+            if (pPassenger instanceof LivingEntity) {
+                ((LivingEntity) pPassenger).yBodyRot = this.yBodyRot;
+            }
+        }
+    }
+
+    @Override
+    protected void tickRidden(Player pPlayer, Vec3 pTravelVector) {
+        super.tickRidden(pPlayer, pTravelVector);
+        Vec2 vec2 = this.getRiddenRotation(pPlayer);
+        this.setRot(vec2.y, vec2.x);
+        this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
+    }
+
+    protected Vec2 getRiddenRotation(LivingEntity pEntity) {
+        return new Vec2(pEntity.getXRot() * 0.5F, pEntity.getYRot());
+    }
+
+    @Override
+    protected float getRiddenSpeed(Player pPlayer) {
+        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED);
+    }
+
+    @Override
+    protected @NotNull Vec3 getRiddenInput(Player pPlayer, Vec3 pTravelVector) {
+        float f = pPlayer.xxa * 0.5F;
+        float f1 = pPlayer.zza;
+        if (f1 <= 0.0F) {
+            f1 *= 0.25F;
+        }
+
+        return new Vec3((double) f, 0.0D, (double) f1);
     }
 
     private void tameTick(Player player) {
@@ -258,7 +312,7 @@ public class Daeodon extends LITTamableAnimal implements GeoEntity {
 
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
-        return null;
+        return EntityInit.DAEODON.get().create(pLevel);
     }
 
     @Override
@@ -311,7 +365,7 @@ public class Daeodon extends LITTamableAnimal implements GeoEntity {
     }
 
     public boolean isSuitablePrey(LivingEntity entity) {
-        if (!isWithinRestriction(entity.blockPosition()) && !isHungry())
+        if (!isWithinRestriction(entity.blockPosition()) || !isHungry())
             return false;
         double distSqr = distanceToSqr(entity);
         if (!isHungry() && this.getBrain().isMemoryValue(MemoryModuleType.ATTACK_TARGET, entity) ? distSqr >= 100 : distSqr >= 25)

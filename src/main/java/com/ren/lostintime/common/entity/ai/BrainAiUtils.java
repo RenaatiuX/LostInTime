@@ -1,11 +1,15 @@
 package com.ren.lostintime.common.entity.ai;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.mojang.datafixers.util.Pair;
 import com.ren.lostintime.common.entity.util.IEggLayerAnimal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.BehaviorControl;
 import net.minecraft.world.entity.ai.behavior.BlockPosTracker;
 import net.minecraft.world.entity.ai.behavior.OneShot;
@@ -14,6 +18,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -93,4 +98,13 @@ public class BrainAiUtils {
             });
         });
     }
+    //TODO
+    /*
+    public static void addSleepActivity(Brain<?> brain){
+        brain.addActivityWithConditions(Activity.REST, ImmutableList.of(),
+                ImmutableSet.of(Pair.of(MemoryModuleType.RES)));
+    }
+
+     */
+
 }
