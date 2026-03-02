@@ -186,6 +186,9 @@ public class Leptictidium extends LITTamableAnimal implements GeoEntity {
 
     @Override
     public boolean isFood(ItemStack pStack) {
+        if (pStack.getItem().isEdible()) {
+            return !pStack.is(Items.ROTTEN_FLESH) && !pStack.is(Items.FERMENTED_SPIDER_EYE);
+        }
         return pStack.is(Items.PUMPKIN_SEEDS);
     }
 
@@ -197,7 +200,14 @@ public class Leptictidium extends LITTamableAnimal implements GeoEntity {
             return flag ? InteractionResult.CONSUME : InteractionResult.PASS;
         } else {
             if (this.isTame()) {
-                if (this.isOwnedBy(pPlayer) && itemstack.isEmpty()) {
+                if (this.isFood(itemstack) && this.getHealth() < this.getMaxHealth()) {
+                    if (!pPlayer.getAbilities().instabuild) {
+                        itemstack.shrink(1);
+                    }
+                    this.heal((float) itemstack.getItem().getFoodProperties().getNutrition());
+                    return InteractionResult.SUCCESS;
+                }
+                if (this.isOwnedBy(pPlayer) && !this.isFood(itemstack)) {
                     this.setOrderedToSit(!this.isOrderedToSit());
                     this.jumping = false;
                     this.navigation.stop();
@@ -213,6 +223,12 @@ public class Leptictidium extends LITTamableAnimal implements GeoEntity {
                     this.level().broadcastEntityEvent(this, (byte) 7);
                 } else {
                     this.level().broadcastEntityEvent(this, (byte) 6);
+                }
+                return InteractionResult.SUCCESS;
+            } else if (this.isBaby() && this.isFood(itemstack)) {
+                this.ageUp(AgeableMob.getSpeedUpSecondsWhenFeeding(-this.getAge()), true);
+                if (!pPlayer.getAbilities().instabuild) {
+                    itemstack.shrink(1);
                 }
                 return InteractionResult.SUCCESS;
             }

@@ -57,7 +57,7 @@ public class LITBlockStateProvider extends BlockStateProvider {
         doorBlockWithRenderType(((DoorBlock) BlockInit.ARAUCARIOXYLON_DOOR.get()), modLoc("block/araucarioxylon_door_bottom"), modLoc("block/araucarioxylon_door_top"), "cutout");
         trapdoorBlockWithRenderType(((TrapDoorBlock) BlockInit.ARAUCARIOXYLON_TRAPDOOR.get()), modLoc("block/araucarioxylon_trapdoor"), true, "cutout");
         
-        createDodoEggModel(BlockInit.DODO_EGG.get(), SingleEggBlock.HATCH);
+        createDodoEggModel(BlockInit.DODO_EGG.get(), LITEggBlock.HATCH);
         createBabyRoeBlock(BlockInit.BOTHRIOLEPIS_ROE.get());
         createCrossRoeBlock(BlockInit.ENDOCERAS_EGG.get());
         createBabyRoeBlock(BlockInit.ANOMALOCARIS_ROE.get());

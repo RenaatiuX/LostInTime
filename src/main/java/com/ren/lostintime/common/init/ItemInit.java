@@ -202,7 +202,20 @@ public class ItemInit {
     public static final RegistryObject<Item> DODO_SPAWN_EGG = registerSpawnEgg("dodo_spawn_egg",
             EntityInit.DODO, 3679516, 7164742);
     public static final RegistryObject<Item> ENDOCERAS_SPAWN_EGG = registerSpawnEgg("endoceras_spawn_egg",
-            EntityInit.ENDOCERAS, 3679516, 7164742);
+            EntityInit.ENDOCERAS, 6709041, 8353403);
+    public static final RegistryObject<Item> ANOMALOCARIS_SPAWN_EGG = registerSpawnEgg("anomalocaris_spawn_egg",
+            EntityInit.ANOMALOCARIS, 8461857, 12872607);
+    public static final RegistryObject<Item> BOTHRIOLEPIS_SPAWN_EGG = registerSpawnEgg("bothriolepis_spawn_egg",
+            EntityInit.BOTHRIOLEPIS, 6109751, 10715772);
+    public static final RegistryObject<Item> DAEODON_SPAWN_EGG = registerSpawnEgg("daeodon_spawn_egg",
+            EntityInit.DAEODON, 5981765, 9339517);
+    public static final RegistryObject<Item> HYLONOMUS_SPAWN_EGG = registerSpawnEgg("hylonomus_spawn_egg",
+            EntityInit.HYLONOMUS, 5325867, 10457717);
+    public static final RegistryObject<Item> LEPTICTIDIUM_SPAWN_EGG = registerSpawnEgg("leptictidium_spawn",
+            EntityInit.LEPTICTIDIUM, 7955270, 11707795);
+    public static final RegistryObject<Item> SCUTOSAURUS_SPAWN_EGG = registerSpawnEgg("scutosaurus_spawn",
+            EntityInit.SCUTOSAURUS, 5852492, 7691613);
+
 
     private static RegistryObject<Item> registerSimple(final String name) {
         return ITEMS.register(name, () -> new Item(new Item.Properties()));

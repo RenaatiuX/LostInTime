@@ -49,6 +49,7 @@ public class ClientEvents {
         event.registerEntityRenderer(EntityInit.ENDOCERAS.get(), EndocerasRender::new);
         event.registerEntityRenderer(EntityInit.DAEODON.get(), DaeodonRender::new);
         event.registerEntityRenderer(EntityInit.LEPTICTIDIUM.get(), LeptictidiumRender::new);
+        event.registerEntityRenderer(EntityInit.SCUTOSAURUS.get(), ScutosaurusRender::new);
 
         event.registerEntityRenderer(EntityInit.GUARDIAN_SPIKE.get(), GuardianSpikeRender::new);
         event.registerEntityRenderer(EntityInit.LIT_THROWN_EGG.get(), ThrownItemRenderer::new);

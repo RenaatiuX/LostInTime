@@ -200,6 +200,12 @@ public class LostInTime {
 
             event.accept(ItemInit.DODO_SPAWN_EGG);
             event.accept(ItemInit.ENDOCERAS_SPAWN_EGG);
+            event.accept(ItemInit.ANOMALOCARIS_SPAWN_EGG);
+            event.accept(ItemInit.BOTHRIOLEPIS_SPAWN_EGG);
+            event.accept(ItemInit.DAEODON_SPAWN_EGG);
+            event.accept(ItemInit.HYLONOMUS_SPAWN_EGG);
+            event.accept(ItemInit.LEPTICTIDIUM_SPAWN_EGG);
+            event.accept(ItemInit.SCUTOSAURUS_SPAWN_EGG);
 
             event.accept(BlockInit.MANGO_LEAVES);
             event.accept(BlockInit.MANGO_LOG);

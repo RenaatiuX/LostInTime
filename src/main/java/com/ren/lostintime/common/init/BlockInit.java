@@ -5,7 +5,6 @@ import com.ren.lostintime.common.block.*;
 import com.ren.lostintime.common.worldgen.fossil.FossilEra;
 import com.ren.lostintime.common.worldgen.tree.trees.AraucarioxylonTreeGrower;
 import com.ren.lostintime.common.worldgen.tree.trees.MangoTreeGrower;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.BlockItem;
@@ -14,7 +13,6 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -131,8 +129,8 @@ public class BlockInit {
 
     //EGGS
     public static final RegistryObject<Block> DODO_EGG = registerBlock("dodo_egg",
-            () -> new SingleEggBlock(BlockBehaviour.Properties.copy(Blocks.TURTLE_EGG).randomTicks(),
-                    EntityInit.DODO, BlockTags.DIRT));
+            () -> new LITEggBlock(BlockBehaviour.Properties.copy(Blocks.TURTLE_EGG).randomTicks(),
+                    EntityInit.DODO, BlockTags.DIRT, 1));
     public static final RegistryObject<Block> ENDOCERAS_EGG = BLOCKS.register("endoceras_eggs",
             () -> new LITRoeBlock(BlockBehaviour.Properties.copy(Blocks.FROGSPAWN), EntityInit.ENDOCERAS,
                     ItemInit.ENDOCERAS_EGGS_BUCKET, 1, 2, 10000, 32000, true));

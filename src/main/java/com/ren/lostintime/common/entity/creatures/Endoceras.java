@@ -139,10 +139,6 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
         }
     }
 
-
-
-    //
-
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
         if (pSource.is(DamageTypeTags.IS_PROJECTILE) || pSource.is(DamageTypeTags.IS_EXPLOSION)) {

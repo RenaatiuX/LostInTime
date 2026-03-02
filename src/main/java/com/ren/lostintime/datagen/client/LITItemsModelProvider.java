@@ -59,6 +59,12 @@ public class LITItemsModelProvider extends ItemModelProvider {
 
         spawnEgg(ItemInit.DODO_SPAWN_EGG.get());
         spawnEgg(ItemInit.ENDOCERAS_SPAWN_EGG.get());
+        spawnEgg(ItemInit.ANOMALOCARIS_SPAWN_EGG.get());
+        spawnEgg(ItemInit.BOTHRIOLEPIS_SPAWN_EGG.get());
+        spawnEgg(ItemInit.DAEODON_SPAWN_EGG.get());
+        spawnEgg(ItemInit.HYLONOMUS_SPAWN_EGG.get());
+        spawnEgg(ItemInit.LEPTICTIDIUM_SPAWN_EGG.get());
+        spawnEgg(ItemInit.SCUTOSAURUS_SPAWN_EGG.get());
 
         saplingItem(BlockInit.MANGO_SAPLING);
         saplingItem(BlockInit.ARAUCARIOXYLON_SAPLING);
