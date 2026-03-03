@@ -56,8 +56,10 @@ public class LITBlockStateProvider extends BlockStateProvider {
 
         doorBlockWithRenderType(((DoorBlock) BlockInit.ARAUCARIOXYLON_DOOR.get()), modLoc("block/araucarioxylon_door_bottom"), modLoc("block/araucarioxylon_door_top"), "cutout");
         trapdoorBlockWithRenderType(((TrapDoorBlock) BlockInit.ARAUCARIOXYLON_TRAPDOOR.get()), modLoc("block/araucarioxylon_trapdoor"), true, "cutout");
-        
-        createDodoEggModel(BlockInit.DODO_EGG.get(), LITEggBlock.HATCH);
+
+        createEggModel(BlockInit.DODO_EGG.get(), "dodo_egg", 1);
+        createEggModel(BlockInit.SCUTOSAURUS_EGG.get(), "scutosaurus_egg", 2);
+
         createBabyRoeBlock(BlockInit.BOTHRIOLEPIS_ROE.get());
         createCrossRoeBlock(BlockInit.ENDOCERAS_EGG.get());
         createBabyRoeBlock(BlockInit.ANOMALOCARIS_ROE.get());
@@ -172,27 +174,27 @@ public class LITBlockStateProvider extends BlockStateProvider {
                 }, ignored);
     }
 
-    private void createDodoEggModel(Block block, IntegerProperty hatchProperty) {
-        Function<Integer, ResourceLocation> modelGenerator = (hatchStage) -> {
-            String suffix = switch (hatchStage) {
+    private void createEggModel(Block block, String baseName, int maxModels) {
+        getVariantBuilder(block).forAllStates(state -> {
+            int hatchStage = state.getValue(BlockStateProperties.HATCH);
+            int eggsCount = state.getValue(BlockStateProperties.EGGS);
+            int visualEggs = Math.min(eggsCount, maxModels);
+
+            String hatchSuffix = switch (hatchStage) {
                 case 1 -> "_slightly_cracked";
                 case 2 -> "_very_cracked";
                 default -> "_not_cracked";
             };
 
-            return models()
-                    .getBuilder("dodo_egg" + suffix)
-                    .parent(new ModelFile.UncheckedModelFile(modLoc("block/dodo_egg")))
-                    .texture("1", modLoc("block/dodo_egg" + suffix))
-                    .texture("particle", modLoc("block/dodo_egg" + suffix))
-                    .getLocation();
-        };
+            String parentName = maxModels > 1 ? baseName + visualEggs : baseName;
+            String generatedModelName = parentName + hatchSuffix;
 
-        getVariantBuilder(block).forAllStates(state -> {
-            int hatchStage = state.getValue(hatchProperty);
-            return ConfiguredModel.builder()
-                    .modelFile(new ModelFile.ExistingModelFile(modelGenerator.apply(hatchStage), models().existingFileHelper))
-                    .build();
+            ModelFile model = models().getBuilder(generatedModelName)
+                    .parent(new ModelFile.UncheckedModelFile(modLoc("block/" + parentName)))
+                    .texture("1", modLoc("block/" + baseName + hatchSuffix))
+                    .texture("particle", modLoc("block/" + baseName + hatchSuffix));
+
+            return ConfiguredModel.builder().modelFile(model).build();
         });
     }
 

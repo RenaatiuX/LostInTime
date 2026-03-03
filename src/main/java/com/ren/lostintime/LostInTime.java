@@ -228,6 +228,8 @@ public class LostInTime {
             event.accept(BlockInit.ARAUCARIOXYLON_TRAPDOOR.get());
 
             event.accept(BlockInit.DODO_EGG);
+            event.accept(BlockInit.SCUTOSAURUS_EGG);
+
             event.accept(BlockInit.DEAD_BARREL_SPONGE);
             event.accept(BlockInit.BARREL_SPONGE);
             event.accept(BlockInit.CLADOPHLEBIS);

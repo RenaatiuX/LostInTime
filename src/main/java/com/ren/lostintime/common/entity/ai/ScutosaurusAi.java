@@ -20,6 +20,7 @@ import net.minecraft.world.entity.schedule.Activity;
 
 import java.util.Optional;
 
+//TODO BRETZ review it please
 public class ScutosaurusAi {
 
     //MEMOIRS
@@ -32,7 +33,8 @@ public class ScutosaurusAi {
             MemoryModuleType.ATTACK_COOLING_DOWN,
             MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
             MemoryModuleType.NEAREST_VISIBLE_ADULT, // So that babies will look for their parents
-            MemoryModuleType.HURT_BY_ENTITY // To find out who hit him
+            MemoryModuleType.HURT_BY_ENTITY, // To find out who hit him
+            MemoryModuleType.BREED_TARGET
     );
 
     //SENSORS
@@ -66,9 +68,9 @@ public class ScutosaurusAi {
         pBrain.addActivity(Activity.IDLE, 10, ImmutableList.of(
                 StartAttacking.create(ScutosaurusAi::findTarget),
                 herdCohesion(),
+                new AnimalMakeLove(EntityInit.SCUTOSAURUS.get(), 1.0F),
                 BabyFollowAdult.create(UniformInt.of(5, 16), 1.1F),
                 SetEntityLookTargetSometimes.create(EntityType.PLAYER, 6.0F, UniformInt.of(30, 60)),
-                new AnimalMakeLove(EntityInit.SCUTOSAURUS.get(), 1.0F),
                 BabyFollowAdult.create(UniformInt.of(5, 16), 1.1F),
                 new RunOne<>(ImmutableList.of(
                         Pair.of(RandomStroll.stroll(1.0F), 1),
@@ -96,13 +98,18 @@ public class ScutosaurusAi {
         if (scuto.getHealth() < (scuto.getMaxHealth() * 0.25F)) {
             brain.eraseMemory(MemoryModuleType.ATTACK_TARGET);
             brain.setActiveActivityIfPossible(Activity.PANIC);
-        }
-        else {
+        } else {
             brain.setActiveActivityToFirstValid(ImmutableList.of(Activity.FIGHT, Activity.IDLE));
         }
     }
 
     private static Optional<? extends LivingEntity> findTarget(Scutosaurus scuto) {
+        //if its a baby, its peaceful and wont fight
+        //leave it with the adults or run away.
+        if (scuto.isBaby()) {
+            return Optional.empty();
+        }
+
         Brain<?> brain = scuto.getBrain();
 
         Optional<LivingEntity> hurtBy = brain.getMemory(MemoryModuleType.HURT_BY_ENTITY);

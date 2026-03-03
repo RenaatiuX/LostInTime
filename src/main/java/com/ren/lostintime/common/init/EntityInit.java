@@ -37,6 +37,10 @@ public class EntityInit {
             Leptictidium::new, 0.5F, 0.5F);
     public static final RegistryObject<EntityType<Scutosaurus>> SCUTOSAURUS = registerMob("scutosaurus",
             Scutosaurus::new, 1.0F, 1.0F);
+    public static final RegistryObject<EntityType<Plesiosaurus>> PLESIOSAURUS = registerWaterMob("plesiosaurus",
+            Plesiosaurus::new, 1.5F, 1.0F);
+    public static final RegistryObject<EntityType<Mastodonsaurus>> MASTODONSAURUS = registerMob("mastodonsaurus",
+            Mastodonsaurus::new, 1.0F, 1.0F);
 
     public static final RegistryObject<EntityType<GuardianSpike>> GUARDIAN_SPIKE = registerProjectile("guardian_spike",
             GuardianSpike::new, 0.5F, 0.5F);

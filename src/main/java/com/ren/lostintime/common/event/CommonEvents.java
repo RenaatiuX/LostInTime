@@ -45,6 +45,8 @@ public class CommonEvents {
         event.put(EntityInit.DAEODON.get(), Daeodon.createAttributes().build());
         event.put(EntityInit.LEPTICTIDIUM.get(), Leptictidium.createAttributes().build());
         event.put(EntityInit.SCUTOSAURUS.get(), Scutosaurus.createAttributes().build());
+        event.put(EntityInit.PLESIOSAURUS.get(), Plesiosaurus.createAttributes().build());
+        event.put(EntityInit.MASTODONSAURUS.get(), Mastodonsaurus.createAttributes().build());
     }
 
     @SubscribeEvent

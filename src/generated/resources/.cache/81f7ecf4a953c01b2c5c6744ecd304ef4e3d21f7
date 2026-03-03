@@ -1,4 +1,4 @@
-// 1.20.1	2026-03-02T11:20:05.8821198	Item Models: lostintime
+// 1.20.1	2026-03-02T17:49:25.862769	Item Models: lostintime
 0570665fcef0e1f3922095a8aa98973135ded46e assets/lostintime/models/item/amber.json
 1a1915f23093ff4fbded979014b60faf9fa1d93e assets/lostintime/models/item/amber_catalyst.json
 879d909212d6267838764316100b2c449321306b assets/lostintime/models/item/amethyst_catalyst.json
@@ -136,6 +136,7 @@ d12b39c07ff0a76637cbcb7ddb6f47c5aa2578d1 assets/lostintime/models/item/red_algae
 6b3753c8dab23481c6f999f4599827f8bf45f2fa assets/lostintime/models/item/red_algae_vital_pattern.json
 331622973d420aaf944875ea707c8833a2ba9c07 assets/lostintime/models/item/rich_nutrient.json
 6a0b2a4e64771b543a28244198a7dbd5c6ac32f2 assets/lostintime/models/item/rose_solution.json
+ba69a7c24c7d499ec0b29168ae0a1da18ac7c087 assets/lostintime/models/item/scutosaurus_egg.json
 e1d2f1425b7ad9e81e29a4d47daeafd4e98ef759 assets/lostintime/models/item/scutosaurus_fossil.json
 47641388158d448e0bcbd52460e5c24ed4d21dc0 assets/lostintime/models/item/scutosaurus_skull.json
 290b0661926be97c0b6dd2f8b7fdaa99e8386c02 assets/lostintime/models/item/scutosaurus_soul_configuration.json

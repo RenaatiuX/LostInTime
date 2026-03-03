@@ -52,6 +52,7 @@ public class LITItemsModelProvider extends ItemModelProvider {
 
         simple(ItemInit.MANGO.get());
         simple(BlockInit.DODO_EGG.get());
+        simple(BlockInit.SCUTOSAURUS_EGG.get());
 
         simple(ItemInit.GOLDEN_EYE.get());
         handheld(ItemInit.IRON_KNIFE.get());

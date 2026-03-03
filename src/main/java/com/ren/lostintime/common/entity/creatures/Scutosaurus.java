@@ -1,27 +1,32 @@
 package com.ren.lostintime.common.entity.creatures;
 
 import com.mojang.serialization.Dynamic;
+import com.ren.lostintime.common.block.LITEggBlock;
 import com.ren.lostintime.common.entity.LITAnimal;
 import com.ren.lostintime.common.entity.ai.ScutosaurusAi;
 import com.ren.lostintime.common.entity.util.SleepController;
+import com.ren.lostintime.common.init.BlockInit;
 import com.ren.lostintime.common.init.EntityInit;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.schedule.Activity;
@@ -29,6 +34,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -228,8 +234,45 @@ public class Scutosaurus extends LITAnimal implements GeoEntity {
     }
 
     @Override
+    public void spawnChildFromBreeding(ServerLevel pLevel, Animal pMate) {
+        ServerPlayer serverplayer = this.getLoveCause();
+        if (serverplayer == null && pMate.getLoveCause() != null) {
+            serverplayer = pMate.getLoveCause();
+        }
+
+        if (serverplayer != null) {
+            serverplayer.awardStat(Stats.ANIMALS_BRED);
+            CriteriaTriggers.BRED_ANIMALS.trigger(serverplayer, this, pMate, null);
+        }
+
+        this.setAge(6000);
+        pMate.setAge(6000);
+        this.resetLove();
+        pMate.resetLove();
+
+        int eggsCount = this.random.nextInt(2) + 1;
+        BlockPos pos = this.blockPosition();
+
+        if (pLevel.getBlockState(pos.below()).is(BlockTags.DIRT)) {
+            BlockState eggState = BlockInit.SCUTOSAURUS_EGG.get().defaultBlockState()
+                    .setValue(LITEggBlock.EGGS, eggsCount);
+
+            pLevel.setBlock(pos, eggState, 3);
+            pLevel.playSound(null, pos, SoundEvents.TURTLE_LAY_EGG, SoundSource.BLOCKS, 0.3F, 0.9F + pLevel.random.nextFloat() * 0.2F);
+        }
+        else {
+            this.spawnAtLocation(new ItemStack(BlockInit.SCUTOSAURUS_EGG.get().asItem(), eggsCount));
+        }
+
+        pLevel.broadcastEntityEvent(this, (byte)18);
+        if (pLevel.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+            pLevel.addFreshEntity(new ExperienceOrb(pLevel, this.getX(), this.getY(), this.getZ(), this.getRandom().nextInt(7) + 1));
+        }
+    }
+
+    @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
-        return EntityInit.SCUTOSAURUS.get().create(pLevel);
+        return null;
     }
 
     @Override

@@ -1,0 +1,7 @@
+{
+  "parent": "lostintime:block/scutosaurus_egg1",
+  "textures": {
+    "1": "lostintime:block/scutosaurus_egg_very_cracked",
+    "particle": "lostintime:block/scutosaurus_egg_very_cracked"
+  }
+}
