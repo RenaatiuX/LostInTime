@@ -150,12 +150,6 @@ public class Scutosaurus extends LITAnimal implements GeoEntity {
         this.entityData.set(DATA_EATING_FLOOR, eating);
     }
 
-    //SLEEP
-    @Override
-    public @Nullable SleepController<?> getSleepController() {
-        return new SleepController<>(this, SleepController.SleepType.DIURNAL);
-    }
-
     //BRAIN
     @Override
     protected Brain.Provider<Scutosaurus> brainProvider() {

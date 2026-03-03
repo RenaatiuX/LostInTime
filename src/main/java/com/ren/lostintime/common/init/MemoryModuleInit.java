@@ -26,4 +26,6 @@ public class MemoryModuleInit {
     public static final RegistryObject<MemoryModuleType<Unit>> SIT_ORDER = MEMORY_MODULE_TYPES.register("sit_order", () -> new MemoryModuleType<>(Optional.of(Codec.unit(Unit.INSTANCE))));
     public static final RegistryObject<MemoryModuleType<Unit>> FOLLOW_ORDER = MEMORY_MODULE_TYPES.register("follow_order", () -> new MemoryModuleType<>(Optional.of(Codec.unit(Unit.INSTANCE))));
     public static final RegistryObject<MemoryModuleType<Unit>> WANDER_ORDER = MEMORY_MODULE_TYPES.register("wander_order", () -> new MemoryModuleType<>(Optional.of(Codec.unit(Unit.INSTANCE))));
+    public static final RegistryObject<MemoryModuleType<Unit>> FORCE_WAKE_UP = MEMORY_MODULE_TYPES.register("force_wake_up", () -> new MemoryModuleType<>(Optional.of(Codec.unit(Unit.INSTANCE))));
+    public static final RegistryObject<MemoryModuleType<Unit>> SHOULD_SLEEP = MEMORY_MODULE_TYPES.register("force_wake_up", () -> new MemoryModuleType<>(Optional.of(Codec.unit(Unit.INSTANCE))));
 }

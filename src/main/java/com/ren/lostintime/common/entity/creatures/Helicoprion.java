@@ -129,9 +129,4 @@ public class Helicoprion extends LITWaterAnimal implements GeoEntity {
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
     }
-
-    @Override
-    public boolean canSleep() {
-        return false;
-    }
 }

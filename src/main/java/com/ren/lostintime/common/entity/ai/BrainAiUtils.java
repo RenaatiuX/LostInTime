@@ -4,10 +4,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 import com.ren.lostintime.common.entity.util.IEggLayerAnimal;
+import com.ren.lostintime.common.entity.util.ISleepingEntity;
+import com.ren.lostintime.common.entity.util.SleepController;
+import com.ren.lostintime.common.init.MemoryModuleInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Unit;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.BehaviorControl;
@@ -15,6 +20,7 @@ import net.minecraft.world.entity.ai.behavior.BlockPosTracker;
 import net.minecraft.world.entity.ai.behavior.OneShot;
 import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
@@ -98,13 +104,40 @@ public class BrainAiUtils {
             });
         });
     }
-    //TODO
-    /*
-    public static void addSleepActivity(Brain<?> brain){
-        brain.addActivityWithConditions(Activity.REST, ImmutableList.of(),
-                ImmutableSet.of(Pair.of(MemoryModuleType.RES)));
+
+
+    public static <E extends LivingEntity & ISleepingEntity> void addSleepActivity(Brain<E> brain) {
+        brain.addActivityWithConditions(Activity.REST, ImmutableList.of(
+                        Pair.of(0, startSleepBehaviour()),
+                        Pair.of(1, forceWakeUpBehaviour(200))
+                ),
+                ImmutableSet.of(
+                        Pair.of(MemoryModuleType.ATTACK_TARGET, MemoryStatus.VALUE_ABSENT),
+                        Pair.of(MemoryModuleInit.FORCE_WAKE_UP.get(), MemoryStatus.VALUE_ABSENT),
+                        Pair.of(MemoryModuleInit.SHOULD_SLEEP.get(), MemoryStatus.VALUE_PRESENT)));
     }
 
-     */
 
+    public static <E extends LivingEntity & ISleepingEntity> OneShot<E> startSleepBehaviour() {
+        return BehaviorBuilder.create((context) -> {
+            return context.group(context.absent(MemoryModuleInit.IS_SLEEPING.get()), context.absent(MemoryModuleInit.FORCE_WAKE_UP.get())).apply(context, (sleeping, forceWakeUp) -> {
+                return (level, entity, gameTime) -> {
+                    entity.setSleeping(true);
+                    return true;
+                };
+            });
+        });
+    }
+
+    public static <E extends LivingEntity & ISleepingEntity> OneShot<E> forceWakeUpBehaviour(int ticksToWakeUp) {
+        return BehaviorBuilder.create((context) -> {
+            return context.group(context.present(MemoryModuleInit.IS_SLEEPING.get()), context.absent(MemoryModuleInit.FORCE_WAKE_UP.get()), context.present(MemoryModuleType.HURT_BY)).apply(context, (sleeping, forceWakeUp, hurtBy) -> {
+                return (level, entity, gameTime) -> {
+                    entity.setSleeping(false);
+                    forceWakeUp.setWithExpiry(Unit.INSTANCE, ticksToWakeUp);
+                    return true;
+                };
+            });
+        });
+    }
 }

@@ -22,4 +22,11 @@ public interface ISleepingEntity {
     default boolean canSleep() {
         return true;
     }
+
+    /**
+     * Gets the sleep type configuration for this entity.
+     *
+     * @return the {@link SleepType} defining when this entity sleeps.
+     */
+    SleepType getSleepType();
 }

@@ -5,7 +5,9 @@ import com.ren.lostintime.common.entity.LITAnimal;
 import com.ren.lostintime.common.entity.LITWaterAnimal;
 import com.ren.lostintime.common.entity.ai.MastodonsaurusAi;
 import com.ren.lostintime.common.entity.ai.ScutosaurusAi;
+import com.ren.lostintime.common.entity.util.ISleepingEntity;
 import com.ren.lostintime.common.entity.util.SleepController;
+import com.ren.lostintime.common.entity.util.SleepType;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -35,7 +37,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity {
+public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity, ISleepingEntity {
 
     private static final EntityDataAccessor<Boolean> DATA_DEATH_ROLLING = SynchedEntityData.defineId(Mastodonsaurus.class, EntityDataSerializers.BOOLEAN);
 
@@ -290,6 +292,11 @@ public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity {
 
     @Override
     public @Nullable SleepController<?> getSleepController() {
-        return new SleepController<>(this, SleepController.SleepType.DIURNAL);
+        return new SleepController<>(this);
+    }
+
+    @Override
+    public SleepType getSleepType() {
+        return SleepType.DIURNAL;
     }
 }

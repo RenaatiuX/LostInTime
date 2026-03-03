@@ -1,7 +1,9 @@
 package com.ren.lostintime.common.entity.creatures;
 
 import com.ren.lostintime.common.entity.LITTamableAnimal;
+import com.ren.lostintime.common.entity.util.ISleepingEntity;
 import com.ren.lostintime.common.entity.util.SleepController;
+import com.ren.lostintime.common.entity.util.SleepType;
 import com.ren.lostintime.common.init.EntityInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -42,7 +44,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.EnumSet;
 
-public class Leptictidium extends LITTamableAnimal implements GeoEntity {
+public class Leptictidium extends LITTamableAnimal implements GeoEntity, ISleepingEntity {
 
     private static final EntityDataAccessor<Boolean> DATA_TRUSTED = SynchedEntityData.defineId(Leptictidium.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_BEGGING = SynchedEntityData.defineId(Leptictidium.class, EntityDataSerializers.BOOLEAN);
@@ -70,6 +72,11 @@ public class Leptictidium extends LITTamableAnimal implements GeoEntity {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 6.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.3F);
+    }
+
+    @Override
+    public SleepType getSleepType() {
+        return SleepType.DIURNAL;
     }
 
     @Override
@@ -238,7 +245,7 @@ public class Leptictidium extends LITTamableAnimal implements GeoEntity {
 
     @Override
     public @Nullable SleepController<?> getSleepController() {
-        return new SleepController<>(this, SleepController.SleepType.DIURNAL);
+        return new SleepController<>(this);
     }
 
     //DANCE
