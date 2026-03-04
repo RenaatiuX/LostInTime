@@ -268,6 +268,7 @@ public class LostInTime {
             event.accept(ItemInit.ANOMALOCARIS_ROE);
             event.accept(ItemInit.ENDOCERAS_EGGS);
             event.accept(BlockInit.TITANOSARCOLITES);
+            event.accept(BlockInit.RED_ALGAE);
 
             event.accept(ItemInit.ANOMALOCARIS_ROE_BUCKET);
             event.accept(ItemInit.BOTHRIOLEPIS_ROE_BUCKET);

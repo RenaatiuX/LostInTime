@@ -1,6 +1,7 @@
-// 1.20.1	2026-03-01T11:41:50.30747	Registries
+// 1.20.1	2026-03-05T00:51:44.3095861	Registries
 98ca6c50de5f8381bf123ecf9f0f2307ad5d88c1 data/lostintime/damage_type/bleeding.json
 ce9df49a01c04a1c69071244fa4a21139c79dff5 data/lostintime/forge/biome_modifier/add_fossils.json
+7bf8e283b154507c97f2e941dd5939ceeaf55c3f data/lostintime/forge/biome_modifier/add_red_algae.json
 2162905615f55c55795e7648db1dbbe38b48da0a data/lostintime/forge/biome_modifier/anomalocaris_spawn.json
 1e9bbe0e3ea8e62e423190c90886de3c24473b66 data/lostintime/forge/biome_modifier/daeodon_spawn.json
 392a27323f845d6973d54bf1f2fda6ecb004082d data/lostintime/forge/biome_modifier/dodo_spawn.json
@@ -20,6 +21,7 @@ a9a852c137c4aa526c01639f5db077865a644971 data/lostintime/worldgen/configured_fea
 218880f023afe7bbf69d53afed1d45df9851d010 data/lostintime/worldgen/configured_feature/fossil/silurian.json
 387d7cdae9abc48d17e04a47264ee0073c119ee4 data/lostintime/worldgen/configured_feature/fossil/triassic.json
 6973557d730bbefedcace6c3f592c58db615a5bd data/lostintime/worldgen/configured_feature/mango_tree.json
+6a254e77de7d24d77b7ba0465061f51bc46880c9 data/lostintime/worldgen/configured_feature/red_algae.json
 b50f522981d668b08aa8ffe4872594bade3445da data/lostintime/worldgen/placed_feature/fossil/cambrian.json
 cbe10cdfdcdecd3e0ebe6eb5d6e75a43bebe629e data/lostintime/worldgen/placed_feature/fossil/carboniferous.json
 348ab50a8d1832162e3b690835570f73837724b3 data/lostintime/worldgen/placed_feature/fossil/cretaceous.json
@@ -32,3 +34,4 @@ fbfc38c6505c9733856ede8ec032aaa0885244ef data/lostintime/worldgen/placed_feature
 8f226fdda14465dc92f385e153c1791f3dacac2a data/lostintime/worldgen/placed_feature/fossil/quaternary.json
 8ec9e6c6e18cb6c9ffc963d21dcf1d461919375b data/lostintime/worldgen/placed_feature/fossil/silurian.json
 de3cd54b39fd8644d8f84cb95a8699a6aa6a010f data/lostintime/worldgen/placed_feature/fossil/triassic.json
+34218bc5173391918df62a583e693dc5fcf4f5e2 data/lostintime/worldgen/placed_feature/red_algae_placed.json

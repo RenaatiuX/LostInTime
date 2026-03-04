@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "lostintime:block/red_algae_0"
+      },
+      {
+        "model": "lostintime:block/red_algae_1"
+      },
+      {
+        "model": "lostintime:block/red_algae_2"
+      }
+    ]
+  }
+}

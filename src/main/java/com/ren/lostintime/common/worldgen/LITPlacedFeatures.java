@@ -8,6 +8,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.*;
@@ -18,8 +19,8 @@ import java.util.Map;
 
 public class LITPlacedFeatures {
 
-    public static final Map<FossilEra, ResourceKey<PlacedFeature>> PLACED_KEYS = new EnumMap<>(FossilEra.class);
-
+    public static final Map<FossilEra, ResourceKey<PlacedFeature>> FOSSIL_PLACED = new EnumMap<>(FossilEra.class);
+    public static final ResourceKey<PlacedFeature> RED_ALGAE_PLACED = registerKey("red_algae_placed");
 
     public static void bootstrap(BootstapContext<PlacedFeature>  context) {
         HolderGetter<ConfiguredFeature<?, ?>> configured = context.lookup(Registries.CONFIGURED_FEATURE);
@@ -28,13 +29,24 @@ public class LITPlacedFeatures {
             ResourceKey<PlacedFeature> key = ResourceKey.create(Registries.PLACED_FEATURE,
                             ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "fossil/" + era.name().toLowerCase()));
 
-            PLACED_KEYS.put(era, key);
+            FOSSIL_PLACED.put(era, key);
 
             context.register(key, new PlacedFeature(configured.getOrThrow(LITConfiguredFeatures.FOSSIL_KEYS.get(era)),
                     List.of(CountPlacement.of(era.count), InSquarePlacement.spread(), HeightRangePlacement.uniform(
                                     VerticalAnchor.absolute(era.minY),
                                     VerticalAnchor.absolute(era.maxY)), BiomeFilter.biome())));
         }
+
+        //PLANTS
+        context.register(RED_ALGAE_PLACED, new PlacedFeature(
+                configured.getOrThrow(LITConfiguredFeatures.RED_ALGAE),
+                List.of(
+                        CountPlacement.of(5),
+                        InSquarePlacement.spread(),
+                        HeightmapPlacement.onHeightmap(Heightmap.Types.OCEAN_FLOOR_WG),
+                        BiomeFilter.biome()
+                )
+        ));
 
     }
 

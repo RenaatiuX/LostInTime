@@ -75,6 +75,8 @@ public class BlockInit {
             () -> new TitanosarcolitesBlock(BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL_BLOCK).noOcclusion()));
     public static final RegistryObject<Block> GIANT_TITANOSARCOLITES = registerBlock("giant_titanosarcolites",
             () -> new GiantTitanosarcolitesBlock(BlockBehaviour.Properties.copy(Blocks.TUBE_CORAL_BLOCK).noOcclusion()));
+    public static final RegistryObject<Block> RED_ALGAE = registerBlock("red_algae",
+            () -> new RedAlgaeBlock(BlockBehaviour.Properties.copy(Blocks.SEAGRASS)));
 
     //SAPLINGS
     public static final RegistryObject<Block> MANGO_SAPLING = registerBlock("mango_sapling",

@@ -47,6 +47,8 @@ public class LITTags {
         public static final TagKey<Biome> ENDOCERAS_CAN_SPAWN = tag("endoceras_can_spawn");
         public static final TagKey<Biome> HYLONOMUS_CAN_SPAWN = tag("hylonomus_can_spawn");
 
+        public static final TagKey<Biome> HAS_RED_ALGAE = tag("has_red_algae");
+
         public static TagKey<Biome> tag(String name){
             return TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, name));
         }

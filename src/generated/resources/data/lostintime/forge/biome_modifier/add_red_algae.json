@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#lostintime:has_red_algae",
+  "features": "lostintime:red_algae_placed",
+  "step": "vegetal_decoration"
+}

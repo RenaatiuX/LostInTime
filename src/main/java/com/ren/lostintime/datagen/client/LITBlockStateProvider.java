@@ -99,6 +99,8 @@ public class LITBlockStateProvider extends BlockStateProvider {
         simplePlant(BlockInit.CONIOPTERIS);
         simplePlant(BlockInit.COOKSONIA);
 
+        randomPlantVariants(BlockInit.RED_ALGAE, 3);
+
         doubleCoralPlant(BlockInit.DEAD_LARGE_PIPE_SPONGE);
         doubleCoralPlant(BlockInit.LARGE_PIPE_SPONGE);
     }
@@ -133,6 +135,22 @@ public class LITBlockStateProvider extends BlockStateProvider {
         simpleBlockItem(block, upper);
     }
 
+    private void randomPlantVariants(RegistryObject<Block> blockRO, int variantCount) {
+        Block block = blockRO.get();
+        String name = blockName(block);
+
+        ConfiguredModel[] models = new ConfiguredModel[variantCount];
+
+        for (int i = 0; i < variantCount; i++) {
+            ModelFile model = models()
+                    .cross(name + "_" + i, modLoc("block/" + name + "_" + i))
+                    .renderType("cutout");
+
+            models[i] = new ConfiguredModel(model);
+        }
+        getVariantBuilder(block).partialState().setModels(models);
+        simpleBlockItem(block, models[0].model);
+    }
 
     private void saplingBlock(RegistryObject<Block> blockRegistryObject) {
         simpleBlock(blockRegistryObject.get(),

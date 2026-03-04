@@ -27,6 +27,7 @@ import java.util.Objects;
 public class LITBiomesModifiers {
 
     public static final ResourceKey<BiomeModifier> ADD_FOSSILS = registerKey("add_fossils");
+    public static final ResourceKey<BiomeModifier> ADD_RED_ALGAE = registerKey("add_red_algae");
     public static final ResourceKey<BiomeModifier> DODO_SPAWN = registerKey("dodo_spawn");
     public static final ResourceKey<BiomeModifier> ANOMALOCARIS_SPAWN = registerKey("anomalocaris_spawn");
     public static final ResourceKey<BiomeModifier> ENDOCERAS_SPAWN = registerKey("endoceras_spawn");
@@ -39,11 +40,20 @@ public class LITBiomesModifiers {
 
         HolderSet<PlacedFeature> fossils =
                 HolderSet.direct(Arrays.stream(FossilEra.values())
-                        .map(era -> placed.getOrThrow(LITPlacedFeatures.PLACED_KEYS.get(era))).toList());
+                        .map(era -> placed.getOrThrow(LITPlacedFeatures.FOSSIL_PLACED.get(era))).toList());
 
         context.register(ADD_FOSSILS, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(
                 biomes.getOrThrow(BiomeTags.IS_OVERWORLD), fossils, GenerationStep.Decoration.UNDERGROUND_ORES));
 
+        //PLANTS
+        context.register(ADD_RED_ALGAE, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(
+                // Llamamos a un tag específico que crearemos en JSON
+                biomes.getOrThrow(LITTags.Biomes.HAS_RED_ALGAE),
+                HolderSet.direct(placed.getOrThrow(LITPlacedFeatures.RED_ALGAE_PLACED)),
+                GenerationStep.Decoration.VEGETAL_DECORATION
+        ));
+
+        //SPAWN
         context.register(DODO_SPAWN, new ForgeBiomeModifiers.AddSpawnsBiomeModifier(biomes.getOrThrow(LITTags.Biomes.DODO_CAN_SPAWN), List.of(
                 new MobSpawnSettings.SpawnerData(EntityInit.DODO.get(), 20, 1, 4)
         )));

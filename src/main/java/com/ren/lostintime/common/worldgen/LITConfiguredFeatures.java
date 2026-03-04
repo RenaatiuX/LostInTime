@@ -10,6 +10,7 @@ import com.ren.lostintime.common.worldgen.fossil.FossilEra;
 import com.ren.lostintime.common.worldgen.feature.config.FossilFormationConfig;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -21,6 +22,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
@@ -42,6 +45,9 @@ public class LITConfiguredFeatures {
 
     //FOSSILS
     public static final Map<FossilEra, ResourceKey<ConfiguredFeature<?, ?>>> FOSSIL_KEYS = new EnumMap<>(FossilEra.class);
+
+    //PLANTS
+    public static final ResourceKey<ConfiguredFeature<?, ?>> RED_ALGAE = registerKey("red_algae");
 
     public static void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> context) {
         register(context, MANGO_TREE_KEY, Feature.TREE, new TreeConfiguration.TreeConfigurationBuilder(
@@ -90,6 +96,13 @@ public class LITConfiguredFeatures {
             register(context, key, FeatureInit.FOSSIL_FORMATION.get(),
                     new FossilFormationConfig(stoneBlock, deepslateBlock, stoneReplace, deepslateReplace));
         }
+
+        //PLANT
+        context.register(RED_ALGAE, new ConfiguredFeature<>(Feature.RANDOM_PATCH,
+                new RandomPatchConfiguration(32, 7, 3, PlacementUtils.inlinePlaced(
+                        Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(BlockStateProvider.simple(BlockInit.RED_ALGAE.get()))
+                ))
+        ));
     }
 
     private static ResourceKey<ConfiguredFeature<?, ?>> registerKey(String name) {
