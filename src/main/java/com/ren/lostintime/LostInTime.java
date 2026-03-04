@@ -4,7 +4,6 @@ import com.mojang.logging.LogUtils;
 import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.init.*;
 import com.ren.lostintime.datagen.DataGatherer;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -67,8 +66,19 @@ public class LostInTime {
             event.accept(ItemInit.SPINEL);
             event.accept(ItemInit.HYLONOMUS_EGG);
             event.accept(ItemInit.ENDOCERAS_SHELL_FRAGMENT);
+            event.accept(ItemInit.SCUTOSAURUS_PLATE);
+            event.accept(ItemInit.REGURGITATED_MASS);
+
+            event.accept(ItemInit.DAEODON_SAC);
+            event.accept(ItemInit.LEPTICTIDIUM_SAC);
+            event.accept(ItemInit.PLESIOSAURUS_SAC);
+
+            event.accept(ItemInit.STONE_KNIFE);
             event.accept(ItemInit.IRON_KNIFE);
+            event.accept(ItemInit.GOLDEN_KNIFE);
             event.accept(ItemInit.DIAMOND_KNIFE);
+            event.accept(ItemInit.NETHERITE_KNIFE);
+            event.accept(ItemInit.ZIRCON_KNIFE);
 
             event.accept(ItemInit.DEVONIAN_FOSSIL);
             event.accept(ItemInit.CAMBRIAN_FOSSIL);
@@ -118,6 +128,20 @@ public class LostInTime {
             event.accept(ItemInit.COOKED_DAEODON);
             event.accept(ItemInit.RAW_ENDOCERAS);
             event.accept(ItemInit.COOKED_ENDOCERAS);
+            event.accept(ItemInit.RAW_HYLONOMUS);
+            event.accept(ItemInit.COOKED_HYLONOMUS);
+            event.accept(ItemInit.RAW_LEPTICTIDIUM);
+            event.accept(ItemInit.COOKED_LEPTICTIDIUM);
+            event.accept(ItemInit.RAW_MASTODONSAURUS_MEAT);
+            event.accept(ItemInit.COOKED_MASTODONSAURUS_MEAT);
+            event.accept(ItemInit.RAW_PLESIOSAURUS_MEAT);
+            event.accept(ItemInit.COOKED_PLESIOSAURUS_MEAT);
+            event.accept(ItemInit.RAW_SCUTOSAURUS_MEAT);
+            event.accept(ItemInit.COOKED_SCUTOSAURUS_MEAT);
+
+            event.accept(ItemInit.SMALL_FRIED_EGG);
+            event.accept(ItemInit.FRIED_EGG);
+            event.accept(ItemInit.LARGE_FRIED_EGG);
 
             event.accept(ItemInit.ASPECT_DIFFERENTIATION);
             event.accept(ItemInit.ASPECT_EMERGENCE);
@@ -131,6 +155,10 @@ public class LostInTime {
             event.accept(ItemInit.ASPECT_RECOVERY);
             event.accept(ItemInit.ASPECT_REFINEMENT);
             event.accept(ItemInit.ASPECT_RESILIENCE);
+            event.accept(ItemInit.ASPECT_COMPLEXITY);
+            event.accept(ItemInit.ASPECT_DOMINATION);
+            event.accept(ItemInit.ASPECT_EXPERIMENTATION);
+            event.accept(ItemInit.ASPECT_SUCCESSION);
 
             event.accept(ItemInit.ZIRCON);
 
@@ -149,21 +177,22 @@ public class LostInTime {
             event.accept(ItemInit.AMBER_CATALYST);
             event.accept(ItemInit.OPAL_CATALYST);
             event.accept(ItemInit.SPINEL_CATALYST);
+            event.accept(ItemInit.OBSIDIAN_CATALYST);
 
-            event.accept(ItemInit.ANOMALOCARIS_SOUL_CFC);
-            event.accept(ItemInit.BOTHRIOLEPIS_SOUL_CFC);
-            event.accept(ItemInit.DAEODON_SOUL_CFC);
-            event.accept(ItemInit.DEINONYCHUS_SOUL_CFC);
-            event.accept(ItemInit.DODO_SOUL_CFC);
-            event.accept(ItemInit.EMPTY_SOUL_CFC);
-            event.accept(ItemInit.ENDOCERAS_SOUL_CFC);
-            event.accept(ItemInit.HYLONOMUS_SOUL_CFC);
-            event.accept(ItemInit.LEPTICTIDIUM_SOUL_CFC);
-            event.accept(ItemInit.MASTODONSAURUS_SOUL_CFC);
-            event.accept(ItemInit.PLESIOSAURUS_SOUL_CFC);
+            event.accept(ItemInit.ANOMALOCARIS_SOUL_CFG);
+            event.accept(ItemInit.BOTHRIOLEPIS_SOUL_CFG);
+            event.accept(ItemInit.DAEODON_SOUL_CFG);
+            event.accept(ItemInit.DEINONYCHUS_SOUL_CFG);
+            event.accept(ItemInit.DODO_SOUL_CFG);
+            event.accept(ItemInit.EMPTY_SOUL_CFG);
+            event.accept(ItemInit.ENDOCERAS_SOUL_CFG);
+            event.accept(ItemInit.HYLONOMUS_SOUL_CFG);
+            event.accept(ItemInit.LEPTICTIDIUM_SOUL_CFG);
+            event.accept(ItemInit.MASTODONSAURUS_SOUL_CFG);
+            event.accept(ItemInit.PLESIOSAURUS_SOUL_CFG);
             event.accept(ItemInit.PROTOTAXITES_VITAL_PATTERN);
-            event.accept(ItemInit.PTERYGOTUS_SOUL_CFC);
-            event.accept(ItemInit.SCUTOSAURUS_SOUL_CFC);
+            event.accept(ItemInit.PTERYGOTUS_SOUL_CFG);
+            event.accept(ItemInit.SCUTOSAURUS_SOUL_CFG);
 
             event.accept(ItemInit.BARREL_SPONGE_VITAL_PATTERN);
             event.accept(ItemInit.GLASS_SPONGE_VITAL_PATTERN);

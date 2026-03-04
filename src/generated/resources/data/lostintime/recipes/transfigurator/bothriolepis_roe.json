@@ -1,0 +1,28 @@
+{
+  "type": "lostintime:transfigurator_recipe",
+  "failed_results": [
+    {
+      "item": {
+        "item": "minecraft:rotten_flesh"
+      },
+      "weight": 7
+    },
+    {
+      "item": {
+        "item": "lostintime:raw_bothriolepis"
+      },
+      "weight": 2
+    }
+  ],
+  "input": {
+    "item": "lostintime:bothriolepis_soul_configuration"
+  },
+  "nutrient": {
+    "item": "lostintime:universal_nutrient"
+  },
+  "processingType": "egg",
+  "processing_time": 200,
+  "result": {
+    "item": "lostintime:bothriolepis_roe"
+  }
+}

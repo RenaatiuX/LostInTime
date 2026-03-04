@@ -1,0 +1,22 @@
+{
+  "criteria": {
+    "hasItem": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "lostintime:mastodonsaurus_fossil"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "hasItem"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

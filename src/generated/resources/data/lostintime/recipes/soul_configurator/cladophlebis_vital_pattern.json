@@ -1,0 +1,18 @@
+{
+  "type": "lostintime:soul_configurator_recipe",
+  "aspect": {
+    "item": "lostintime:aspect_domination"
+  },
+  "coherence_medium": {
+    "item": "lostintime:empty_vital_pattern"
+  },
+  "fail_result": {
+    "item": "lostintime:empty_vital_pattern"
+  },
+  "precedent_matter": {
+    "item": "lostintime:cladophlebis_fossil"
+  },
+  "success_result": {
+    "item": "lostintime:cladophlebis_vital_pattern"
+  }
+}

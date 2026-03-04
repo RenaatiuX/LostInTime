@@ -3,6 +3,8 @@ package com.ren.lostintime.common.item;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.ren.lostintime.common.entity.projectile.ThrownKnife;
+import com.ren.lostintime.common.init.ItemInit;
+import com.ren.lostintime.common.util.ModToolTiers;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -19,6 +21,8 @@ import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
 public class KnifeItem extends TieredItem {
@@ -46,7 +50,23 @@ public class KnifeItem extends TieredItem {
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        if (this.getTier() == ModToolTiers.ZIRCON) {
+            if (enchantment == Enchantments.SHARPNESS || enchantment == Enchantments.SMITE) {
+                return false;
+            }
+        }
         return enchantment.category == EnchantmentCategory.WEAPON || super.canApplyAtEnchantingTable(stack, enchantment);
+    }
+
+    @Override
+    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+        if (this.getTier() == ModToolTiers.ZIRCON) {
+            var enchantments = EnchantmentHelper.getEnchantments(book);
+            if (enchantments.containsKey(Enchantments.SHARPNESS) || enchantments.containsKey(Enchantments.SMITE)) {
+                return false;
+            }
+        }
+        return super.isBookEnchantable(stack, book);
     }
 
     @Override
@@ -89,4 +109,5 @@ public class KnifeItem extends TieredItem {
     public float getDamage() {
         return this.attackDamage;
     }
+
 }

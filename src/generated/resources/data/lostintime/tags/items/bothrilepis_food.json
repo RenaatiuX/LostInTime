@@ -49,7 +49,20 @@
     "lostintime:cooked_daeodon",
     "lostintime:raw_endoceras",
     "lostintime:cooked_endoceras",
+    "lostintime:raw_hylonomus",
+    "lostintime:cooked_hylonomus",
+    "lostintime:raw_leptictidium",
+    "lostintime:cooked_leptictidium",
+    "lostintime:raw_mastodonsaurus_meat",
+    "lostintime:cooked_mastodonsaurus_meat",
+    "lostintime:raw_plesiosaurus_meat",
+    "lostintime:cooked_plesiosaurus_meat",
+    "lostintime:raw_scutosaurus_meat",
+    "lostintime:cooked_scutosaurus_meat",
     "lostintime:mango",
+    "lostintime:small_fried_egg",
+    "lostintime:fried_egg",
+    "lostintime:large_fried_egg",
     "minecraft:spider_eye"
   ]
 }

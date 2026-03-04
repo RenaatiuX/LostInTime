@@ -14,13 +14,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -353,17 +351,107 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
                 .save(pWriter);
 
         SoulConfiguratorFuelRecipeBuilder.fuelRecipe(ItemInit.SOUL_POWDER.get(), 300).save(pWriter, Objects.requireNonNull(ResourceLocation.tryBuild(LostInTime.MODID, "soul_powder_fuel")));
-        SoulConfiguratorRecipeBuilder.recipe(ItemInit.ANOMALOCARIS_SOUL_CFC.get(), ItemInit.EMPTY_SOUL_CFC.get())
+
+        SoulConfiguratorRecipeBuilder.recipe(ItemInit.ANOMALOCARIS_SOUL_CFG.get(), ItemInit.EMPTY_SOUL_CFG.get())
                 .aspect(ItemInit.ASPECT_EMERGENCE.get())
-                .bindingMaterial(ItemInit.EMPTY_SOUL_CFC.get())
+                .bindingMaterial(ItemInit.EMPTY_SOUL_CFG.get())
                 .fossil(ItemInit.ANOMALOCARIS_FOSSIL.get())
                 .unlockedBy("hasItem", has(ItemInit.ANOMALOCARIS_FOSSIL.get()))
                 .save(pWriter);
+        SoulConfiguratorRecipeBuilder.recipe(ItemInit.ENDOCERAS_SOUL_CFG.get(),ItemInit.EMPTY_SOUL_CFG.get())
+                .aspect(ItemInit.ASPECT_STRUCTURING.get())
+                .bindingMaterial(ItemInit.EMPTY_SOUL_CFG.get())
+                .fossil(ItemInit.ENDOCERAS_FOSSIL.get())
+                .unlockedBy("hasItem", has(ItemInit.ENDOCERAS_FOSSIL.get()))
+                .save(pWriter);
+        SoulConfiguratorRecipeBuilder.recipe(ItemInit.PTERYGOTUS_SOUL_CFG.get(),ItemInit.EMPTY_SOUL_CFG.get())
+                .aspect(ItemInit.ASPECT_INTEGRATION.get())
+                .bindingMaterial(ItemInit.EMPTY_SOUL_CFG.get())
+                .fossil(ItemInit.PTERYGOTUS_FOSSIL.get())
+                .unlockedBy("hasItem", has(ItemInit.PTERYGOTUS_FOSSIL.get()))
+                .save(pWriter);
+        SoulConfiguratorRecipeBuilder.recipe(ItemInit.BOTHRIOLEPIS_SOUL_CFG.get(),ItemInit.EMPTY_SOUL_CFG.get())
+                .aspect(ItemInit.ASPECT_DIFFERENTIATION.get())
+                .bindingMaterial(ItemInit.EMPTY_SOUL_CFG.get())
+                .fossil(ItemInit.BOTHRIOLEPIS_FOSSIL.get())
+                .unlockedBy("hasItem", has(ItemInit.BOTHRIOLEPIS_FOSSIL.get()))
+                .save(pWriter);
+        SoulConfiguratorRecipeBuilder.recipe(ItemInit.HYLONOMUS_SOUL_CFG.get(),ItemInit.EMPTY_SOUL_CFG.get())
+                .aspect(ItemInit.ASPECT_ABUNDANCE.get())
+                .bindingMaterial(ItemInit.EMPTY_SOUL_CFG.get())
+                .fossil(ItemInit.HYLONOMUS_FOSSIL.get())
+                .unlockedBy("hasItem", has(ItemInit.HYLONOMUS_FOSSIL.get()))
+                .save(pWriter);
+        SoulConfiguratorRecipeBuilder.recipe(ItemInit.SCUTOSAURUS_SOUL_CFG.get(),ItemInit.EMPTY_SOUL_CFG.get())
+                .aspect(ItemInit.ASPECT_CONTINUITY.get())
+                .bindingMaterial(ItemInit.EMPTY_SOUL_CFG.get())
+                .fossil(ItemInit.SCUTOSAURUS_FOSSIL.get())
+                .unlockedBy("hasItem", has(ItemInit.SCUTOSAURUS_FOSSIL.get()))
+                .save(pWriter);
+        SoulConfiguratorRecipeBuilder.recipe(ItemInit.MASTODONSAURUS_SOUL_CFG.get(),ItemInit.EMPTY_SOUL_CFG.get())
+                .aspect(ItemInit.ASPECT_RECOVERY.get())
+                .bindingMaterial(ItemInit.EMPTY_SOUL_CFG.get())
+                .fossil(ItemInit.MASTODONSAURUS_FOSSIL.get())
+                .unlockedBy("hasItem", has(ItemInit.MASTODONSAURUS_FOSSIL.get()))
+                .save(pWriter);
+        SoulConfiguratorRecipeBuilder.recipe(ItemInit.PLESIOSAURUS_SOUL_CFG.get(),ItemInit.EMPTY_SOUL_CFG.get())
+                .aspect(ItemInit.ASPECT_MAGNITUDE.get())
+                .bindingMaterial(ItemInit.EMPTY_SOUL_CFG.get())
+                .fossil(ItemInit.PLESIOSAURUS_FOSSIL.get())
+                .unlockedBy("hasItem", has(ItemInit.PLESIOSAURUS_FOSSIL.get()))
+                .save(pWriter);
+        SoulConfiguratorRecipeBuilder.recipe(ItemInit.DEINONYCHUS_SOUL_CFG.get(),ItemInit.EMPTY_SOUL_CFG.get())
+                .aspect(ItemInit.ASPECT_PROLIFERATION.get())
+                .bindingMaterial(ItemInit.EMPTY_SOUL_CFG.get())
+                .fossil(ItemInit.DEINONYCHUS_FOSSIL.get())
+                .unlockedBy("hasItem", has(ItemInit.DEINONYCHUS_FOSSIL.get()))
+                .save(pWriter);
+        SoulConfiguratorRecipeBuilder.recipe(ItemInit.LEPTICTIDIUM_SOUL_CFG.get(),ItemInit.EMPTY_SOUL_CFG.get())
+                .aspect(ItemInit.ASPECT_RESILIENCE.get())
+                .bindingMaterial(ItemInit.EMPTY_SOUL_CFG.get())
+                .fossil(ItemInit.LEPTICTIDIUM_FOSSIL.get())
+                .unlockedBy("hasItem", has(ItemInit.LEPTICTIDIUM_FOSSIL.get()))
+                .save(pWriter);
+        SoulConfiguratorRecipeBuilder.recipe(ItemInit.DAEODON_SOUL_CFG.get(),ItemInit.EMPTY_SOUL_CFG.get())
+                .aspect(ItemInit.ASPECT_REFINEMENT.get())
+                .bindingMaterial(ItemInit.EMPTY_SOUL_CFG.get())
+                .fossil(ItemInit.DAEODON_FOSSIL.get())
+                .unlockedBy("hasItem", has(ItemInit.DAEODON_FOSSIL.get()))
+                .save(pWriter);
+        SoulConfiguratorRecipeBuilder.recipe(ItemInit.DODO_SOUL_CFG.get(),ItemInit.EMPTY_SOUL_CFG.get())
+                .aspect(ItemInit.ASPECT_TRANSIENCE.get())
+                .bindingMaterial(ItemInit.EMPTY_SOUL_CFG.get())
+                .fossil(ItemInit.DODO_FOSSIL.get())
+                .unlockedBy("hasItem", has(ItemInit.DODO_FOSSIL.get()))
+                .save(pWriter);
+
+        SoulConfiguratorRecipeBuilder.recipe(ItemInit.CLADOPHLEBIS_VITAL_PATTERN.get(), ItemInit.EMPTY_VITAL_PATTERN.get())
+                .aspect(ItemInit.ASPECT_DOMINATION.get())
+                .bindingMaterial(ItemInit.EMPTY_VITAL_PATTERN.get())
+                .fossil(ItemInit.CLADOPHLEBIS_FOSSIL.get())
+                .unlockedBy("hasItem", has(ItemInit.CLADOPHLEBIS_FOSSIL.get()))
+                .save(pWriter);
+
         TransfiguratorRecipeBuilder.transfigurator(BlockInit.DODO_EGG.get(), TransfiguratorRecipe.Type.EGG)
                 .addFailedResult(Items.ROTTEN_FLESH, 7)
                 .addFailedResult(ItemInit.RAW_DODO.get(), 2)
-                .input(ItemInit.DODO_SOUL_CFC.get())
-                .unlockedBy("hasItem", has(ItemInit.DODO_SOUL_CFC.get())).save(pWriter);
+                .input(ItemInit.DODO_SOUL_CFG.get())
+                .unlockedBy("hasItem", has(ItemInit.DODO_SOUL_CFG.get())).save(pWriter);
+        TransfiguratorRecipeBuilder.transfigurator(BlockInit.ANOMALOCARIS_ROE.get(), TransfiguratorRecipe.Type.EGG)
+                .addFailedResult(Items.ROTTEN_FLESH, 7)
+                .addFailedResult(ItemInit.RAW_ANOMALOCARIS.get(), 2)
+                .input(ItemInit.ANOMALOCARIS_SOUL_CFG.get())
+                .unlockedBy("hasItem", has(ItemInit.ANOMALOCARIS_SOUL_CFG.get())).save(pWriter);
+        TransfiguratorRecipeBuilder.transfigurator(BlockInit.BOTHRIOLEPIS_ROE.get(), TransfiguratorRecipe.Type.EGG)
+                .addFailedResult(Items.ROTTEN_FLESH, 7)
+                .addFailedResult(ItemInit.RAW_BOTHRIOLEPIS.get(), 2)
+                .input(ItemInit.BOTHRIOLEPIS_SOUL_CFG.get())
+                .unlockedBy("hasItem", has(ItemInit.BOTHRIOLEPIS_SOUL_CFG.get())).save(pWriter);
+        TransfiguratorRecipeBuilder.transfigurator(BlockInit.ENDOCERAS_EGG.get(), TransfiguratorRecipe.Type.EGG)
+                .addFailedResult(Items.ROTTEN_FLESH, 7)
+                .addFailedResult(ItemInit.RAW_ENDOCERAS.get(), 2)
+                .input(ItemInit.ENDOCERAS_SOUL_CFG.get())
+                .unlockedBy("hasItem", has(ItemInit.ENDOCERAS_SOUL_CFG.get())).save(pWriter);
 
     }
 

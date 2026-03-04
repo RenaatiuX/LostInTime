@@ -2,6 +2,7 @@ package com.ren.lostintime.common.recipe;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.init.ItemInit;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.CriterionTriggerInstance;
@@ -107,11 +108,32 @@ public class TransfiguratorRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
+    public void save(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+        save(pFinishedRecipeConsumer, getRecipeId());
+    }
+
+    @Override
+    public void save(Consumer<FinishedRecipe> pFinishedRecipeConsumer, String pRecipeId) {
+        ResourceLocation resourceLocation = getRecipeId();
+        ResourceLocation resourceLocation2 = ResourceLocation.parse(pRecipeId);
+        if (resourceLocation2.equals(resourceLocation)) {
+            throw new IllegalStateException("Recipe " + pRecipeId + " should remove its 'save' argument as it is equal to default one");
+        } else {
+            save(pFinishedRecipeConsumer, resourceLocation2);
+        }
+    }
+
+    @Override
     public void save(Consumer<FinishedRecipe> pFinishedRecipeConsumer, ResourceLocation pRecipeId) {
         if (advancement.getCriteria().isEmpty()) {
-            // Warn or add default criteria?
+            LostInTime.LOGGER.warn("No way of obtaining recipe {}", pRecipeId);
         }
         pFinishedRecipeConsumer.accept(new Result(pRecipeId, group, input, nutrient, failedResults, result, processingTime, type, advancement));
+    }
+
+    protected ResourceLocation getRecipeId() {
+        return ResourceLocation.fromNamespaceAndPath(
+                LostInTime.MODID, "transfigurator/" + ForgeRegistries.ITEMS.getKey(result.getItem()).getPath());
     }
 
     public static class Result implements FinishedRecipe {

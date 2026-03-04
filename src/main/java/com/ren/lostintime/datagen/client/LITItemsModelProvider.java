@@ -38,6 +38,12 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.REDSTONE_CHIP.get());
         simple(ItemInit.HYLONOMUS_EGG.get());
         simple(ItemInit.ENDOCERAS_SHELL_FRAGMENT.get());
+        simple(ItemInit.SCUTOSAURUS_PLATE.get());
+        simple(ItemInit.REGURGITATED_MASS.get());
+
+        simple(ItemInit.DAEODON_SAC.get());
+        simple(ItemInit.LEPTICTIDIUM_SAC.get());
+        simple(ItemInit.PLESIOSAURUS_SAC.get());
 
         simple(ItemInit.RAW_DODO.get());
         simple(ItemInit.COOKED_DODO.get());
@@ -49,14 +55,32 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.COOKED_DAEODON.get());
         simple(ItemInit.RAW_ENDOCERAS.get());
         simple(ItemInit.COOKED_ENDOCERAS.get());
+        simple(ItemInit.RAW_HYLONOMUS.get());
+        simple(ItemInit.COOKED_HYLONOMUS.get());
+        simple(ItemInit.RAW_LEPTICTIDIUM.get());
+        simple(ItemInit.COOKED_LEPTICTIDIUM.get());
+        simple(ItemInit.RAW_MASTODONSAURUS_MEAT.get());
+        simple(ItemInit.COOKED_MASTODONSAURUS_MEAT.get());
+        simple(ItemInit.RAW_PLESIOSAURUS_MEAT.get());
+        simple(ItemInit.COOKED_PLESIOSAURUS_MEAT.get());
+        simple(ItemInit.RAW_SCUTOSAURUS_MEAT.get());
+        simple(ItemInit.COOKED_SCUTOSAURUS_MEAT.get());
+
+        simple(ItemInit.SMALL_FRIED_EGG.get());
+        simple(ItemInit.FRIED_EGG.get());
+        simple(ItemInit.LARGE_FRIED_EGG.get());
 
         simple(ItemInit.MANGO.get());
         simple(BlockInit.DODO_EGG.get());
         simple(BlockInit.SCUTOSAURUS_EGG.get());
 
         simple(ItemInit.GOLDEN_EYE.get());
+        handheld(ItemInit.STONE_KNIFE.get());
         handheld(ItemInit.IRON_KNIFE.get());
+        handheld(ItemInit.GOLDEN_KNIFE.get());
         handheld(ItemInit.DIAMOND_KNIFE.get());
+        handheld(ItemInit.NETHERITE_KNIFE.get());
+        handheld(ItemInit.ZIRCON_KNIFE.get());
 
         spawnEgg(ItemInit.DODO_SPAWN_EGG.get());
         spawnEgg(ItemInit.ENDOCERAS_SPAWN_EGG.get());
@@ -129,6 +153,10 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.ASPECT_RECOVERY.get());
         simple(ItemInit.ASPECT_REFINEMENT.get());
         simple(ItemInit.ASPECT_RESILIENCE.get());
+        simple(ItemInit.ASPECT_COMPLEXITY.get());
+        simple(ItemInit.ASPECT_DOMINATION.get());
+        simple(ItemInit.ASPECT_EXPERIMENTATION.get());
+        simple(ItemInit.ASPECT_SUCCESSION.get());
 
         simple(ItemInit.ZIRCON.get());
         simple(ItemInit.OPAL.get());
@@ -149,21 +177,22 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.AMBER_CATALYST.get());
         simple(ItemInit.OPAL_CATALYST.get());
         simple(ItemInit.SPINEL_CATALYST.get());
+        simple(ItemInit.OBSIDIAN_CATALYST.get());
 
-        simple(ItemInit.ANOMALOCARIS_SOUL_CFC.get());
-        simple(ItemInit.BOTHRIOLEPIS_SOUL_CFC.get());
-        simple(ItemInit.DAEODON_SOUL_CFC.get());
-        simple(ItemInit.DEINONYCHUS_SOUL_CFC.get());
-        simple(ItemInit.DODO_SOUL_CFC.get());
-        simple(ItemInit.EMPTY_SOUL_CFC.get());
-        simple(ItemInit.ENDOCERAS_SOUL_CFC.get());
-        simple(ItemInit.HYLONOMUS_SOUL_CFC.get());
-        simple(ItemInit.LEPTICTIDIUM_SOUL_CFC.get());
-        simple(ItemInit.MASTODONSAURUS_SOUL_CFC.get());
-        simple(ItemInit.PLESIOSAURUS_SOUL_CFC.get());
+        simple(ItemInit.ANOMALOCARIS_SOUL_CFG.get());
+        simple(ItemInit.BOTHRIOLEPIS_SOUL_CFG.get());
+        simple(ItemInit.DAEODON_SOUL_CFG.get());
+        simple(ItemInit.DEINONYCHUS_SOUL_CFG.get());
+        simple(ItemInit.DODO_SOUL_CFG.get());
+        simple(ItemInit.EMPTY_SOUL_CFG.get());
+        simple(ItemInit.ENDOCERAS_SOUL_CFG.get());
+        simple(ItemInit.HYLONOMUS_SOUL_CFG.get());
+        simple(ItemInit.LEPTICTIDIUM_SOUL_CFG.get());
+        simple(ItemInit.MASTODONSAURUS_SOUL_CFG.get());
+        simple(ItemInit.PLESIOSAURUS_SOUL_CFG.get());
         simple(ItemInit.PROTOTAXITES_VITAL_PATTERN.get());
-        simple(ItemInit.PTERYGOTUS_SOUL_CFC.get());
-        simple(ItemInit.SCUTOSAURUS_SOUL_CFC.get());
+        simple(ItemInit.PTERYGOTUS_SOUL_CFG.get());
+        simple(ItemInit.SCUTOSAURUS_SOUL_CFG.get());
 
         simple(ItemInit.BARREL_SPONGE_VITAL_PATTERN.get());
         simple(ItemInit.GLASS_SPONGE_VITAL_PATTERN.get());
