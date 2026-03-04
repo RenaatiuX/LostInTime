@@ -1,4 +1,4 @@
-// 1.20.1	2026-03-04T14:00:13.8307646	Recipes
+// 1.20.1	2026-03-04T21:38:01.9083053	Recipes
 334e226d286d4f776663fc970162381466eb1e6d data/lostintime/advancements/recipes/food/cooked_dodo.json
 f4abb2e811999d9ceef51f5781ec5bedc062bd92 data/lostintime/advancements/recipes/food/cooked_dodo_from_campfire_cooking.json
 069d46778f0610a31ea02de739a956261de5ca9d data/lostintime/advancements/recipes/food/cooked_dodo_from_smoking.json
@@ -78,7 +78,7 @@ f3464c12e81375eb3ca804fe71e3721af10fd44d data/lostintime/recipes/soul_extractor/
 a7cedecf5aaa0bb36135ca9e48438a1c974a82a9 data/lostintime/recipes/soul_extractor/soul_lantern.json
 ea6c5647c4ff6514dd20b4fe7e93eca2edc74d03 data/lostintime/recipes/soul_extractor/soul_torch.json
 411ea00330d6a9941cc231a33b6a16d92ca65027 data/lostintime/recipes/soul_extractor/spinel.json
-1562e74748d89cfc6f1beae9a807307bc8752932 data/lostintime/recipes/transfigurator/anomalocaris_roe.json
-dbcb096bb78e2ae5b5397a96d5b2e52c6c915318 data/lostintime/recipes/transfigurator/bothriolepis_roe.json
-53dfb9256565a13785ae810df678a0e1a5978d97 data/lostintime/recipes/transfigurator/dodo_egg.json
-1d6bf5686fd9fd3d0501a64efe879181be68de2f data/lostintime/recipes/transfigurator/endoceras_eggs.json
+fa0c940e962564ba495f636fce097783b100c03c data/lostintime/recipes/transfigurator/anomalocaris_roe.json
+2af40c7edad8b9d11d977049e6feb72a2128bcf1 data/lostintime/recipes/transfigurator/bothriolepis_roe.json
+7fc811d6354c026301d70b25fdb72d9566305943 data/lostintime/recipes/transfigurator/dodo_egg.json
+f2f49ca4555aaeb4c465f01c04013c6f989f9ffd data/lostintime/recipes/transfigurator/endoceras_eggs.json

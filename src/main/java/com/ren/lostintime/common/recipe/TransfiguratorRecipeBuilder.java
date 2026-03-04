@@ -27,6 +27,7 @@ public class TransfiguratorRecipeBuilder implements RecipeBuilder {
     private final ItemStack result;
     private final TransfiguratorRecipe.Type type;
     private Ingredient input = Ingredient.EMPTY;
+    private Ingredient solution = Ingredient.EMPTY;
     private Ingredient nutrient = Ingredient.of(ItemInit.UNIVERSAL_NUTRIENT.get());
     private final List<TransfiguratorRecipe.WeightedItem> failedResults = new ArrayList<>();
     private int processingTime = 200;
@@ -57,6 +58,19 @@ public class TransfiguratorRecipeBuilder implements RecipeBuilder {
 
     public TransfiguratorRecipeBuilder input(TagKey<Item> input) {
         return input(Ingredient.of(input));
+    }
+
+    public TransfiguratorRecipeBuilder solution(Ingredient solution) {
+        this.solution = solution;
+        return this;
+    }
+
+    public TransfiguratorRecipeBuilder solution(ItemLike solution) {
+        return solution(Ingredient.of(solution));
+    }
+
+    public TransfiguratorRecipeBuilder solution(TagKey<Item> solution) {
+        return solution(Ingredient.of(solution));
     }
 
     public TransfiguratorRecipeBuilder nutrient(Ingredient nutrient) {
@@ -128,7 +142,7 @@ public class TransfiguratorRecipeBuilder implements RecipeBuilder {
         if (advancement.getCriteria().isEmpty()) {
             LostInTime.LOGGER.warn("No way of obtaining recipe {}", pRecipeId);
         }
-        pFinishedRecipeConsumer.accept(new Result(pRecipeId, group, input, nutrient, failedResults, result, processingTime, type, advancement));
+        pFinishedRecipeConsumer.accept(new Result(pRecipeId, group, input, solution, nutrient, failedResults, result, processingTime, type, advancement));
     }
 
     protected ResourceLocation getRecipeId() {
@@ -140,6 +154,7 @@ public class TransfiguratorRecipeBuilder implements RecipeBuilder {
         private final ResourceLocation id;
         private final String group;
         private final Ingredient input;
+        private final Ingredient solution;
         private final Ingredient nutrient;
         private final List<TransfiguratorRecipe.WeightedItem> failedResults;
         private final ItemStack result;
@@ -147,10 +162,11 @@ public class TransfiguratorRecipeBuilder implements RecipeBuilder {
         private final TransfiguratorRecipe.Type type;
         private final Advancement.Builder advancement;
 
-        public Result(ResourceLocation id, String group, Ingredient input, Ingredient nutrient, List<TransfiguratorRecipe.WeightedItem> failedResults, ItemStack result, int processingTime, TransfiguratorRecipe.Type type, Advancement.Builder advancement) {
+        public Result(ResourceLocation id, String group, Ingredient input, Ingredient solution, Ingredient nutrient, List<TransfiguratorRecipe.WeightedItem> failedResults, ItemStack result, int processingTime, TransfiguratorRecipe.Type type, Advancement.Builder advancement) {
             this.id = id;
             this.group = group;
             this.input = input;
+            this.solution = solution;
             this.nutrient = nutrient;
             this.failedResults = failedResults;
             this.result = result;
@@ -165,6 +181,7 @@ public class TransfiguratorRecipeBuilder implements RecipeBuilder {
                 pJson.addProperty("group", group);
             }
             pJson.add("input", input.toJson());
+            pJson.add("solution", solution.toJson());
             pJson.add("nutrient", nutrient.toJson());
             
             JsonObject resultObj = new JsonObject();

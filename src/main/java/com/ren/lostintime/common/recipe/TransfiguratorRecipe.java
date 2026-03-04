@@ -3,6 +3,7 @@ package com.ren.lostintime.common.recipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.ren.lostintime.common.init.ItemInit;
 import com.ren.lostintime.common.init.RecipeInit;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
@@ -26,15 +27,17 @@ public class TransfiguratorRecipe implements Recipe<Container> {
 
     private final ResourceLocation id;
     private final Ingredient input;
+    private final Ingredient solution;
     private final Ingredient nutrient;
     private final List<WeightedItem> failedResults;
     private final ItemStack result;
     private final int processingTime;
     private final Type type;
 
-    public TransfiguratorRecipe(ResourceLocation id, Ingredient input, Ingredient nutrient, List<WeightedItem> failedResults, ItemStack result, int processingTime, Type type) {
+    public TransfiguratorRecipe(ResourceLocation id, Ingredient input, Ingredient solution, Ingredient nutrient, List<WeightedItem> failedResults, ItemStack result, int processingTime, Type type) {
         this.id = id;
         this.input = input;
+        this.solution = solution;
         this.nutrient = nutrient;
         this.failedResults = failedResults;
         this.result = result;
@@ -45,7 +48,25 @@ public class TransfiguratorRecipe implements Recipe<Container> {
     @Override
     public boolean matches(Container pContainer, Level pLevel) {
         // Slot 0 is input, Slot 3 is nutrient
-        return input.test(pContainer.getItem(0)) && nutrient.test(pContainer.getItem(1));
+        //return input.test(pContainer.getItem(0)) && nutrient.test(pContainer.getItem(1));
+        ItemStack inputStack = pContainer.getItem(0);
+        ItemStack nutrientStack = pContainer.getItem(2);
+        ItemStack solutionStack = pContainer.getItem(3);
+
+        if (!this.input.test(inputStack)) return false;
+
+        boolean isNutrientValid = this.nutrient.test(nutrientStack) || nutrientStack.is(ItemInit.UNIVERSAL_NUTRIENT.get());
+        if (!isNutrientValid) return false;
+
+        boolean recipePideSolution = this.solution != null && this.solution != Ingredient.EMPTY;
+
+        if (recipePideSolution) {
+            if (!this.solution.test(solutionStack)) return false;
+        } else {
+            if (!solutionStack.isEmpty()) return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -80,6 +101,10 @@ public class TransfiguratorRecipe implements Recipe<Container> {
 
     public Ingredient getInput() {
         return input;
+    }
+
+    public Ingredient getSolution() {
+        return solution;
     }
 
     public Ingredient getNutrient() {
@@ -129,6 +154,7 @@ public class TransfiguratorRecipe implements Recipe<Container> {
         @Override
         public TransfiguratorRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
             Ingredient input = Ingredient.fromJson(pSerializedRecipe.get("input"));
+            Ingredient solution = pSerializedRecipe.has("solution") ? Ingredient.fromJson(pSerializedRecipe.get("solution")) : Ingredient.EMPTY;
             Ingredient nutrient = Ingredient.fromJson(pSerializedRecipe.get("nutrient"));
             ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(pSerializedRecipe, "result"));
             int processingTime = GsonHelper.getAsInt(pSerializedRecipe, "processing_time", 200);
@@ -145,12 +171,13 @@ public class TransfiguratorRecipe implements Recipe<Container> {
                 }
             }
 
-            return new TransfiguratorRecipe(pRecipeId, input, nutrient, failedResults, result, processingTime, type);
+            return new TransfiguratorRecipe(pRecipeId, input, solution, nutrient, failedResults, result, processingTime, type);
         }
 
         @Override
         public @Nullable TransfiguratorRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
             Ingredient input = Ingredient.fromNetwork(pBuffer);
+            Ingredient solution = Ingredient.fromNetwork(pBuffer);
             Ingredient nutrient = Ingredient.fromNetwork(pBuffer);
             ItemStack result = pBuffer.readItem();
             int processingTime = pBuffer.readVarInt();
@@ -164,12 +191,13 @@ public class TransfiguratorRecipe implements Recipe<Container> {
                 failedResults.add(new WeightedItem(stack, weight));
             }
 
-            return new TransfiguratorRecipe(pRecipeId, input, nutrient, failedResults, result, processingTime, type);
+            return new TransfiguratorRecipe(pRecipeId, input, solution, nutrient, failedResults, result, processingTime, type);
         }
 
         @Override
         public void toNetwork(FriendlyByteBuf pBuffer, TransfiguratorRecipe pRecipe) {
             pRecipe.input.toNetwork(pBuffer);
+            pRecipe.solution.toNetwork(pBuffer);
             pRecipe.nutrient.toNetwork(pBuffer);
             pBuffer.writeItem(pRecipe.result);
             pBuffer.writeVarInt(pRecipe.processingTime);

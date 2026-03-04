@@ -18,11 +18,14 @@
     "item": "lostintime:dodo_soul_configuration"
   },
   "nutrient": {
-    "item": "lostintime:universal_nutrient"
+    "item": "lostintime:rich_nutrient"
   },
   "processingType": "egg",
   "processing_time": 200,
   "result": {
     "item": "lostintime:dodo_egg"
+  },
+  "solution": {
+    "item": "lostintime:carmine_solution"
   }
 }

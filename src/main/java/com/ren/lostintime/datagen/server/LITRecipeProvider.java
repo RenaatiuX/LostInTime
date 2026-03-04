@@ -432,27 +432,34 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("hasItem", has(ItemInit.CLADOPHLEBIS_FOSSIL.get()))
                 .save(pWriter);
 
-        TransfiguratorRecipeBuilder.transfigurator(BlockInit.DODO_EGG.get(), TransfiguratorRecipe.Type.EGG)
-                .addFailedResult(Items.ROTTEN_FLESH, 7)
-                .addFailedResult(ItemInit.RAW_DODO.get(), 2)
-                .input(ItemInit.DODO_SOUL_CFG.get())
-                .unlockedBy("hasItem", has(ItemInit.DODO_SOUL_CFG.get())).save(pWriter);
         TransfiguratorRecipeBuilder.transfigurator(BlockInit.ANOMALOCARIS_ROE.get(), TransfiguratorRecipe.Type.EGG)
                 .addFailedResult(Items.ROTTEN_FLESH, 7)
                 .addFailedResult(ItemInit.RAW_ANOMALOCARIS.get(), 2)
                 .input(ItemInit.ANOMALOCARIS_SOUL_CFG.get())
+                .solution(ItemInit.TEAL_SOLUTION.get())
+                .nutrient(ItemInit.GELATINOUS_NUTRIENT.get())
                 .unlockedBy("hasItem", has(ItemInit.ANOMALOCARIS_SOUL_CFG.get())).save(pWriter);
         TransfiguratorRecipeBuilder.transfigurator(BlockInit.BOTHRIOLEPIS_ROE.get(), TransfiguratorRecipe.Type.EGG)
                 .addFailedResult(Items.ROTTEN_FLESH, 7)
                 .addFailedResult(ItemInit.RAW_BOTHRIOLEPIS.get(), 2)
                 .input(ItemInit.BOTHRIOLEPIS_SOUL_CFG.get())
+                .solution(ItemInit.DELFT_SOLUTION.get())
+                .nutrient(ItemInit.RICH_NUTRIENT.get())
                 .unlockedBy("hasItem", has(ItemInit.BOTHRIOLEPIS_SOUL_CFG.get())).save(pWriter);
+        TransfiguratorRecipeBuilder.transfigurator(BlockInit.DODO_EGG.get(), TransfiguratorRecipe.Type.EGG)
+                .addFailedResult(Items.ROTTEN_FLESH, 7)
+                .addFailedResult(ItemInit.RAW_DODO.get(), 2)
+                .input(ItemInit.DODO_SOUL_CFG.get())
+                .solution(ItemInit.CARMINE_SOLUTION.get())
+                .nutrient(ItemInit.RICH_NUTRIENT.get())
+                .unlockedBy("hasItem", has(ItemInit.DODO_SOUL_CFG.get())).save(pWriter);
         TransfiguratorRecipeBuilder.transfigurator(BlockInit.ENDOCERAS_EGG.get(), TransfiguratorRecipe.Type.EGG)
                 .addFailedResult(Items.ROTTEN_FLESH, 7)
                 .addFailedResult(ItemInit.RAW_ENDOCERAS.get(), 2)
                 .input(ItemInit.ENDOCERAS_SOUL_CFG.get())
+                .solution(ItemInit.CINEREOUS_SOLUTION.get())
+                .nutrient(ItemInit.GELATINOUS_NUTRIENT.get())
                 .unlockedBy("hasItem", has(ItemInit.ENDOCERAS_SOUL_CFG.get())).save(pWriter);
-
     }
 
     private void addFossilRecipe(Consumer<FinishedRecipe> pWriter, ItemLike input, boolean isDeepslate, Consumer<IdentificationBuilder> builderConsumer) {

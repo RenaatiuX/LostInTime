@@ -21,6 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -200,15 +201,32 @@ public class TransfiguratorBE extends BlockEntity implements MenuProvider {
         return new TransfiguratorMenu(pContainerId, pPlayerInventory, this, this.dataAccess);
     }
 
-    protected boolean canProcessRecipe() {
-        ItemStack translatorStack = itemHandler.getStackInSlot(1);
+    protected boolean canProcessRecipe(TransfiguratorRecipe recipe) {
+        /*ItemStack translatorStack = itemHandler.getStackInSlot(1);
         if (translatorStack.isEmpty() || !Config.transfiguratorTranslators.containsKey(translatorStack.getItem()))
             return false;
-        return itemHandler.getStackInSlot(4).isEmpty();
+        return itemHandler.getStackInSlot(4).isEmpty();*/
+        ItemStack translatorStack = itemHandler.getStackInSlot(1);
+        if (translatorStack.isEmpty() || !Config.transfiguratorTranslators.containsKey(translatorStack.getItem())) {
+            return false;
+        }
+
+        if (itemHandler.getStackInSlot(0).isEmpty()) {
+            return false;
+        }
+
+        ItemStack outputSlot = itemHandler.getStackInSlot(4);
+        if (outputSlot.isEmpty()) {
+            return true;
+        }
+
+        ItemStack resultStack = recipe.getResultItem(level.registryAccess());
+        if (!outputSlot.is(resultStack.getItem())) return false;
+        return outputSlot.getCount() + resultStack.getCount() <= outputSlot.getMaxStackSize();
     }
 
     protected void finishProcessingRecipe(TransfiguratorRecipe recipe) {
-        ItemStack translatorStack = itemHandler.getStackInSlot(1);
+        /*ItemStack translatorStack = itemHandler.getStackInSlot(1);
         float chance = Config.transfiguratorTranslators.getOrDefault(translatorStack.getItem(), 0f);
         ItemStack resultStack;
 
@@ -225,6 +243,25 @@ public class TransfiguratorBE extends BlockEntity implements MenuProvider {
             itemHandler.extractItem(1, 1, false);
             itemHandler.extractItem(2, 1, false);
         }
+        reset();*/
+        ItemStack translatorStack = itemHandler.getStackInSlot(1);
+        float successChance = Config.transfiguratorTranslators.getOrDefault(translatorStack.getItem(), 0f);
+        ItemStack finalResult;
+
+        if (level.random.nextFloat() < successChance) {
+            finalResult = recipe.getResultItem(level.registryAccess()).copy();
+        } else {
+            finalResult = recipe.getFailedResult(level.random);
+        }
+
+        itemHandler.insertItem(4, finalResult, false);
+        itemHandler.extractItem(0, 1, false); // Soul Config
+        if (recipe.getSolution() != null && recipe.getSolution() != Ingredient.EMPTY) {
+            itemHandler.extractItem(3, 1, false);
+        } // Solution
+        itemHandler.extractItem(2, 1, false); // Nutrient
+        itemHandler.extractItem(1, 1, false);
+
         reset();
     }
 
@@ -241,10 +278,51 @@ public class TransfiguratorBE extends BlockEntity implements MenuProvider {
     public static void tick(Level level, BlockPos pos, BlockState state, TransfiguratorBE be) {
         if (level.isClientSide) return;
 
-        ItemStack inputStack = be.itemHandler.getStackInSlot(0);
-        ItemStack nutrientStack = be.itemHandler.getStackInSlot(2);
+        ItemStack translator = be.itemHandler.getStackInSlot(1);
+        if (translator.isEmpty() || !Config.transfiguratorTranslators.containsKey(translator.getItem())) {
+            if (be.cookingProgress > 0) be.reset();
+            updateState(level, pos, state, false);
+            return;
+        };
 
-        if (!be.canProcessRecipe()) {
+        SimpleContainer tempContainer = new SimpleContainer(5);
+        for (int i = 0; i < 5; i++) {
+            tempContainer.setItem(i, be.itemHandler.getStackInSlot(i));
+        }
+
+        Optional<TransfiguratorRecipe> match = level.getRecipeManager()
+                .getRecipeFor(RecipeInit.TRANSFIGURATOR_RECIPE.get(), tempContainer, level);
+
+        if (match.isPresent()) {
+            TransfiguratorRecipe recipe = match.get();
+
+            ItemStack outputSlot = be.itemHandler.getStackInSlot(4);
+            ItemStack resultStack = recipe.getResultItem(level.registryAccess());
+            boolean canInsert = outputSlot.isEmpty() ||
+                    (outputSlot.is(resultStack.getItem()) && outputSlot.getCount() + resultStack.getCount() <= outputSlot.getMaxStackSize());
+
+            if (canInsert) {
+                be.cookingTotalTime = recipe.getProcessingTime();
+                if (be.currentType != recipe.getProcessingType()) {
+                    be.currentType = recipe.getProcessingType();
+                    be.setChanged();
+                }
+
+                be.cookingProgress++;
+
+                if (be.cookingProgress >= be.cookingTotalTime) {
+                    be.finishProcessingRecipe(recipe);
+                }
+                updateState(level, pos, state, true);
+            } else {
+                updateState(level, pos, state, false);
+            }
+        } else {
+            if (be.cookingProgress > 0) be.reset();
+            updateState(level, pos, state, false);
+        }
+
+        /*if (!be.canProcessRecipe()) {
             be.cookingProgress = 0;
             return;
         }
@@ -289,6 +367,16 @@ public class TransfiguratorBE extends BlockEntity implements MenuProvider {
             var otherHalfPos = doubleBlockHalf == DoubleBlockHalf.LOWER ? pos.above() : pos.below();
             var otherHalfState = level.getBlockState(otherHalfPos);
             level.setBlock(otherHalfPos, otherHalfState.setValue(SoulExtractorBlock.ON, be.cookingProgress > 0), Block.UPDATE_ALL);
+        }*/
+    }
+
+    private static void updateState(Level level, BlockPos pos, BlockState state, boolean isWorking) {
+        if (state.getValue(SoulExtractorBlock.ON) != isWorking) {
+            level.setBlock(pos, state.setValue(SoulExtractorBlock.ON, isWorking), Block.UPDATE_ALL);
+            var doubleBlockHalf = state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF);
+            var otherHalfPos = doubleBlockHalf == DoubleBlockHalf.LOWER ? pos.above() : pos.below();
+            var otherHalfState = level.getBlockState(otherHalfPos);
+            level.setBlock(otherHalfPos, otherHalfState.setValue(SoulExtractorBlock.ON, isWorking), Block.UPDATE_ALL);
         }
     }
 }

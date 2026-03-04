@@ -18,11 +18,14 @@
     "item": "lostintime:anomalocaris_soul_configuration"
   },
   "nutrient": {
-    "item": "lostintime:universal_nutrient"
+    "item": "lostintime:gelatinous_nutrient"
   },
   "processingType": "egg",
   "processing_time": 200,
   "result": {
     "item": "lostintime:anomalocaris_roe"
+  },
+  "solution": {
+    "item": "lostintime:teal_solution"
   }
 }

@@ -3,6 +3,7 @@ package com.ren.lostintime.common.menu;
 import com.ren.lostintime.common.blockentity.TransfiguratorBE;
 import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.init.BlockInit;
+import com.ren.lostintime.common.init.ItemInit;
 import com.ren.lostintime.common.init.MenuInit;
 import com.ren.lostintime.common.init.RecipeInit;
 import net.minecraft.network.FriendlyByteBuf;
@@ -53,9 +54,9 @@ public class TransfiguratorMenu extends AbstractContainerMenu {
         addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 3, 64, 27){
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
-                return false;
+                return isValidSolution(stack);
             }
-        }); // something which doesnt exist
+        }); //Solution
         addSlot(new SlotItemHandler(blockEntity.getItemHandler(), 4, 148, 36){
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
@@ -74,9 +75,15 @@ public class TransfiguratorMenu extends AbstractContainerMenu {
                 .stream().anyMatch(r -> r.getInput().test(stack));
     }
 
-    private boolean isValidNutrient(ItemStack stack) {
+    private boolean isValidSolution(ItemStack stack) {
         return blockEntity.getLevel().getRecipeManager().getAllRecipesFor(RecipeInit.TRANSFIGURATOR_RECIPE.get())
-                .stream().anyMatch(r -> r.getNutrient().test(stack));
+                .stream().anyMatch(r -> r.getSolution().test(stack));
+    }
+
+    private boolean isValidNutrient(ItemStack stack) {
+        return stack.getItem() == ItemInit.UNIVERSAL_NUTRIENT.get() ||
+                blockEntity.getLevel().getRecipeManager().getAllRecipesFor(RecipeInit.TRANSFIGURATOR_RECIPE.get())
+                        .stream().anyMatch(r -> r.getNutrient().test(stack));
     }
 
     public boolean isCrafting() {
