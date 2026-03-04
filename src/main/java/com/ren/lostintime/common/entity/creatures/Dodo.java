@@ -8,6 +8,7 @@ import com.ren.lostintime.common.entity.goal.MoveToEntityGoal;
 import com.ren.lostintime.common.entity.util.IEggLayer;
 import com.ren.lostintime.common.entity.util.ISleepingEntity;
 import com.ren.lostintime.common.entity.util.SleepController;
+import com.ren.lostintime.common.entity.util.SleepType;
 import com.ren.lostintime.common.init.*;
 import com.ren.lostintime.datagen.server.LITTags;
 import net.minecraft.core.BlockPos;
@@ -61,7 +62,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-public class Dodo extends LITAnimal implements GeoEntity, IEggLayer {
+public class Dodo extends LITAnimal implements GeoEntity, IEggLayer, ISleepingEntity {
 
     private static final EntityDataAccessor<Boolean> PECKING = SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> HAS_EGG = SynchedEntityData.defineId(Dodo.class, EntityDataSerializers.BOOLEAN);
@@ -174,8 +175,13 @@ public class Dodo extends LITAnimal implements GeoEntity, IEggLayer {
     }
 
     @Override
+    public SleepType getSleepType() {
+        return SleepType.DIURNAL;
+    }
+
+    @Override
     public @Nullable SleepController<?> getSleepController() {
-        return new SleepController<>(this, SleepController.SleepType.DIURNAL);
+        return new SleepController<>(this);
     }
 
     @Override

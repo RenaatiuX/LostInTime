@@ -4,19 +4,13 @@ import net.minecraft.world.entity.Mob;
 
 public class SleepController<T extends Mob & ISleepingEntity> {
 
-    public enum SleepType {
-        DIURNAL, // Active during day, sleeps at night
-        NOCTURNAL // Active during night, sleeps at day
-    }
 
     private final T entity;
-    private final SleepType sleepType;
     private int forceWakeTicks = 0;
     private boolean initialized = false;
 
-    public SleepController(T entity, SleepType sleepType) {
+    public SleepController(T entity) {
         this.entity = entity;
-        this.sleepType = sleepType;
     }
 
     public void tick() {
@@ -67,7 +61,7 @@ public class SleepController<T extends Mob & ISleepingEntity> {
 
         boolean isDay = entity.level().isDay();
 
-        if (sleepType == SleepType.DIURNAL) {
+        if (entity.getSleepType() == SleepType.DIURNAL) {
             return !isDay;
         } else {
             return isDay;
@@ -84,9 +78,5 @@ public class SleepController<T extends Mob & ISleepingEntity> {
         if (entity.isSleeping()) {
             setSleeping(false);
         }
-    }
-
-    public SleepType getSleepType() {
-        return sleepType;
     }
 }

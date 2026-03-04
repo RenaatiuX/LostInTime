@@ -63,7 +63,6 @@ public class Daeodon extends LITTamableAnimal implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private int temper;
-    private DaeodonAggression currentAggression = DaeodonAggression.NONE;
     private int hungerTicks = 0;
     private int aggressionCooldown = 0;
 
@@ -80,11 +79,6 @@ public class Daeodon extends LITTamableAnimal implements GeoEntity {
                 .add(Attributes.ATTACK_DAMAGE, 8.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.5D)
                 .add(AttributeInit.MAX_HUNGER.get(), 200D);
-    }
-
-    @Override
-    public @Nullable SleepController<?> getSleepController() {
-        return new SleepController<>(this, SleepController.SleepType.DIURNAL);
     }
 
     @Override
@@ -365,7 +359,7 @@ public class Daeodon extends LITTamableAnimal implements GeoEntity {
     }
 
     public boolean isSuitablePrey(LivingEntity entity) {
-        if (!isWithinRestriction(entity.blockPosition()) || !isHungry())
+        if (!isWithinRestriction(entity.blockPosition()) && !isHungry())
             return false;
         double distSqr = distanceToSqr(entity);
         if (!isHungry() && this.getBrain().isMemoryValue(MemoryModuleType.ATTACK_TARGET, entity) ? distSqr >= 100 : distSqr >= 25)

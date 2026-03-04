@@ -5,6 +5,7 @@ import com.mojang.serialization.Dynamic;
 import com.ren.lostintime.common.entity.LITAnimal;
 import com.ren.lostintime.common.entity.LITWaterAnimal;
 import com.ren.lostintime.common.entity.ai.PlesiosaurusAi;
+import com.ren.lostintime.common.entity.util.ISleepingEntity;
 import com.ren.lostintime.common.init.EntityInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -232,10 +233,5 @@ public class Plesiosaurus extends LITWaterAnimal implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public boolean canSleep() {
-        return false;
     }
 }

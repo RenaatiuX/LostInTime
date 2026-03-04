@@ -23,7 +23,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 
-public abstract class LITAnimal extends Animal implements ISleepingEntity {
+public abstract class LITAnimal extends Animal {
 
     public static final EntityDataAccessor<Boolean> IS_SLEEPING = SynchedEntityData.defineId(LITAnimal.class, EntityDataSerializers.BOOLEAN);
 
@@ -45,7 +45,7 @@ public abstract class LITAnimal extends Animal implements ISleepingEntity {
      * Returns the {@link SleepController} for this animal.
      * Subclasses should override this to provide their specific sleep logic.
      *
-     * @return the sleep controller, or {@code null} if this animal does not use one.
+     * @return the sleep controller, or {@code null} if this animal does not use one, this can also be used with the brain system, then this must return null, otherwise both system might interfere.
      */
     @Nullable
     public SleepController<?> getSleepController() {
@@ -63,12 +63,11 @@ public abstract class LITAnimal extends Animal implements ISleepingEntity {
 
     @Override
     public boolean isSleeping() {
-        return this.sleepControllerOptional.isPresent() ? this.entityData.get(IS_SLEEPING) : super.isSleeping();
+        return this.entityData.hasItem(IS_SLEEPING) ? this.entityData.get(IS_SLEEPING) : super.isSleeping();
     }
 
-    @Override
     public void setSleeping(boolean sleeping) {
-        if (this.sleepControllerOptional.isPresent()) {
+        if (this.entityData.hasItem(IS_SLEEPING)) {
             this.entityData.set(IS_SLEEPING, sleeping);
         }
     }

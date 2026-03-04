@@ -16,10 +16,17 @@ public interface ISleepingEntity {
 
     /**
      * Determines if the entity is currently capable of falling asleep.
-     * this allows for additional conditions besides {@link com.ren.lostintime.common.entity.util.SleepController.SleepType}
+     * this allows for additional conditions besides {@link SleepType}
      * @return true if the entity can sleep, false otherwise.
      */
     default boolean canSleep() {
         return true;
     }
+
+    /**
+     * Gets the sleep type configuration for this entity.
+     *
+     * @return the {@link SleepType} defining when this entity sleeps.
+     */
+    SleepType getSleepType();
 }
