@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "cooked_pleiosaurus_meat": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "lostintime:raw_plesiosaurus_meat"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "lostintime:cooked_plesiosaurus_meat"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "cooked_pleiosaurus_meat",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lostintime:cooked_plesiosaurus_meat"
+    ]
+  },
+  "sends_telemetry_event": false
+}

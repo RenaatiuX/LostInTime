@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -32,9 +33,11 @@ public class LITBlockStateProvider extends BlockStateProvider {
     protected void registerStatesAndModels() {
         logBlock((RotatedPillarBlock) BlockInit.MANGO_LOG.get());
         blockItem(BlockInit.MANGO_LOG);
-
         logBlock((RotatedPillarBlock) BlockInit.ARAUCARIOXYLON_LOG.get());
         blockItem(BlockInit.ARAUCARIOXYLON_LOG);
+        logBlock((RotatedPillarBlock) BlockInit.STRIPPED_ARAUCARIOXYLON_LOG.get());
+        blockItem(BlockInit.STRIPPED_ARAUCARIOXYLON_LOG);
+
         leavesBlock(BlockInit.ARAUCARIOXYLON_LEAVES);
         saplingBlock(BlockInit.ARAUCARIOXYLON_SAPLING);
         block(BlockInit.ARAUCARIOXYLON_PLANKS.get());
@@ -63,13 +66,18 @@ public class LITBlockStateProvider extends BlockStateProvider {
         createBabyRoeBlock(BlockInit.BOTHRIOLEPIS_ROE.get());
         createCrossRoeBlock(BlockInit.ENDOCERAS_EGG.get());
         createBabyRoeBlock(BlockInit.ANOMALOCARIS_ROE.get());
+        createBabyRoeBlock(BlockInit.MASTODONSAURUS_EGG.get());
         customParentBlock(BlockInit.TITANOSARCOLITES, "titanosarcolites_model", "0");
         giantTitanosarcolites(BlockInit.GIANT_TITANOSARCOLITES.get());
 
+        block(BlockInit.SPINEL_ORE.get());
+        block(BlockInit.ZIRCON_ORE.get());
         block(BlockInit.QUATERNARY_FOSSIL_BLOCK.get());
         block(BlockInit.NEOGENE_FOSSIL_BLOCK.get());
         block(BlockInit.PALEOGENE_FOSSIL_BLOCK.get());
         block(BlockInit.CRETACEOUS_FOSSIL_BLOCK.get());
+        block(BlockInit.DEEPSLATE_SPINEL_ORE.get());
+        block(BlockInit.DEEPSLATE_ZIRCON_ORE.get());
         block(BlockInit.DEEPSLATE_JURASSIC_FOSSIL_BLOCK.get());
         block(BlockInit.DEEPSLATE_TRIASSIC_FOSSIL_BLOCK.get());
         block(BlockInit.DEEPSLATE_PERMIAN_FOSSIL_BLOCK.get());
@@ -81,6 +89,9 @@ public class LITBlockStateProvider extends BlockStateProvider {
 
         block(BlockInit.SANDSTONE_BRICKS.get());
         block(BlockInit.SMALL_SANDSTONE_BRICKS.get());
+        block(BlockInit.AMBER_BLOCK.get());
+        block(BlockInit.SPINEL_BLOCK.get());
+        block(BlockInit.ZIRCON_BLOCK.get());
 
         soulExtractorModels(BlockInit.SOUL_EXTRACTOR.get());
         soulExtractor(BlockInit.SOUL_EXTRACTOR.get());
@@ -98,11 +109,42 @@ public class LITBlockStateProvider extends BlockStateProvider {
         simplePlant(BlockInit.CLADOPHLEBIS);
         simplePlant(BlockInit.CONIOPTERIS);
         simplePlant(BlockInit.COOKSONIA);
+        simplePlant(BlockInit.GONDWANAGARICITES);
+
+        hugeMushroomBlock(BlockInit.GONDWANAGARICITES_BLOCK.get(), modLoc("block/gondwanagaricites_block"));
+        hugeMushroomBlock(BlockInit.GONDWANAGARICITES_STEM.get(), modLoc("block/gondwanagaricites_stem"));
 
         randomPlantVariants(BlockInit.RED_ALGAE, 3);
 
         doubleCoralPlant(BlockInit.DEAD_LARGE_PIPE_SPONGE);
         doubleCoralPlant(BlockInit.LARGE_PIPE_SPONGE);
+
+        axisBlock((RotatedPillarBlock) BlockInit.ARAUCARIOXYLON_WOOD.get(),
+                modLoc("block/araucarioxylon_log"),
+                modLoc("block/araucarioxylon_log")
+        );
+        blockItem(BlockInit.ARAUCARIOXYLON_WOOD);
+
+        axisBlock((RotatedPillarBlock) BlockInit.STRIPPED_ARAUCARIOXYLON_WOOD.get(),
+                modLoc("block/stripped_araucarioxylon_log"),
+                modLoc("block/stripped_araucarioxylon_log")
+        );
+        blockItem(BlockInit.STRIPPED_ARAUCARIOXYLON_WOOD);
+
+        signBlock(((StandingSignBlock) BlockInit.ARAUCARIOXYLON_SIGN.get()), ((WallSignBlock) BlockInit.ARAUCARIOXYLON_WALL_SIGN.get()),
+                blockTexture(BlockInit.ARAUCARIOXYLON_PLANKS.get()));
+
+        hangingSignBlock(BlockInit.ARAUCARIOXYLON_HANGING_SIGN.get(), BlockInit.ARAUCARIOXYLON_WALL_HANGING_SIGN.get(), blockTexture(BlockInit.ARAUCARIOXYLON_PLANKS.get()));
+    }
+
+    public void hangingSignBlock(Block signBlock, Block wallSignBlock, ResourceLocation texture) {
+        ModelFile sign = models().sign(blockName(signBlock), texture);
+        hangingSignBlock(signBlock, wallSignBlock, sign);
+    }
+
+    public void hangingSignBlock(Block signBlock, Block wallSignBlock, ModelFile sign) {
+        simpleBlock(signBlock, sign);
+        simpleBlock(wallSignBlock, sign);
     }
 
     private void simplePlant(RegistryObject<Block> blockRO) {
@@ -150,6 +192,49 @@ public class LITBlockStateProvider extends BlockStateProvider {
         }
         getVariantBuilder(block).partialState().setModels(models);
         simpleBlockItem(block, models[0].model);
+    }
+
+    private void hugeMushroomBlock(Block block, ResourceLocation texture) {
+        String name = blockName(block);
+
+        ModelFile outsideModel = models().withExistingParent(name, mcLoc("block/template_single_face"))
+                .texture("texture", texture);
+
+        ModelFile insideModel = new ModelFile.UncheckedModelFile(mcLoc("block/mushroom_block_inside"));
+
+        MultiPartBlockStateBuilder builder = getMultipartBuilder(block);
+
+        builder.part().modelFile(outsideModel).rotationX(270).uvLock(true).addModel()
+                .condition(HugeMushroomBlock.UP, true).end()
+                .part().modelFile(insideModel).rotationX(270).uvLock(false).addModel()
+                .condition(HugeMushroomBlock.UP, false).end();
+
+        builder.part().modelFile(outsideModel).rotationX(90).uvLock(true).addModel()
+                .condition(HugeMushroomBlock.DOWN, true).end()
+                .part().modelFile(insideModel).rotationX(90).uvLock(false).addModel()
+                .condition(HugeMushroomBlock.DOWN, false).end();
+
+        builder.part().modelFile(outsideModel).addModel()
+                .condition(HugeMushroomBlock.NORTH, true).end()
+                .part().modelFile(insideModel).addModel()
+                .condition(HugeMushroomBlock.NORTH, false).end();
+
+        builder.part().modelFile(outsideModel).rotationY(90).uvLock(true).addModel()
+                .condition(HugeMushroomBlock.EAST, true).end()
+                .part().modelFile(insideModel).rotationY(90).uvLock(false).addModel()
+                .condition(HugeMushroomBlock.EAST, false).end();
+
+        builder.part().modelFile(outsideModel).rotationY(180).uvLock(true).addModel()
+                .condition(HugeMushroomBlock.SOUTH, true).end()
+                .part().modelFile(insideModel).rotationY(180).uvLock(false).addModel()
+                .condition(HugeMushroomBlock.SOUTH, false).end();
+
+        builder.part().modelFile(outsideModel).rotationY(270).uvLock(true).addModel()
+                .condition(HugeMushroomBlock.WEST, true).end()
+                .part().modelFile(insideModel).rotationY(270).uvLock(false).addModel()
+                .condition(HugeMushroomBlock.WEST, false).end();
+
+        simpleBlockItem(block, models().cubeAll(name + "_inventory", texture));
     }
 
     private void saplingBlock(RegistryObject<Block> blockRegistryObject) {

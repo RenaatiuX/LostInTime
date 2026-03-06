@@ -8,6 +8,11 @@ import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 
 public class HylonomusModel extends DefaultedEntityGeoModel<Hylonomus> {
 
+    private static final String ADULT_TEXTURE = "textures/entity/hylonomus/adult/";
+    private static final String BABY_TEXTURE = "textures/entity/hylonomus/baby/";
+    private static final String BABY_ANIM = "animations/entity/hylonomus_baby.animation.json";
+    private static final String BABY_GEO = "geo/entity/hylonomus_baby.geo.json";
+
     public HylonomusModel() {
         super(ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "hylonomus"));
     }
@@ -15,7 +20,7 @@ public class HylonomusModel extends DefaultedEntityGeoModel<Hylonomus> {
     @Override
     public ResourceLocation getModelResource(Hylonomus animatable) {
         if (animatable.isBaby()) {
-            return ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "geo/entity/hylonomus_baby.geo.json");
+            return ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, BABY_GEO);
         }
         return super.getModelResource(animatable);
     }
@@ -23,7 +28,7 @@ public class HylonomusModel extends DefaultedEntityGeoModel<Hylonomus> {
     @Override
     public ResourceLocation getAnimationResource(Hylonomus animatable) {
         if (animatable.isBaby()) {
-            return ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "animations/entity/hylonomus_baby.animation.json");
+            return ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, BABY_ANIM);
         }
         return super.getAnimationResource(animatable);
     }
@@ -32,7 +37,7 @@ public class HylonomusModel extends DefaultedEntityGeoModel<Hylonomus> {
     public ResourceLocation getTextureResource(Hylonomus animatable) {
         HylonomusVariant variant = animatable.getVariant();
 
-        String folder = animatable.isBaby() ? "textures/entity/hylonomus/baby/" : "textures/entity/hylonomus/adult/";
+        String folder = animatable.isBaby() ? BABY_TEXTURE : ADULT_TEXTURE;
 
         return switch (variant) {
             case LEAF -> ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, folder + "leaf.png");

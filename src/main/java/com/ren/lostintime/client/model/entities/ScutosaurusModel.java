@@ -7,22 +7,26 @@ import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 
 public class ScutosaurusModel extends DefaultedEntityGeoModel<Scutosaurus> {
 
+    private static final String BABY_TEXTURE = "textures/entity/scutosaurus_baby.png";
+    private static final String BABY_ANIM = "animations/entity/scutosaurus_baby.animation.json";
+    private static final String BABY_GEO = "geo/entity/scutosaurus_baby.geo.json";
+
     public ScutosaurusModel() {
         super(ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "scutosaurus"), true);
     }
 
     @Override
     public ResourceLocation getTextureResource(Scutosaurus animatable) {
-        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/entity/scutosaurus_baby.png") : super.getTextureResource(animatable);
+        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, BABY_TEXTURE) : super.getTextureResource(animatable);
     }
 
     @Override
     public ResourceLocation getModelResource(Scutosaurus animatable) {
-        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "geo/entity/scutosaurus_baby.geo.json") : super.getModelResource(animatable);
+        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, BABY_GEO) : super.getModelResource(animatable);
     }
 
     @Override
     public ResourceLocation getAnimationResource(Scutosaurus animatable) {
-        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "animations/entity/scutosaurus_baby.animation.json") : super.getAnimationResource(animatable);
+        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, BABY_ANIM) : super.getAnimationResource(animatable);
     }
 }

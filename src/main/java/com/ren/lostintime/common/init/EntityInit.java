@@ -2,7 +2,8 @@ package com.ren.lostintime.common.init;
 
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.entity.creatures.*;
-import com.ren.lostintime.common.entity.misc.LITBoatEntity;
+import com.ren.lostintime.common.entity.misc.LITBoat;
+import com.ren.lostintime.common.entity.misc.LITChestBoat;
 import com.ren.lostintime.common.entity.projectile.GuardianSpike;
 import com.ren.lostintime.common.entity.projectile.LITThrownEgg;
 import com.ren.lostintime.common.entity.projectile.ThrownKnife;
@@ -46,8 +47,10 @@ public class EntityInit {
             GuardianSpike::new, 0.5F, 0.5F);
     public static final RegistryObject<EntityType<LITThrownEgg>> LIT_THROWN_EGG = registerProjectile("lit_thrown_egg",
             LITThrownEgg::new, 0.25F, 0.25F);
-    public static final RegistryObject<EntityType<LITBoatEntity>> LIT_BOAT = registerMiscEntity("lit_boat",
-            LITBoatEntity::new, 1.375F, 0.5625F);
+    public static final RegistryObject<EntityType<LITBoat>> LIT_BOAT = registerMiscEntity("lit_boat",
+            LITBoat::new, 1.375F, 0.5625F);
+    public static final RegistryObject<EntityType<LITChestBoat>> LIT_CHEST_BOAT = registerMiscEntity("lit_chest_boat",
+            LITChestBoat::new, 1.375F, 0.5625F);
     public static final RegistryObject<EntityType<ThrownKnife>> THROWN_KNIFE = registerProjectile("thrown_knife",
             ThrownKnife::new, 0.5F, 0.5F);
 

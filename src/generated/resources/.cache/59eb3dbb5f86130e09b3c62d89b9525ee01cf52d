@@ -1,4 +1,8 @@
-// 1.20.1	2026-02-25T18:23:37.754566699	Loot Tables
+// 1.20.1	2026-03-06T10:33:37.7487593	Loot Tables
+98f09297f12fe8fcfe57b925063b54577cbd9ddc data/lostintime/loot_tables/blocks/araucarioxylon_hanging_sign.json
+4e286979fc7a406cddedfcf079bd7b8189bd5e27 data/lostintime/loot_tables/blocks/araucarioxylon_sign.json
+0fc1dd1dc3f6a1d23dfdf159b149d01ba5b91d88 data/lostintime/loot_tables/blocks/araucarioxylon_wall_hanging_sign.json
+7e0573004628cac21ffea5ad7cad470b4a29b60a data/lostintime/loot_tables/blocks/araucarioxylon_wall_sign.json
 16fbc73e533736c0a20d815b370f459ae1498dc6 data/lostintime/loot_tables/blocks/cretaceous_fossil_block.json
 041963ab85ae58d491e0f38a8da99076f956b020 data/lostintime/loot_tables/blocks/identification_table.json
 8ef3b5cf5fd41c74aaa77f983de0e30b4f6442ed data/lostintime/loot_tables/blocks/soul_configurator.json

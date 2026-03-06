@@ -24,13 +24,12 @@ import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -46,6 +45,7 @@ public class LITRoeBlock extends Block implements BucketPickup, SimpleWaterlogge
     private final int minHatchTickDelay;
     private final int maxHatchTickDelay;
     private final Supplier<? extends EntityType<? extends Mob>> entityType;
+    @Nullable
     private final Supplier<? extends Item> roeBucketItem;
     private final boolean canBePlacedUnderWater;
 
@@ -56,9 +56,13 @@ public class LITRoeBlock extends Block implements BucketPickup, SimpleWaterlogge
         this(pProperties, entityType, roeBucketItem, minBabySpawn, maxBabySpawn, minHatchTickDelay, maxHatchTickDelay, false);
     }
 
+    public LITRoeBlock(Properties pProperties, Supplier<? extends EntityType<? extends Mob>> entityType,
+                       int minBabySpawn, int maxBabySpawn, int minHatchTickDelay, int maxHatchTickDelay, boolean canBePlacedUnderWater) {
+        this(pProperties, entityType, null, minBabySpawn, maxBabySpawn, minHatchTickDelay, maxHatchTickDelay, canBePlacedUnderWater);
+    }
 
     public LITRoeBlock(Properties pProperties, Supplier<? extends EntityType<? extends Mob>> entityType,
-                       Supplier<? extends Item> roeBucketItem,
+                       @Nullable Supplier<? extends Item> roeBucketItem,
                        int minBabySpawn, int maxBabySpawn, int minHatchTickDelay, int maxHatchTickDelay, boolean canBePlacedUnderWater) {
         super(pProperties);
         this.entityType = entityType;
@@ -166,13 +170,16 @@ public class LITRoeBlock extends Block implements BucketPickup, SimpleWaterlogge
 
     @Override
     public ItemStack pickupBlock(LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
+        if (this.roeBucketItem == null) {
+            return ItemStack.EMPTY;
+        }
         pLevel.setBlock(pPos, Blocks.AIR.defaultBlockState(), 3);
-        return new ItemStack(roeBucketItem.get());
+        return new ItemStack(this.roeBucketItem.get());
     }
 
     @Override
     public Optional<SoundEvent> getPickupSound() {
-        return Optional.of(SoundEvents.BUCKET_FILL);
+        return this.roeBucketItem == null ? Optional.empty() : Optional.of(SoundEvents.BUCKET_FILL);
     }
 
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {

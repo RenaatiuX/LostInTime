@@ -15,4 +15,9 @@ public class ModModelLayers {
             ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "transfigurator_plant"), "main");
     public static final ModelLayerLocation DODO_LAYER = new ModelLayerLocation(
             ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "dodo_skeleton"), "main");
+
+    public static final ModelLayerLocation ARAUCARIOXYLON_BOAT_LAYER = new ModelLayerLocation(
+            ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "boat/araucarioxylon"), "main");
+    public static final ModelLayerLocation ARAUCARIOXYLON_CHEST_BOAT_LAYER = new ModelLayerLocation(
+            ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "chest_boat/araucarioxylon"), "main");
 }

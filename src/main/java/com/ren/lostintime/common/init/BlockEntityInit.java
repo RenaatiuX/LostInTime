@@ -1,10 +1,7 @@
 package com.ren.lostintime.common.init;
 
 import com.ren.lostintime.LostInTime;
-import com.ren.lostintime.common.blockentity.IdentificationBE;
-import com.ren.lostintime.common.blockentity.SoulConfiguratorBE;
-import com.ren.lostintime.common.blockentity.SoulExtractorBE;
-import com.ren.lostintime.common.blockentity.TransfiguratorBE;
+import com.ren.lostintime.common.blockentity.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -28,5 +25,19 @@ public class BlockEntityInit {
 
     public static final RegistryObject<BlockEntityType<TransfiguratorBE>> TRANSFIGURATOR = BLOCK_ENTITY_TYPES.register("transfigurator", () ->
             BlockEntityType.Builder.of(TransfiguratorBE::new, BlockInit.TRANSFIGURATOR.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<LITSignBE>> LIT_SIGN =
+            BLOCK_ENTITY_TYPES.register( "lit_sign", () ->
+                    BlockEntityType.Builder.of(LITSignBE::new,
+                                    BlockInit.ARAUCARIOXYLON_SIGN.get(),
+                                    BlockInit.ARAUCARIOXYLON_WALL_SIGN.get())
+                            .build(null));
+
+    public static final RegistryObject<BlockEntityType<LITHangingSignBE>> LIT_HANGING_SIGN =
+            BLOCK_ENTITY_TYPES.register( "lit_hanging_sign", () ->
+                    BlockEntityType.Builder.of(LITHangingSignBE::new,
+                                    BlockInit.ARAUCARIOXYLON_HANGING_SIGN.get(),
+                                    BlockInit.ARAUCARIOXYLON_WALL_HANGING_SIGN.get())
+                            .build(null));
 
 }

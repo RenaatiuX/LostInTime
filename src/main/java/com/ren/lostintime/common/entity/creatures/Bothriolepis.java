@@ -12,6 +12,7 @@ import com.ren.lostintime.common.entity.util.IEggLayerAnimal;
 import com.ren.lostintime.common.init.ActivitInit;
 import com.ren.lostintime.common.init.BlockInit;
 import com.ren.lostintime.common.init.EntityInit;
+import com.ren.lostintime.common.init.ItemInit;
 import com.ren.lostintime.datagen.server.LITTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,6 +24,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
@@ -44,6 +46,7 @@ import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.animal.AbstractFish;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
@@ -96,11 +99,6 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity, IEggLay
     }
 
     @Override
-    protected void registerGoals() {
-        // Brain system handles goals
-    }
-
-    @Override
     protected PathNavigation createNavigation(Level pLevel) {
         return new AmphibiousPathNavigation(this, pLevel);
     }
@@ -141,7 +139,7 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity, IEggLay
 
     @Override
     public ItemStack getBucketItemStack() {
-        return ItemStack.EMPTY;
+        return new ItemStack(ItemInit.BOTHRIOLEPIS_BABY_BUCKET.get());
     }
 
     @Override
@@ -389,5 +387,10 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity, IEggLay
     @Override
     public BlockState getEggState(ServerLevel level, Animal entity, BlockPos pos) {
         return BlockInit.BOTHRIOLEPIS_ROE.get().defaultBlockState();
+    }
+
+    @Override
+    public boolean canBePickedUpWithBucket(Player player, InteractionHand hand) {
+        return this.isBaby();
     }
 }

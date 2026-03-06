@@ -25,10 +25,18 @@ public class ModBlockLoot extends BlockLootSubProvider {
     @Override
     protected void generate() {
         dropSelf(BlockInit.CRETACEOUS_FOSSIL_BLOCK.get());
-        this.dropSelf(BlockInit.IDENTIFICATION_TABLE.get());
-        this.dropSelf(BlockInit.SOUL_EXTRACTOR.get());
-        this.dropSelf(BlockInit.SOUL_CONFIGURATOR.get());
-        this.dropSelf(BlockInit.TRANSFIGURATOR.get());
+        dropSelf(BlockInit.IDENTIFICATION_TABLE.get());
+        dropSelf(BlockInit.SOUL_EXTRACTOR.get());
+        dropSelf(BlockInit.SOUL_CONFIGURATOR.get());
+        dropSelf(BlockInit.TRANSFIGURATOR.get());
+        add(BlockInit.ARAUCARIOXYLON_SIGN.get(), block ->
+                createSingleItemTable(BlockInit.ARAUCARIOXYLON_SIGN.get()));
+        add(BlockInit.ARAUCARIOXYLON_WALL_SIGN.get(), block ->
+                createSingleItemTable(BlockInit.ARAUCARIOXYLON_SIGN.get()));
+        add(BlockInit.ARAUCARIOXYLON_HANGING_SIGN.get(), block ->
+                createSingleItemTable(BlockInit.ARAUCARIOXYLON_HANGING_SIGN.get()));
+        add(BlockInit.ARAUCARIOXYLON_WALL_HANGING_SIGN.get(), block ->
+                createSingleItemTable(BlockInit.ARAUCARIOXYLON_HANGING_SIGN.get()));
     }
 
     protected void dropSelfWithContents(Block block) {

@@ -12,11 +12,17 @@ import com.ren.lostintime.datagen.server.LITTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
@@ -27,8 +33,11 @@ import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Bucketable;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -48,13 +57,16 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Optional;
 
-public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAnimal {
+public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAnimal, Bucketable {
+
+    private static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(Endoceras.class, EntityDataSerializers.BOOLEAN);
+
 
     //ANIMATIONS
-    protected static final RawAnimation SWIM = RawAnimation.begin().thenLoop("animation.endoceras.swim");
-    protected static final RawAnimation BEACHED = RawAnimation.begin().thenLoop("animation.endoceras.beached");
-    protected static final RawAnimation GRAB = RawAnimation.begin().thenPlayAndHold("animation.endoceras.grab");
-    public static final RawAnimation EAT = RawAnimation.begin().thenPlay("animation.endoceras.eat");
+    protected static final RawAnimation SWIM = RawAnimation.begin().thenLoop("swim");
+    protected static final RawAnimation BEACHED = RawAnimation.begin().thenLoop("beached");
+    protected static final RawAnimation GRAB = RawAnimation.begin().thenPlayAndHold("grab");
+    public static final RawAnimation EAT = RawAnimation.begin().thenPlay("eat");
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     //MULTIPART
@@ -373,5 +385,68 @@ public class Endoceras extends LITWaterAnimal implements GeoEntity, IEggLayerAni
     @Override
     public BlockState getEggState(ServerLevel level, Animal entity, BlockPos pos) {
         return BlockInit.ENDOCERAS_EGG.get().defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, true);
+    }
+
+    @Override
+    public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
+        ItemStack itemstack = pPlayer.getItemInHand(pHand);
+        if (this.isBaby() && itemstack.is(Items.WATER_BUCKET)) {
+            return Bucketable.bucketMobPickup(pPlayer, pHand, this).orElse(super.mobInteract(pPlayer, pHand));
+        }
+        return super.mobInteract(pPlayer, pHand);
+    }
+
+    //NBT
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(FROM_BUCKET, false);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putBoolean("FromBucket", this.fromBucket());
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        this.setFromBucket(pCompound.getBoolean("FromBucket"));
+    }
+
+    @Override
+    public boolean fromBucket() {
+        return this.entityData.get(FROM_BUCKET);
+    }
+
+    @Override
+    public void setFromBucket(boolean pFromBucket) {
+        this.entityData.set(FROM_BUCKET, pFromBucket);
+    }
+
+    @Override
+    public void saveToBucketTag(ItemStack pStack) {
+        Bucketable.saveDefaultDataToBucketTag(this, pStack);
+        CompoundTag compoundtag = pStack.getOrCreateTag();
+        compoundtag.putInt("Age", this.getAge());
+    }
+
+    @Override
+    public void loadFromBucketTag(CompoundTag pTag) {
+        Bucketable.loadDefaultDataFromBucketTag(this, pTag);
+        if (pTag.contains("Age")) {
+            this.setAge(pTag.getInt("Age"));
+        }
+    }
+
+    @Override
+    public ItemStack getBucketItemStack() {
+        return new ItemStack(ItemInit.ENDOCERAS_BABY_BUCKET.get());
+    }
+
+    @Override
+    public SoundEvent getPickupSound() {
+        return SoundEvents.BUCKET_FILL_FISH;
     }
 }

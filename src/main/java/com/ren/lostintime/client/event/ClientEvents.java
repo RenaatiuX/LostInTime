@@ -7,11 +7,12 @@ import com.ren.lostintime.client.particles.BleedingStreamParticle;
 import com.ren.lostintime.client.particles.SleepingParticle;
 import com.ren.lostintime.client.model.ModModelLayers;
 import com.ren.lostintime.client.model.blockentities.*;
-import com.ren.lostintime.client.render.entity.*;
-import com.ren.lostintime.client.render.entity.skeleton.SkeletonRenderer;
-import com.ren.lostintime.client.render.projectile.GuardianSpikeRender;
-import com.ren.lostintime.client.render.projectile.ThrownKnifeRenderer;
-import com.ren.lostintime.client.renderer.TransfiguratorBERenderer;
+import com.ren.lostintime.client.renderer.entity.*;
+import com.ren.lostintime.client.renderer.entity.misc.LITBoatRenderer;
+import com.ren.lostintime.client.renderer.entity.skeleton.SkeletonRenderer;
+import com.ren.lostintime.client.renderer.projectile.GuardianSpikeRenderer;
+import com.ren.lostintime.client.renderer.projectile.ThrownKnifeRenderer;
+import com.ren.lostintime.client.renderer.blockentities.TransfiguratorBERenderer;
 import com.ren.lostintime.client.screen.IdentificationScreen;
 import com.ren.lostintime.client.screen.SoulConfiguratorScreen;
 import com.ren.lostintime.client.screen.SoulExtractorScreen;
@@ -20,7 +21,13 @@ import com.ren.lostintime.common.init.BlockEntityInit;
 import com.ren.lostintime.common.init.EntityInit;
 import com.ren.lostintime.common.init.MenuInit;
 import com.ren.lostintime.common.init.ParticlesInit;
+import com.ren.lostintime.common.util.LITWoodTypes;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.model.BoatModel;
+import net.minecraft.client.model.ChestBoatModel;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
+import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -38,28 +45,35 @@ public class ClientEvents {
         MenuScreens.register(MenuInit.SOUL_EXTRACTOR_MENU.get(), SoulExtractorScreen::new);
         MenuScreens.register(MenuInit.SOUL_CONFIGURATOR_MENU.get(), SoulConfiguratorScreen::new);
         MenuScreens.register(MenuInit.TRANSFIGURATOR_MENU.get(), TransfiguratorScreen::new);
+
+        Sheets.addWoodType(LITWoodTypes.ARAUCARIOXYLON);
     }
 
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(EntityInit.DODO.get(), DodoRender::new);
-        event.registerEntityRenderer(EntityInit.ANOMALOCARIS.get(), AnomalocarisRender::new);
-        event.registerEntityRenderer(EntityInit.BOTHRIOLEPIS.get(), BothriolepisRender::new);
-        event.registerEntityRenderer(EntityInit.HYLONOMUS.get(), HylonomusRender::new);
-        event.registerEntityRenderer(EntityInit.ENDOCERAS.get(), EndocerasRender::new);
-        event.registerEntityRenderer(EntityInit.DAEODON.get(), DaeodonRender::new);
-        event.registerEntityRenderer(EntityInit.LEPTICTIDIUM.get(), LeptictidiumRender::new);
-        event.registerEntityRenderer(EntityInit.SCUTOSAURUS.get(), ScutosaurusRender::new);
-        event.registerEntityRenderer(EntityInit.PLESIOSAURUS.get(), PlesiosaurusRender::new);
-        event.registerEntityRenderer(EntityInit.MASTODONSAURUS.get(), MastodonsaurusRender::new);
+        event.registerEntityRenderer(EntityInit.DODO.get(), DodoRenderer::new);
+        event.registerEntityRenderer(EntityInit.ANOMALOCARIS.get(), AnomalocarisRenderer::new);
+        event.registerEntityRenderer(EntityInit.BOTHRIOLEPIS.get(), BothriolepisRenderer::new);
+        event.registerEntityRenderer(EntityInit.HYLONOMUS.get(), HylonomusRenderer::new);
+        event.registerEntityRenderer(EntityInit.ENDOCERAS.get(), EndocerasRenderer::new);
+        event.registerEntityRenderer(EntityInit.DAEODON.get(), DaeodonRenderer::new);
+        event.registerEntityRenderer(EntityInit.LEPTICTIDIUM.get(), LeptictidiumRenderer::new);
+        event.registerEntityRenderer(EntityInit.SCUTOSAURUS.get(), ScutosaurusRenderer::new);
+        event.registerEntityRenderer(EntityInit.PLESIOSAURUS.get(), PlesiosaurusRenderer::new);
+        event.registerEntityRenderer(EntityInit.MASTODONSAURUS.get(), MastodonsaurusRenderer::new);
 
-        event.registerEntityRenderer(EntityInit.GUARDIAN_SPIKE.get(), GuardianSpikeRender::new);
+        event.registerEntityRenderer(EntityInit.GUARDIAN_SPIKE.get(), GuardianSpikeRenderer::new);
         event.registerEntityRenderer(EntityInit.LIT_THROWN_EGG.get(), ThrownItemRenderer::new);
         event.registerEntityRenderer(EntityInit.THROWN_KNIFE.get(), ThrownKnifeRenderer::new);
+        event.registerEntityRenderer(EntityInit.LIT_BOAT.get(), p_174094_ -> new LITBoatRenderer(p_174094_, false));
+        event.registerEntityRenderer(EntityInit.LIT_CHEST_BOAT.get(), p_174094_ -> new LITBoatRenderer(p_174094_, true));
 
         event.registerEntityRenderer(EntityInit.LIT_SKELETON.get(), SkeletonRenderer::new);
 
         event.registerBlockEntityRenderer(BlockEntityInit.TRANSFIGURATOR.get(), TransfiguratorBERenderer::new);
+
+        event.registerBlockEntityRenderer(BlockEntityInit.LIT_SIGN.get(), SignRenderer::new);
+        event.registerBlockEntityRenderer(BlockEntityInit.LIT_HANGING_SIGN.get(), HangingSignRenderer::new);
     }
 
     @SubscribeEvent
@@ -70,6 +84,11 @@ public class ClientEvents {
         event.registerLayerDefinition(ModModelLayers.TRANSFIGURATOR_PLANT, TransfiguratorPlant::createBodyLayer);
 
         event.registerLayerDefinition(ModModelLayers.DODO_LAYER, DodoSkeleton::createBodyLayer);
+
+        event.registerLayerDefinition(ModModelLayers.ARAUCARIOXYLON_BOAT_LAYER, BoatModel::createBodyModel);
+        event.registerLayerDefinition(ModModelLayers.ARAUCARIOXYLON_CHEST_BOAT_LAYER, ChestBoatModel::createBodyModel);
+
+
     }
 
     @SubscribeEvent

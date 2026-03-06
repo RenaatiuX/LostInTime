@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "cooked_anomalocaris": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "lostintime:raw_anomalocaris"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "lostintime:cooked_anomalocaris"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "cooked_anomalocaris",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lostintime:cooked_anomalocaris"
+    ]
+  },
+  "sends_telemetry_event": false
+}

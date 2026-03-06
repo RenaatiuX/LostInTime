@@ -1,13 +1,16 @@
 package com.ren.lostintime.common.entity.creatures;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Dynamic;
 import com.ren.lostintime.common.entity.LITAnimal;
 import com.ren.lostintime.common.entity.LITWaterAnimal;
 import com.ren.lostintime.common.entity.ai.PlesiosaurusAi;
-import com.ren.lostintime.common.entity.util.ISleepingEntity;
 import com.ren.lostintime.common.init.EntityInit;
+import com.ren.lostintime.common.init.ItemInit;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -21,6 +24,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -40,7 +44,9 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
 
-public class Plesiosaurus extends LITWaterAnimal implements GeoEntity {
+public class Plesiosaurus extends LITWaterAnimal implements GeoEntity, Bucketable {
+
+    private static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(Plesiosaurus.class, EntityDataSerializers.BOOLEAN);
 
     private static final RawAnimation SWIM = RawAnimation.begin().thenPlay("swim");
     private static final RawAnimation BEACHED = RawAnimation.begin().thenPlay("beached");
@@ -176,10 +182,34 @@ public class Plesiosaurus extends LITWaterAnimal implements GeoEntity {
         super.customServerAiStep();
     }
 
+    //NBT
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(FROM_BUCKET, false);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putBoolean("FromBucket", this.fromBucket());
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        this.setFromBucket(pCompound.getBoolean("FromBucket"));
+    }
+
     //
     @Override
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
+
+        if (this.isBaby() && itemstack.is(Items.WATER_BUCKET)) {
+            return Bucketable.bucketMobPickup(pPlayer, pHand, this).orElse(super.mobInteract(pPlayer, pHand));
+        }
+
         if (this.isFood(itemstack)) {
             if (!this.level().isClientSide) {
                 this.bodyguardOwner = pPlayer.getUUID();
@@ -233,5 +263,40 @@ public class Plesiosaurus extends LITWaterAnimal implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    @Override
+    public boolean fromBucket() {
+        return this.entityData.get(FROM_BUCKET);
+    }
+
+    @Override
+    public void setFromBucket(boolean pFromBucket) {
+        this.entityData.set(FROM_BUCKET, pFromBucket);
+    }
+
+    @Override
+    public void saveToBucketTag(ItemStack pStack) {
+        Bucketable.saveDefaultDataToBucketTag(this, pStack);
+        CompoundTag compoundtag = pStack.getOrCreateTag();
+        compoundtag.putInt("Age", this.getAge());
+    }
+
+    @Override
+    public void loadFromBucketTag(CompoundTag pTag) {
+        Bucketable.loadDefaultDataFromBucketTag(this, pTag);
+        if (pTag.contains("Age")) {
+            this.setAge(pTag.getInt("Age"));
+        }
+    }
+
+    @Override
+    public ItemStack getBucketItemStack() {
+        return new ItemStack(ItemInit.PLESIOSAURUS_BABY_BUCKET.get());
+    }
+
+    @Override
+    public SoundEvent getPickupSound() {
+        return SoundEvents.BUCKET_FILL_FISH;
     }
 }

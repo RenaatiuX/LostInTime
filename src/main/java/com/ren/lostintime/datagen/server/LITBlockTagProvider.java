@@ -64,16 +64,32 @@ public class LITBlockTagProvider extends BlockTagsProvider {
         pickaxe(BlockInit.CRETACEOUS_FOSSIL_BLOCK,
                 BlockInit.SOUL_EXTRACTOR,
                 BlockInit.SOUL_CONFIGURATOR,
-                BlockInit.TRANSFIGURATOR);
+                BlockInit.TRANSFIGURATOR,
+                BlockInit.AMBER_BLOCK,
+                BlockInit.SPINEL_BLOCK,
+                BlockInit.ZIRCON_BLOCK);
 
         tag(BlockTags.MINEABLE_WITH_AXE)
-                .add(BlockInit.IDENTIFICATION_TABLE.get());
+                .add(BlockInit.IDENTIFICATION_TABLE.get())
+                .add(BlockInit.GONDWANAGARICITES_BLOCK.get())
+                .add(BlockInit.GONDWANAGARICITES_STEM.get());
 
         tag(BlockTags.NEEDS_IRON_TOOL)
                 .add(BlockInit.IDENTIFICATION_TABLE.get())
                 .add(BlockInit.SOUL_EXTRACTOR.get())
                 .add(BlockInit.SOUL_CONFIGURATOR.get())
-                .add(BlockInit.TRANSFIGURATOR.get());
+                .add(BlockInit.TRANSFIGURATOR.get())
+                .add(BlockInit.AMBER_BLOCK.get())
+                .add(BlockInit.SPINEL_BLOCK.get());
+
+        tag(BlockTags.NEEDS_DIAMOND_TOOL)
+                .add(BlockInit.ZIRCON_BLOCK.get());
+
+        tag(BlockTags.MUSHROOM_GROW_BLOCK)
+                .add(Blocks.MYCELIUM)
+                .add(Blocks.PODZOL)
+                .add(Blocks.DIRT)
+                .add(Blocks.GRASS_BLOCK);
     }
 
     public void pickaxe(Supplier<? extends Block>... blocks) {

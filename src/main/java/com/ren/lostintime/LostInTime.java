@@ -235,14 +235,18 @@ public class LostInTime {
             event.accept(ItemInit.HYLONOMUS_SPAWN_EGG);
             event.accept(ItemInit.LEPTICTIDIUM_SPAWN_EGG);
             event.accept(ItemInit.SCUTOSAURUS_SPAWN_EGG);
+            event.accept(ItemInit.PLESIOSAURUS_SPAWN_EGG);
 
             event.accept(BlockInit.MANGO_LEAVES);
             event.accept(BlockInit.MANGO_LOG);
             event.accept(BlockInit.MANGO_SAPLING);
             event.accept(BlockInit.ARAUCARIOXYLON_SAPLING);
             event.accept(BlockInit.ARAUCARIOXYLON_LEAVES);
-            event.accept(BlockInit.ARAUCARIOXYLON_LOG);
             event.accept(BlockInit.ARAUCARIOXYLON_PLANKS);
+            event.accept(BlockInit.ARAUCARIOXYLON_LOG);
+            event.accept(BlockInit.STRIPPED_ARAUCARIOXYLON_LOG);
+            event.accept(BlockInit.ARAUCARIOXYLON_WOOD);
+            event.accept(BlockInit.STRIPPED_ARAUCARIOXYLON_WOOD);
 
             event.accept(BlockInit.ARAUCARIOXYLON_STAIRS.get());
             event.accept(BlockInit.ARAUCARIOXYLON_SLAB.get());
@@ -267,18 +271,30 @@ public class LostInTime {
             event.accept(ItemInit.BOTHRIOLEPIS_ROE);
             event.accept(ItemInit.ANOMALOCARIS_ROE);
             event.accept(ItemInit.ENDOCERAS_EGGS);
+            event.accept(ItemInit.MASTODONSAURUS_EGG);
             event.accept(BlockInit.TITANOSARCOLITES);
             event.accept(BlockInit.RED_ALGAE);
+
+            event.accept(ItemInit.ARAUCARIOXYLON_BOAT);
+            event.accept(ItemInit.ARAUCARIOXYLON_CHEST_BOAT);
 
             event.accept(ItemInit.ANOMALOCARIS_ROE_BUCKET);
             event.accept(ItemInit.BOTHRIOLEPIS_ROE_BUCKET);
             event.accept(ItemInit.ENDOCERAS_EGGS_BUCKET);
 
+            event.accept(ItemInit.PLESIOSAURUS_BABY_BUCKET);
+            event.accept(ItemInit.ENDOCERAS_BABY_BUCKET);
+            event.accept(ItemInit.BOTHRIOLEPIS_BABY_BUCKET);
 
+            event.accept(BlockInit.SPINEL_ORE);
+            event.accept(BlockInit.ZIRCON_ORE);
             event.accept(BlockInit.QUATERNARY_FOSSIL_BLOCK);
             event.accept(BlockInit.NEOGENE_FOSSIL_BLOCK);
             event.accept(BlockInit.PALEOGENE_FOSSIL_BLOCK);
             event.accept(BlockInit.CRETACEOUS_FOSSIL_BLOCK);
+
+            event.accept(BlockInit.DEEPSLATE_SPINEL_ORE);
+            event.accept(BlockInit.DEEPSLATE_ZIRCON_ORE);
             event.accept(BlockInit.DEEPSLATE_JURASSIC_FOSSIL_BLOCK);
             event.accept(BlockInit.DEEPSLATE_TRIASSIC_FOSSIL_BLOCK);
             event.accept(BlockInit.DEEPSLATE_PERMIAN_FOSSIL_BLOCK);
@@ -290,6 +306,9 @@ public class LostInTime {
 
             event.accept(BlockInit.SANDSTONE_BRICKS);
             event.accept(BlockInit.SMALL_SANDSTONE_BRICKS);
+            event.accept(BlockInit.AMBER_BLOCK);
+            event.accept(BlockInit.SPINEL_BLOCK);
+            event.accept(BlockInit.ZIRCON_BLOCK);
 
             event.accept(BlockInit.IDENTIFICATION_TABLE);
             event.accept(BlockInit.SOUL_EXTRACTOR);
@@ -301,8 +320,13 @@ public class LostInTime {
 
             event.accept(BlockInit.DEAD_LARGE_PIPE_SPONGE);
             event.accept(BlockInit.LARGE_PIPE_SPONGE);
+
+            event.accept(BlockInit.GONDWANAGARICITES_BLOCK);
+            event.accept(BlockInit.GONDWANAGARICITES_STEM);
+            event.accept(BlockInit.GONDWANAGARICITES);
+
+            event.accept(BlockInit.ARAUCARIOXYLON_SIGN);
+            event.accept(BlockInit.ARAUCARIOXYLON_HANGING_SIGN);
         }
     }
-
-
 }

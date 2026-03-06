@@ -19,7 +19,7 @@ public class LITLanguageProvider extends LanguageProvider{
         add("container.lostintime.soul_configurator", "Soul Configurator");
         add("container.lostintime.transfigurator", "Transfigurator");
         add("container.lostintime.identification_table", "Identification Table");
-        add("itemGroup.lostintime", "Lost In Time");
+        add("creative_tab.lostintime.lost_in_time", "Lost In Time");
         add("lostintime.tooltip.residue", "Residue: %s / %s");
 
         add("death.attack.bleeding", "%1$s bled to death");

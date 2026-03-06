@@ -3,8 +3,10 @@ package com.ren.lostintime.common.init;
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.worldgen.feature.FossilFormationFeature;
 import com.ren.lostintime.common.worldgen.feature.config.FossilFormationConfig;
+import com.ren.lostintime.common.worldgen.feature.mushrooms.GondwanagaricitesFeature;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.HugeMushroomFeatureConfiguration;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -14,4 +16,7 @@ public class FeatureInit {
 
     public static final RegistryObject<Feature<FossilFormationConfig>> FOSSIL_FORMATION = FEATURES.register(
             "fossil_formation", () -> new FossilFormationFeature(FossilFormationConfig.CODEC));
+    public static final RegistryObject<Feature<HugeMushroomFeatureConfiguration>> GONDWANAGARICITES_MUSHROOM =
+            FEATURES.register("gondwanagaricites_mushroom",
+                    () -> new GondwanagaricitesFeature(HugeMushroomFeatureConfiguration.CODEC));
 }

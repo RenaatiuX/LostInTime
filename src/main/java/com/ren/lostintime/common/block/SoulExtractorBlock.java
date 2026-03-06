@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -27,10 +28,16 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class SoulExtractorBlock extends LITMachineBlock {
 
+    protected static final VoxelShape SHAPE_LOWER = makeLowerShape();
+    protected static final VoxelShape SHAPE_UPPER = makeUpperShape();
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 
     public SoulExtractorBlock(Properties pProperties) {
@@ -120,5 +127,25 @@ public class SoulExtractorBlock extends LITMachineBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         super.createBlockStateDefinition(pBuilder);
         pBuilder.add(HALF, BlockStateProperties.HORIZONTAL_FACING);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return pState.getValue(HALF) == DoubleBlockHalf.LOWER ? SHAPE_LOWER : SHAPE_UPPER;
+    }
+
+    private static VoxelShape makeLowerShape() {
+        VoxelShape shape = Shapes.empty();
+        shape = Shapes.join(shape, Shapes.box(0, 0, 0, 1, 0.5625, 1), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.0625, 0.5625, 0.0625, 0.9375, 0.8125, 0.9375), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0.8125, 0.1875, 0.8125, 1, 0.8125), BooleanOp.OR);
+        return shape;
+    }
+
+    private static VoxelShape makeUpperShape() {
+        VoxelShape shape = Shapes.empty();
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0, 0.1875, 0.8125, 0.375, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.0625, 0.375, 0.0625, 0.9375, 1, 0.9375), BooleanOp.OR);
+        return shape;
     }
 }

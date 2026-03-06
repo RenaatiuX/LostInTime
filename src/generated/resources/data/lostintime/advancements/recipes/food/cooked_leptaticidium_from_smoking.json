@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "cooked_leptaticidium": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "lostintime:raw_leptictidium"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "lostintime:cooked_leptaticidium_from_smoking"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "cooked_leptaticidium",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lostintime:cooked_leptaticidium_from_smoking"
+    ]
+  },
+  "sends_telemetry_event": false
+}

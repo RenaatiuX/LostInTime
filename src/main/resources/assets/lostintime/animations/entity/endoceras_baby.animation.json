@@ -1,0 +1,148 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"swim": {
+			"loop": true,
+			"animation_length": 4,
+			"bones": {
+				"left_tentacle_4": {
+					"rotation": {
+						"vector": ["5-math.sin(query.anim_time*90)*5", "-5-math.sin(query.anim_time*90)*15", "math.sin(query.anim_time*90)*-12.5"]
+					}
+				},
+				"left_tentacle_5": {
+					"rotation": {
+						"vector": [15, "-5-math.sin(query.anim_time*90)*12.5", -45]
+					}
+				},
+				"right_tentacle_5": {
+					"rotation": {
+						"vector": [15, "5-math.sin(query.anim_time*90)*-12.5", 45]
+					}
+				},
+				"right_tentacle_4": {
+					"rotation": {
+						"vector": ["5-math.sin(query.anim_time*90)*5", "5-math.sin(query.anim_time*90)*-15", "math.sin(query.anim_time*90)*12.5"]
+					}
+				},
+				"left_tentacle_1": {
+					"rotation": {
+						"vector": [-15, "-5-math.sin(query.anim_time*90)*17.5", -25]
+					}
+				},
+				"left_tentacle_2": {
+					"rotation": {
+						"vector": ["-5-math.sin(query.anim_time*90)*-5", "-5-math.sin(query.anim_time*90)*15", "math.sin(query.anim_time*90)*12.5"]
+					}
+				},
+				"left_tentacle_3": {
+					"rotation": {
+						"vector": [0, "-5-math.sin(query.anim_time*90)*17.5", 0]
+					}
+				},
+				"right_tentacle_1": {
+					"rotation": {
+						"vector": [-15, "5-math.sin(query.anim_time*90)*-17.5", 25]
+					}
+				},
+				"right_tentacle_2": {
+					"rotation": {
+						"vector": ["-5-math.sin(query.anim_time*90)*-5", "5-math.sin(query.anim_time*90)*-15", "math.sin(query.anim_time*90)*-12.5"]
+					}
+				},
+				"right_tentacle_3": {
+					"rotation": {
+						"vector": [0, "5-math.sin(query.anim_time*90)*-17.5", 0]
+					}
+				}
+			}
+		},
+		"beached": {
+			"loop": true,
+			"animation_length": 1,
+			"bones": {
+				"left_tentacle_4": {
+					"rotation": {
+						"0.0": {
+							"vector": [22.5, 0, 0]
+						},
+						"1.0": {
+							"vector": [22.5, 0, 0]
+						}
+					}
+				},
+				"left_tentacle_5": {
+					"rotation": {
+						"0.0": {
+							"vector": [27.5, 0, 0]
+						},
+						"1.0": {
+							"vector": [27.5, 0, 0]
+						}
+					}
+				},
+				"right_tentacle_5": {
+					"rotation": {
+						"0.0": {
+							"vector": [27.5, 0, 0]
+						},
+						"1.0": {
+							"vector": [27.5, 0, 0]
+						}
+					}
+				},
+				"right_tentacle_4": {
+					"rotation": {
+						"0.0": {
+							"vector": [22.5, 0, 0]
+						},
+						"1.0": {
+							"vector": [22.5, 0, 0]
+						}
+					}
+				},
+				"left_tentacle_2": {
+					"rotation": {
+						"0.0": {
+							"vector": [12.5, 0, 0]
+						},
+						"1.0": {
+							"vector": [12.5, 0, 0]
+						}
+					}
+				},
+				"left_tentacle_3": {
+					"rotation": {
+						"0.0": {
+							"vector": [17.5, 7.5, 0]
+						},
+						"1.0": {
+							"vector": [17.5, 7.5, 0]
+						}
+					}
+				},
+				"right_tentacle_2": {
+					"rotation": {
+						"0.0": {
+							"vector": [12.5, 0, 0]
+						},
+						"1.0": {
+							"vector": [12.5, 0, 0]
+						}
+					}
+				},
+				"right_tentacle_3": {
+					"rotation": {
+						"0.0": {
+							"vector": [17.5, -7.5, 0]
+						},
+						"1.0": {
+							"vector": [17.5, -7.5, 0]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

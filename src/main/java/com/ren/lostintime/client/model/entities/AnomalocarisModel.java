@@ -12,6 +12,10 @@ import software.bernie.geckolib.model.data.EntityModelData;
 
 public class AnomalocarisModel extends DefaultedEntityGeoModel<Anomalocaris> {
 
+    private static final String BABY_TEXTURE = "textures/entity/anomalocaris_baby.png";
+    private static final String BABY_ANIM = "animations/entity/anomalocaris_baby.animation.json";
+    private static final String BABY_GEO = "geo/entity/anomalocaris_baby.geo.json";
+
     public AnomalocarisModel() {
         super(ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "anomalocaris"));
     }
@@ -29,16 +33,16 @@ public class AnomalocarisModel extends DefaultedEntityGeoModel<Anomalocaris> {
 
     @Override
     public ResourceLocation getTextureResource(Anomalocaris animatable) {
-        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/entity/anomalocaris_baby.png") : super.getTextureResource(animatable);
+        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, BABY_TEXTURE) : super.getTextureResource(animatable);
     }
 
     @Override
     public ResourceLocation getModelResource(Anomalocaris animatable) {
-        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "geo/entity/anomalocaris_baby.geo.json") : super.getModelResource(animatable);
+        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, BABY_GEO) : super.getModelResource(animatable);
     }
 
     @Override
     public ResourceLocation getAnimationResource(Anomalocaris animatable) {
-        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "animations/entity/anomalocaris_baby.animation.json") : super.getAnimationResource(animatable);
+        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, BABY_ANIM) : super.getAnimationResource(animatable);
     }
 }

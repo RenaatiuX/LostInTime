@@ -1,0 +1,165 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "daeodon",
+					"pivot": [0, 14, 4]
+				},
+				{
+					"name": "body",
+					"parent": "daeodon",
+					"pivot": [0, 14, 4]
+				},
+				{
+					"name": "neck",
+					"parent": "body",
+					"pivot": [0, 14, -6]
+				},
+				{
+					"name": "neck_f",
+					"parent": "neck",
+					"pivot": [0, 14, -6],
+					"cubes": [
+						{"origin": [-2, 8, -9], "size": [4, 6, 3], "uv": [0, 27]}
+					]
+				},
+				{
+					"name": "head",
+					"parent": "neck_f",
+					"pivot": [0, 14, -9]
+				},
+				{
+					"name": "head_f",
+					"parent": "head",
+					"pivot": [0, 14, -9],
+					"cubes": [
+						{"origin": [-2.5, 10, -14], "size": [5, 4, 5], "uv": [0, 18]},
+						{"origin": [-1, 10, -19], "size": [2, 3, 5], "uv": [32, 1]}
+					]
+				},
+				{
+					"name": "left_eyelid",
+					"parent": "head_f",
+					"pivot": [2, 13, -14.1],
+					"cubes": [
+						{"origin": [1.5, 12, -14.1], "size": [1, 1, 0], "uv": [32, 16]}
+					]
+				},
+				{
+					"name": "right_eyelid",
+					"parent": "head_f",
+					"pivot": [-2, 13, -14.1],
+					"cubes": [
+						{"origin": [-2.5, 12, -14.1], "size": [1, 1, 0], "uv": [32, 16], "mirror": true}
+					]
+				},
+				{
+					"name": "jaw",
+					"parent": "head_f",
+					"pivot": [2, 10, -9]
+				},
+				{
+					"name": "jaw_f",
+					"parent": "jaw",
+					"pivot": [2, 10, -9],
+					"cubes": [
+						{"origin": [-2.5, 8, -14], "size": [5, 2, 5], "uv": [20, 18]},
+						{"origin": [-1, 8, -19], "size": [2, 2, 5], "uv": [32, 9]}
+					]
+				},
+				{
+					"name": "left_ear",
+					"parent": "head_f",
+					"pivot": [2.5, 14, -11],
+					"rotation": [0, 0, 15],
+					"cubes": [
+						{"origin": [2.5, 14, -12], "size": [0, 2, 2], "uv": [22, 35]}
+					]
+				},
+				{
+					"name": "right_ear",
+					"parent": "head_f",
+					"pivot": [-2.5, 14, -11],
+					"rotation": [0, 0, -15],
+					"cubes": [
+						{"origin": [-2.5, 14, -12], "size": [0, 2, 2], "uv": [22, 35], "mirror": true}
+					]
+				},
+				{
+					"name": "left_arm",
+					"parent": "body",
+					"pivot": [3, 8, -4],
+					"cubes": [
+						{"origin": [2, 0, -5], "size": [2, 8, 2], "uv": [34, 25]}
+					]
+				},
+				{
+					"name": "right_arm",
+					"parent": "body",
+					"pivot": [-3, 8, -4],
+					"cubes": [
+						{"origin": [-4, 0, -5], "size": [2, 8, 2], "uv": [34, 25], "mirror": true}
+					]
+				},
+				{
+					"name": "tail",
+					"parent": "body",
+					"pivot": [0, 14, 4],
+					"cubes": [
+						{"origin": [0, 9, 4], "size": [0, 5, 3], "uv": [14, 27]}
+					]
+				},
+				{
+					"name": "body_f",
+					"parent": "body",
+					"pivot": [0, 14, 4],
+					"cubes": [
+						{"origin": [-3, 6, -6], "size": [6, 8, 10], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "left_leg",
+					"parent": "daeodon",
+					"pivot": [4, 9, 3],
+					"cubes": [
+						{"origin": [2, 4, 1], "size": [3, 6, 4], "uv": [20, 25]}
+					]
+				},
+				{
+					"name": "left_leg2",
+					"parent": "left_leg",
+					"pivot": [3, 4, 5],
+					"cubes": [
+						{"origin": [2, 0, 3], "size": [2, 4, 2], "uv": [14, 35]}
+					]
+				},
+				{
+					"name": "right_leg",
+					"parent": "daeodon",
+					"pivot": [-4, 9, 3],
+					"cubes": [
+						{"origin": [-5, 4, 1], "size": [3, 6, 4], "uv": [20, 25], "mirror": true}
+					]
+				},
+				{
+					"name": "right_leg2",
+					"parent": "right_leg",
+					"pivot": [-3, 4, 5],
+					"cubes": [
+						{"origin": [-4, 0, 3], "size": [2, 4, 2], "uv": [14, 35], "mirror": true}
+					]
+				}
+			]
+		}
+	]
+}

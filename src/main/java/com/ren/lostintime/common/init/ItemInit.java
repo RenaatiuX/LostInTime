@@ -1,15 +1,16 @@
 package com.ren.lostintime.common.init;
 
 import com.ren.lostintime.LostInTime;
+import com.ren.lostintime.common.entity.misc.LITBoat;
+import com.ren.lostintime.common.entity.util.BoatType;
 import com.ren.lostintime.common.item.*;
 import com.ren.lostintime.common.util.ModToolTiers;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.PlaceOnWaterBlockItem;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -234,6 +235,8 @@ public class ItemInit {
             () -> new PlaceOnWaterBlockItem(BlockInit.ANOMALOCARIS_ROE.get(), new Item.Properties()));
     public static final RegistryObject<Item> ENDOCERAS_EGGS = ITEMS.register("endoceras_eggs",
             () -> new PlaceOnWaterBlockItem(BlockInit.ENDOCERAS_EGG.get(), new Item.Properties()));
+    public static final RegistryObject<Item> MASTODONSAURUS_EGG = ITEMS.register("mastodonsaurus_egg",
+            () -> new PlaceOnWaterBlockItem(BlockInit.MASTODONSAURUS_EGG.get(), new Item.Properties()));
 
     //BUCKETS
     public static final RegistryObject<Item> BOTHRIOLEPIS_ROE_BUCKET = ITEMS.register("bothriolepis_roe_bucket",
@@ -242,6 +245,17 @@ public class ItemInit {
             () -> new RoeBucketItem(BlockInit.ENDOCERAS_EGG, () -> SoundEvents.BUCKET_EMPTY, new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ANOMALOCARIS_ROE_BUCKET = ITEMS.register("anomalocaris_roe_bucket",
             () -> new RoeBucketItem(BlockInit.ANOMALOCARIS_ROE, () -> SoundEvents.BUCKET_EMPTY, new Item.Properties().stacksTo(1)));
+
+    //BUCKET
+    public static final RegistryObject<Item> PLESIOSAURUS_BABY_BUCKET = ITEMS.register("plesiosaurus_baby_bucket",
+            () -> new MobBucketItem(EntityInit.PLESIOSAURUS, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY,
+                    new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ENDOCERAS_BABY_BUCKET = ITEMS.register("endoceras_baby_bucket",
+            () -> new MobBucketItem(EntityInit.ENDOCERAS, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY,
+                    new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> BOTHRIOLEPIS_BABY_BUCKET = ITEMS.register("bothriolepis_baby_bucket",
+            () -> new MobBucketItem(EntityInit.BOTHRIOLEPIS, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY,
+                    new Item.Properties().stacksTo(1)));
 
     //SPAWN EGG
     public static final RegistryObject<Item> DODO_SPAWN_EGG = registerSpawnEgg("dodo_spawn_egg",
@@ -256,11 +270,24 @@ public class ItemInit {
             EntityInit.DAEODON, 5981765, 9339517);
     public static final RegistryObject<Item> HYLONOMUS_SPAWN_EGG = registerSpawnEgg("hylonomus_spawn_egg",
             EntityInit.HYLONOMUS, 5325867, 10457717);
-    public static final RegistryObject<Item> LEPTICTIDIUM_SPAWN_EGG = registerSpawnEgg("leptictidium_spawn",
+    public static final RegistryObject<Item> LEPTICTIDIUM_SPAWN_EGG = registerSpawnEgg("leptictidium_spawn_egg",
             EntityInit.LEPTICTIDIUM, 7955270, 11707795);
-    public static final RegistryObject<Item> SCUTOSAURUS_SPAWN_EGG = registerSpawnEgg("scutosaurus_spawn",
+    public static final RegistryObject<Item> SCUTOSAURUS_SPAWN_EGG = registerSpawnEgg("scutosaurus_spawn_egg",
             EntityInit.SCUTOSAURUS, 5852492, 7691613);
+    public static final RegistryObject<Item> PLESIOSAURUS_SPAWN_EGG = registerSpawnEgg("plesiosaurus_spawn_egg",
+            EntityInit.PLESIOSAURUS, 2372675, 14280690);
 
+    //BOATS
+    public static final RegistryObject<Item> ARAUCARIOXYLON_BOAT = ITEMS.register("araucarioxylon_boat",
+            () -> new LITBoatItem(BoatType.ARAUCARIOXYLON, false, new Item.Properties()));
+    public static final RegistryObject<Item> ARAUCARIOXYLON_CHEST_BOAT = ITEMS.register("araucarioxylon_chest_boat",
+            () -> new LITBoatItem(BoatType.ARAUCARIOXYLON, true, new Item.Properties()));
+
+    //SIGNS
+    public static final RegistryObject<Item> ARAUCARIOXYLON_SIGN = ITEMS.register("araucarioxylon_sign",
+            () -> new SignItem(new Item.Properties().stacksTo(16), BlockInit.ARAUCARIOXYLON_SIGN.get(), BlockInit.ARAUCARIOXYLON_WALL_SIGN.get()));
+    public static final RegistryObject<Item> ARAUCARIOXYLON_HANGING_SIGN = ITEMS.register("araucarioxylon_hanging_sign",
+            () -> new HangingSignItem(BlockInit.ARAUCARIOXYLON_HANGING_SIGN.get(), BlockInit.ARAUCARIOXYLON_WALL_HANGING_SIGN.get(), new Item.Properties().stacksTo(16)));
 
     private static RegistryObject<Item> registerSimple(final String name) {
         return ITEMS.register(name, () -> new Item(new Item.Properties()));

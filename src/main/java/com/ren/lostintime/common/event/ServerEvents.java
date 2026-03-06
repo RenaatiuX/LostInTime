@@ -23,8 +23,10 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
@@ -100,4 +102,18 @@ public class ServerEvents {
         }
     }
 
+    @SubscribeEvent
+    public static void onAxeStrip(BlockEvent.BlockToolModificationEvent event) {
+        if (event.getToolAction() == ToolActions.AXE_STRIP) {
+            if (event.getState().is(BlockInit.ARAUCARIOXYLON_LOG.get())) {
+                event.setFinalState(BlockInit.STRIPPED_ARAUCARIOXYLON_LOG.get().defaultBlockState()
+                        .setValue(RotatedPillarBlock.AXIS, event.getState().getValue(RotatedPillarBlock.AXIS)));
+            }
+
+            if (event.getState().is(BlockInit.ARAUCARIOXYLON_WOOD.get())) {
+                event.setFinalState(BlockInit.STRIPPED_ARAUCARIOXYLON_WOOD.get().defaultBlockState()
+                        .setValue(RotatedPillarBlock.AXIS, event.getState().getValue(RotatedPillarBlock.AXIS)));
+            }
+        }
+    }
 }

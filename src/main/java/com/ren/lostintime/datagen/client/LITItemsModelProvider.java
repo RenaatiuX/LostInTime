@@ -90,18 +90,27 @@ public class LITItemsModelProvider extends ItemModelProvider {
         spawnEgg(ItemInit.HYLONOMUS_SPAWN_EGG.get());
         spawnEgg(ItemInit.LEPTICTIDIUM_SPAWN_EGG.get());
         spawnEgg(ItemInit.SCUTOSAURUS_SPAWN_EGG.get());
+        spawnEgg(ItemInit.PLESIOSAURUS_SPAWN_EGG.get());
 
         saplingItem(BlockInit.MANGO_SAPLING);
         saplingItem(BlockInit.ARAUCARIOXYLON_SAPLING);
         simple(ItemInit.BOTHRIOLEPIS_ROE.get());
         simple(ItemInit.ENDOCERAS_EGGS.get());
+        simple(ItemInit.MASTODONSAURUS_EGG.get());
         simple(ItemInit.ANOMALOCARIS_ROE.get());
 
         simple(ItemInit.BOTHRIOLEPIS_ROE_BUCKET.get());
         simple(ItemInit.ENDOCERAS_EGGS_BUCKET.get());
         //simple(ItemInit.ANOMALOCARIS_ROE_BUCKET.get());
 
+        simple(ItemInit.PLESIOSAURUS_BABY_BUCKET.get());
+        simple(ItemInit.ENDOCERAS_BABY_BUCKET.get());
+        simple(ItemInit.BOTHRIOLEPIS_BABY_BUCKET.get());
+
         simple(ItemInit.GUARDIAN_SPIKE.get());
+
+        simple(ItemInit.ARAUCARIOXYLON_BOAT.get());
+        simple(ItemInit.ARAUCARIOXYLON_CHEST_BOAT.get());
 
         simple(ItemInit.CAMBRIAN_FOSSIL.get());
         simple(ItemInit.ORDOVICIAN_FOSSIL.get());
@@ -236,6 +245,9 @@ public class LITItemsModelProvider extends ItemModelProvider {
         evenSimplerBlockItem(BlockInit.ARAUCARIOXYLON_FENCE_GATE);
 
         trapdoorItem(BlockInit.ARAUCARIOXYLON_TRAPDOOR);
+
+        simple(ItemInit.ARAUCARIOXYLON_SIGN.get());
+        simple(ItemInit.ARAUCARIOXYLON_HANGING_SIGN.get());
     }
 
     public void evenSimplerBlockItem(RegistryObject<Block> block) {

@@ -507,9 +507,15 @@ public class LITRecipeProvider extends RecipeProvider implements IConditionBuild
     public void smeltingRecipes(Consumer<FinishedRecipe> pWriter){
         cookingFood("cooked_dodo", ItemInit.RAW_DODO.get(), ItemInit.COOKED_DODO.get(), 0.35F, pWriter);
         cookingFood("cooked_endoceras", ItemInit.RAW_ENDOCERAS.get(), ItemInit.COOKED_ENDOCERAS.get(), 0.35F, pWriter);
+        cookingFood("cooked_anomalocaris", ItemInit.RAW_ANOMALOCARIS.get(), ItemInit.COOKED_ANOMALOCARIS.get(), 0.35F, pWriter);
+        cookingFood("cooked_bothriolepis", ItemInit.RAW_BOTHRIOLEPIS.get(), ItemInit.COOKED_BOTHRIOLEPIS.get(), 0.35F, pWriter);
+        cookingFood("cooked_daeodon", ItemInit.RAW_DAEODON.get(), ItemInit.COOKED_DAEODON.get(), 0.35F, pWriter);
+        cookingFood("cooked_hylonomus", ItemInit.RAW_HYLONOMUS.get(), ItemInit.COOKED_HYLONOMUS.get(), 0.35F, pWriter);
+        cookingFood("cooked_leptaticidium", ItemInit.RAW_LEPTICTIDIUM.get(), ItemInit.COOKED_LEPTICTIDIUM.get(), 0.35F, pWriter);
+        cookingFood("cooked_mastodonsaus_meat", ItemInit.RAW_MASTODONSAURUS_MEAT.get(), ItemInit.COOKED_MASTODONSAURUS_MEAT.get(), 0.35F, pWriter);
+        cookingFood("cooked_pleiosaurus_meat", ItemInit.RAW_PLESIOSAURUS_MEAT.get(), ItemInit.COOKED_PLESIOSAURUS_MEAT.get(), 0.35F, pWriter);
+        cookingFood("cooked_scutosaurus_meat", ItemInit.RAW_SCUTOSAURUS_MEAT.get(), ItemInit.COOKED_SCUTOSAURUS_MEAT.get(), 0.35F, pWriter);
     }
-
-
 
     private IdentificationBuilder identify(ItemLike item) {
         return new IdentificationBuilder(LostInTime.MODID, item);

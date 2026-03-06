@@ -3,6 +3,8 @@
     "lostintime:identification_table",
     "lostintime:soul_extractor",
     "lostintime:soul_configurator",
-    "lostintime:transfigurator"
+    "lostintime:transfigurator",
+    "lostintime:amber_block",
+    "lostintime:spinel_block"
   ]
 }

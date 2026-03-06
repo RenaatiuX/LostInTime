@@ -7,6 +7,10 @@ import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 
 public class LeptictidiumModel extends DefaultedEntityGeoModel<Leptictidium> {
 
+    private static final String BABY_TEXTURE = "textures/entity/leptictidium_baby.png";
+    private static final String BABY_ANIM = "animations/entity/leptictidium_baby.animation.json";
+    private static final String BABY_GEO = "geo/entity/leptictidium_baby.geo.json";
+
     public LeptictidiumModel() {
         super(ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "leptictidium"));
     }
@@ -14,7 +18,7 @@ public class LeptictidiumModel extends DefaultedEntityGeoModel<Leptictidium> {
     @Override
     public ResourceLocation getModelResource(Leptictidium animatable) {
         if (animatable.isBaby()) {
-            return ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "geo/entity/leptictidium_baby.geo.json");
+            return ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, BABY_GEO);
         }
         return super.getModelResource(animatable);
     }
@@ -22,7 +26,7 @@ public class LeptictidiumModel extends DefaultedEntityGeoModel<Leptictidium> {
     @Override
     public ResourceLocation getTextureResource(Leptictidium animatable) {
         if (animatable.isBaby()) {
-            return ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/entity/leptictidium_baby.png");
+            return ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, BABY_TEXTURE);
         }
         return super.getTextureResource(animatable);
     }
@@ -30,7 +34,7 @@ public class LeptictidiumModel extends DefaultedEntityGeoModel<Leptictidium> {
     @Override
     public ResourceLocation getAnimationResource(Leptictidium animatable) {
         if (animatable.isBaby()) {
-            return ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "animations/entity/leptictidium_baby.animation.json");
+            return ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, BABY_ANIM);
         }
         return super.getAnimationResource(animatable);
     }

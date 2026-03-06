@@ -1,5 +1,7 @@
 {
   "values": [
-    "lostintime:identification_table"
+    "lostintime:identification_table",
+    "lostintime:gondwanagaricites_block",
+    "lostintime:gondwanagaricites_stem"
   ]
 }

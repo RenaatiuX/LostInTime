@@ -18,13 +18,11 @@ import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HugeMushroomBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.*;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.SpruceFoliagePlacer;
@@ -42,6 +40,9 @@ public class LITConfiguredFeatures {
     //TREE
     public static final ResourceKey<ConfiguredFeature<?, ?>> MANGO_TREE_KEY = registerKey("mango_tree");
     public static final ResourceKey<ConfiguredFeature<?, ?>> ARAUCARIOXYLON_TREE_KEY = registerKey("araucarioxylon_tree");
+
+    //MUSHROOMS
+    public static final ResourceKey<ConfiguredFeature<?, ?>> GONDWANAGARICITES_KEY = registerKey("gondwanagaricites");
 
     //FOSSILS
     public static final Map<FossilEra, ResourceKey<ConfiguredFeature<?, ?>>> FOSSIL_KEYS = new EnumMap<>(FossilEra.class);
@@ -103,6 +104,15 @@ public class LITConfiguredFeatures {
                         Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(BlockStateProvider.simple(BlockInit.RED_ALGAE.get()))
                 ))
         ));
+
+        //MUSHROOMS
+        register(context, GONDWANAGARICITES_KEY, FeatureInit.GONDWANAGARICITES_MUSHROOM.get(),
+                new HugeMushroomFeatureConfiguration(
+                        BlockStateProvider.simple(BlockInit.GONDWANAGARICITES_BLOCK.get().defaultBlockState()
+                                .setValue(HugeMushroomBlock.DOWN, false)),
+                        BlockStateProvider.simple(BlockInit.GONDWANAGARICITES_STEM.get().defaultBlockState()
+                                .setValue(HugeMushroomBlock.UP, false).setValue(HugeMushroomBlock.DOWN, false)),
+                        2));
     }
 
     private static ResourceKey<ConfiguredFeature<?, ?>> registerKey(String name) {
