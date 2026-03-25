@@ -20,8 +20,13 @@ public class PrehistoricBookScreen extends Screen {
 
     private static final ResourceLocation BOOK_TEXTURE = ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/gui/prehistoric_book.png");
 
-    private final int imageWidth = 256;
-    private final int imageHeight = 192;
+    private final int imageWidth = 328;
+    private final int imageHeight = 181;
+
+    private final int xMarginToCenter = 20;
+
+    private int topPos, topPagePos;
+    private int leftPos, leftPagePos;
 
     private int currentPage = 0;
     private int maxPages = 2;
@@ -43,17 +48,19 @@ public class PrehistoricBookScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        int x = (this.width - this.imageWidth) / 2;
-        int y = (this.height - this.imageHeight) / 2;
 
-        this.btnPrev = new PageButton(x + 20, y + 155, false, (button) -> {
+        leftPos = (this.width - this.imageWidth) / 2;
+        topPos = (this.height - this.imageHeight) / 2;
+
+        //switching to relative number basically, so what we are doing here is setting a margin of 5 % of the image width and height
+        this.btnPrev = new PageButton(leftPos + xMarginToCenter + Math.round((imageWidth - 2f * xMarginToCenter) * 0.05f), topPos + Math.round(imageHeight * 0.95f) - 13, false, (button) -> {
             if (this.currentPage > 0) {
                 this.currentPage--;
                 this.updateButtons();
             }
         }, true);
 
-        this.btnNext = new PageButton(x + 215, y + 155, true, (button) -> {
+        this.btnNext = new PageButton(leftPos + xMarginToCenter + Math.round((imageWidth - 2f * xMarginToCenter) * 0.95f) - 23, topPos + Math.round(imageHeight * 0.95f) - 13, true, (button) -> {
             if (this.currentPage < this.maxPages) {
                 this.currentPage++;
                 this.updateButtons();
@@ -112,7 +119,7 @@ public class PrehistoricBookScreen extends Screen {
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
 
-        pGuiGraphics.blit(BOOK_TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight);
+        pGuiGraphics.blit(BOOK_TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight, 512, 512);
         this.hoveredItem = ItemStack.EMPTY;
 
         if (this.currentPage == 0) {

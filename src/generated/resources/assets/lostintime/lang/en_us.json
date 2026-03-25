@@ -263,5 +263,6 @@
   "item.lostintime.zircon": "Zircon",
   "item.lostintime.zircon_catalyst": "Zircon Catalyst",
   "item.lostintime.zircon_knife": "Zircon Knife",
-  "lostintime.tooltip.residue": "Residue: %s / %s"
+  "lostintime.tooltip.residue": "Residue: %s / %s",
+  "message.lostintime.infection_block": "The infection prevents your wounds from healing!"
 }

@@ -68,8 +68,6 @@ public class DaeodonAi {
 
         brain.tick((ServerLevel) daeodon.level(), daeodon);
         brain.setActiveActivityToFirstValid(ImmutableList.of(Activity.FIGHT, Activity.IDLE));
-
-        LostInTime.LOGGER.debug("move target value : {}", brain.getMemory(MemoryModuleType.WALK_TARGET).orElse(null));
     }
 
     public static void initIdleActivity(Brain<Daeodon> brain) {
