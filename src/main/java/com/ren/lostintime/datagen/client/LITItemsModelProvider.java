@@ -91,6 +91,8 @@ public class LITItemsModelProvider extends ItemModelProvider {
         spawnEgg(ItemInit.LEPTICTIDIUM_SPAWN_EGG.get());
         spawnEgg(ItemInit.SCUTOSAURUS_SPAWN_EGG.get());
         spawnEgg(ItemInit.PLESIOSAURUS_SPAWN_EGG.get());
+        spawnEgg(ItemInit.MASTODONSAURUS_SPAWN_EGG.get());
+        spawnEgg(ItemInit.HELICOPRION_SPAWN_EGG.get());
 
         saplingItem(BlockInit.MANGO_SAPLING);
         saplingItem(BlockInit.ARAUCARIOXYLON_SAPLING);
@@ -101,11 +103,11 @@ public class LITItemsModelProvider extends ItemModelProvider {
 
         simple(ItemInit.BOTHRIOLEPIS_ROE_BUCKET.get());
         simple(ItemInit.ENDOCERAS_EGGS_BUCKET.get());
-        //simple(ItemInit.ANOMALOCARIS_ROE_BUCKET.get());
 
         simple(ItemInit.PLESIOSAURUS_BABY_BUCKET.get());
         simple(ItemInit.ENDOCERAS_BABY_BUCKET.get());
         simple(ItemInit.BOTHRIOLEPIS_BABY_BUCKET.get());
+        simple(ItemInit.ANOMALOCARIS_BABY_BUCKET.get());
 
         simple(ItemInit.GUARDIAN_SPIKE.get());
 

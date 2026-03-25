@@ -2,15 +2,15 @@ package com.ren.lostintime.common.event;
 
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.entity.creatures.Dodo;
-import com.ren.lostintime.common.init.BlockInit;
-import com.ren.lostintime.common.init.EnchantmentInit;
-import com.ren.lostintime.common.init.ItemInit;
-import com.ren.lostintime.common.init.VillagerInit;
+import com.ren.lostintime.common.init.*;
 import com.ren.lostintime.common.villager.LITItemTrade;
 import com.ren.lostintime.common.villager.helper.RandomItemStackSource;
 import com.ren.lostintime.datagen.server.LITTags;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.npc.VillagerTrades;
@@ -28,6 +28,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -113,6 +116,59 @@ public class ServerEvents {
             if (event.getState().is(BlockInit.ARAUCARIOXYLON_WOOD.get())) {
                 event.setFinalState(BlockInit.STRIPPED_ARAUCARIOXYLON_WOOD.get().defaultBlockState()
                         .setValue(RotatedPillarBlock.AXIS, event.getState().getValue(RotatedPillarBlock.AXIS)));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingHeal(LivingHealEvent event) {
+        LivingEntity entity = event.getEntity();
+
+        if (entity.hasEffect(MobEffectInit.INFECTION.get())) {
+
+            event.setCanceled(true);
+
+            if (entity instanceof Player player && !entity.level().isClientSide) {
+                if (player.tickCount % 40 == 0 || event.getAmount() > 1.0F) {
+
+                    player.displayClientMessage(
+                            Component.translatable("message.lostintime.infection_block")
+                                    .withStyle(ChatFormatting.DARK_GREEN),
+                            true
+                    );
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingJump(LivingEvent.LivingJumpEvent event) {
+        LivingEntity entity = event.getEntity();
+
+        if (entity.hasEffect(MobEffectInit.FRACTURE.get())) {
+            int amplifier = entity.getEffect(MobEffectInit.FRACTURE.get()).getAmplifier();
+
+            if (amplifier >= 2) {
+                entity.hurt(entity.damageSources().fall(), 1.0F); // 1.0F es medio corazón
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingFall(LivingFallEvent event) {
+        LivingEntity entity = event.getEntity();
+
+        if (entity.hasEffect(MobEffectInit.FRACTURE.get())) {
+            int amplifier = entity.getEffect(MobEffectInit.FRACTURE.get()).getAmplifier();
+
+            float actualdistance = event.getDistance();
+
+            if (actualdistance > 0.5F) {
+                float extraDistance = 3.0F + (amplifier * 1.0F);
+
+                event.setDistance(actualdistance + extraDistance);
+
+                event.setDamageMultiplier(event.getDamageMultiplier() + 0.5F);
             }
         }
     }

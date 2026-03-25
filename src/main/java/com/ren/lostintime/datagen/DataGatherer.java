@@ -8,8 +8,10 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class DataGatherer {
@@ -31,6 +33,7 @@ public class DataGatherer {
         gen.addProvider(event.includeServer(), new LITLootTableProvider(output));
         gen.addProvider(event.includeServer(), new LITPoiTypeProvider(output, provider, helper));
         gen.addProvider(event.includeServer(), new LITBiomeTags(output, provider, helper));
+        gen.addProvider(event.includeServer(), new ForgeAdvancementProvider(output, provider, helper, List.of(new LITAdvancementProvider())));
 
         //CLIENT
         gen.addProvider(event.includeClient(), new LITBlockStateProvider(output, helper));

@@ -7,9 +7,12 @@ import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 
 public class DaeodonModel extends DefaultedEntityGeoModel<Daeodon> {
 
-    private static final String BABY_TEXTURE = "textures/entity/daeodon/daeodon_baby.png";
+    private static final ResourceLocation BABY_TEXTURE = ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/entity/daeodon/daeodon_baby.png");
     private static final String BABY_ANIM = "animations/entity/daeodon_baby.animation.json";
     private static final String BABY_GEO = "geo/entity/daeodon_baby.geo.json";
+
+    private static final ResourceLocation ADULT_TEXTURE = ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/entity/daeodon.png");
+
 
     public DaeodonModel() {
         super(ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "daeodon"));
@@ -17,7 +20,7 @@ public class DaeodonModel extends DefaultedEntityGeoModel<Daeodon> {
 
     @Override
     public ResourceLocation getTextureResource(Daeodon animatable) {
-        return animatable.isBaby() ? ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, BABY_TEXTURE) : super.getTextureResource(animatable);
+        return animatable.isBaby() ? BABY_TEXTURE : ADULT_TEXTURE;
     }
 
     @Override

@@ -8,6 +8,9 @@
 				"mastodonsaurus": {
 					"rotation": {
 						"vector": [0, "-math.sin(query.anim_time*180)*5", 0]
+					},
+					"position": {
+						"vector": [0, -6, 0]
 					}
 				},
 				"head": {

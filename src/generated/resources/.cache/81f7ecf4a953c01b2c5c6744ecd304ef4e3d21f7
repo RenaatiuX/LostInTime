@@ -1,7 +1,8 @@
-// 1.20.1	2026-03-06T11:15:10.2904948	Item Models: lostintime
+// 1.20.1	2026-03-12T10:44:00.5434346	Item Models: lostintime
 0570665fcef0e1f3922095a8aa98973135ded46e assets/lostintime/models/item/amber.json
 1a1915f23093ff4fbded979014b60faf9fa1d93e assets/lostintime/models/item/amber_catalyst.json
 879d909212d6267838764316100b2c449321306b assets/lostintime/models/item/amethyst_catalyst.json
+905f43c6d963ad3d80002f1989989fbebf3e498f assets/lostintime/models/item/anomalocaris_baby_bucket.json
 89daf447e685f234deebcc2968d3f90fa3cee0df assets/lostintime/models/item/anomalocaris_fossil.json
 14b123ac2613be145a56d4e35216487de011ba10 assets/lostintime/models/item/anomalocaris_roe.json
 2c0702a05ea5fedd4159dac2f205fa5a863002d6 assets/lostintime/models/item/anomalocaris_soul_configuration.json
@@ -109,6 +110,7 @@ af7affd58910004752be8cb604091600bd28e888 assets/lostintime/models/item/golden_ey
 b88fe4aa34497e9be8c5d9570290a1960bc9f7c6 assets/lostintime/models/item/gold_catalyst.json
 60fcdba47fab343c1482fa7b790afb7b69a82f67 assets/lostintime/models/item/gondwanagaricites_vital_pattern.json
 9503bba495ea11cf6474824156381cf39bb9afdc assets/lostintime/models/item/guardian_spike.json
+63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/lostintime/models/item/helicoprion_spawn_egg.json
 0889fed767d510c6dc511cbef6974bcf7e698391 assets/lostintime/models/item/hylonomus_egg.json
 b6cb09935c85e93de208f2bb0005759b2a1292ee assets/lostintime/models/item/hylonomus_fossil.json
 3491d9b95add05fab970526c6c406a95f367ebfb assets/lostintime/models/item/hylonomus_soul_configuration.json
@@ -129,6 +131,7 @@ f3aae676da69f9346b49566afff1b75be57e4bf5 assets/lostintime/models/item/mastodons
 487469cd2edd8584f6f0eee87df26b1d52cd7ac9 assets/lostintime/models/item/mastodonsaurus_fossil.json
 b61a120f9b2ec1a8d4c2c6f5b589148bc0bc60ed assets/lostintime/models/item/mastodonsaurus_skull.json
 b9fec14334fdd570eb3c24104333e07a3bcaee56 assets/lostintime/models/item/mastodonsaurus_soul_configuration.json
+63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/lostintime/models/item/mastodonsaurus_spawn_egg.json
 78b0649195fab95316cc9f76bcb0c4d93ce0c663 assets/lostintime/models/item/neogene_fossil.json
 580cda74429ee08b801e2b49378248bda1333e1e assets/lostintime/models/item/netherite_knife.json
 faf4fdf0d6f7f85e30583a357ecbda121997264b assets/lostintime/models/item/obsidian_catalyst.json

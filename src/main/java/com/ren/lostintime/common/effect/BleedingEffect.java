@@ -21,22 +21,19 @@ public class BleedingEffect extends MobEffect {
             DamageSource damageSource = LITDamageTypes.causeBleedingDamage(pLivingEntity.level());
             pLivingEntity.hurt(damageSource, damage);
 
-            if (!pLivingEntity.level().isClientSide) {
-                ServerLevel serverLevel = (ServerLevel) pLivingEntity.level();
+            if (pLivingEntity.level().isClientSide) {
+                int amountOfBlood = 1 + pAmplifier;
 
-                double x = pLivingEntity.getX();
-                double y = pLivingEntity.getY() + (pLivingEntity.getBbHeight() / 2.0D);
-                double z = pLivingEntity.getZ();
+                for (int i = 0; i < amountOfBlood; i++) {
 
-                serverLevel.sendParticles(ParticlesInit.BLEEDING_STREAM.get(), x, y, z,
-                        5,
-                        0.2D, 0.2D, 0.2D,
-                        0.05D);
+                    double x = pLivingEntity.getRandomX(0.6D);
 
-                serverLevel.sendParticles(ParticlesInit.BLEEDING_DROPLET.get(), x, y, z,
-                        10,
-                        0.3D, 0.3D, 0.3D,
-                        0.01D);
+                    double y = pLivingEntity.getY() + (pLivingEntity.getBbHeight() / 2.0D) + (pLivingEntity.getRandom().nextDouble() * 0.4D);
+
+                    double z = pLivingEntity.getRandomZ(0.6D);
+
+                    pLivingEntity.level().addParticle(ParticlesInit.BLEEDING_STREAM.get(), x, y, z, 0.0D, 0.0D, 0.0D);
+                }
             }
         }
     }

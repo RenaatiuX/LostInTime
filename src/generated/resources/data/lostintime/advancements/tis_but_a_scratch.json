@@ -1,0 +1,33 @@
+{
+  "criteria": {
+    "has_bleeding": {
+      "conditions": {
+        "effects": {
+          "lostintime:bleeding": {}
+        }
+      },
+      "trigger": "minecraft:effects_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.lostintime.tis_but_a_scratch.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:red_dye"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.lostintime.tis_but_a_scratch.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_bleeding"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

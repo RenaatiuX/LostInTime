@@ -17,11 +17,10 @@ import com.ren.lostintime.client.screen.IdentificationScreen;
 import com.ren.lostintime.client.screen.SoulConfiguratorScreen;
 import com.ren.lostintime.client.screen.SoulExtractorScreen;
 import com.ren.lostintime.client.screen.TransfiguratorScreen;
-import com.ren.lostintime.common.init.BlockEntityInit;
-import com.ren.lostintime.common.init.EntityInit;
-import com.ren.lostintime.common.init.MenuInit;
-import com.ren.lostintime.common.init.ParticlesInit;
+import com.ren.lostintime.client.screen.overlay.BleedingOverlay;
+import com.ren.lostintime.common.init.*;
 import com.ren.lostintime.common.util.LITWoodTypes;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.BoatModel;
 import net.minecraft.client.model.ChestBoatModel;
@@ -29,9 +28,14 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
 import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -61,6 +65,7 @@ public class ClientEvents {
         event.registerEntityRenderer(EntityInit.SCUTOSAURUS.get(), ScutosaurusRenderer::new);
         event.registerEntityRenderer(EntityInit.PLESIOSAURUS.get(), PlesiosaurusRenderer::new);
         event.registerEntityRenderer(EntityInit.MASTODONSAURUS.get(), MastodonsaurusRenderer::new);
+        event.registerEntityRenderer(EntityInit.HELICOPRION.get(), HelicoprionRenderer::new);
 
         event.registerEntityRenderer(EntityInit.GUARDIAN_SPIKE.get(), GuardianSpikeRenderer::new);
         event.registerEntityRenderer(EntityInit.LIT_THROWN_EGG.get(), ThrownItemRenderer::new);
@@ -96,5 +101,10 @@ public class ClientEvents {
         event.registerSpriteSet(ParticlesInit.SLEEPING_PARTICLES.get(), SleepingParticle.Factory::new);
         event.registerSpriteSet(ParticlesInit.BLEEDING_DROPLET.get(), BleedingDropletParticle.Provider::new);
         event.registerSpriteSet(ParticlesInit.BLEEDING_STREAM.get(), BleedingStreamParticle.Provider::new);
+    }
+
+    @SubscribeEvent
+    public static void registerOverlays(RegisterGuiOverlaysEvent event) {
+        event.registerAboveAll("bleeding_hud", BleedingOverlay.HUD_BLEEDING);
     }
 }

@@ -5,10 +5,12 @@ import com.ren.lostintime.common.entity.util.ISleepingEntity;
 import com.ren.lostintime.common.entity.util.SleepController;
 import com.ren.lostintime.common.init.ParticlesInit;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -26,19 +28,61 @@ import javax.annotation.Nullable;
 public abstract class LITAnimal extends Animal {
 
     public static final EntityDataAccessor<Boolean> IS_SLEEPING = SynchedEntityData.defineId(LITAnimal.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Integer> CURRENT_HUNGER = SynchedEntityData.defineId(LITAnimal.class, EntityDataSerializers.INT);
 
     protected LazyOptional<SleepController<?>> sleepControllerOptional;
 
     //sleep particles
     private int sleepParticleCooldown = 0;
 
+    private int hungerTickTimer = 0;
+
     public LITAnimal(EntityType<? extends Animal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         var sleepController = getSleepController();
         this.sleepControllerOptional = LazyOptional.of(sleepController == null ? null : () -> sleepController);
-        if (sleepController != null) {
+        /*if (sleepController != null) {
             this.entityData.define(IS_SLEEPING, false);
-        }
+        }*/
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(IS_SLEEPING, false);
+        //this.entityData.define(CURRENT_HUNGER, this.getMaxHunger());
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putBoolean("IsSleeping", this.isSleeping());
+        //pCompound.putInt("CurrentHunger", this.getHunger());
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        this.setSleeping(pCompound.getBoolean("IsSleeping"));
+        this.setHunger(pCompound.getInt("CurrentHunger"));
+    }
+
+    /*public int getMaxHunger() {
+        return 100; // Valor por defecto. Un Daeodon podría devolver 200, un Dodo 50.
+    }
+
+    public int getHunger() {
+        return this.entityData.get(CURRENT_HUNGER);
+    }*/
+
+    public void setHunger(int hunger) {
+        // Aseguramos que el hambre nunca baje de 0 ni suba más del máximo
+        //this.entityData.set(CURRENT_HUNGER, Mth.clamp(hunger, 0, this.getMaxHunger()));
+    }
+
+    // Método útil para cuando comen
+    public void feed(int amount) {
+        //this.setHunger(this.getHunger() + amount);
     }
 
     /**
@@ -76,6 +120,20 @@ public abstract class LITAnimal extends Animal {
     public void aiStep() {
         if (!level().isClientSide()) {
             sleepControllerOptional.ifPresent(SleepController::tick);
+
+            //HUNGER
+            this.hungerTickTimer++;
+            if (this.hungerTickTimer >= 600) {
+                //this.setHunger(this.getHunger() - 1);
+                this.hungerTickTimer = 0;
+            }
+
+            //STARVATION
+            /*if (this.getHunger() <= 0) {
+                if (this.tickCount % 80 == 0) {
+                    this.hurt(this.damageSources().starve(), 1.0F);
+                }
+            }*/
         }
         super.aiStep();
         if (this.level().isClientSide() && this.isSleeping()) {

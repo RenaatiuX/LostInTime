@@ -5,6 +5,7 @@ import com.ren.lostintime.common.entity.AbstractBaseFish;
 import com.ren.lostintime.common.init.AttributeInit;
 import com.ren.lostintime.common.init.BlockInit;
 import com.ren.lostintime.common.init.EntityInit;
+import com.ren.lostintime.common.init.ItemInit;
 import com.ren.lostintime.datagen.server.LITTags;
 import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -320,7 +321,6 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     }
 
     // --- Interaction & Combat ---
-
     @Override
     public boolean hurt(DamageSource pSource, float amount) {
         boolean hurt = super.hurt(pSource, amount);
@@ -411,9 +411,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     protected <E extends Anomalocaris> PlayState movePredicate(final AnimationState<E> event) {
         if (!this.isInWater()) {
             event.getController().setAnimation(OUT_OF_WATER);
-        } else if (event.isMoving()) {
-            event.getController().setAnimation(SWIM);
-        } else {
+        } else if (this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6) {
             event.getController().setAnimation(SWIM);
         }
         return PlayState.CONTINUE;
@@ -434,7 +432,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
 
     @Override
     public ItemStack getBucketItemStack() {
-        return ItemStack.EMPTY;
+        return new ItemStack(ItemInit.ANOMALOCARIS_BABY_BUCKET.get());
     }
 
     // --- Inner Classes (Goals) ---

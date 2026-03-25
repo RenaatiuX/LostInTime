@@ -2,11 +2,14 @@ package com.ren.lostintime.common.entity.ai;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.mojang.datafixers.util.Pair;
 import com.ren.lostintime.common.entity.creatures.Helicoprion;
 import com.ren.lostintime.common.init.MobEffectInit;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.*;
+import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
@@ -43,7 +46,6 @@ public class HelicoprionAi {
 
     private static void initCoreActivity(Brain<Helicoprion> pBrain) {
         pBrain.addActivity(Activity.CORE, 0, ImmutableList.of(
-                new Swim(0.8F),
                 new LookAtTargetSink(45, 90),
                 new MoveToTargetSink()
         ));
@@ -51,8 +53,12 @@ public class HelicoprionAi {
 
     private static void initIdleActivity(Brain<Helicoprion> pBrain) {
         pBrain.addActivity(Activity.IDLE, 10, ImmutableList.of(
+                breachAttack(),
                 StartAttacking.create(HelicoprionAi::findTarget),
-                RandomStroll.swim(1.0F)
+                new RunOne<>(ImmutableList.of(
+                        Pair.of(RandomStroll.swim(1.0F), 2),
+                        Pair.of(new DoNothing(30, 60), 1)
+                ))
         ));
     }
 
@@ -92,6 +98,49 @@ public class HelicoprionAi {
                     }
                     return false;
                 }));
+    }
+
+    private static OneShot<Helicoprion> breachAttack() {
+        return BehaviorBuilder.create(instance -> instance.group(
+                instance.present(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES),
+                instance.registered(MemoryModuleType.ATTACK_TARGET) // Usamos esto para no interferir con la caza normal
+        ).apply(instance, (entitiesAccessor, targetAccessor) -> (level, entity, time) -> {
+
+            if (entity.isBreaching() || entity.getBrain().hasMemoryValue(MemoryModuleType.ATTACK_COOLING_DOWN)) {
+                return false;
+            }
+
+            BlockPos posAbove = entity.blockPosition().above();
+            if (!level.getBlockState(posAbove).isAir()) {
+                return false;
+            }
+
+            Optional<LivingEntity> flyingTarget = instance.get(entitiesAccessor).findClosest(target -> {
+
+                if (target instanceof Helicoprion) return false;
+                if (target.isInWater() || target.onGround()) return false;
+
+                double yDiff = target.getY() - entity.getY();
+                if (yDiff < 1.0D || yDiff > 8.0D) return false;
+
+                double horizontalDist = Math.sqrt(entity.distanceToSqr(target.getX(), entity.getY(), target.getZ()));
+                return horizontalDist <= 10.0D;
+            });
+
+            if (flyingTarget.isPresent()) {
+                LivingEntity prey = flyingTarget.get();
+
+                entity.getLookControl().setLookAt(prey);
+
+                entity.executeBreachAttack(prey);
+
+                entity.getBrain().setMemoryWithExpiry(MemoryModuleType.ATTACK_COOLING_DOWN, true, 40L);
+
+                return true;
+            }
+
+            return false;
+        }));
     }
 
 }

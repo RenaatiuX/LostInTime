@@ -187,7 +187,7 @@ public class BlockInit {
                     ItemInit.BOTHRIOLEPIS_ROE_BUCKET, 1, 3, 8000, 24000));
     public static final RegistryObject<Block> ANOMALOCARIS_ROE = BLOCKS.register("anomalocaris_roe",
             () -> new LITRoeBlock(BlockBehaviour.Properties.copy(Blocks.FROGSPAWN), EntityInit.ANOMALOCARIS,
-                    ItemInit.ANOMALOCARIS_ROE_BUCKET, 1, 2, 4000, 12000));
+                    null, 1, 2, 4000, 12000));
     public static final RegistryObject<Block> MASTODONSAURUS_EGG = BLOCKS.register("mastodonsaurus_egg",
             () -> new LITRoeBlock(BlockBehaviour.Properties.copy(Blocks.FROGSPAWN), EntityInit.MASTODONSAURUS,
                     null, 1, 1, 10000, 32000));

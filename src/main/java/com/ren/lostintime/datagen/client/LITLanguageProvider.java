@@ -24,5 +24,10 @@ public class LITLanguageProvider extends LanguageProvider{
 
         add("death.attack.bleeding", "%1$s bled to death");
         add("death.attack.bleeding.player", "%1$s bled to death while trying to escape %2$s");
+
+        add("message.lostintime.infection_block", "The infection prevents your wounds from healing!");
+
+        add("advancement.lostintime.tis_but_a_scratch.title", "'Tis But a Scratch!");
+        add("advancement.lostintime.tis_but_a_scratch.desc", "Survive the bite of a prehistoric predator.");
     }
 }

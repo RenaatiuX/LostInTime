@@ -41,6 +41,8 @@ public class ItemInit {
     public static final RegistryObject<Item> ZIRCON = registerSimple("zircon");
     public static final RegistryObject<Item> OPAL = registerSimple("opal");
     public static final RegistryObject<Item> SPINEL = registerSimple("spinel");
+    public static final RegistryObject<Item> PREHISTORIC_BOOK = ITEMS.register("prehistoric_book",
+            () -> new PrehistoricBookItem(new Item.Properties()));
 
     //SAC
     public static final RegistryObject<Item> DAEODON_SAC = registerSimple("daeodon_sac");
@@ -243,10 +245,7 @@ public class ItemInit {
             () -> new RoeBucketItem(BlockInit.BOTHRIOLEPIS_ROE, () -> SoundEvents.BUCKET_EMPTY, new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ENDOCERAS_EGGS_BUCKET = ITEMS.register("endoceras_eggs_bucket",
             () -> new RoeBucketItem(BlockInit.ENDOCERAS_EGG, () -> SoundEvents.BUCKET_EMPTY, new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> ANOMALOCARIS_ROE_BUCKET = ITEMS.register("anomalocaris_roe_bucket",
-            () -> new RoeBucketItem(BlockInit.ANOMALOCARIS_ROE, () -> SoundEvents.BUCKET_EMPTY, new Item.Properties().stacksTo(1)));
 
-    //BUCKET
     public static final RegistryObject<Item> PLESIOSAURUS_BABY_BUCKET = ITEMS.register("plesiosaurus_baby_bucket",
             () -> new MobBucketItem(EntityInit.PLESIOSAURUS, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY,
                     new Item.Properties().stacksTo(1)));
@@ -255,6 +254,9 @@ public class ItemInit {
                     new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> BOTHRIOLEPIS_BABY_BUCKET = ITEMS.register("bothriolepis_baby_bucket",
             () -> new MobBucketItem(EntityInit.BOTHRIOLEPIS, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY,
+                    new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ANOMALOCARIS_BABY_BUCKET = ITEMS.register("anomalocaris_baby_bucket",
+            () -> new MobBucketItem(EntityInit.ANOMALOCARIS, () -> Fluids.WATER, () -> SoundEvents.BUCKET_EMPTY,
                     new Item.Properties().stacksTo(1)));
 
     //SPAWN EGG
@@ -276,6 +278,10 @@ public class ItemInit {
             EntityInit.SCUTOSAURUS, 5852492, 7691613);
     public static final RegistryObject<Item> PLESIOSAURUS_SPAWN_EGG = registerSpawnEgg("plesiosaurus_spawn_egg",
             EntityInit.PLESIOSAURUS, 2372675, 14280690);
+    public static final RegistryObject<Item> MASTODONSAURUS_SPAWN_EGG = registerSpawnEgg("mastodonsaurus_spawn_egg",
+            EntityInit.MASTODONSAURUS, 5262637, 9999450);
+    public static final RegistryObject<Item> HELICOPRION_SPAWN_EGG = registerSpawnEgg("helicoprion_spawn_egg",
+            EntityInit.HELICOPRION, 4871251, 15592941);
 
     //BOATS
     public static final RegistryObject<Item> ARAUCARIOXYLON_BOAT = ITEMS.register("araucarioxylon_boat",

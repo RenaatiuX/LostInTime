@@ -15,6 +15,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.schedule.Activity;
@@ -32,11 +33,14 @@ public class MastodonsaurusAi {
             MemoryModuleType.PATH,
             MemoryModuleType.ATTACK_TARGET,
             MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
-            MemoryModuleType.ATTACK_COOLING_DOWN
+            MemoryModuleType.ATTACK_COOLING_DOWN,
+            MemoryModuleType.HURT_BY,
+            MemoryModuleType.HURT_BY_ENTITY
     );
 
     public static final ImmutableList<SensorType<? extends Sensor<? super Mastodonsaurus>>> SENSOR_TYPES = ImmutableList.of(
-            SensorType.NEAREST_LIVING_ENTITIES
+            SensorType.NEAREST_LIVING_ENTITIES,
+            SensorType.HURT_BY
     );
 
     public static void makeBrain(Brain<Mastodonsaurus> pBrain) {
@@ -58,6 +62,7 @@ public class MastodonsaurusAi {
 
     private static void initIdleActivity(Brain<Mastodonsaurus> pBrain) {
         pBrain.addActivity(Activity.IDLE, 10, ImmutableList.of(
+                babyPanic(),
                 dragToWater(),
                 StartAttacking.create(MastodonsaurusAi::findSheepTarget),
                 seekWater(),
@@ -85,7 +90,7 @@ public class MastodonsaurusAi {
 
     //SHEEPS For testing only
     private static Optional<? extends LivingEntity> findSheepTarget(Mastodonsaurus masto) {
-        if (!masto.getPassengers().isEmpty()) return Optional.empty();
+        if (masto.isBaby() || !masto.getPassengers().isEmpty()) return Optional.empty();
 
         return masto.getBrain().getMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES).flatMap(entities ->
                 entities.findClosest(entity -> entity instanceof Sheep)
@@ -117,7 +122,7 @@ public class MastodonsaurusAi {
                 instance.registered(MemoryModuleType.WALK_TARGET)
         ).apply(instance, (walkTargetAccessor) -> (level, entity, time) -> {
 
-            if (!entity.getPassengers().isEmpty() && !entity.isInWater()) {
+            if (!entity.isBaby() || !entity.getPassengers().isEmpty() && !entity.isInWater()) {
                 if (!instance.tryGet(walkTargetAccessor).isPresent()) {
                     BlockPos waterPos = findNearestWater(level, entity.blockPosition(), 15);
                     if (waterPos != null) {
@@ -142,10 +147,10 @@ public class MastodonsaurusAi {
     private static OneShot<Mastodonsaurus> seekWater() {
         return BehaviorBuilder.create(instance -> instance.group(
                 instance.registered(MemoryModuleType.WALK_TARGET),
-                instance.absent(MemoryModuleType.ATTACK_TARGET) // Solo lo hace si está tranquilo
+                instance.absent(MemoryModuleType.ATTACK_TARGET)
         ).apply(instance, (walkTargetAccessor, attackTargetAccessor) -> (level, entity, time) -> {
 
-            if (!entity.isInWater() && entity.landTimer > 600 && entity.getPassengers().isEmpty()) {
+            if (!entity.isBaby() || !entity.isInWater() && entity.landTimer > 600 && entity.getPassengers().isEmpty()) {
 
                 BlockPos targetWater = null;
                 RandomSource random = entity.getRandom();
@@ -177,7 +182,7 @@ public class MastodonsaurusAi {
                 instance.absent(MemoryModuleType.ATTACK_TARGET)
         ).apply(instance, (walkTargetAccessor, attackTargetAccessor) -> (level, entity, time) -> {
 
-            if (entity.isInWater() && entity.swimTimer > 1200 && entity.getPassengers().isEmpty()) {
+            if (!entity.isBaby() || entity.isInWater() && entity.swimTimer > 1200 && entity.getPassengers().isEmpty()) {
 
                 Vec3 landPos = LandRandomPos.getPos(entity, 15, 7);
 
@@ -191,6 +196,29 @@ public class MastodonsaurusAi {
                 }
             }
             return false;
+        }));
+    }
+
+    private static OneShot<Mastodonsaurus> babyPanic() {
+        return BehaviorBuilder.create(instance -> instance.group(
+                instance.present(MemoryModuleType.HURT_BY_ENTITY),
+                instance.registered(MemoryModuleType.WALK_TARGET)
+        ).apply(instance, (hurtByAccessor, walkTargetAccessor) -> (level, entity, time) -> {
+
+            if (!entity.isBaby()) return false;
+
+            LivingEntity attacker = instance.get(hurtByAccessor);
+
+            if (entity.distanceToSqr(attacker) > 144.0D) {
+                entity.getBrain().eraseMemory(MemoryModuleType.HURT_BY_ENTITY);
+                return true;
+            }
+
+            Vec3 fleePos = DefaultRandomPos.getPosAway(entity, 16, 7, attacker.position());
+            if (fleePos != null) {
+                walkTargetAccessor.set(new WalkTarget(fleePos, 1.5F, 0));
+            }
+            return true;
         }));
     }
 }

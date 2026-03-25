@@ -134,7 +134,7 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity, IEggLay
 
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
-        return null;
+        return EntityInit.BOTHRIOLEPIS.get().create(pLevel);
     }
 
     @Override

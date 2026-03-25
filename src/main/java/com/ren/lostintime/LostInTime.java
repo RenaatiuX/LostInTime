@@ -37,6 +37,7 @@ public class LostInTime {
         EnchantmentInit.ENCHANTMENTS.register(modEventBus);
         AttributeInit.ATTRIBUTES.register(modEventBus);
         MobEffectInit.MOB_EFFECTS.register(modEventBus);
+        SoundInit.SOUNDS.register(modEventBus);
 
         LootConditionsInit.LOOT_CONDITIONS.register(modEventBus);
         LootConditionsInit.LOOT_POOL_ENTRIES.register(modEventBus);
@@ -68,6 +69,7 @@ public class LostInTime {
             event.accept(ItemInit.ENDOCERAS_SHELL_FRAGMENT);
             event.accept(ItemInit.SCUTOSAURUS_PLATE);
             event.accept(ItemInit.REGURGITATED_MASS);
+            event.accept(ItemInit.PREHISTORIC_BOOK);
 
             event.accept(ItemInit.DAEODON_SAC);
             event.accept(ItemInit.LEPTICTIDIUM_SAC);
@@ -236,6 +238,8 @@ public class LostInTime {
             event.accept(ItemInit.LEPTICTIDIUM_SPAWN_EGG);
             event.accept(ItemInit.SCUTOSAURUS_SPAWN_EGG);
             event.accept(ItemInit.PLESIOSAURUS_SPAWN_EGG);
+            event.accept(ItemInit.MASTODONSAURUS_SPAWN_EGG);
+            event.accept(ItemInit.HELICOPRION_SPAWN_EGG);
 
             event.accept(BlockInit.MANGO_LEAVES);
             event.accept(BlockInit.MANGO_LOG);
@@ -278,13 +282,13 @@ public class LostInTime {
             event.accept(ItemInit.ARAUCARIOXYLON_BOAT);
             event.accept(ItemInit.ARAUCARIOXYLON_CHEST_BOAT);
 
-            event.accept(ItemInit.ANOMALOCARIS_ROE_BUCKET);
             event.accept(ItemInit.BOTHRIOLEPIS_ROE_BUCKET);
             event.accept(ItemInit.ENDOCERAS_EGGS_BUCKET);
 
             event.accept(ItemInit.PLESIOSAURUS_BABY_BUCKET);
             event.accept(ItemInit.ENDOCERAS_BABY_BUCKET);
             event.accept(ItemInit.BOTHRIOLEPIS_BABY_BUCKET);
+            event.accept(ItemInit.ANOMALOCARIS_BABY_BUCKET);
 
             event.accept(BlockInit.SPINEL_ORE);
             event.accept(BlockInit.ZIRCON_ORE);

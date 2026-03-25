@@ -8,11 +8,13 @@ import com.ren.lostintime.common.entity.ai.ScutosaurusAi;
 import com.ren.lostintime.common.entity.util.ISleepingEntity;
 import com.ren.lostintime.common.entity.util.SleepController;
 import com.ren.lostintime.common.entity.util.SleepType;
+import com.ren.lostintime.common.init.EntityInit;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
@@ -20,9 +22,11 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -39,21 +43,31 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity, ISleepingEntity {
 
+    private static final EntityDataAccessor<Integer> DATA_GROWTH_STAGE = SynchedEntityData.defineId(Mastodonsaurus.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_DEATH_ROLLING = SynchedEntityData.defineId(Mastodonsaurus.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> DATA_REGURGITATING = SynchedEntityData.defineId(Mastodonsaurus.class, EntityDataSerializers.BOOLEAN);
 
     //ANIMATIONS
     protected static final RawAnimation SWIM = RawAnimation.begin().thenLoop("swim");
     protected static final RawAnimation ATTACK = RawAnimation.begin().thenPlay("attack");
     protected static final RawAnimation SLEEP = RawAnimation.begin().thenLoop("sleep");
-    public static final RawAnimation DEATHROLL = RawAnimation.begin().thenLoop("deathroll");
+    protected static final RawAnimation DEATHROLL = RawAnimation.begin().thenLoop("deathroll");
     protected static final RawAnimation WALK = RawAnimation.begin().thenLoop("walk");
     protected static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");
     protected static final RawAnimation PANTING = RawAnimation.begin().thenLoop("panting");
     protected static final RawAnimation REGURGITATE = RawAnimation.begin().thenLoop("regurgitate");
+    //BABY ANIM
+    protected static final RawAnimation BABY_SWIM_FAST = RawAnimation.begin().thenLoop("swim_fast");
+    protected static final RawAnimation BABY_OUT_OF_WATER = RawAnimation.begin().thenLoop("out_of_water");
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public int digestionTimer = 0;
     public boolean isDigesting = false;
+    public float healthAtDigestionStart = 0;
+    public boolean wasStarvingBeforeEating = false;
+    public int regurgitationAnimTimer = 0;
+    public int pendingVomitType = 0;
+
     public int deathRollTimer = 0;
     private boolean isLandNavigator;
     public int swimTimer = 0;
@@ -95,10 +109,16 @@ public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity, ISleepi
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_DEATH_ROLLING, false);
+        this.entityData.define(DATA_GROWTH_STAGE, 0);
+        this.entityData.define(DATA_REGURGITATING, false);
     }
 
     public boolean isDeathRolling() {
         return this.entityData.get(DATA_DEATH_ROLLING);
+    }
+
+    public boolean isRegurgitating() {
+        return this.entityData.get(DATA_REGURGITATING);
     }
 
     //BRAIN
@@ -110,12 +130,16 @@ public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity, ISleepi
 
         MastodonsaurusAi.updateActivity(this);
         super.customServerAiStep();
+
+        //CHANGE OF NAVIGATION
         boolean onGround = !this.isInWater();
         if (onGround && !this.isLandNavigator) {
             this.switchNavigator(true);
         } else if (!onGround && this.isLandNavigator) {
             this.switchNavigator(false);
         }
+
+        //AMPHIBIAN TIMERS
         if (this.isInWater()) {
             this.swimTimer++;
             this.landTimer = 0;
@@ -123,14 +147,7 @@ public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity, ISleepi
             this.landTimer++;
             this.swimTimer = 0;
         }
-        if (this.isInWater() && this.horizontalCollision && this.isLandNavigator) {
-            float f = this.getYRot() * ((float)Math.PI / 180F);
-            this.setDeltaMovement(this.getDeltaMovement().add(
-                    (double)(-Mth.sin(f) * 0.2F),
-                    0.1D,
-                    (double)(Mth.cos(f) * 0.2F)
-            ));
-        }
+
         if (!this.getPassengers().isEmpty() && this.getPassengers().get(0) instanceof LivingEntity prey) {
             if (this.isInWater()) {
                 if (!this.entityData.get(DATA_DEATH_ROLLING)) {
@@ -147,7 +164,13 @@ public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity, ISleepi
                     prey.stopRiding();
                     this.entityData.set(DATA_DEATH_ROLLING, false);
                     this.deathRollTimer = 0;
-                    // ¡AQUÍ activaremos la digestión luego!
+                    // DIGESTION
+                    if (!this.isDigesting) {
+                        this.isDigesting = true;
+                        this.digestionTimer = 60; // 3 minutes of digestion
+                        this.healthAtDigestionStart = this.getHealth();
+                        this.wasStarvingBeforeEating = this.getHealth() < (this.getMaxHealth() * 0.5F);
+                    }
                 }
             }
             else {
@@ -163,6 +186,86 @@ public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity, ISleepi
                 this.entityData.set(DATA_DEATH_ROLLING, false);
                 this.deathRollTimer = 0;
             }
+        }
+
+        if (this.isDigesting) {
+            this.digestionTimer--;
+
+            if (this.digestionTimer <= 0) {
+                this.isDigesting = false;
+                float healthLost = this.healthAtDigestionStart - this.getHealth();
+                boolean tookHeavyDamage = healthLost > (this.getMaxHealth() * 0.33F);
+
+                int roll = this.random.nextInt(100) + 1;
+                int vomitType = 0;
+
+                if (tookHeavyDamage) {
+                    if (roll <= 33) vomitType = 2;
+                } else if (this.wasStarvingBeforeEating) {
+                    if (roll <= 50) vomitType = 3;
+                } else {
+                    if (roll <= 20) vomitType = 1;
+                }
+
+                if (vomitType > 0) {
+                    this.entityData.set(DATA_REGURGITATING, true);
+                    this.regurgitationAnimTimer = 40;
+                    this.pendingVomitType = vomitType;
+                }
+            }
+        }
+
+        if (this.isRegurgitating()) {
+            this.regurgitationAnimTimer--;
+            if (this.regurgitationAnimTimer == 20) {
+                this.regurgitateLoot(this.pendingVomitType);
+            }
+
+            if (this.regurgitationAnimTimer <= 0) {
+                this.entityData.set(DATA_REGURGITATING, false);
+                this.pendingVomitType = 0;
+            }
+        }
+    }
+
+    private void regurgitateLoot(int vomitType) {
+        this.playSound(SoundEvents.LLAMA_SPIT, 1.0F, 0.8F);
+
+        ItemStack regurgitatedItem = ItemStack.EMPTY;
+
+        switch (vomitType) {
+            case 1: // Normal
+                regurgitatedItem = new ItemStack(Items.SLIME_BALL);
+                break;
+            case 2: // Por Daño
+                regurgitatedItem = new ItemStack(Items.BONE_MEAL);
+                break;
+            case 3: // Hambriento
+                regurgitatedItem = new ItemStack(Items.GOLD_NUGGET);
+                break;
+        }
+
+        if (!regurgitatedItem.isEmpty()) {
+            ItemEntity itementity = this.spawnAtLocation(regurgitatedItem, 0.5F);
+            if (itementity != null) {
+                itementity.setDeltaMovement(itementity.getDeltaMovement().add(
+                        this.getLookAngle().scale(0.3D)
+                ));
+            }
+        }
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (this.getGrowthStage() != 2 && this.isInWater() && this.horizontalCollision) {
+            float f = this.getYRot() * ((float)Math.PI / 180F);
+
+            this.setDeltaMovement(this.getDeltaMovement().add(
+                    (double)(-Mth.sin(f) * 0.2F),
+                    0.15D,
+                    (double)(Mth.cos(f) * 0.2F)
+            ));
         }
     }
 
@@ -211,20 +314,17 @@ public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity, ISleepi
 
     @Override
     public boolean canFlop() {
-        return false;
+        return this.getGrowthStage() == 2;
     }
 
     @Override
     public @Nullable SoundEvent getFlopSound() {
-        return null;
+        return SoundEvents.GENERIC_SPLASH;
     }
 
     //GROWTH SYSTEM
     public int getGrowthStage() {
-        int age = this.getAge();
-        if (age >= 0) return 0;
-        if (age >= -12000) return 1;
-        return 2;
+        return this.entityData.get(DATA_GROWTH_STAGE);
     }
 
     @Override
@@ -241,7 +341,10 @@ public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity, ISleepi
     public void baseTick() {
         super.baseTick();
         if (!this.level().isClientSide) {
-            if (this.getAge() == -12000 || this.getAge() == 0) {
+            int age = this.getAge();
+            int currentStage = (age >= 0) ? 0 : (age >= -12000 ? 1 : 2);
+            if (this.entityData.get(DATA_GROWTH_STAGE) != currentStage) {
+                this.entityData.set(DATA_GROWTH_STAGE, currentStage);
                 this.refreshDimensions();
             }
         }
@@ -249,7 +352,7 @@ public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity, ISleepi
 
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
-        return null;
+        return EntityInit.MASTODONSAURUS.get().create(pLevel);
     }
 
     //DIET
@@ -267,9 +370,24 @@ public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity, ISleepi
     private <T extends Mastodonsaurus> PlayState movementPredicate(final AnimationState<T> event) {
         if (this.isDeathRolling()) return PlayState.STOP;
 
+        if (this.getGrowthStage() == 2) {
+            if (!this.isInWater()) {
+                event.getController().setAnimation(BABY_OUT_OF_WATER);
+            } else if (this.getBrain().hasMemoryValue(MemoryModuleType.HURT_BY_ENTITY)) {
+                event.getController().setAnimation(BABY_SWIM_FAST);
+            } else {
+                event.getController().setAnimation(SWIM);
+            }
+            return PlayState.CONTINUE;
+        }
+
+        if (this.isRegurgitating()) {
+            event.getController().setAnimation(REGURGITATE);
+            return PlayState.CONTINUE;
+        }
         if (this.isInWater()) {
             event.getController().setAnimation(SWIM);
-        } else if (event.isMoving()) {
+        } else if (this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6) {
             event.getController().setAnimation(WALK);
         } else {
             event.getController().setAnimation(IDLE);
