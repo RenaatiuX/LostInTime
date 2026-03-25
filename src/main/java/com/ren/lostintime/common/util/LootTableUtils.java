@@ -7,6 +7,6 @@ public class LootTableUtils {
 
 
     public static void parseLootTable(ServerLevel serverLevel, ResourceLocation lootTable){
-        serverLevel.
+        //TODO
     }
 }
