@@ -1,6 +1,7 @@
 package com.ren.lostintime.datagen.client;
 
 import com.ren.lostintime.LostInTime;
+import com.ren.lostintime.client.screen.book.PrehistoricBookScreen;
 import com.ren.lostintime.common.init.ItemInit;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.registries.RegistryObject;
@@ -14,6 +15,8 @@ public class LITLanguageProvider extends LanguageProvider{
     @Override
     protected void addTranslations() {
         ItemInit.ITEMS.getEntries().stream().map(RegistryObject::get).forEach(this::simpleItem);
+
+        add(PrehistoricBookScreen.TITLE_TRANSLATION_KEY, "Prehistoric Book");
 
         add("container.lostintime.soul_extractor", "Soul Extractor");
         add("container.lostintime.soul_configurator", "Soul Configurator");

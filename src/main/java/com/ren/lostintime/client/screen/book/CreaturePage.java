@@ -16,11 +16,12 @@ public class CreaturePage extends Page {
     public final EntityType<? extends LivingEntity> entityType;
     public final ItemStack drop;
     public final String description;
+    public final String entityName;
 
     private LivingEntity cachedEntity;
 
     public CreaturePage(String name, EntityType<? extends LivingEntity> entityType, ItemStack drop, String description) {
-        super(name);
+        this.entityName = name;
         this.entityType = entityType;
         this.drop = drop;
         this.description = description;
@@ -34,10 +35,10 @@ public class CreaturePage extends Page {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, int x, int y, Font font, PrehistoricBookScreen screen) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, Font font, PrehistoricBookScreen screen) {
         LivingEntity entity = getEntityType(Minecraft.getInstance().level);
         if (entity != null) {
-            graphics.drawCenteredString(font, this.name, x + 64, y + 15, 0x8B7D6B);
+            graphics.drawCenteredString(font, this.entityName, x + 64, y + 15, 0x8B7D6B);
             graphics.fill(x + 20, y + 26, x + 108, y + 27, 0x558B7D6B);
 
             int entityRenderX = x + 64;

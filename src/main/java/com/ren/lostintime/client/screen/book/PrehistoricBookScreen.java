@@ -10,9 +10,11 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,16 +22,42 @@ public class PrehistoricBookScreen extends Screen {
 
     private static final ResourceLocation BOOK_TEXTURE = ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/gui/prehistoric_book.png");
 
-    private final int imageWidth = 328;
-    private final int imageHeight = 181;
+    public static final String TITLE_TRANSLATION_KEY = "gui." + LostInTime.MODID + ".prehistoric_book.title";
 
-    private final int xMarginToCenter = 20;
+    /**
+     * those never change depending on the screen instance, so we make them static
+     */
+    public static final int imageWidth = 283;
+    public static final int imageHeight = 181;
 
-    private int topPos, topPagePos;
-    private int leftPos, leftPagePos;
+    /**
+     * as this texture isnt beginning at (0,0) we need to add this margin to draw it correctly
+     */
+    private static final int xMarginToCenter = 20;
+
+    public static final int pageTurnButtonHeight = 13;
+    public static final int pageTurnButtonWidth = 23;
+
+    private int topPos;
+    private int leftPos;
+    private Rectangle leftPageBounds, rightPageBounds;
+
+    private int arrowBotMargin = 10;
+    private float arrowVertMargin = 0.07f;
+
+    //margin in percentage, book turning button height will be already excluded
+    private float leftPageLeftMargin = 0.08F;
+    private float leftPageRightMargin = 0.03F;
+    private float leftPageTopMargin = 0.07F;
+    private float leftPageBotMargin = 0.00F;
+
+    private float rightPageLeftMargin = 0.035F;
+    private float rightPageRightMargin = 0.08F;
+    private float rightPageTopMargin = 0.07F;
+    private float rightPageBotMargin = 0.00F;
+
 
     private int currentPage = 0;
-    private int maxPages = 2;
 
     private PageButton btnNext;
     private PageButton btnPrev;
@@ -38,43 +66,65 @@ public class PrehistoricBookScreen extends Screen {
     private final List<Page> pages = new ArrayList<>();
 
     public PrehistoricBookScreen() {
-        super(Component.translatable("gui."+ LostInTime.MODID + ".prehistoric_book"));
+        super(Component.translatable("gui." + LostInTime.MODID + ".prehistoric_book"));
+        this.pages.add(new TitlePage(Component.translatable(TITLE_TRANSLATION_KEY), List.of()));
         this.pages.add(new CreaturePage("Helicoprion", EntityInit.HELICOPRION.get(), new ItemStack(Items.SLIME_BALL), "Tiburón de sierra"));
         this.pages.add(new CreaturePage("Mastodonsaurus", EntityInit.MASTODONSAURUS.get(), new ItemStack(Items.COD), "Anfibio masivo"));
-
-        this.maxPages = 2 + this.pages.size();
     }
 
     @Override
     protected void init() {
         super.init();
 
-        leftPos = (this.width - this.imageWidth) / 2;
-        topPos = (this.height - this.imageHeight) / 2;
+        leftPos = (this.width - imageWidth) / 2;
+        topPos = (this.height - imageHeight) / 2;
+
+        int actualPageHeight = imageHeight - arrowBotMargin - pageTurnButtonHeight;
+        int actualPageWidth = imageWidth / 2;
+
+        int leftY = topPos + Math.round(actualPageHeight * leftPageTopMargin);//calculating the top margin
+        int leftX = leftPos + 1 + Math.round(actualPageWidth * leftPageLeftMargin);
+        int leftWidth = Math.round(actualPageWidth * (1 - leftPageLeftMargin - leftPageRightMargin));
+        int leftHeight = Math.round(actualPageHeight * (1 - leftPageTopMargin - leftPageBotMargin));
+        this.leftPageBounds = new Rectangle(leftX, leftY, leftWidth, leftHeight);
+
+        int rightY = topPos + Math.round(actualPageHeight * rightPageTopMargin);
+        int rightX = leftPos + 1 + actualPageWidth + Math.round(actualPageWidth * rightPageLeftMargin);
+        int rightWidth = Math.max(1, Math.round(actualPageWidth * (1 - rightPageLeftMargin - rightPageRightMargin)));
+        int rightHeight = Math.max(1, Math.round(actualPageHeight * (1 - rightPageTopMargin - rightPageBotMargin)));
+
+        this.rightPageBounds = new Rectangle(rightX, rightY, rightWidth, rightHeight);
+
 
         //switching to relative number basically, so what we are doing here is setting a margin of 5 % of the image width and height
-        this.btnPrev = new PageButton(leftPos + xMarginToCenter + Math.round((imageWidth - 2f * xMarginToCenter) * 0.05f), topPos + Math.round(imageHeight * 0.95f) - 13, false, (button) -> {
-            if (this.currentPage > 0) {
-                this.currentPage--;
-                this.updateButtons();
-            }
-        }, true);
-
-        this.btnNext = new PageButton(leftPos + xMarginToCenter + Math.round((imageWidth - 2f * xMarginToCenter) * 0.95f) - 23, topPos + Math.round(imageHeight * 0.95f) - 13, true, (button) -> {
-            if (this.currentPage < this.maxPages) {
-                this.currentPage++;
-                this.updateButtons();
-            }
-        }, true);
+        this.btnPrev = new PageButton(leftPos + Math.round(imageWidth * arrowVertMargin), topPos + imageHeight - arrowBotMargin - pageTurnButtonHeight, false, (button) -> previousPage(), false);
+        this.btnNext = new PageButton(leftPos + Math.round(imageWidth * (1 - arrowVertMargin)) - pageTurnButtonWidth, topPos + imageHeight - arrowBotMargin - pageTurnButtonHeight, true, (button) -> nextPage(), false);
 
         this.addRenderableWidget(this.btnPrev);
         this.addRenderableWidget(this.btnNext);
         this.updateButtons();
     }
 
+    private void setPage(int pageNumber) {
+        int tmp = this.currentPage;
+        this.currentPage = Mth.clamp(pageNumber, 0, this.pages.size() - 1);
+        updateButtons();
+        if (tmp != this.currentPage) {
+            playPageTurnSound();
+        }
+    }
+
+    private void nextPage() {
+        setPage(this.currentPage + 1);
+    }
+
+    private void previousPage() {
+        setPage(this.currentPage - 1);
+    }
+
     private void updateButtons() {
         this.btnPrev.visible = this.currentPage > 0;
-        this.btnNext.visible = this.currentPage < this.maxPages;
+        this.btnNext.visible = this.currentPage < this.pages.size() - 1;
     }
 
     @Override
@@ -88,24 +138,15 @@ public class PrehistoricBookScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        int x = (this.width - this.imageWidth) / 2;
-        int y = (this.height - this.imageHeight) / 2;
-
-        if (this.currentPage == 2 && pButton == 0) {
-            for (int i = 0; i < this.pages.size(); i++) {
-                int textY = y + 45 + (i * 15);
-                if (isMouseOver(pMouseX, pMouseY, x + 30, textY, 100, 10)) {
-                    this.currentPage = 3 + i;
-                    this.updateButtons();
-                    playClickSound();
-                    return true;
-                }
-            }
+        var page = this.pages.get(this.currentPage);
+        if (page.isInside((int) pMouseX, (int) pMouseY)) {
+            page.onClick((int) pMouseX, (int) pMouseY, pButton);
         }
+
         return super.mouseClicked(pMouseX, pMouseY, pButton);
     }
 
-    private void playClickSound() {
+    private void playPageTurnSound() {
         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
     }
 
@@ -116,38 +157,20 @@ public class PrehistoricBookScreen extends Screen {
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pGuiGraphics);
-        int x = (this.width - this.imageWidth) / 2;
-        int y = (this.height - this.imageHeight) / 2;
 
-        pGuiGraphics.blit(BOOK_TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight, 512, 512);
+        pGuiGraphics.blit(BOOK_TEXTURE, leftPos, topPos, xMarginToCenter, 0, imageWidth, imageHeight, 512, 512);
         this.hoveredItem = ItemStack.EMPTY;
 
-        if (this.currentPage == 0) {
-            pGuiGraphics.drawCenteredString(this.font, "LOST IN TIME", this.width / 2, y + 60, 0x8B0000);
-            pGuiGraphics.drawCenteredString(this.font, "Diario de Expedición", this.width / 2, y + 80, 0x555555);
+        var currentPageObject = this.pages.get(this.currentPage);
+        if (currentPageObject instanceof DoublePage doublePage){
+            doublePage.getLeftPage().setBounds(this.leftPageBounds);
+            doublePage.getRightPage().setBounds(this.rightPageBounds);
+        }else {
+            currentPageObject.setBounds(this.leftPageBounds);
         }
-        else if (this.currentPage == 1) {
-            pGuiGraphics.drawString(this.font, "Introducción", x + 30, y + 20, 0x000000, false);
-            pGuiGraphics.drawString(this.font, "Hace millones de años...", x + 30, y + 45, 0x333333, false);
-        }
-        else if (this.currentPage == 2) {
-            pGuiGraphics.drawString(this.font, "Índice de Especies", x + 30, y + 20, 0x000000, false);
+        currentPageObject.render(pGuiGraphics, pMouseX, pMouseY, this.font, this);
 
-            for (int i = 0; i < this.pages.size(); i++) {
-                Page page = this.pages.get(i);
-                int textY = y + 45 + (i * 15);
-                boolean isHovering = isMouseOver(pMouseX, pMouseY, x + 30, textY, 100, 10);
 
-                pGuiGraphics.drawString(this.font, "- " + page.name, x + 30, textY, isHovering ? 0x0000FF : 0x8B0000, false);
-            }
-        }
-        else {
-            int pageIndex = this.currentPage - 3;
-            if (pageIndex >= 0 && pageIndex < this.pages.size()) {
-                Page page = this.pages.get(pageIndex);
-                page.render(pGuiGraphics, pMouseX, pMouseY, x, y, this.font, this);
-            }
-        }
 
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
 
