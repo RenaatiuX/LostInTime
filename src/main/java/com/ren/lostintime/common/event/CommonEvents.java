@@ -4,23 +4,36 @@ import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.entity.LITWaterAnimal;
 import com.ren.lostintime.common.entity.creatures.*;
 import com.ren.lostintime.common.entity.projectile.LITThrownEgg;
+import com.ren.lostintime.common.entity.util.PlayerDiscoveredPrehistoric;
+import com.ren.lostintime.common.entity.util.PlayerDiscoveredPrehistoricImpl;
+import com.ren.lostintime.common.init.CapabilityInit;
 import com.ren.lostintime.common.init.EntityInit;
 import com.ren.lostintime.common.init.ItemInit;
 import com.ren.lostintime.common.item.LITEggItem;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Mod.EventBusSubscriber(modid = LostInTime.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CommonEvents {

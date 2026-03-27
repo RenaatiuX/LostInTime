@@ -10,7 +10,7 @@ public class ScreenRenderingUtils {
         target.setX(centerBounds.x + (centerBounds.width - target.getBounds().width) / 2);
     }
     public static void centerVertically(Rectangle centerBounds, PageComponent target){
-        target.setX(centerBounds.y + (centerBounds.height - target.getBounds().height) / 2);
+        target.setY(centerBounds.y + (centerBounds.height - target.getBounds().height) / 2);
     }
 
     public static void center(Rectangle centerBounds, PageComponent target){

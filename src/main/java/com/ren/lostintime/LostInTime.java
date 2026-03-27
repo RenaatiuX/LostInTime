@@ -1,14 +1,30 @@
 package com.ren.lostintime;
 
 import com.mojang.logging.LogUtils;
+import com.ren.lostintime.common.command.DiscoverCommand;
 import com.ren.lostintime.common.config.Config;
+import com.ren.lostintime.common.entity.util.PlayerDiscoveredPrehistoric;
+import com.ren.lostintime.common.entity.util.PlayerDiscoveredPrehistoricImpl;
 import com.ren.lostintime.common.init.*;
 import com.ren.lostintime.datagen.DataGatherer;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 @Mod(LostInTime.MODID)
@@ -21,6 +37,7 @@ public class LostInTime {
 
         modEventBus.addListener(this::addCreative);
         modEventBus.addListener(DataGatherer::gatherData);
+        modEventBus.addListener(this::networkInit);
 
         ItemInit.ITEMS.register(modEventBus);
         GroupInit.GROUP.register(modEventBus);
@@ -50,6 +67,10 @@ public class LostInTime {
         ActivitInit.ACTIVITIES.register(modEventBus);
 
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+    }
+
+    private void networkInit(FMLCommonSetupEvent event) {
+        NetworkInit.registerPackets();
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {

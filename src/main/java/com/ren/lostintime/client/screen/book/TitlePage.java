@@ -18,7 +18,7 @@ public class TitlePage extends Page {
     public TitlePage(Component title, List<Component> description) {
         this.title = title.copy().withStyle(ChatFormatting.UNDERLINE);
         this.description = description;
-        this.textPageComponent = new TextPageComponent(title.copy().withStyle(ChatFormatting.UNDERLINE), 0x6495ed, true, true);
+        this.textPageComponent = new TitlePageComponent(title.copy().withStyle(ChatFormatting.UNDERLINE), 0x6495ed, true, true);
 
 
     }

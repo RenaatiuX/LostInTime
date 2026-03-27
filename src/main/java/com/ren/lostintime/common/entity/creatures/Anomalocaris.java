@@ -2,10 +2,10 @@ package com.ren.lostintime.common.entity.creatures;
 
 import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.entity.AbstractBaseFish;
-import com.ren.lostintime.common.init.AttributeInit;
-import com.ren.lostintime.common.init.BlockInit;
-import com.ren.lostintime.common.init.EntityInit;
-import com.ren.lostintime.common.init.ItemInit;
+import com.ren.lostintime.common.entity.util.BookDescrtiptionImpl;
+import com.ren.lostintime.common.entity.util.LostInTimeBookDescription;
+import com.ren.lostintime.common.entity.util.TimePeriod;
+import com.ren.lostintime.common.init.*;
 import com.ren.lostintime.datagen.server.LITTags;
 import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -40,6 +40,9 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.level.LevelAccessor;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -82,6 +85,8 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
 
     private int curioFeedCooldown = 0;
     private int curioSwimWithPlayerCooldown = 0;
+
+    private LazyOptional<LostInTimeBookDescription> description = LazyOptional.of(() -> new BookDescrtiptionImpl(TimePeriod.TRIASSIC, this.getType(), ItemInit.RAW_ANOMALOCARIS));
 
 
     public Anomalocaris(EntityType<? extends AbstractBaseFish> pEntityType, Level pLevel) {
@@ -433,6 +438,16 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     @Override
     public ItemStack getBucketItemStack() {
         return new ItemStack(ItemInit.ANOMALOCARIS_BABY_BUCKET.get());
+    }
+
+
+
+    @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap) {
+        if (cap == CapabilityInit.ENTITY_DESCRIPTION_CAPABILITY){
+            return description.cast();
+        }
+        return super.getCapability(cap);
     }
 
     // --- Inner Classes (Goals) ---

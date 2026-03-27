@@ -1,25 +1,49 @@
 package com.ren.lostintime.common.entity.util;
 
+import java.util.Locale;
+
 public enum TimePeriod {
 
-    Quaternary(
+    TRIASSIC(
+            252_000_000,
+            201_000_000,
+            "lostintime.timeperiod.triassic.desc"
+    ),
+    JURASSIC(
+            201_000_000,
+            145_000_000,
+            "lostintime.timeperiod.jurassic.desc"
+    ),
+    CRETACEOUS(
+            145_000_000,
+            66_000_000,
+            "lostintime.timeperiod.cretaceous.desc"
+    ),
+    PALEOGENE(
+            66_000_000,
+            23_000_000,
+            "lostintime.timeperiod.paleogene.desc"
+    ),
+    NEOGENE(
+            23_000_000,
+            2_600_000,
+            "lostintime.timeperiod.neogene.desc"
+    ),
+    QUATERNARY(
             2_600_000,
             0,
-            "The Quaternary Period began about 2.6 million years ago and continues today. " +
-                    "It is marked by repeated ice ages, major climate changes, and the evolution and spread of humans. " +
-                    "This period includes the Pleistocene, known for glaciers and early humans, and the Holocene, " +
-                    "which features warmer climates and the rise of agriculture and modern civilization."
+            "lostintime.timeperiod.quaternary.desc"
     );
 
     /** Years ago */
     public final double fromYear;
     public final double toYear;
 
-    public final String shortDescription;
+    public final String descriptionKey;
 
-    TimePeriod(double fromYear, double toYear, String shortDescription) {
+    TimePeriod(double fromYear, double toYear, String descriptionKey) {
         this.fromYear = fromYear;
         this.toYear = toYear;
-        this.shortDescription = shortDescription;
+        this.descriptionKey = descriptionKey;
     }
 }
