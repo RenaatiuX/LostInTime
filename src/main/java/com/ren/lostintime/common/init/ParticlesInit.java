@@ -21,4 +21,7 @@ public class ParticlesInit {
     public static final RegistryObject<SimpleParticleType> BLEEDING_STREAM =
             PARTICLE_TYPE.register("bleeding_stream", () -> new SimpleParticleType(false));
 
+    public static final RegistryObject<SimpleParticleType> BLEEDING_UNDERWATER =
+            PARTICLE_TYPE.register("bleeding_underwater", () -> new SimpleParticleType(false));
+
 }

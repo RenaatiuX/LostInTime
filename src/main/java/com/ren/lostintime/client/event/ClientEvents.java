@@ -4,6 +4,7 @@ import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.client.model.skeleton.DodoSkeleton;
 import com.ren.lostintime.client.particles.BleedingDropletParticle;
 import com.ren.lostintime.client.particles.BleedingStreamParticle;
+import com.ren.lostintime.client.particles.BleedingUnderwaterParticle;
 import com.ren.lostintime.client.particles.SleepingParticle;
 import com.ren.lostintime.client.model.ModModelLayers;
 import com.ren.lostintime.client.model.blockentities.*;
@@ -101,6 +102,7 @@ public class ClientEvents {
         event.registerSpriteSet(ParticlesInit.SLEEPING_PARTICLES.get(), SleepingParticle.Factory::new);
         event.registerSpriteSet(ParticlesInit.BLEEDING_DROPLET.get(), BleedingDropletParticle.Provider::new);
         event.registerSpriteSet(ParticlesInit.BLEEDING_STREAM.get(), BleedingStreamParticle.Provider::new);
+        event.registerSpriteSet(ParticlesInit.BLEEDING_UNDERWATER.get(), BleedingUnderwaterParticle.Provider::new);
     }
 
     @SubscribeEvent

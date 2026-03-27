@@ -27,10 +27,17 @@ import javax.annotation.Nullable;
 
 public abstract class LITAnimal extends Animal {
 
-    public static final EntityDataAccessor<Boolean> IS_SLEEPING = SynchedEntityData.defineId(LITAnimal.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<Integer> CURRENT_HUNGER = SynchedEntityData.defineId(LITAnimal.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Boolean> IS_SLEEPING = SynchedEntityData.defineId(LITAnimal.class, EntityDataSerializers.BOOLEAN);
+    protected static final EntityDataAccessor<Integer> CURRENT_HUNGER = SynchedEntityData.defineId(LITAnimal.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(LITAnimal.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Integer> EAT_COOLDOWN = SynchedEntityData.defineId(LITAnimal.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Integer> COMMAND = SynchedEntityData.defineId(LITAnimal.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Boolean> DANCING = SynchedEntityData.defineId(LITAnimal.class, EntityDataSerializers.BOOLEAN);
+    protected static final EntityDataAccessor<Boolean> SITTING = SynchedEntityData.defineId(LITAnimal.class, EntityDataSerializers.BOOLEAN);
 
     protected LazyOptional<SleepController<?>> sleepControllerOptional;
+
+    private BlockPos jukebox;
 
     //sleep particles
     private int sleepParticleCooldown = 0;
@@ -68,7 +75,7 @@ public abstract class LITAnimal extends Animal {
     }
 
     /*public int getMaxHunger() {
-        return 100; // Valor por defecto. Un Daeodon podría devolver 200, un Dodo 50.
+        return 100;
     }
 
     public int getHunger() {

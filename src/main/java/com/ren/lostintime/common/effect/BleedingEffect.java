@@ -17,22 +17,25 @@ public class BleedingEffect extends MobEffect {
     @Override
     public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
         if (pLivingEntity.isAlive()) {
-            float damage = 1.0F + (float) pAmplifier * 0.5F;
-            DamageSource damageSource = LITDamageTypes.causeBleedingDamage(pLivingEntity.level());
-            pLivingEntity.hurt(damageSource, damage);
+            if (!pLivingEntity.level().isClientSide()) {
+                float damage = 1.0F + (float) pAmplifier * 0.5F;
+                DamageSource damageSource = LITDamageTypes.causeBleedingDamage(pLivingEntity.level());
+                pLivingEntity.hurt(damageSource, damage);
+            }
 
-            if (pLivingEntity.level().isClientSide) {
+            if (pLivingEntity.level().isClientSide()) {
                 int amountOfBlood = 1 + pAmplifier;
 
                 for (int i = 0; i < amountOfBlood; i++) {
-
                     double x = pLivingEntity.getRandomX(0.6D);
-
                     double y = pLivingEntity.getY() + (pLivingEntity.getBbHeight() / 2.0D) + (pLivingEntity.getRandom().nextDouble() * 0.4D);
-
                     double z = pLivingEntity.getRandomZ(0.6D);
 
-                    pLivingEntity.level().addParticle(ParticlesInit.BLEEDING_STREAM.get(), x, y, z, 0.0D, 0.0D, 0.0D);
+                    if (pLivingEntity.isInWater()) {
+                        pLivingEntity.level().addParticle(ParticlesInit.BLEEDING_UNDERWATER.get(), x, y, z, 0, 0, 0);
+                    } else {
+                        pLivingEntity.level().addParticle(ParticlesInit.BLEEDING_STREAM.get(), x, y, z, 0.0D, 0.0D, 0.0D);
+                    }
                 }
             }
         }
