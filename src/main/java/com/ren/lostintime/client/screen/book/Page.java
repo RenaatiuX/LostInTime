@@ -21,7 +21,10 @@ public abstract class Page{
         this.y = y;
         this.width = width;
         this.height = height;
+        updateBounds();
     }
+
+    public void updateBounds(){}
 
     public boolean isInside(int x, int y) {
         return getBounds().contains(x, y);
