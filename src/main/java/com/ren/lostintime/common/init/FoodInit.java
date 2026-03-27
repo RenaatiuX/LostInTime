@@ -49,6 +49,14 @@ public class FoodInit {
             .saturationMod(0.3F).meat().build();
     public static final FoodProperties COOKED_SCUTOSAURUS_MEAT = new FoodProperties.Builder().nutrition(8)
             .saturationMod(0.6F).meat().build();
+    public static final FoodProperties RAW_DEINONYCHUS_MEAT = new FoodProperties.Builder().nutrition(2)
+            .saturationMod(0.2F).meat().build();
+    public static final FoodProperties COOKED_DEINONYCHUS_MEAT = new FoodProperties.Builder().nutrition(6)
+            .saturationMod(0.6F).meat().build();
+    public static final FoodProperties RAW_HELICOPRION_MEAT = new FoodProperties.Builder().nutrition(3)
+            .saturationMod(0.3F).meat().build();
+    public static final FoodProperties COOKED_HELICOPRION_MEAT = new FoodProperties.Builder().nutrition(9)
+            .saturationMod(0.8F).meat().build();
 
     //FRUIT
     public static final FoodProperties MANGO = new FoodProperties.Builder().nutrition(4)

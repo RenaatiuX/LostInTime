@@ -95,6 +95,7 @@ public class LostInTime {
             event.accept(ItemInit.DAEODON_SAC);
             event.accept(ItemInit.LEPTICTIDIUM_SAC);
             event.accept(ItemInit.PLESIOSAURUS_SAC);
+            event.accept(ItemInit.HELICOPRION_SAC);
 
             event.accept(ItemInit.STONE_KNIFE);
             event.accept(ItemInit.IRON_KNIFE);
@@ -138,6 +139,9 @@ public class LostInTime {
             event.accept(ItemInit.DODO_FOSSIL);
             event.accept(ItemInit.DODO_SKULL);
             event.accept(ItemInit.DODO_FOSSIL_MOUNT);
+            event.accept(ItemInit.HELICOPRION_FOSSIL);
+            event.accept(ItemInit.HELICOPRION_SKULL);
+
             event.accept(ItemInit.EMPTY_SKELETON_MOUNT);
 
             event.accept(ItemInit.RAW_DODO);
@@ -161,6 +165,10 @@ public class LostInTime {
             event.accept(ItemInit.COOKED_PLESIOSAURUS_MEAT);
             event.accept(ItemInit.RAW_SCUTOSAURUS_MEAT);
             event.accept(ItemInit.COOKED_SCUTOSAURUS_MEAT);
+            event.accept(ItemInit.RAW_DEINONYCHUS_MEAT);
+            event.accept(ItemInit.COOKED_DEINONYCHUS_MEAT);
+            event.accept(ItemInit.RAW_HELICOPRION_MEAT);
+            event.accept(ItemInit.COOKED_HELICOPRION_MEAT);
 
             event.accept(ItemInit.SMALL_FRIED_EGG);
             event.accept(ItemInit.FRIED_EGG);
@@ -216,6 +224,7 @@ public class LostInTime {
             event.accept(ItemInit.PROTOTAXITES_VITAL_PATTERN);
             event.accept(ItemInit.PTERYGOTUS_SOUL_CFG);
             event.accept(ItemInit.SCUTOSAURUS_SOUL_CFG);
+            event.accept(ItemInit.HELICOPRION_SOUL_CFG);
 
             event.accept(ItemInit.BARREL_SPONGE_VITAL_PATTERN);
             event.accept(ItemInit.GLASS_SPONGE_VITAL_PATTERN);

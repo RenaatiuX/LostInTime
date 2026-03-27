@@ -44,6 +44,7 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.DAEODON_SAC.get());
         simple(ItemInit.LEPTICTIDIUM_SAC.get());
         simple(ItemInit.PLESIOSAURUS_SAC.get());
+        simple(ItemInit.HELICOPRION_SAC.get());
 
         simple(ItemInit.RAW_DODO.get());
         simple(ItemInit.COOKED_DODO.get());
@@ -65,6 +66,10 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.COOKED_PLESIOSAURUS_MEAT.get());
         simple(ItemInit.RAW_SCUTOSAURUS_MEAT.get());
         simple(ItemInit.COOKED_SCUTOSAURUS_MEAT.get());
+        simple(ItemInit.RAW_DEINONYCHUS_MEAT.get());
+        simple(ItemInit.COOKED_DEINONYCHUS_MEAT.get());
+        simple(ItemInit.RAW_HELICOPRION_MEAT.get());
+        simple(ItemInit.COOKED_HELICOPRION_MEAT.get());
 
         simple(ItemInit.SMALL_FRIED_EGG.get());
         simple(ItemInit.FRIED_EGG.get());
@@ -148,6 +153,8 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.CLADOPHLEBIS_FOSSIL.get());
         simple(ItemInit.CONIOPTERIS_FOSSIL.get());
         simple(ItemInit.RED_ALGAE_FOSSIL.get());
+        simple(ItemInit.HELICOPRION_FOSSIL.get());
+        simple(ItemInit.HELICOPRION_SKULL.get());
 
         simple(ItemInit.DODO_FOSSIL_MOUNT.get());
         simple(ItemInit.EMPTY_SKELETON_MOUNT.get());
@@ -204,6 +211,7 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.PROTOTAXITES_VITAL_PATTERN.get());
         simple(ItemInit.PTERYGOTUS_SOUL_CFG.get());
         simple(ItemInit.SCUTOSAURUS_SOUL_CFG.get());
+        simple(ItemInit.HELICOPRION_SOUL_CFG.get());
 
         simple(ItemInit.BARREL_SPONGE_VITAL_PATTERN.get());
         simple(ItemInit.GLASS_SPONGE_VITAL_PATTERN.get());

@@ -1,4 +1,4 @@
-// 1.20.1	2026-03-12T10:44:00.5434346	Item Models: lostintime
+// 1.20.1	2026-03-27T18:00:09.6015919	Item Models: lostintime
 0570665fcef0e1f3922095a8aa98973135ded46e assets/lostintime/models/item/amber.json
 1a1915f23093ff4fbded979014b60faf9fa1d93e assets/lostintime/models/item/amber_catalyst.json
 879d909212d6267838764316100b2c449321306b assets/lostintime/models/item/amethyst_catalyst.json
@@ -61,8 +61,10 @@ e177dff6361e579f62d8a4a07fbc310158134870 assets/lostintime/models/item/coal_cata
 1bed6ab22c0b492929e14a27f13751d7608ded92 assets/lostintime/models/item/cooked_anomalocaris.json
 b76e0e23a00efba60ad6c21578d8059802740dc3 assets/lostintime/models/item/cooked_bothriolepis.json
 0bd1e7f09f57db8a990e6df40808ab12b6da9fb9 assets/lostintime/models/item/cooked_daeodon.json
+64cea5051466784b406edd5861dd183a5dc5a8a5 assets/lostintime/models/item/cooked_deinonychus_meat.json
 8b2b67e1d54049b242993334119680165ffb9c3a assets/lostintime/models/item/cooked_dodo.json
 6cb9c4f5feb2b215cce230831873a4b8251010a4 assets/lostintime/models/item/cooked_endoceras.json
+0302f54c78e93de931110a029dafef7ae3e7c01d assets/lostintime/models/item/cooked_helicoprion_meat.json
 995ae54da9e1fb49c8b4e645a00e41ac1027776a assets/lostintime/models/item/cooked_hylonomus.json
 d052dcdf2717c891c8f2a2f8efce720796702ddc assets/lostintime/models/item/cooked_leptictidium.json
 636f4a2a78fe8571c42e056f2feb72aded6cb1f4 assets/lostintime/models/item/cooked_mastodonsaurus_meat.json
@@ -110,6 +112,10 @@ af7affd58910004752be8cb604091600bd28e888 assets/lostintime/models/item/golden_ey
 b88fe4aa34497e9be8c5d9570290a1960bc9f7c6 assets/lostintime/models/item/gold_catalyst.json
 60fcdba47fab343c1482fa7b790afb7b69a82f67 assets/lostintime/models/item/gondwanagaricites_vital_pattern.json
 9503bba495ea11cf6474824156381cf39bb9afdc assets/lostintime/models/item/guardian_spike.json
+d5154a32508160a6ed294426f2f246fb1302bb74 assets/lostintime/models/item/helicoprion_fossil.json
+05dc1153faf164d41d3b0a08bcda6755c9ce8c55 assets/lostintime/models/item/helicoprion_sac.json
+71ac924dc2708b1d90c9e0abf5c57ecf0a20b3e9 assets/lostintime/models/item/helicoprion_skull.json
+73bf8ff45a0fa5c8b61798609f2149897c58de7d assets/lostintime/models/item/helicoprion_soul_configuration.json
 63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/lostintime/models/item/helicoprion_spawn_egg.json
 0889fed767d510c6dc511cbef6974bcf7e698391 assets/lostintime/models/item/hylonomus_egg.json
 b6cb09935c85e93de208f2bb0005759b2a1292ee assets/lostintime/models/item/hylonomus_fossil.json
@@ -157,8 +163,10 @@ d73453f8dd4c6d1328a109f61e7fef3b423d61f3 assets/lostintime/models/item/quaternar
 405092086662efa0187e56b57d887888711981b7 assets/lostintime/models/item/raw_anomalocaris.json
 209502ffa63236256176fe2a5decd3a0a28ab5d6 assets/lostintime/models/item/raw_bothriolepis.json
 016fcfbe5560a3a11fc4356039afef229274e1c0 assets/lostintime/models/item/raw_daeodon.json
+88f3cf346cd1d0d1682f8dc70374d3fbf63ab10b assets/lostintime/models/item/raw_deinonychus_meat.json
 a87c28ce3a8b26d757bf486206ce44bb9f71f4f5 assets/lostintime/models/item/raw_dodo.json
 ffe77b8124f3e956a3af0e2a680ccbadf8e5be5f assets/lostintime/models/item/raw_endoceras.json
+20b11383c7bbade9f290bf2758f125893d443082 assets/lostintime/models/item/raw_helicoprion_meat.json
 db5e2e0f7d38772d80e0754f6181fe586567af5b assets/lostintime/models/item/raw_hylonomus.json
 2a601740e4648b10c744b20f296eb864dc3d35f8 assets/lostintime/models/item/raw_leptictidium.json
 712a99c8bbe2a5b0980d1000f37ac53bd15752f8 assets/lostintime/models/item/raw_mastodonsaurus_meat.json

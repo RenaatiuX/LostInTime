@@ -48,6 +48,7 @@ public class ItemInit {
     public static final RegistryObject<Item> DAEODON_SAC = registerSimple("daeodon_sac");
     public static final RegistryObject<Item> LEPTICTIDIUM_SAC = registerSimple("leptictidium_sac");
     public static final RegistryObject<Item> PLESIOSAURUS_SAC = registerSimple("plesiosaurus_sac");
+    public static final RegistryObject<Item> HELICOPRION_SAC = registerSimple("helicoprion_sac");
 
     //ASPECT
     public static final RegistryObject<Item> ASPECT_DIFFERENTIATION = registerSimple("aspect_differentiation");
@@ -113,6 +114,7 @@ public class ItemInit {
     public static final RegistryObject<Item> PLESIOSAURUS_SOUL_CFG = registerSimple("plesiosaurus_soul_configuration");
     public static final RegistryObject<Item> PTERYGOTUS_SOUL_CFG = registerSimple("pterygotus_soul_configuration");
     public static final RegistryObject<Item> SCUTOSAURUS_SOUL_CFG = registerSimple("scutosaurus_soul_configuration");
+    public static final RegistryObject<Item> HELICOPRION_SOUL_CFG = registerSimple("helicoprion_soul_configuration");
 
     //PATTERN
     public static final RegistryObject<Item> PROTOTAXITES_VITAL_PATTERN = registerSimple("prototaxites_vital_pattern");
@@ -167,6 +169,8 @@ public class ItemInit {
     public static final RegistryObject<Item> PTERYGOTUS_FOSSIL = registerSimple("pterygotus_fossil");
     public static final RegistryObject<Item> SCUTOSAURUS_FOSSIL = registerSimple("scutosaurus_fossil");
     public static final RegistryObject<Item> SCUTOSAURUS_SKULL = registerSimple("scutosaurus_skull");
+    public static final RegistryObject<Item> HELICOPRION_FOSSIL = registerSimple("helicoprion_fossil");
+    public static final RegistryObject<Item> HELICOPRION_SKULL = registerSimple("helicoprion_skull");
 
     //PLANT FOSSIL
     public static final RegistryObject<Item> CLADOPHLEBIS_FOSSIL = registerSimple("cladophlebis_fossil");
@@ -223,6 +227,10 @@ public class ItemInit {
     public static final RegistryObject<Item> COOKED_PLESIOSAURUS_MEAT = registerFood("cooked_plesiosaurus_meat", FoodInit.COOKED_PLESIOSAURUS_MEAT);
     public static final RegistryObject<Item> RAW_SCUTOSAURUS_MEAT = registerFood("raw_scutosaurus_meat", FoodInit.RAW_SCUTOSAURUS_MEAT);
     public static final RegistryObject<Item> COOKED_SCUTOSAURUS_MEAT = registerFood("cooked_scutosaurus_meat", FoodInit.COOKED_SCUTOSAURUS_MEAT);
+    public static final RegistryObject<Item> RAW_DEINONYCHUS_MEAT = registerFood("raw_deinonychus_meat", FoodInit.RAW_DEINONYCHUS_MEAT);
+    public static final RegistryObject<Item> COOKED_DEINONYCHUS_MEAT = registerFood("cooked_deinonychus_meat", FoodInit.COOKED_DEINONYCHUS_MEAT);
+    public static final RegistryObject<Item> RAW_HELICOPRION_MEAT = registerFood("raw_helicoprion_meat", FoodInit.RAW_HELICOPRION_MEAT);
+    public static final RegistryObject<Item> COOKED_HELICOPRION_MEAT = registerFood("cooked_helicoprion_meat", FoodInit.COOKED_HELICOPRION_MEAT);
 
     public static final RegistryObject<Item> MANGO = registerFood("mango", FoodInit.MANGO);
 
