@@ -2,7 +2,9 @@ package com.ren.lostintime.common.effect;
 
 import com.ren.lostintime.common.init.ParticlesInit;
 import com.ren.lostintime.datagen.server.loot.LITDamageTypes;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -31,7 +33,10 @@ public class BleedingEffect extends MobEffect {
                     double y = pLivingEntity.getY() + (pLivingEntity.getBbHeight() / 2.0D) + (pLivingEntity.getRandom().nextDouble() * 0.4D);
                     double z = pLivingEntity.getRandomZ(0.6D);
 
-                    if (pLivingEntity.isInWater()) {
+                    BlockPos partcilePos = BlockPos.containing(x, y, z);
+                    boolean isSpawnInWater = pLivingEntity.level().getFluidState(partcilePos).is(FluidTags.WATER);
+
+                    if (isSpawnInWater) {
                         pLivingEntity.level().addParticle(ParticlesInit.BLEEDING_UNDERWATER.get(), x, y, z, 0, 0, 0);
                     } else {
                         pLivingEntity.level().addParticle(ParticlesInit.BLEEDING_STREAM.get(), x, y, z, 0.0D, 0.0D, 0.0D);

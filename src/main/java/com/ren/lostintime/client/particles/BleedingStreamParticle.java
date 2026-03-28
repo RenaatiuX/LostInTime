@@ -1,6 +1,6 @@
 package com.ren.lostintime.client.particles;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.*;
 import com.ren.lostintime.common.init.ParticlesInit;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -8,7 +8,9 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +41,13 @@ public class BleedingStreamParticle extends LITBaseParticle {
     public void tick() {
         super.tick();
         this.alpha = 1.0F - ((float) this.age / (float) this.lifetime);
+
+        BlockPos currentPos = BlockPos.containing(this.x, this.y, this.z);
+        if (this.level.getFluidState(currentPos).is(FluidTags.WATER)) {
+            this.level.addParticle(ParticlesInit.BLEEDING_UNDERWATER.get(), this.x, this.y, this.z, 0.0D, 0.0D, 0.0D);
+            this.remove();
+            return;
+        }
 
         if (this.onGround) {
             double microscopicoYOffset = 0.001D + (this.random.nextDouble() * 0.004D);
@@ -107,5 +116,4 @@ public class BleedingStreamParticle extends LITBaseParticle {
             return new BleedingStreamParticle(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, this.spriteSet);
         }
     }
-
 }
