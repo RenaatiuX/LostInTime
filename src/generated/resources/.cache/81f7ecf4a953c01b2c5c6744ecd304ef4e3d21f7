@@ -1,4 +1,4 @@
-// 1.20.1	2026-03-27T18:00:09.6015919	Item Models: lostintime
+// 1.20.1	2026-04-01T13:40:03.5917111	Item Models: lostintime
 0570665fcef0e1f3922095a8aa98973135ded46e assets/lostintime/models/item/amber.json
 1a1915f23093ff4fbded979014b60faf9fa1d93e assets/lostintime/models/item/amber_catalyst.json
 879d909212d6267838764316100b2c449321306b assets/lostintime/models/item/amethyst_catalyst.json
@@ -78,9 +78,11 @@ f48a28b955b93d08ff1ed54fd1852419e4c8b3ce assets/lostintime/models/item/daeodon_f
 c92560f12e1dba2b6f3ced304b5ac11aef9f7ba9 assets/lostintime/models/item/daeodon_skull.json
 8a64cda35afa95640d631b0e278649f7a647956a assets/lostintime/models/item/daeodon_soul_configuration.json
 63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/lostintime/models/item/daeodon_spawn_egg.json
+6ea73d6135f8ddab442a11d29ac458b8a8bb120e assets/lostintime/models/item/deinonychus_egg.json
 56d5de8623a550f9f6b5ed876c1571faff37bc56 assets/lostintime/models/item/deinonychus_fossil.json
 6104bce054d75d29a1c98b759e06a2a537b29420 assets/lostintime/models/item/deinonychus_skull.json
 42909286a63b411ff391cd2b36e5928494390be5 assets/lostintime/models/item/deinonychus_soul_configuration.json
+63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/lostintime/models/item/deinonychus_spawn_egg.json
 afcf95e7e795ae370ce3843fec6891b394b6c798 assets/lostintime/models/item/delft_solution.json
 39dc454b5a524d3d25dd619660235442462936d3 assets/lostintime/models/item/devonian_fossil.json
 853529a04a082874f4946e4b89ae23494dd2fdff assets/lostintime/models/item/diamond_knife.json
@@ -158,6 +160,7 @@ dad6801382554af70cae8b2f7fba3eb775395173 assets/lostintime/models/item/plesiosau
 4816329457681e7cb8ecffa57bf90e9fcdf9a284 assets/lostintime/models/item/prototaxites_vital_pattern.json
 0e042e51acd48c4ff78f2ea961765062ebb8fbec assets/lostintime/models/item/pterygotus_fossil.json
 a2ae3095d29058a86ad0a1444967d576014293c4 assets/lostintime/models/item/pterygotus_soul_configuration.json
+63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/lostintime/models/item/pterygotus_spawn_egg.json
 87f952339bba41591cb1efd1813726482656d636 assets/lostintime/models/item/quartz_catalyst.json
 d73453f8dd4c6d1328a109f61e7fef3b423d61f3 assets/lostintime/models/item/quaternary_fossil.json
 405092086662efa0187e56b57d887888711981b7 assets/lostintime/models/item/raw_anomalocaris.json

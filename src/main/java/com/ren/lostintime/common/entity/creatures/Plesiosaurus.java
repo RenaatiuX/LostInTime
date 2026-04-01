@@ -2,6 +2,7 @@ package com.ren.lostintime.common.entity.creatures;
 
 import com.mojang.serialization.Dynamic;
 import com.ren.lostintime.common.entity.LITAnimal;
+import com.ren.lostintime.common.entity.LITBucketableWaterAnimal;
 import com.ren.lostintime.common.entity.LITWaterAnimal;
 import com.ren.lostintime.common.entity.ai.PlesiosaurusAi;
 import com.ren.lostintime.common.init.EntityInit;
@@ -14,6 +15,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.AgeableMob;
@@ -44,9 +46,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
 
-public class Plesiosaurus extends LITWaterAnimal implements GeoEntity, Bucketable {
-
-    private static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(Plesiosaurus.class, EntityDataSerializers.BOOLEAN);
+public class Plesiosaurus extends LITBucketableWaterAnimal implements GeoEntity {
 
     private static final RawAnimation SWIM = RawAnimation.begin().thenPlay("swim");
     private static final RawAnimation BEACHED = RawAnimation.begin().thenPlay("beached");
@@ -61,10 +61,11 @@ public class Plesiosaurus extends LITWaterAnimal implements GeoEntity, Bucketabl
     public int bodyguardTimer = 0;
     @Nullable
     public UUID bodyguardOwner = null;
+    public float swimPitch = 0;
+    public float prevSwimPitch = 0;
 
     public Plesiosaurus(EntityType<? extends LITAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-        this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
         this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 0.0F);
         this.navigation = new AmphibiousPathNavigation(this, pLevel);
     }
@@ -72,11 +73,36 @@ public class Plesiosaurus extends LITWaterAnimal implements GeoEntity, Bucketabl
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.8D)
+                .add(Attributes.MOVEMENT_SPEED, 1.2D)
                 .add(Attributes.ATTACK_DAMAGE, 3.0D);
     }
 
-    //DOUBLE BREATHING SYSTEM
+    @Override
+    public int getMaxHeadYRot() {
+        return 6;
+    }
+
+    @Override
+    public int getMaxHeadXRot() {
+        return 6;
+    }
+
+    // ==========================================
+    // HUNGER
+    // ==========================================
+    @Override
+    public float getBaseMaxHunger() {
+        return 150F;
+    }
+
+    @Override
+    public int getHungerTickInterval() {
+        return 600;
+    }
+
+    // ==========================================
+    // DUAL BREATHING SYSTEM
+    // ==========================================
     @Override
     public boolean canBreatheUnderwater() {
         return false;
@@ -118,9 +144,9 @@ public class Plesiosaurus extends LITWaterAnimal implements GeoEntity, Bucketabl
     }
 
     @Override
-    public boolean isInWaterOrRain() {
+    public boolean isInWaterRainOrBubble() {
         BlockPos pos = this.blockPosition();
-        return this.isInWater() || (this.level().isRaining() && this.level().canSeeSky(pos));
+        return super.isInWaterRainOrBubble() && this.level().canSeeSky(pos);
     }
 
     @Override
@@ -138,12 +164,9 @@ public class Plesiosaurus extends LITWaterAnimal implements GeoEntity, Bucketabl
         return SoundEvents.GENERIC_SPLASH;
     }
 
-    @Override
-    public boolean checkSpawnObstruction(LevelReader pLevel) {
-        return pLevel.isUnobstructed(this);
-    }
-
-    //BRAIN
+    // ==========================================
+    // BRAIN
+    // ==========================================
     @Override
     protected Brain.Provider<Plesiosaurus> brainProvider() {
         return Brain.provider(PlesiosaurusAi.MEMORY_TYPES, PlesiosaurusAi.SENSOR_TYPES);
@@ -157,6 +180,7 @@ public class Plesiosaurus extends LITWaterAnimal implements GeoEntity, Bucketabl
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Brain<Plesiosaurus> getBrain() {
         return (Brain<Plesiosaurus>) super.getBrain();
     }
@@ -182,47 +206,46 @@ public class Plesiosaurus extends LITWaterAnimal implements GeoEntity, Bucketabl
         super.customServerAiStep();
     }
 
-    //NBT
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(FROM_BUCKET, false);
+    public void tick() {
+        super.tick();
+        if (this.level().isClientSide) {
+            this.prevSwimPitch = this.swimPitch;
+            this.swimPitch += (this.getXRot() - this.swimPitch) * 0.1F;
+
+            float turnSpeed = (float) this.getMaxHeadYRot();
+            this.yBodyRot = Mth.approachDegrees(this.yBodyRotO, this.getYRot(), turnSpeed);
+        }
     }
 
-    @Override
-    public void addAdditionalSaveData(CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-        pCompound.putBoolean("FromBucket", this.fromBucket());
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-        this.setFromBucket(pCompound.getBoolean("FromBucket"));
-    }
-
-    //
+    // ==========================================
+    // BODYGUARD AND DIET
+    // ==========================================
     @Override
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
 
-        if (this.isBaby() && itemstack.is(Items.WATER_BUCKET)) {
-            return Bucketable.bucketMobPickup(pPlayer, pHand, this).orElse(super.mobInteract(pPlayer, pHand));
+        InteractionResult parentResult = super.mobInteract(pPlayer, pHand);
+        if (parentResult.consumesAction()) {
+            if (this.isFood(itemstack) && !this.level().isClientSide) {
+                this.bodyguardOwner = pPlayer.getUUID();
+                this.bodyguardTimer = 4000;
+            }
+            return parentResult;
         }
 
         if (this.isFood(itemstack)) {
             if (!this.level().isClientSide) {
                 this.bodyguardOwner = pPlayer.getUUID();
                 this.bodyguardTimer = 4000;
-
-                if (this.getAge() == 0 && !this.canFallInLove()) {
-                    this.usePlayerItem(pPlayer, pHand, itemstack);
-                    this.level().broadcastEntityEvent(this, (byte)7);
-                    return InteractionResult.SUCCESS;
+                if (!pPlayer.getAbilities().instabuild) {
+                    itemstack.shrink(1);
                 }
+                this.level().broadcastEntityEvent(this, (byte) 7);
+                return InteractionResult.SUCCESS;
             }
         }
-        return super.mobInteract(pPlayer, pHand);
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -233,6 +256,19 @@ public class Plesiosaurus extends LITWaterAnimal implements GeoEntity, Bucketabl
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
         return EntityInit.PLESIOSAURUS.get().create(pLevel);
+    }
+
+    @Override
+    public boolean hasJuvenileStage() {
+        return true;
+    }
+
+    // ==========================================
+    // BUCKETTABLE & GECKOLIB
+    // ==========================================
+    @Override
+    public ItemStack getBucketItemStack() {
+        return new ItemStack(ItemInit.PLESIOSAURUS_BABY_BUCKET.get());
     }
 
     @Override
@@ -263,40 +299,5 @@ public class Plesiosaurus extends LITWaterAnimal implements GeoEntity, Bucketabl
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public boolean fromBucket() {
-        return this.entityData.get(FROM_BUCKET);
-    }
-
-    @Override
-    public void setFromBucket(boolean pFromBucket) {
-        this.entityData.set(FROM_BUCKET, pFromBucket);
-    }
-
-    @Override
-    public void saveToBucketTag(ItemStack pStack) {
-        Bucketable.saveDefaultDataToBucketTag(this, pStack);
-        CompoundTag compoundtag = pStack.getOrCreateTag();
-        compoundtag.putInt("Age", this.getAge());
-    }
-
-    @Override
-    public void loadFromBucketTag(CompoundTag pTag) {
-        Bucketable.loadDefaultDataFromBucketTag(this, pTag);
-        if (pTag.contains("Age")) {
-            this.setAge(pTag.getInt("Age"));
-        }
-    }
-
-    @Override
-    public ItemStack getBucketItemStack() {
-        return new ItemStack(ItemInit.PLESIOSAURUS_BABY_BUCKET.get());
-    }
-
-    @Override
-    public SoundEvent getPickupSound() {
-        return SoundEvents.BUCKET_FILL_FISH;
     }
 }

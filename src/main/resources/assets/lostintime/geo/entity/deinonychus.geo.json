@@ -1,0 +1,189 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 6,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "deinonychus",
+					"pivot": [0, 16, 6]
+				},
+				{
+					"name": "body",
+					"parent": "deinonychus",
+					"pivot": [0, 16, 6]
+				},
+				{
+					"name": "neck",
+					"parent": "body",
+					"pivot": [0, 15, -6],
+					"rotation": [12.5, 0, 0],
+					"cubes": [
+						{"origin": [-2, 11, -10], "size": [4, 10, 6], "inflate": -0.05, "uv": [0, 68]}
+					]
+				},
+				{
+					"name": "head",
+					"parent": "neck",
+					"pivot": [0, 21, -6],
+					"rotation": [-12.5, 0, 0],
+					"cubes": [
+						{"origin": [-1, 18, -17], "size": [2, 3, 7], "uv": [18, 45]},
+						{"origin": [-2, 18, -10], "size": [4, 3, 4], "uv": [52, 51]},
+						{"origin": [-1, 17.3, -17], "size": [2, 1, 7], "inflate": -0.125, "uv": [0, 50]}
+					]
+				},
+				{
+					"name": "jaw",
+					"parent": "head",
+					"pivot": [0, 18, -6],
+					"cubes": [
+						{"origin": [-1, 17, -17], "size": [2, 1, 7], "uv": [48, 0]},
+						{"origin": [-1, 17.8, -17], "size": [2, 1, 7], "inflate": -0.1, "uv": [48, 8]},
+						{"origin": [-2, 17, -10], "size": [4, 1, 4], "uv": [18, 55]},
+						{"origin": [-2, 17, -9], "size": [4, 3.5, 3], "inflate": -0.025, "pivot": [0, 19.5, -7.75], "rotation": [-25, 0, 0], "uv": [0, 86]}
+					]
+				},
+				{
+					"name": "eyelids",
+					"parent": "head",
+					"pivot": [0, 20, -9],
+					"cubes": [
+						{"origin": [-2, 19, -10], "size": [4, 1, 2], "inflate": 0.025, "uv": [45, 65]}
+					]
+				},
+				{
+					"name": "tail",
+					"parent": "body",
+					"pivot": [0, 15, 6],
+					"cubes": [
+						{"origin": [-2, 10, 6], "size": [4, 5, 9], "uv": [30, 18]}
+					]
+				},
+				{
+					"name": "tail2",
+					"parent": "tail",
+					"pivot": [0, 15, 15]
+				},
+				{
+					"name": "left_tail2",
+					"parent": "tail2",
+					"pivot": [0, 15, 15],
+					"cubes": [
+						{"origin": [0, 15, 15], "size": [6, 0, 18], "pivot": [0, 15, 15], "rotation": [0, 0, 32.5], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "right_tail2",
+					"parent": "tail2",
+					"pivot": [0, 15, 15],
+					"cubes": [
+						{"origin": [-6, 15, 15], "size": [6, 0, 18], "pivot": [0, 15, 15], "rotation": [0, 0, -32.5], "uv": [0, 0], "mirror": true}
+					]
+				},
+				{
+					"name": "left_arm",
+					"parent": "body",
+					"pivot": [3.5, 12, -4.5],
+					"rotation": [52.5, 0, 0],
+					"cubes": [
+						{"origin": [3.75, 6, -7], "size": [1, 6, 4], "uv": [55, 33]},
+						{"origin": [4.7, 4, -7], "size": [0, 8, 7], "pivot": [4.7, 8, -3.5], "rotation": [-20, 0, 0], "uv": [22, 65]},
+						{"origin": [2.5, 4.57819, -7.30048], "size": [2, 6, 4], "inflate": -0.25, "pivot": [4.25, 7.6, -5.3], "rotation": [-37.5, 0, 0], "uv": [55, 16]}
+					]
+				},
+				{
+					"name": "right_arm",
+					"parent": "body",
+					"pivot": [-3.5, 12, -4.5],
+					"rotation": [52.5, 0, 0],
+					"cubes": [
+						{"origin": [-4.75, 6, -7], "size": [1, 6, 4], "uv": [55, 33], "mirror": true},
+						{"origin": [-4.7, 4, -7], "size": [0, 8, 7], "pivot": [-4.7, 8, -3.5], "rotation": [-20, 0, 0], "uv": [22, 65], "mirror": true},
+						{"origin": [-4.58232, 4.57819, -7.29709], "size": [2, 6, 4], "inflate": -0.25, "pivot": [-4.33232, 7.6, -5.29661], "rotation": [-37.5, 0, 0], "uv": [55, 16], "mirror": true}
+					]
+				},
+				{
+					"name": "body_f",
+					"parent": "body",
+					"pivot": [0, 16, 6],
+					"cubes": [
+						{"origin": [-3.5, 8, -7], "size": [7, 8, 5], "uv": [30, 32]},
+						{"origin": [-3.5, 6, -2], "size": [7, 10, 8], "uv": [0, 18]}
+					]
+				},
+				{
+					"name": "left_leg",
+					"parent": "deinonychus",
+					"pivot": [2.5, 9, 4.5],
+					"cubes": [
+						{"origin": [1.5, 5, 2], "size": [3, 6, 5], "uv": [36, 45]}
+					]
+				},
+				{
+					"name": "left_leg2",
+					"parent": "left_leg",
+					"pivot": [2, 5, 7],
+					"cubes": [
+						{"origin": [2, 0, 5], "size": [2, 5, 3], "uv": [18, 36]}
+					]
+				},
+				{
+					"name": "left_foot",
+					"parent": "left_leg2",
+					"pivot": [3, 0, 7],
+					"cubes": [
+						{"origin": [1.5, 0, 2], "size": [3, 0, 6], "uv": [52, 45]}
+					]
+				},
+				{
+					"name": "left_sickle",
+					"parent": "left_foot",
+					"pivot": [2, 0, 5],
+					"cubes": [
+						{"origin": [2.5, 0, 3], "size": [0, 2, 2], "uv": [57, 26]}
+					]
+				},
+				{
+					"name": "right_leg",
+					"parent": "deinonychus",
+					"pivot": [-2.5, 9, 4.5],
+					"cubes": [
+						{"origin": [-4.5, 5, 2], "size": [3, 6, 5], "uv": [36, 45], "mirror": true}
+					]
+				},
+				{
+					"name": "right_leg2",
+					"parent": "right_leg",
+					"pivot": [-2, 5, 7],
+					"cubes": [
+						{"origin": [-4, 0, 5], "size": [2, 5, 3], "uv": [18, 36], "mirror": true}
+					]
+				},
+				{
+					"name": "right_foot",
+					"parent": "right_leg2",
+					"pivot": [-3, 0, 7],
+					"cubes": [
+						{"origin": [-4.5, 0, 2], "size": [3, 0, 6], "uv": [52, 45], "mirror": true}
+					]
+				},
+				{
+					"name": "right_sickle",
+					"parent": "right_foot",
+					"pivot": [-2, 0, 5],
+					"cubes": [
+						{"origin": [-2.5, 0, 3], "size": [0, 2, 2], "uv": [56, 26], "mirror": true}
+					]
+				}
+			]
+		}
+	]
+}

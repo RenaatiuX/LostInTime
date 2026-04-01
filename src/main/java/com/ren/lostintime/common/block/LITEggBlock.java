@@ -107,7 +107,7 @@ public class LITEggBlock extends Block {
         for (int j = 0; j < numberOfEggs; j++) {
             LITAnimal baby = (LITAnimal) entityType.get().create(pLevel);
             if (baby != null) {
-                baby.setAge(-24000);
+                baby.setAge(-baby.getGrowthTicks());
                 Vec3 vec3 = pPos.getCenter();
                 baby.finalizeSpawn(pLevel, pLevel.getCurrentDifficultyAt(pPos), MobSpawnType.BREEDING, null, null);
                 baby.moveTo(vec3.x(), vec3.y(), vec3.z(), Mth.wrapDegrees(pLevel.random.nextFloat() * 360.0F), 0.0F);

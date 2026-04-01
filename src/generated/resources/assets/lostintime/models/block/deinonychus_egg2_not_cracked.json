@@ -1,0 +1,7 @@
+{
+  "parent": "lostintime:block/deinonychus_egg2",
+  "textures": {
+    "1": "lostintime:block/deinonychus_egg_not_cracked",
+    "particle": "lostintime:block/deinonychus_egg_not_cracked"
+  }
+}

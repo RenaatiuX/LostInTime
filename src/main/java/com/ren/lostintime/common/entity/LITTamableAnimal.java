@@ -5,6 +5,7 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -28,10 +29,10 @@ import java.util.UUID;
 
 public abstract class LITTamableAnimal extends LITAnimal implements OwnableEntity {
 
-    /**
-     * bools inside a byte, bits are defined as follows:
-     * 0 is whether its tamed
-     */
+    // ==========================================
+    // DATA ACCESSORS
+    // Bit 0 = Sitting | Bit 2 = Tamed
+    // ==========================================
     protected static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(LITTamableAnimal.class, EntityDataSerializers.BYTE);
     protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(LITTamableAnimal.class, EntityDataSerializers.OPTIONAL_UUID);
 
@@ -46,20 +47,22 @@ public abstract class LITTamableAnimal extends LITAnimal implements OwnableEntit
         this.entityData.define(DATA_OWNERUUID_ID, Optional.empty());
     }
 
+    // ==========================================
+    // NBT DATA (SAVE/LOAD)
+    // ==========================================
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        pCompound.putByte("data_flags", this.entityData.get(DATA_FLAGS_ID));
         if (this.getOwnerUUID() != null) {
             pCompound.putUUID("Owner", this.getOwnerUUID());
         }
+        pCompound.putBoolean("Sitting", this.isInSittingPose());
 
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        this.entityData.set(DATA_FLAGS_ID, pCompound.getByte("data_flags"));
 
         UUID uuid;
         if (pCompound.hasUUID("Owner")) {
@@ -70,12 +73,68 @@ public abstract class LITTamableAnimal extends LITAnimal implements OwnableEntit
         }
 
         if (uuid != null) {
-            try {
-                this.setOwnerUUID(uuid);
-                this.setTame(true);
-            } catch (Throwable throwable) {
-                this.setTame(false);
-            }
+            this.setOwnerUUID(uuid);
+            this.setTame(true);
+        }
+        this.setInSittingPose(pCompound.getBoolean("Sitting"));
+    }
+
+    // ==========================================
+    // TAMING AND SITTING LOGIC (Using BitUtils)
+    // ==========================================
+    public boolean isTame() {
+        return BitUtils.getBit(this.entityData.get(DATA_FLAGS_ID), 2);
+    }
+
+    public void setTame(boolean pTamed) {
+        byte flags = this.entityData.get(DATA_FLAGS_ID);
+        this.entityData.set(DATA_FLAGS_ID, BitUtils.setBit(flags, 2, pTamed));
+    }
+
+    public boolean isInSittingPose() {
+        return BitUtils.getBit(this.entityData.get(DATA_FLAGS_ID), 0);
+    }
+
+    public void setInSittingPose(boolean pSitting) {
+        byte flags = this.entityData.get(DATA_FLAGS_ID);
+        this.entityData.set(DATA_FLAGS_ID, BitUtils.setBit(flags, 0, pSitting));
+    }
+
+    public void tame(Player pPlayer) {
+        this.setTame(true);
+        this.setOwnerUUID(pPlayer.getUUID());
+        if (pPlayer instanceof ServerPlayer serverPlayer) {
+            CriteriaTriggers.TAME_ANIMAL.trigger(serverPlayer, this);
+        }
+    }
+
+    // ==========================================
+    // OWNERSHIP
+    // ==========================================
+    @Nullable
+    public UUID getOwnerUUID() {
+        return this.entityData.get(DATA_OWNERUUID_ID).orElse(null);
+    }
+
+    public void setOwnerUUID(@Nullable UUID pUuid) {
+        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(pUuid));
+    }
+
+    public boolean isOwnedBy(LivingEntity pEntity) {
+        return pEntity == this.getOwner();
+    }
+
+    // ==========================================
+    // PARTICLES AND EVENTS
+    // ==========================================
+    @Override
+    public void handleEntityEvent(byte pId) {
+        if (pId == 7) {
+            this.spawnTamingParticles(true);
+        } else if (pId == 6) {
+            this.spawnTamingParticles(false);
+        } else {
+            super.handleEntityEvent(pId);
         }
     }
 
@@ -94,45 +153,9 @@ public abstract class LITTamableAnimal extends LITAnimal implements OwnableEntit
 
     }
 
-    public boolean isTame() {
-        return BitUtils.getBit(this.entityData.get(DATA_FLAGS_ID), 0);
-    }
-
-    public void setTame(boolean pTamed) {
-        byte flags = this.entityData.get(DATA_FLAGS_ID);
-        this.entityData.set(DATA_FLAGS_ID, BitUtils.setBit(flags, 0, pTamed));
-    }
-
-    public void tame(Player pPlayer) {
-        this.setTame(true);
-        this.setOwnerUUID(pPlayer.getUUID());
-        if (pPlayer instanceof ServerPlayer) {
-            CriteriaTriggers.TAME_ANIMAL.trigger((ServerPlayer) pPlayer, this);
-        }
-
-    }
-
-    @Nullable
-    public UUID getOwnerUUID() {
-        return this.entityData.get(DATA_OWNERUUID_ID).orElse(null);
-    }
-
-    public void setOwnerUUID(@Nullable UUID pUuid) {
-        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(pUuid));
-    }
-
-    @Override
-    public void handleEntityEvent(byte pId) {
-        if (pId == 7) {
-            this.spawnTamingParticles(true);
-        } else if (pId == 6) {
-            this.spawnTamingParticles(false);
-        } else {
-            super.handleEntityEvent(pId);
-        }
-
-    }
-
+    // ==========================================
+    // COMBAT AND TEAM LOGIC
+    // ==========================================
     @Override
     public Team getTeam() {
         if (this.isTame()) {
@@ -145,9 +168,6 @@ public abstract class LITTamableAnimal extends LITAnimal implements OwnableEntit
         return super.getTeam();
     }
 
-    /**
-     * Returns whether this Entity is on the same team as the given Entity.
-     */
     @Override
     public boolean isAlliedTo(Entity pEntity) {
         if (this.isTame()) {
@@ -169,28 +189,17 @@ public abstract class LITTamableAnimal extends LITAnimal implements OwnableEntit
         return !this.isOwnedBy(pTarget) && super.canAttack(pTarget);
     }
 
-
-    public boolean isOwnedBy(LivingEntity pEntity) {
-        return pEntity == this.getOwner();
-    }
-
-
     public boolean wantsToAttack(LivingEntity pTarget, LivingEntity pOwner) {
         return true;
     }
 
-    /**
-     * Called when the mob's health reaches 0.
-     */
     public void die(DamageSource pCause) {
-        // FORGE: Super moved to top so that death message would be cancelled properly
-        net.minecraft.network.chat.Component deathMessage = this.getCombatTracker().getDeathMessage();
+        Component deathMessage = this.getCombatTracker().getDeathMessage();
         super.die(pCause);
 
-        if (this.dead)
-            if (!this.level().isClientSide && this.level().getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES) && this.getOwner() instanceof ServerPlayer) {
-                this.getOwner().sendSystemMessage(deathMessage);
+        if (this.isDeadOrDying())
+            if (!this.level().isClientSide && this.level().getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES) && this.getOwner() instanceof ServerPlayer ownerPlayer) {
+                ownerPlayer.sendSystemMessage(deathMessage);
             }
-
     }
 }

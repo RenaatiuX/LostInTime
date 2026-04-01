@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,6 +37,7 @@ public class PlesiosaurusAi {
             MemoryModuleType.ATTACK_TARGET,
             MemoryModuleType.ATTACK_COOLING_DOWN,
             MemoryModuleType.BREED_TARGET,
+            MemoryModuleType.NEAREST_VISIBLE_ADULT,
             MemoryModuleType.NEAREST_PLAYERS,
             MemoryModuleType.NEAREST_VISIBLE_PLAYER,
             MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
@@ -46,7 +48,8 @@ public class PlesiosaurusAi {
     public static final ImmutableList<SensorType<? extends Sensor<? super Plesiosaurus>>> SENSOR_TYPES = ImmutableList.of(
             SensorType.NEAREST_PLAYERS,
             SensorType.NEAREST_LIVING_ENTITIES,
-            SensorType.HURT_BY
+            SensorType.HURT_BY,
+            SensorType.NEAREST_ADULT
     );
 
     public static void makeBrain(Brain<Plesiosaurus> pBrain) {
@@ -69,13 +72,12 @@ public class PlesiosaurusAi {
     private static void initIdleActivity(Brain<Plesiosaurus> pBrain) {
         pBrain.addActivity(Activity.IDLE, 10, ImmutableList.of(
                 StartAttacking.create(PlesiosaurusAi::findTarget),
+                BabyFollowAdult.create(UniformInt.of(5, 16), 1.15F),
                 seekAir(),
                 stealFood(),
                 new AnimalMakeLove(EntityInit.PLESIOSAURUS.get(), 1.0F),
                 new RunOne<>(ImmutableList.of(
-                        Pair.of(RandomStroll.swim(0.8F), 1),
-                        Pair.of(new DoNothing(30, 60), 2)
-                ))
+                        Pair.of(RandomStroll.swim(0.8F), 1)))
         ));
     }
 
@@ -144,7 +146,7 @@ public class PlesiosaurusAi {
                 instance.present(MemoryModuleType.NEAREST_PLAYERS)
         ).apply(instance, (playersAccessor) -> (level, entity, time) -> {
 
-            if (entity.stealCooldown > 0) return false;
+            if (entity.stealCooldown > 0 || !entity.isHungry()) return false;
 
             for (Player player : instance.get(playersAccessor)) {
                 if (entity.distanceToSqr(player) <= 9.0D) {
@@ -160,6 +162,7 @@ public class PlesiosaurusAi {
                         if (player.getDeltaMovement().lengthSqr() < 0.001D) {
                             if (entity.hasLineOfSight(player)) {
                                 foodStack.shrink(1);
+                                entity.setHunger(entity.getHunger() + (entity.getMaxHunger() * 0.25F));
                                 entity.playSound(SoundEvents.GENERIC_EAT, 1.0F, 1.0F);
                                 entity.swing(InteractionHand.MAIN_HAND);
                                 entity.stealCooldown = 600;

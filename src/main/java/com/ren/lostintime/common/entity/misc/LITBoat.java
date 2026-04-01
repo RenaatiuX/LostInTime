@@ -1,6 +1,6 @@
 package com.ren.lostintime.common.entity.misc;
 
-import com.ren.lostintime.common.entity.util.BoatType;
+import com.ren.lostintime.common.entity.enums.BoatType;
 import com.ren.lostintime.common.init.EntityInit;
 import com.ren.lostintime.common.init.ItemInit;
 import net.minecraft.nbt.CompoundTag;

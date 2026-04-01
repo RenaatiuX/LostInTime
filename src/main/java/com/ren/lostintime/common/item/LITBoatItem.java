@@ -2,7 +2,7 @@ package com.ren.lostintime.common.item;
 
 import com.ren.lostintime.common.entity.misc.LITBoat;
 import com.ren.lostintime.common.entity.misc.LITChestBoat;
-import com.ren.lostintime.common.entity.util.BoatType;
+import com.ren.lostintime.common.entity.enums.BoatType;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;

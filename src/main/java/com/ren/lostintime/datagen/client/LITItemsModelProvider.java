@@ -78,6 +78,7 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.MANGO.get());
         simple(BlockInit.DODO_EGG.get());
         simple(BlockInit.SCUTOSAURUS_EGG.get());
+        simple(BlockInit.DEINONYCHUS_EGG.get());
 
         simple(ItemInit.GOLDEN_EYE.get());
         handheld(ItemInit.STONE_KNIFE.get());
@@ -98,6 +99,8 @@ public class LITItemsModelProvider extends ItemModelProvider {
         spawnEgg(ItemInit.PLESIOSAURUS_SPAWN_EGG.get());
         spawnEgg(ItemInit.MASTODONSAURUS_SPAWN_EGG.get());
         spawnEgg(ItemInit.HELICOPRION_SPAWN_EGG.get());
+        spawnEgg(ItemInit.DEINONYCHUS_SPAWN_EGG.get());
+        spawnEgg(ItemInit.PTERYGOTUS_SPAWN_EGG.get());
 
         saplingItem(BlockInit.MANGO_SAPLING);
         saplingItem(BlockInit.ARAUCARIOXYLON_SAPLING);

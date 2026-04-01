@@ -147,11 +147,6 @@ public class Bothriolepis extends AbstractBaseFish implements GeoEntity, IEggLay
         return false;
     }
 
-    @Override
-    public boolean floatsUp() {
-        return false;
-    }
-
     public boolean isOnOceanFloor() {
         BlockPos pos = this.blockPosition();
         return this.level().getFluidState(pos).is(FluidTags.WATER) && this.level().getBlockState(pos.below()).isSolid();

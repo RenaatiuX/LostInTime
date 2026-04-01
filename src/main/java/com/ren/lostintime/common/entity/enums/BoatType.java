@@ -1,4 +1,4 @@
-package com.ren.lostintime.common.entity.util;
+package com.ren.lostintime.common.entity.enums;
 
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;

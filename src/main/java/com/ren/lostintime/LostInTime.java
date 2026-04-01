@@ -91,6 +91,7 @@ public class LostInTime {
             event.accept(ItemInit.SCUTOSAURUS_PLATE);
             event.accept(ItemInit.REGURGITATED_MASS);
             event.accept(ItemInit.PREHISTORIC_BOOK);
+            event.accept(ItemInit.SCANNER);
 
             event.accept(ItemInit.DAEODON_SAC);
             event.accept(ItemInit.LEPTICTIDIUM_SAC);
@@ -270,6 +271,8 @@ public class LostInTime {
             event.accept(ItemInit.PLESIOSAURUS_SPAWN_EGG);
             event.accept(ItemInit.MASTODONSAURUS_SPAWN_EGG);
             event.accept(ItemInit.HELICOPRION_SPAWN_EGG);
+            event.accept(ItemInit.DEINONYCHUS_SPAWN_EGG);
+            event.accept(ItemInit.PTERYGOTUS_SPAWN_EGG);
 
             event.accept(BlockInit.MANGO_LEAVES);
             event.accept(BlockInit.MANGO_LOG);
@@ -296,6 +299,7 @@ public class LostInTime {
 
             event.accept(BlockInit.DODO_EGG);
             event.accept(BlockInit.SCUTOSAURUS_EGG);
+            event.accept(BlockInit.DEINONYCHUS_EGG);
 
             event.accept(BlockInit.DEAD_BARREL_SPONGE);
             event.accept(BlockInit.BARREL_SPONGE);

@@ -1,8 +1,7 @@
 package com.ren.lostintime.common.init;
 
 import com.ren.lostintime.LostInTime;
-import com.ren.lostintime.common.entity.misc.LITBoat;
-import com.ren.lostintime.common.entity.util.BoatType;
+import com.ren.lostintime.common.entity.enums.BoatType;
 import com.ren.lostintime.common.item.*;
 import com.ren.lostintime.common.util.ModToolTiers;
 import net.minecraft.sounds.SoundEvents;
@@ -43,6 +42,8 @@ public class ItemInit {
     public static final RegistryObject<Item> SPINEL = registerSimple("spinel");
     public static final RegistryObject<Item> PREHISTORIC_BOOK = ITEMS.register("prehistoric_book",
             () -> new PrehistoricBookItem(new Item.Properties()));
+    public static final RegistryObject<Item> SCANNER = ITEMS.register("scanner",
+            () -> new PaleoScannerItem(new Item.Properties().stacksTo(1)));
 
     //SAC
     public static final RegistryObject<Item> DAEODON_SAC = registerSimple("daeodon_sac");
@@ -290,6 +291,10 @@ public class ItemInit {
             EntityInit.MASTODONSAURUS, 5262637, 9999450);
     public static final RegistryObject<Item> HELICOPRION_SPAWN_EGG = registerSpawnEgg("helicoprion_spawn_egg",
             EntityInit.HELICOPRION, 4871251, 15592941);
+    public static final RegistryObject<Item> DEINONYCHUS_SPAWN_EGG = registerSpawnEgg("deinonychus_spawn_egg",
+            EntityInit.DEINONYCHUS, 6967369, 9993579);
+    public static final RegistryObject<Item> PTERYGOTUS_SPAWN_EGG = registerSpawnEgg("pterygotus_spawn_egg",
+            EntityInit.PTERYGOTUS, 4080219, 2631200);
 
     //BOATS
     public static final RegistryObject<Item> ARAUCARIOXYLON_BOAT = ITEMS.register("araucarioxylon_boat",

@@ -62,6 +62,7 @@ public class LITBlockStateProvider extends BlockStateProvider {
 
         createEggModel(BlockInit.DODO_EGG.get(), "dodo_egg", 1);
         createEggModel(BlockInit.SCUTOSAURUS_EGG.get(), "scutosaurus_egg", 2);
+        createEggModel(BlockInit.DEINONYCHUS_EGG.get(), "deinonychus_egg", 3);
 
         createBabyRoeBlock(BlockInit.BOTHRIOLEPIS_ROE.get());
         createCrossRoeBlock(BlockInit.ENDOCERAS_EGG.get());

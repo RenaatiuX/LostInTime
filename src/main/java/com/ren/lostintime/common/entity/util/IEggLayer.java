@@ -36,5 +36,4 @@ public interface IEggLayer {
     boolean canLayEgg();
 
     BlockState getEgg();
-
 }

@@ -179,6 +179,9 @@ public class BlockInit {
     public static final RegistryObject<Block> SCUTOSAURUS_EGG = registerBlock("scutosaurus_egg",
             () -> new LITEggBlock(BlockBehaviour.Properties.copy(Blocks.TURTLE_EGG).randomTicks(),
                     EntityInit.SCUTOSAURUS, BlockTags.DIRT, 2));
+    public static final RegistryObject<Block> DEINONYCHUS_EGG = registerBlock("deinonychus_egg",
+            () -> new LITEggBlock(BlockBehaviour.Properties.copy(Blocks.TURTLE_EGG).randomTicks(),
+                    EntityInit.DEINONYCHUS, BlockTags.DIRT, 3));
     public static final RegistryObject<Block> ENDOCERAS_EGG = BLOCKS.register("endoceras_eggs",
             () -> new LITRoeBlock(BlockBehaviour.Properties.copy(Blocks.FROGSPAWN), EntityInit.ENDOCERAS,
                     ItemInit.ENDOCERAS_EGGS_BUCKET, 1, 2, 10000, 32000, true));

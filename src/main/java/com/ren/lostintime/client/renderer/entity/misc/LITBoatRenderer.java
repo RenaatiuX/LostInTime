@@ -5,7 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.entity.misc.LITBoat;
 import com.ren.lostintime.common.entity.misc.LITChestBoat;
-import com.ren.lostintime.common.entity.util.BoatType;
+import com.ren.lostintime.common.entity.enums.BoatType;
 import net.minecraft.client.model.BoatModel;
 import net.minecraft.client.model.ChestBoatModel;
 import net.minecraft.client.model.ListModel;

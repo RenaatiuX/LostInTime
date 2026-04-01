@@ -5,6 +5,7 @@ import com.ren.lostintime.common.entity.LITAnimal;
 import com.ren.lostintime.common.entity.LITWaterAnimal;
 import com.ren.lostintime.common.entity.ai.MastodonsaurusAi;
 import com.ren.lostintime.common.entity.ai.ScutosaurusAi;
+import com.ren.lostintime.common.entity.enums.GrowthStage;
 import com.ren.lostintime.common.entity.util.ISleepingEntity;
 import com.ren.lostintime.common.entity.util.SleepController;
 import com.ren.lostintime.common.entity.util.SleepType;
@@ -43,7 +44,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity, ISleepingEntity {
 
-    private static final EntityDataAccessor<Integer> DATA_GROWTH_STAGE = SynchedEntityData.defineId(Mastodonsaurus.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_DEATH_ROLLING = SynchedEntityData.defineId(Mastodonsaurus.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_REGURGITATING = SynchedEntityData.defineId(Mastodonsaurus.class, EntityDataSerializers.BOOLEAN);
 
@@ -109,7 +109,6 @@ public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity, ISleepi
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_DEATH_ROLLING, false);
-        this.entityData.define(DATA_GROWTH_STAGE, 0);
         this.entityData.define(DATA_REGURGITATING, false);
     }
 
@@ -256,20 +255,6 @@ public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity, ISleepi
     }
 
     @Override
-    public void aiStep() {
-        super.aiStep();
-        if (this.getGrowthStage() != 2 && this.isInWater() && this.horizontalCollision) {
-            float f = this.getYRot() * ((float)Math.PI / 180F);
-
-            this.setDeltaMovement(this.getDeltaMovement().add(
-                    (double)(-Mth.sin(f) * 0.2F),
-                    0.15D,
-                    (double)(Mth.cos(f) * 0.2F)
-            ));
-        }
-    }
-
-    @Override
     protected Brain.Provider<Mastodonsaurus> brainProvider() {
         return Brain.provider(MastodonsaurusAi.MEMORY_TYPES, MastodonsaurusAi.SENSOR_TYPES);
     }
@@ -313,41 +298,8 @@ public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity, ISleepi
     }
 
     @Override
-    public boolean canFlop() {
-        return this.getGrowthStage() == 2;
-    }
-
-    @Override
     public @Nullable SoundEvent getFlopSound() {
         return SoundEvents.GENERIC_SPLASH;
-    }
-
-    //GROWTH SYSTEM
-    public int getGrowthStage() {
-        return this.entityData.get(DATA_GROWTH_STAGE);
-    }
-
-    @Override
-    public EntityDimensions getDimensions(Pose pPose) {
-        EntityDimensions base = super.getDimensions(pPose);
-        return switch (getGrowthStage()) {
-            case 2 -> base.scale(0.35F);
-            case 1 -> base.scale(0.70F);
-            default -> base;
-        };
-    }
-
-    @Override
-    public void baseTick() {
-        super.baseTick();
-        if (!this.level().isClientSide) {
-            int age = this.getAge();
-            int currentStage = (age >= 0) ? 0 : (age >= -12000 ? 1 : 2);
-            if (this.entityData.get(DATA_GROWTH_STAGE) != currentStage) {
-                this.entityData.set(DATA_GROWTH_STAGE, currentStage);
-                this.refreshDimensions();
-            }
-        }
     }
 
     @Override
@@ -370,7 +322,7 @@ public class Mastodonsaurus extends LITWaterAnimal implements GeoEntity, ISleepi
     private <T extends Mastodonsaurus> PlayState movementPredicate(final AnimationState<T> event) {
         if (this.isDeathRolling()) return PlayState.STOP;
 
-        if (this.getGrowthStage() == 2) {
+        if (this.getGrowthStage() == GrowthStage.BABY) {
             if (!this.isInWater()) {
                 event.getController().setAnimation(BABY_OUT_OF_WATER);
             } else if (this.getBrain().hasMemoryValue(MemoryModuleType.HURT_BY_ENTITY)) {

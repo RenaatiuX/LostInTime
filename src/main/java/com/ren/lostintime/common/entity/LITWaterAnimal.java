@@ -41,14 +41,22 @@ public abstract class LITWaterAnimal extends LITAnimal {
     public LITWaterAnimal(EntityType<? extends LITAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 0.0F);
         this.moveControl = new SmoothSwimmingMoveControl(this, 85, 10, 0.02F, 0.1F, true);
         this.lookControl = new SmoothSwimmingLookControl(this, 10);
     }
 
+    @Override
     public boolean canBreatheUnderwater() {
         return true;
     }
 
+    @Override
+    protected float getWaterSlowDown() {
+        return 0.9F;
+    }
+
+    @Override
     public MobType getMobType() {
         return MobType.WATER;
     }
@@ -84,7 +92,6 @@ public abstract class LITWaterAnimal extends LITAnimal {
         } else {
             this.setAirSupply(300);
         }
-
     }
 
     /**
@@ -104,27 +111,11 @@ public abstract class LITWaterAnimal extends LITAnimal {
         return false;
     }
 
-
     @Override
-    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
-        if (pSpawnData == null) {
-            pSpawnData = new AgeableWaterAnimalGroupData(true);
-        }
-
-        AgeableWaterAnimalGroupData ageablemob$ageablemobgroupdata = (AgeableWaterAnimalGroupData) pSpawnData;
-        if (ageablemob$ageablemobgroupdata.isShouldSpawnBaby() && ageablemob$ageablemobgroupdata.getGroupSize() > 0 && pLevel.getRandom().nextFloat() <= ageablemob$ageablemobgroupdata.getBabySpawnChance()) {
-            this.setAge(BABY_START_AGE);
-        }
-
-        ageablemob$ageablemobgroupdata.increaseGroupSizeByOne();
-        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
-    }
-
     protected void usePlayerItem(Player pPlayer, InteractionHand pHand, ItemStack pStack) {
         if (!pPlayer.getAbilities().instabuild) {
             pStack.shrink(1);
         }
-
     }
 
     @Override
@@ -150,9 +141,8 @@ public abstract class LITWaterAnimal extends LITAnimal {
             this.move(MoverType.SELF, this.getDeltaMovement());
             this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
             if (this.getTarget() == null) {
-                this.setDeltaMovement(this.getDeltaMovement().add(0.0D, this.floatsUp() ? -0.005D : -0.010D, 0.0D));
+                this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.005D, 0.0D));
             }
-            this.calculateEntityAnimation(true);
         } else {
             super.travel(pTravelVector);
         }
@@ -165,96 +155,15 @@ public abstract class LITWaterAnimal extends LITAnimal {
         return true;
     }
 
-    public boolean floatsUp() {
-        return true;
-    }
-
-
     public boolean canSwim() {
         return true;
     }
 
-    public static class AgeableWaterAnimalGroupData extends AgeableMob.AgeableMobGroupData {
-        private int groupSize;
-        private final boolean shouldSpawnBaby;
-        private final float babySpawnChance;
-
-        private AgeableWaterAnimalGroupData(boolean pShouldSpawnBaby, float pBabySpawnChance) {
-            super(pShouldSpawnBaby);
-            this.shouldSpawnBaby = pShouldSpawnBaby;
-            this.babySpawnChance = pBabySpawnChance;
+    @Override
+    public float getWalkTargetValue(BlockPos pPos, LevelReader pLevel) {
+        if (pLevel.getFluidState(pPos).is(net.minecraft.tags.FluidTags.WATER)) {
+            return 10.0F;
         }
-
-        public AgeableWaterAnimalGroupData(boolean pShouldSpawnBaby) {
-            this(pShouldSpawnBaby, 0.05F);
-        }
-
-        public AgeableWaterAnimalGroupData(float pBabySpawnChance) {
-            this(true, pBabySpawnChance);
-        }
-
-        public int getGroupSize() {
-            return this.groupSize;
-        }
-
-        public void increaseGroupSizeByOne() {
-            ++this.groupSize;
-        }
-
-        public boolean isShouldSpawnBaby() {
-            return this.shouldSpawnBaby;
-        }
-
-        public float getBabySpawnChance() {
-            return this.babySpawnChance;
-        }
-    }
-
-    @Cancelable
-    public static class BabyWaterAnimalSpawnEvent extends Event {
-
-        private final Mob parentA;
-        private final Mob parentB;
-        private final Player causedByPlayer;
-        private LITWaterAnimal child;
-
-        public BabyWaterAnimalSpawnEvent(Mob parentA, Mob parentB, @org.jetbrains.annotations.Nullable LITWaterAnimal proposedChild) {
-            //causedByPlayer calculated here to simplify the patch.
-            Player causedByPlayer = null;
-            if (parentA instanceof LITWaterAnimal) {
-                causedByPlayer = ((LITWaterAnimal) parentA).getLoveCause();
-            }
-
-            if (causedByPlayer == null && parentB instanceof LITWaterAnimal) {
-                causedByPlayer = ((LITWaterAnimal) parentB).getLoveCause();
-            }
-
-            this.parentA = parentA;
-            this.parentB = parentB;
-            this.causedByPlayer = causedByPlayer;
-            this.child = proposedChild;
-        }
-
-        public Mob getParentA() {
-            return parentA;
-        }
-
-        public Mob getParentB() {
-            return parentB;
-        }
-
-        @Nullable
-        public Player getCausedByPlayer() {
-            return causedByPlayer;
-        }
-
-        @Nullable
-        public LITWaterAnimal getChild() {
-            return child;
-        }
-
-        public void setChild(LITWaterAnimal proposedChild) {
-            child = proposedChild;
-        }
+        return 0.0F;
     }
 }

@@ -19,7 +19,7 @@ public class DaeodonRenderer extends GeoEntityRenderer<Daeodon> {
     public DaeodonRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new DaeodonModel());
         this.shadowRadius = 0.8F;
-        this.addRenderLayer(new LITEyesLayer<>(this, EYES_LAYER));
+        this.addRenderLayer(new LITEyesLayer<>(this, EYES_LAYER, false));
     }
 
     @Override
