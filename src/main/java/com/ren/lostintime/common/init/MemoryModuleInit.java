@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.ren.lostintime.LostInTime;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,4 +29,8 @@ public class MemoryModuleInit {
     public static final RegistryObject<MemoryModuleType<Unit>> WANDER_ORDER = MEMORY_MODULE_TYPES.register("wander_order", () -> new MemoryModuleType<>(Optional.of(Codec.unit(Unit.INSTANCE))));
     public static final RegistryObject<MemoryModuleType<Unit>> FORCE_WAKE_UP = MEMORY_MODULE_TYPES.register("force_wake_up", () -> new MemoryModuleType<>(Optional.of(Codec.unit(Unit.INSTANCE))));
     public static final RegistryObject<MemoryModuleType<Unit>> SHOULD_SLEEP = MEMORY_MODULE_TYPES.register("should_wake_up", () -> new MemoryModuleType<>(Optional.of(Codec.unit(Unit.INSTANCE))));
+    public static final RegistryObject<MemoryModuleType<Integer>> AQUATIC_PHASE_TIMER = MEMORY_MODULE_TYPES.register("aquatic_phase_timer", () -> new MemoryModuleType<>(Optional.of(Codec.INT)));
+    public static final RegistryObject<MemoryModuleType<Boolean>> IS_WATER_PHASE = MEMORY_MODULE_TYPES.register("is_water_phase", () -> new MemoryModuleType<>(Optional.of(Codec.BOOL)));
+    public static final RegistryObject<MemoryModuleType<Boolean>> IS_TRAVELING_TO_WATER = MEMORY_MODULE_TYPES.register("is_traveling_to_water", () -> new MemoryModuleType<>(Optional.of(Codec.BOOL)));
 }
+

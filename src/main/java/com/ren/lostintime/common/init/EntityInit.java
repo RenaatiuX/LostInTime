@@ -47,7 +47,7 @@ public class EntityInit {
     public static final RegistryObject<EntityType<Deinonychus>> DEINONYCHUS = registerMob("deinonychus",
             Deinonychus::new, 1.0F, 1.0F);
     public static final RegistryObject<EntityType<Pterygotus>> PTERYGOTUS = registerWaterMob("pterygotus",
-            Pterygotus::new, 1.0F, 1.0F);
+            Pterygotus::new, 0.8F, 0.5F);
 
     public static final RegistryObject<EntityType<GuardianSpike>> GUARDIAN_SPIKE = registerProjectile("guardian_spike",
             GuardianSpike::new, 0.5F, 0.5F);

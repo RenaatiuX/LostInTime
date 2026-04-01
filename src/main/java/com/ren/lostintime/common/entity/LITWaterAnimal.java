@@ -2,11 +2,9 @@ package com.ren.lostintime.common.entity;
 
 import com.ren.lostintime.common.config.Config;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
@@ -18,25 +16,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.fluids.FluidType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class LITWaterAnimal extends LITAnimal {
-
-    public static boolean checkWaterLITSpawnRules(EntityType<?> pType, LevelAccessor pLevel, MobSpawnType pReason, BlockPos pPos, RandomSource pRandom) {
-        return Config.naturalSpawns && checkSurfaceWaterAnimalSpawnRules(pType, pLevel, pReason, pPos, pRandom);
-    }
-
-    public static boolean checkSurfaceWaterAnimalSpawnRules(EntityType<?> pWaterAnimal, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        int i = pLevel.getSeaLevel();
-        int j = i - 13;
-        return pPos.getY() >= j && pPos.getY() <= i && pLevel.getFluidState(pPos.below()).is(FluidTags.WATER) && pLevel.getBlockState(pPos.above()).is(Blocks.WATER);
-    }
 
     public LITWaterAnimal(EntityType<? extends LITAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -46,19 +33,17 @@ public abstract class LITWaterAnimal extends LITAnimal {
         this.lookControl = new SmoothSwimmingLookControl(this, 10);
     }
 
-    @Override
-    public boolean canBreatheUnderwater() {
-        return true;
+    // ==========================================
+    // SPAWN RULES
+    // ==========================================
+    public static boolean checkWaterLITSpawnRules(EntityType<?> pType, LevelAccessor pLevel, MobSpawnType pReason, BlockPos pPos, RandomSource pRandom) {
+        return Config.naturalSpawns && checkSurfaceWaterAnimalSpawnRules(pType, pLevel, pReason, pPos, pRandom);
     }
 
-    @Override
-    protected float getWaterSlowDown() {
-        return 0.9F;
-    }
-
-    @Override
-    public MobType getMobType() {
-        return MobType.WATER;
+    public static boolean checkSurfaceWaterAnimalSpawnRules(EntityType<?> pWaterAnimal, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+        int i = pLevel.getSeaLevel();
+        int j = i - 13;
+        return pPos.getY() >= j && pPos.getY() <= i && pLevel.getFluidState(pPos.below()).is(FluidTags.WATER) && pLevel.getBlockState(pPos.above()).is(Blocks.WATER);
     }
 
     @Override
@@ -71,57 +56,60 @@ public abstract class LITWaterAnimal extends LITAnimal {
         return pLevel.getFluidState(this.blockPosition()).is(FluidTags.WATER) && pLevel.getBlockState(this.blockPosition()).is(Blocks.WATER);
     }
 
-    /**
-     * Get number of ticks, at least during which the living entity will be silent.
-     */
+    // ==========================================
+    // CORE PROPERTIES
+    // ==========================================
+    @Override
+    public @NotNull MobType getMobType() {
+        return MobType.WATER;
+    }
+
+    @Override
     public int getAmbientSoundInterval() {
         return 120;
     }
 
+    @Override
     public int getExperienceReward() {
         return 1 + this.level().random.nextInt(3);
     }
 
-    protected void handleAirSupply(int pAirSupply) {
-        if (this.isAlive() && !this.isInWaterOrBubble()) {
-            this.setAirSupply(pAirSupply - 1);
-            if (this.getAirSupply() == -20) {
-                this.setAirSupply(0);
-                this.hurt(this.damageSources().drown(), 2.0F);
-            }
-        } else {
-            this.setAirSupply(300);
+    // ==========================================
+    // NAVIGATION & MOVEMENT
+    // ==========================================
+    @Override
+    protected @NotNull PathNavigation createNavigation(Level pLevel) {
+        return new WaterBoundPathNavigation(this, pLevel);
+    }
+
+    @Override
+    protected float getWaterSlowDown() {
+        return 0.9F;
+    }
+
+    @Override
+    public float getWalkTargetValue(BlockPos pPos, LevelReader pLevel) {
+        if (pLevel.getFluidState(pPos).is(FluidTags.WATER)) {
+            return 10.0F;
         }
+        return 0.0F;
     }
 
-    /**
-     * Gets called every tick from main Entity class
-     */
-    public void baseTick() {
-        int i = this.getAirSupply();
-        super.baseTick();
-        this.handleAirSupply(i);
-    }
-
+    @Override
     public boolean isPushedByFluid() {
         return false;
     }
 
-    public boolean canBeLeashed(Player pPlayer) {
-        return false;
+    public boolean canSwim() {
+        return true;
     }
 
-    @Override
-    protected void usePlayerItem(Player pPlayer, InteractionHand pHand, ItemStack pStack) {
-        if (!pPlayer.getAbilities().instabuild) {
-            pStack.shrink(1);
-        }
+    public boolean canFlop() {
+        return true;
     }
 
-    @Override
-    protected PathNavigation createNavigation(Level pLevel) {
-        return new WaterBoundPathNavigation(this, pLevel);
-    }
+    @Nullable
+    public abstract SoundEvent getFlopSound();
 
     @Override
     public void aiStep() {
@@ -148,22 +136,43 @@ public abstract class LITWaterAnimal extends LITAnimal {
         }
     }
 
-    @Nullable
-    public abstract SoundEvent getFlopSound();
-
-    public boolean canFlop() {
-        return true;
+    // ==========================================
+    // BREATHING (OXYGEN)
+    // ==========================================
+    @Override
+    public boolean canDrownInFluidType(FluidType type) {
+        return false;
     }
 
-    public boolean canSwim() {
-        return true;
+    public void baseTick() {
+        int i = this.getAirSupply();
+        super.baseTick();
+        this.handleAirSupply(i);
+    }
+
+    protected void handleAirSupply(int pAirSupply) {
+        if (this.isAlive() && !this.isInWaterOrBubble()) {
+            this.setAirSupply(pAirSupply - 1);
+            if (this.getAirSupply() == -20) {
+                this.setAirSupply(0);
+                this.hurt(this.damageSources().drown(), 2.0F);
+            }
+        } else {
+            this.setAirSupply(300);
+        }
+    }
+
+    // ==========================================
+    // INTERACTION
+    // ==========================================
+    public boolean canBeLeashed(Player pPlayer) {
+        return false;
     }
 
     @Override
-    public float getWalkTargetValue(BlockPos pPos, LevelReader pLevel) {
-        if (pLevel.getFluidState(pPos).is(net.minecraft.tags.FluidTags.WATER)) {
-            return 10.0F;
+    protected void usePlayerItem(Player pPlayer, InteractionHand pHand, ItemStack pStack) {
+        if (!pPlayer.getAbilities().instabuild) {
+            pStack.shrink(1);
         }
-        return 0.0F;
     }
 }

@@ -2,10 +2,12 @@ package com.ren.lostintime.common.entity.creatures;
 
 import com.mojang.serialization.Dynamic;
 import com.ren.lostintime.common.entity.LITAnimal;
+import com.ren.lostintime.common.entity.LITSemiAquaticAnimal;
 import com.ren.lostintime.common.entity.LITWaterAnimal;
 import com.ren.lostintime.common.entity.ai.PterygotusAi;
 import com.ren.lostintime.common.entity.util.IItemEater;
 import com.ren.lostintime.common.init.EntityInit;
+import com.ren.lostintime.common.init.MemoryModuleInit;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -24,6 +26,8 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -33,7 +37,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class Pterygotus extends LITWaterAnimal implements GeoEntity, IItemEater {
+public class Pterygotus extends LITSemiAquaticAnimal implements GeoEntity, IItemEater {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -47,7 +51,7 @@ public class Pterygotus extends LITWaterAnimal implements GeoEntity, IItemEater 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 15.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.20D)
+                .add(Attributes.MOVEMENT_SPEED, 0.2D)
                 .add(Attributes.ATTACK_DAMAGE, 3.0D);
     }
 
@@ -79,14 +83,6 @@ public class Pterygotus extends LITWaterAnimal implements GeoEntity, IItemEater 
         this.level().getProfiler().pop();
         PterygotusAi.updateActivity(this);
         super.customServerAiStep();
-    }
-
-    // ==========================================
-    // NAVIGATION
-    // ==========================================
-    @Override
-    protected @NotNull PathNavigation createNavigation(Level pLevel) {
-        return new AmphibiousPathNavigation(this, pLevel);
     }
 
     // ==========================================
@@ -143,8 +139,7 @@ public class Pterygotus extends LITWaterAnimal implements GeoEntity, IItemEater 
                 List<Entity> passengers = List.copyOf(this.getPassengers());
 
                 for (Entity passenger : passengers) {
-                    passenger.stopRiding(); // ¡Todos abajo!
-
+                    passenger.stopRiding();
                     if (passenger instanceof Pterygotus baby) {
                         baby.getBrain().setMemory(MemoryModuleType.IS_PANICKING, true);
 
@@ -156,16 +151,6 @@ public class Pterygotus extends LITWaterAnimal implements GeoEntity, IItemEater 
             }
         }
         return wasHurt;
-    }
-
-    @Override
-    public @Nullable SoundEvent getFlopSound() {
-        return SoundEvents.COD_FLOP;
-    }
-
-    @Override
-    public boolean canFlop() {
-        return false;
     }
 
     @Override
@@ -186,5 +171,34 @@ public class Pterygotus extends LITWaterAnimal implements GeoEntity, IItemEater 
     @Override
     public boolean isFoodItem(ItemStack stack) {
         return stack.is(ItemTags.FISHES);
+    }
+
+    @Override
+    protected void handleSemiAquaticNeeds() {
+        if (this.timeOnLand > 2400 && this.timeOnLand % 20 == 0) {
+            this.hurt(this.damageSources().drown(), 2.0F);
+        }
+    }
+
+    @Override
+    public int getWaterPhaseDuration() {
+        return 3600;
+    }
+
+    @Override
+    public int getLandPhaseDuration() {
+        return this.getMaxAirSupply();
+    }
+
+    @Override
+    public float getSpeed() {
+        return this.isInWaterOrBubble()
+                ? (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED)
+                : super.getSpeed();
+    }
+
+    @Override
+    public boolean canDrownInFluidType(FluidType type) {
+        return false;
     }
 }

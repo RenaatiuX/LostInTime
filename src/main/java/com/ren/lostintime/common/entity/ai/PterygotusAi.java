@@ -5,6 +5,9 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 import com.ren.lostintime.common.entity.creatures.Pterygotus;
 import com.ren.lostintime.common.init.EntityInit;
+import com.ren.lostintime.common.init.MemoryModuleInit;
+import net.minecraft.core.BlockPos;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,33 +27,24 @@ import java.util.Optional;
 public class PterygotusAi {
 
     public static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(
-            MemoryModuleType.LOOK_TARGET,
-            MemoryModuleType.WALK_TARGET,
-            MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
-            MemoryModuleType.PATH,
-            MemoryModuleType.ATTACK_TARGET,
-            MemoryModuleType.ATTACK_COOLING_DOWN,
-            MemoryModuleType.NEAREST_PLAYERS,
-            MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
-            MemoryModuleType.HURT_BY_ENTITY,
-            MemoryModuleType.IS_PANICKING,
-            MemoryModuleType.NEAREST_VISIBLE_ADULT,
+            MemoryModuleType.LOOK_TARGET, MemoryModuleType.WALK_TARGET, MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
+            MemoryModuleType.PATH, MemoryModuleType.ATTACK_TARGET, MemoryModuleType.ATTACK_COOLING_DOWN,
+            MemoryModuleType.NEAREST_PLAYERS, MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
+            MemoryModuleType.HURT_BY_ENTITY, MemoryModuleType.IS_PANICKING, MemoryModuleType.NEAREST_VISIBLE_ADULT,
             MemoryModuleType.BREED_TARGET,
-            MemoryModuleType.NEAREST_REPELLENT
+            MemoryModuleInit.AQUATIC_PHASE_TIMER.get(),
+            MemoryModuleInit.IS_WATER_PHASE.get(),
+            MemoryModuleInit.IS_TRAVELING_TO_WATER.get()
     );
 
     public static final ImmutableList<SensorType<? extends Sensor<? super Pterygotus>>> SENSOR_TYPES = ImmutableList.of(
-            SensorType.NEAREST_PLAYERS,
-            SensorType.NEAREST_LIVING_ENTITIES,
-            SensorType.HURT_BY,
-            SensorType.NEAREST_ADULT
+            SensorType.NEAREST_PLAYERS, SensorType.NEAREST_LIVING_ENTITIES, SensorType.HURT_BY, SensorType.NEAREST_ADULT
     );
 
     public static void makeBrain(Brain<Pterygotus> pBrain) {
         initCoreActivity(pBrain);
         initIdleActivity(pBrain);
         initFightActivity(pBrain);
-
         pBrain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         pBrain.setDefaultActivity(Activity.IDLE);
         pBrain.useDefaultActivity();
@@ -60,30 +54,22 @@ public class PterygotusAi {
         pBrain.addActivity(Activity.CORE, 0, ImmutableList.of(
                 new LookAtTargetSink(45, 90),
                 new MoveToTargetSink(),
-                new Swim(0.8F),
-                new AnimalPanic(2.0F) //vital for babies to escape when they fall
+                new AnimalPanic(2.0F)
         ));
     }
 
     private static void initIdleActivity(Brain<Pterygotus> pBrain) {
         pBrain.addActivity(Activity.IDLE, 10, ImmutableList.of(
                 StartAttacking.create(PterygotusAi::findTarget),
-
-                //babies have the highest priority they must climb on the adult
                 babyMountAdult(),
-                //if the adult is full, the previous behavior fails and they switch to this(follow)
                 BabyFollowAdult.create(UniformInt.of(5, 16), 1.2F),
-
-                //eating thrown away food
+                managePhaseCycle(),
                 eatDroppedFood(),
-
-                //brred
                 new AnimalMakeLove(EntityInit.PTERYGOTUS.get(), 1.0F),
-
                 new RunOne<>(ImmutableList.of(
-                        Pair.of(RandomStroll.stroll(1.0F), 2),
-                        Pair.of(SetEntityLookTarget.create(EntityType.PLAYER, 8.0F), 1),
-                        Pair.of(new DoNothing(30, 60), 1)
+                        Pair.of(RandomStroll.swim(0.8F), 4), // más peso
+                        Pair.of(RandomStroll.stroll(0.8F), 2),
+                        Pair.of(SetEntityLookTarget.create(EntityType.PLAYER, 8.0F), 1)
                 ))
         ));
     }
@@ -91,89 +77,56 @@ public class PterygotusAi {
     private static void initFightActivity(Brain<Pterygotus> pBrain) {
         pBrain.addActivityAndRemoveMemoryWhenStopped(Activity.FIGHT, 10, ImmutableList.of(
                 StopAttackingIfTargetInvalid.create(),
-                MeleeAttack.create(20) //attack
+                MeleeAttack.create(20)
         ), MemoryModuleType.ATTACK_TARGET);
     }
 
     public static void updateActivity(Pterygotus pterygotus) {
         Brain<Pterygotus> brain = pterygotus.getBrain();
-
         if (brain.hasMemoryValue(MemoryModuleType.ATTACK_TARGET)) {
             brain.setActiveActivityIfPossible(Activity.FIGHT);
             return;
         }
-
         brain.setActiveActivityToFirstValid(ImmutableList.of(Activity.FIGHT, Activity.IDLE));
     }
 
     private static Optional<? extends LivingEntity> findTarget(Pterygotus pterygotus) {
-        Brain<?> brain = pterygotus.getBrain();
-
-        //since it is neutral, it only attacks if it is attacked first.
-        Optional<LivingEntity> hurtBy = brain.getMemory(MemoryModuleType.HURT_BY_ENTITY);
-        if (hurtBy.isPresent()) {
-            return hurtBy;
-        }
-
-        return Optional.empty();
+        return pterygotus.getBrain().getMemory(MemoryModuleType.HURT_BY_ENTITY);
     }
 
     // ==========================================
-    //BEHAVIOR OF THE BREEDS
+    // BEHAVIORS
     // ==========================================
     public static BehaviorControl<Pterygotus> babyMountAdult() {
         return BehaviorBuilder.create(instance -> instance.group(
                 instance.registered(MemoryModuleType.WALK_TARGET),
-                instance.registered(MemoryModuleType.LOOK_TARGET),
                 instance.present(MemoryModuleType.NEAREST_VISIBLE_ADULT)
-        ).apply(instance, (walkTarget, lookTarget, nearestAdult) -> (level, entity, time) -> {
-
-            //If its not a baby, or if its already riding something, ignore it
+        ).apply(instance, (walkTarget, nearestAdult) -> (level, entity, time) -> {
             if (!entity.isBaby() || entity.isPassenger()) return false;
-
-            //we obtain the closest adult memory
             Pterygotus adult = (Pterygotus) instance.get(nearestAdult);
-
-            //ff the adult is already full (3 babies), the current baby will ignore this adult.
             if (adult.getPassengers().size() >= 3) return false;
 
-            //If its less than 2 blocks away, jump onto its back
             if (entity.distanceToSqr(adult) < 4.0D) {
                 entity.startRiding(adult);
                 walkTarget.erase();
                 return true;
             }
-
-            lookTarget.set(new EntityTracker(adult, true));
             walkTarget.set(new WalkTarget(new EntityTracker(adult, false), 1.1F, 1));
-
             return true;
         }));
     }
 
-    // ==========================================
-    // FEEDING
-    // ==========================================
     public static BehaviorControl<Pterygotus> eatDroppedFood() {
         return BehaviorBuilder.create(instance -> instance.group(
                 instance.registered(MemoryModuleType.WALK_TARGET),
                 instance.registered(MemoryModuleType.LOOK_TARGET)
         ).apply(instance, (walkTarget, lookTarget) -> (level, entity, time) -> {
-
-            if (entity.getHunger() >= entity.getMaxHunger() && entity.getHealth() >= entity.getMaxHealth()) {
+            if (entity.getHunger() >= entity.getMaxHunger() && entity.getHealth() >= entity.getMaxHealth())
                 return false;
-            }
-
-            List<ItemEntity> droppedFood = level.getEntitiesOfClass(
-                    ItemEntity.class,
-                    entity.getBoundingBox().inflate(8.0D, 4.0D, 8.0D),
-                    item -> entity.isFoodItem(item.getItem())
-            );
-
+            List<ItemEntity> droppedFood = level.getEntitiesOfClass(ItemEntity.class, entity.getBoundingBox().inflate(8.0D), item -> entity.isFoodItem(item.getItem()));
             if (droppedFood.isEmpty()) return false;
 
             ItemEntity targetItem = droppedFood.get(0);
-
             if (entity.distanceToSqr(targetItem) < 2.25D) {
                 entity.consumeItem(entity, targetItem);
                 entity.setHunger(entity.getHunger() + 10.0F);
@@ -181,11 +134,135 @@ public class PterygotusAi {
                 walkTarget.erase();
                 return true;
             }
-
             lookTarget.set(new EntityTracker(targetItem, true));
             walkTarget.set(new WalkTarget(new EntityTracker(targetItem, false), 1.0F, 0));
-
             return true;
+        }));
+    }
+
+    public static BehaviorControl<Pterygotus> managePhaseCycle() {
+        return BehaviorBuilder.create(instance -> instance.group(
+                instance.registered(MemoryModuleType.WALK_TARGET),
+                instance.registered(MemoryModuleInit.AQUATIC_PHASE_TIMER.get()),
+                instance.registered(MemoryModuleInit.IS_WATER_PHASE.get()),
+                instance.registered(MemoryModuleInit.IS_TRAVELING_TO_WATER.get())
+        ).apply(instance, (walkTarget, phaseTimer, isWaterPhase, isTraveling) -> (level, entity, time) -> {
+
+            int waterDuration = entity.getWaterPhaseDuration();
+            int landDuration = entity.getLandPhaseDuration();
+
+            Optional<Integer> timerOpt = entity.getBrain().getMemory(MemoryModuleInit.AQUATIC_PHASE_TIMER.get());
+            Optional<Boolean> phaseOpt = entity.getBrain().getMemory(MemoryModuleInit.IS_WATER_PHASE.get());
+            Optional<Boolean> travelingOpt = entity.getBrain().getMemory(MemoryModuleInit.IS_TRAVELING_TO_WATER.get());
+            boolean currentlyInWater = entity.isConsideredInWater();
+            boolean traveling = travelingOpt.orElse(false);
+
+            // ── Inicialización ───────────────────────────────────────────
+            if (timerOpt.isEmpty() || phaseOpt.isEmpty()) {
+                isWaterPhase.set(currentlyInWater);
+                isTraveling.set(false);
+                phaseTimer.set(currentlyInWater ? waterDuration : landDuration);
+                return false;
+            }
+
+            int remaining = timerOpt.get();
+            boolean waterPhase = phaseOpt.get();
+
+            // ── Si está viajando, espera a que llegue ────────────────────
+            if (traveling) {
+                if (currentlyInWater && !waterPhase) {
+                    // Llegó al agua
+                    isWaterPhase.set(true);
+                    isTraveling.set(false);
+                    phaseTimer.set(waterDuration);
+                    System.out.println("[Pterygotus] Llego al agua! Iniciando fase AGUA");
+                } else if (!currentlyInWater && waterPhase) {
+                    // Llegó a tierra
+                    isWaterPhase.set(false);
+                    isTraveling.set(false);
+                    phaseTimer.set(landDuration);
+                    System.out.println("[Pterygotus] Llego a tierra! Iniciando fase TIERRA");
+                }
+                // Mientras viaja no hace nada más
+                return false;
+            }
+
+            // ── Si el medio cambió sin que estuviera viajando (empujado, teleportado...) ──
+            if (currentlyInWater != waterPhase) {
+                isWaterPhase.set(currentlyInWater);
+                phaseTimer.set(currentlyInWater ? waterDuration : landDuration);
+                System.out.println("[Pterygotus] Cambio externo detectado, ajustando fase");
+                return false;
+            }
+
+            // ── Tick down ────────────────────────────────────────────────
+            if (remaining > 0) {
+                if (remaining % 100 == 0) {
+                    System.out.println("[Pterygotus] Timer: " + remaining + " | Fase: "
+                            + (waterPhase ? "AGUA" : "TIERRA"));
+                }
+
+                if (!waterPhase && remaining == 200) {
+                    BlockPos waterPos = BlockPos.findClosestMatch(
+                            entity.blockPosition(), 16, 8,
+                            p -> level.getFluidState(p).is(FluidTags.WATER)
+                    ).orElse(null);
+                    if (waterPos != null) {
+                        walkTarget.set(new WalkTarget(waterPos, 0.8F, 0));
+                        isTraveling.set(true);
+                        phaseTimer.set(0); // fuerza el cambio cuando llegue
+                        System.out.println("[Pterygotus] Saliendo anticipado hacia agua!");
+                        return true;
+                    }
+                }
+
+                phaseTimer.set(remaining - 1);
+                return false;
+            }
+
+            // ── Timer a 0 — buscar destino ───────────────────────────────
+            System.out.println("[Pterygotus] TIMER A 0! Buscando " + (waterPhase ? "TIERRA" : "AGUA"));
+
+            if (waterPhase) {
+                BlockPos landPos = null;
+                for (int i = 0; i < 10; i++) {
+                    BlockPos p = entity.blockPosition().offset(
+                            level.random.nextInt(16) - 8,
+                            level.random.nextInt(6) - 3,
+                            level.random.nextInt(16) - 8
+                    );
+                    if (level.getBlockState(p).isSolidRender(level, p)
+                            && level.getFluidState(p.above()).isEmpty()) {
+                        landPos = p.above();
+                        break;
+                    }
+                }
+                if (landPos != null) {
+                    walkTarget.set(new WalkTarget(landPos, 0.8F, 0));
+                    isTraveling.set(true);
+                    System.out.println("[Pterygotus] Viajando a tierra: " + landPos);
+                    return true;
+                }
+                System.out.println("[Pterygotus] No encontro tierra, reintentando en 5s");
+                phaseTimer.set(100);
+
+            } else {
+                BlockPos waterPos = BlockPos.findClosestMatch(
+                        entity.blockPosition(), 16, 8,
+                        p -> level.getFluidState(p).is(FluidTags.WATER)
+                ).orElse(null);
+
+                if (waterPos != null) {
+                    walkTarget.set(new WalkTarget(waterPos, 0.8F, 0));
+                    isTraveling.set(true);
+                    System.out.println("[Pterygotus] Viajando a agua: " + waterPos);
+                    return true;
+                }
+                System.out.println("[Pterygotus] No encontro agua, reintentando en 5s");
+                phaseTimer.set(100);
+            }
+
+            return false;
         }));
     }
 }
