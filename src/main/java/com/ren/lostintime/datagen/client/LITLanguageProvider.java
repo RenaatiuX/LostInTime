@@ -37,20 +37,34 @@ public class LITLanguageProvider extends LanguageProvider {
         add("advancement.lostintime.tis_but_a_scratch.desc", "Survive the bite of a prehistoric predator.");
 
         // Time Periods
-        add(TimePeriod.TRIASSIC, "Triassic");
-        add(TimePeriod.JURASSIC, "Jurassic");
-        add(TimePeriod.CRETACEOUS, "Cretaceous");
-        add(TimePeriod.PALEOGENE, "Paleogene");
-        add(TimePeriod.NEOGENE, "Neogene");
-        add(TimePeriod.QUATERNARY, "Quaternary");
+        add(TimePeriod.CAMBRIAN.descriptionKey.replace(".desc", ""), "Cambrian");
+        add(TimePeriod.ORDOVICIAN.descriptionKey.replace(".desc", ""), "Ordovician");
+        add(TimePeriod.SILURIAN.descriptionKey.replace(".desc", ""), "Silurian");
+        add(TimePeriod.DEVONIAN.descriptionKey.replace(".desc", ""), "Devonian");
+        add(TimePeriod.CARBONIFEROUS.descriptionKey.replace(".desc", ""), "Carboniferous");
+        add(TimePeriod.PERMIAN.descriptionKey.replace(".desc", ""), "Permian");
+        add(TimePeriod.TRIASSIC.descriptionKey.replace(".desc", ""), "Triassic");
+        add(TimePeriod.JURASSIC.descriptionKey.replace(".desc", ""), "Jurassic");
+        add(TimePeriod.CRETACEOUS.descriptionKey.replace(".desc", ""), "Cretaceous");
+        add(TimePeriod.PALEOGENE.descriptionKey.replace(".desc", ""), "Paleogene");
+        add(TimePeriod.NEOGENE.descriptionKey.replace(".desc", ""), "Neogene");
+        add(TimePeriod.QUATERNARY.descriptionKey.replace(".desc", ""), "Quaternary");
+        add(TimePeriod.PHANEROZOIC.descriptionKey.replace(".desc", ""), "Phanerozoic Eon");
 
         // Descriptions
-        add(TimePeriod.TRIASSIC.descriptionKey, "The Triassic Period (252-201 million years ago) marked the beginning of the Mesozoic Era. After a mass extinction, life slowly recovered, leading to the rise of reptiles and the very first dinosaurs.");
-        add(TimePeriod.JURASSIC.descriptionKey, "The Jurassic Period (201-145 million years ago) was the golden age of dinosaurs. Giant sauropods roamed the land, while pterosaurs ruled the skies and large marine reptiles dominated the oceans.");
-        add(TimePeriod.CRETACEOUS.descriptionKey, "The Cretaceous Period (145-66 million years ago) saw the diversification of dinosaurs, including iconic species like Tyrannosaurus Rex and Triceratops. It ended with a cataclysmic extinction event that wiped out the non-avian dinosaurs.");
-        add(TimePeriod.PALEOGENE.descriptionKey, "The Paleogene Period (66-23 million years ago) began after the dinosaurs' extinction. With the dominant reptiles gone, mammals rapidly diversified, evolving from small, simple forms into a wide variety of new species.");
-        add(TimePeriod.NEOGENE.descriptionKey, "The Neogene Period (23-2.6 million years ago) was a time of cooling climates. Grasslands expanded, and many modern mammals and birds continued to evolve, including the earliest human ancestors.");
-        add(TimePeriod.QUATERNARY.descriptionKey, "The Quaternary Period (2.6 million years ago to today) is defined by dramatic ice ages and the rise of Homo sapiens. It encompasses all of modern human history, from early tool use to the development of civilization.");
+        add(TimePeriod.CAMBRIAN.descriptionKey, "The Cambrian (541-485 Ma) exploded with life. It saw the rise of arthropods like trilobites and the first complex marine ecosystems in history.");
+        add(TimePeriod.ORDOVICIAN.descriptionKey, "During the Ordovician (485-443 Ma), the seas were filled with giant nautiloids and early jawless fish, while the first plants began to touch the barren land.");
+        add(TimePeriod.SILURIAN.descriptionKey, "The Silurian (443-419 Ma) stabilized life after a great extinction. Jawed fish appeared, and terrestrial plants became more common near the water's edge.");
+        add(TimePeriod.DEVONIAN.descriptionKey, "Known as the 'Age of Fishes', the Devonian (419-358 Ma) saw fish mastering the oceans and the first brave tetrapods starting to walk on land.");
+        add(TimePeriod.CARBONIFEROUS.descriptionKey, "The Carboniferous (358-298 Ma) was a world of colossal swamps and giant insects. High oxygen levels allowed dragonflies the size of eagles to rule the air.");
+        add(TimePeriod.PERMIAN.descriptionKey, "The Permian (298-252 Ma) saw the rise of synapsids, ancestors of mammals. It ended with the 'Great Dying', the most severe mass extinction ever known.");
+        add(TimePeriod.TRIASSIC.descriptionKey, "The Triassic (252-201 Ma) marked the recovery of life. It saw the rise of the first dinosaurs and the split of the supercontinent Pangea.");
+        add(TimePeriod.JURASSIC.descriptionKey, "The Jurassic (201-145 Ma) was the golden age of giants. Sauropods dominated the land while pterosaurs and marine reptiles ruled the skies and seas.");
+        add(TimePeriod.CRETACEOUS.descriptionKey, "The Cretaceous (145-66 Ma) saw the peak of dinosaur diversity and the rise of flowering plants, ending with the famous asteroid impact.");
+        add(TimePeriod.PALEOGENE.descriptionKey, "The Paleogene (66-23 Ma) followed the dinosaurs' demise. Mammals and birds rapidly diversified to fill the empty ecological niches.");
+        add(TimePeriod.NEOGENE.descriptionKey, "During the Neogene (23-2.6 Ma), climates cooled and grasslands expanded. Many modern mammal groups, including early hominids, appeared.");
+        add(TimePeriod.QUATERNARY.descriptionKey, "The Quaternary (2.6 Ma - Present) is the age of ice and humans. It is defined by repeated glaciations and the rise of modern civilization.");
+        add(TimePeriod.PHANEROZOIC.descriptionKey, "The Phanerozoic Eon encompasses the last 541 million years. It is the age of 'visible life', where complex organisms have flourished across the globe.");
     }
 
     private void add(TimePeriod period, String name) {

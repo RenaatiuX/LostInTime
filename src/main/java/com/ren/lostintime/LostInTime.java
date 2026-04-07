@@ -273,6 +273,7 @@ public class LostInTime {
             event.accept(ItemInit.HELICOPRION_SPAWN_EGG);
             event.accept(ItemInit.DEINONYCHUS_SPAWN_EGG);
             event.accept(ItemInit.PTERYGOTUS_SPAWN_EGG);
+            event.accept(ItemInit.KALLIGRAMMATIDAE_SPAWN_EGG);
 
             event.accept(BlockInit.MANGO_LEAVES);
             event.accept(BlockInit.MANGO_LOG);

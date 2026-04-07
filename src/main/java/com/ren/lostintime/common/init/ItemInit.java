@@ -295,6 +295,8 @@ public class ItemInit {
             EntityInit.DEINONYCHUS, 6967369, 9993579);
     public static final RegistryObject<Item> PTERYGOTUS_SPAWN_EGG = registerSpawnEgg("pterygotus_spawn_egg",
             EntityInit.PTERYGOTUS, 4080219, 2631200);
+    public static final RegistryObject<Item> KALLIGRAMMATIDAE_SPAWN_EGG = registerSpawnEgg("kalligrammatidae_spawm_egg",
+            EntityInit.KALLIGRAMMATIDAE, 10387549, 4993051);
 
     //BOATS
     public static final RegistryObject<Item> ARAUCARIOXYLON_BOAT = ITEMS.register("araucarioxylon_boat",

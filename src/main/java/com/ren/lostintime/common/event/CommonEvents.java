@@ -59,6 +59,7 @@ public class CommonEvents {
         event.put(EntityInit.HELICOPRION.get(), Helicoprion.createAttributes().build());
         event.put(EntityInit.DEINONYCHUS.get(), Deinonychus.createAttributes().build());
         event.put(EntityInit.PTERYGOTUS.get(),  Pterygotus.createAttributes().build());
+        event.put(EntityInit.KALLIGRAMMATIDAE.get(), Kalligrammatidae.createAttributes().build());
     }
 
     @SubscribeEvent

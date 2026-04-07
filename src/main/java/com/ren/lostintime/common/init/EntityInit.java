@@ -48,6 +48,8 @@ public class EntityInit {
             Deinonychus::new, 1.0F, 1.0F);
     public static final RegistryObject<EntityType<Pterygotus>> PTERYGOTUS = registerWaterMob("pterygotus",
             Pterygotus::new, 0.8F, 0.5F);
+    public static final RegistryObject<EntityType<Kalligrammatidae>> KALLIGRAMMATIDAE = registerMiscEntity("kalligrammatidae",
+            Kalligrammatidae::new, 0.3f, 0.3F);
 
     public static final RegistryObject<EntityType<GuardianSpike>> GUARDIAN_SPIKE = registerProjectile("guardian_spike",
             GuardianSpike::new, 0.5F, 0.5F);

@@ -101,6 +101,7 @@ public class LITItemsModelProvider extends ItemModelProvider {
         spawnEgg(ItemInit.HELICOPRION_SPAWN_EGG.get());
         spawnEgg(ItemInit.DEINONYCHUS_SPAWN_EGG.get());
         spawnEgg(ItemInit.PTERYGOTUS_SPAWN_EGG.get());
+        spawnEgg(ItemInit.KALLIGRAMMATIDAE_SPAWN_EGG.get());
 
         saplingItem(BlockInit.MANGO_SAPLING);
         saplingItem(BlockInit.ARAUCARIOXYLON_SAPLING);

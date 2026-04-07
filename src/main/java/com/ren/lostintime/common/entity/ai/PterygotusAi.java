@@ -157,7 +157,6 @@ public class PterygotusAi {
             boolean currentlyInWater = entity.isConsideredInWater();
             boolean traveling = travelingOpt.orElse(false);
 
-            // ── Inicialización ───────────────────────────────────────────
             if (timerOpt.isEmpty() || phaseOpt.isEmpty()) {
                 isWaterPhase.set(currentlyInWater);
                 isTraveling.set(false);
@@ -168,26 +167,21 @@ public class PterygotusAi {
             int remaining = timerOpt.get();
             boolean waterPhase = phaseOpt.get();
 
-            // ── Si está viajando, espera a que llegue ────────────────────
             if (traveling) {
                 if (currentlyInWater && !waterPhase) {
-                    // Llegó al agua
                     isWaterPhase.set(true);
                     isTraveling.set(false);
                     phaseTimer.set(waterDuration);
                     System.out.println("[Pterygotus] Llego al agua! Iniciando fase AGUA");
                 } else if (!currentlyInWater && waterPhase) {
-                    // Llegó a tierra
                     isWaterPhase.set(false);
                     isTraveling.set(false);
                     phaseTimer.set(landDuration);
                     System.out.println("[Pterygotus] Llego a tierra! Iniciando fase TIERRA");
                 }
-                // Mientras viaja no hace nada más
                 return false;
             }
 
-            // ── Si el medio cambió sin que estuviera viajando (empujado, teleportado...) ──
             if (currentlyInWater != waterPhase) {
                 isWaterPhase.set(currentlyInWater);
                 phaseTimer.set(currentlyInWater ? waterDuration : landDuration);
@@ -195,7 +189,6 @@ public class PterygotusAi {
                 return false;
             }
 
-            // ── Tick down ────────────────────────────────────────────────
             if (remaining > 0) {
                 if (remaining % 100 == 0) {
                     System.out.println("[Pterygotus] Timer: " + remaining + " | Fase: "
@@ -220,7 +213,6 @@ public class PterygotusAi {
                 return false;
             }
 
-            // ── Timer a 0 — buscar destino ───────────────────────────────
             System.out.println("[Pterygotus] TIMER A 0! Buscando " + (waterPhase ? "TIERRA" : "AGUA"));
 
             if (waterPhase) {
