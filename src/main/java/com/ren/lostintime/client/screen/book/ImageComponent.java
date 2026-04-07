@@ -11,9 +11,10 @@ public class ImageComponent extends PageComponent{
     protected int imageWidth, imageHeight, totalTextureWidth, totalTextureHeight;
 
     protected float additionalScale = 1f;
+    private final boolean centered;
 
-    public ImageComponent(ResourceLocation texture, int imageWidth, int imageHeight) {
-        this(texture, imageWidth, imageHeight, imageWidth, imageHeight);
+    public ImageComponent(ResourceLocation texture, int imageWidth, int imageHeight, boolean centered) {
+        this(texture, imageWidth, imageHeight, imageWidth, imageHeight, centered);
     }
 
     /**
@@ -24,16 +25,18 @@ public class ImageComponent extends PageComponent{
      * @param totalTextureWidth the total width of the whole texture file
      * @param totalTextureHeight the total height of the whole texture file
      */
-    public ImageComponent(ResourceLocation texture, int imageWidth, int imageHeight, int totalTextureWidth, int totalTextureHeight) {
+    public ImageComponent(ResourceLocation texture, int imageWidth, int imageHeight, int totalTextureWidth, int totalTextureHeight, boolean centered) {
         this.texture = texture;
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
         this.totalTextureHeight = totalTextureHeight;
         this.totalTextureWidth = totalTextureWidth;
+        this.centered = centered;
     }
 
     public ImageComponent additionalScale(float scale){
-        this.additionalScale = Mth.clamp(scale, 0, 1);
+        //this.additionalScale = Mth.clamp(scale, 0, 1);
+        this.additionalScale = Math.max(0, scale);
         return this;
     }
 
@@ -45,7 +48,7 @@ public class ImageComponent extends PageComponent{
         }
 
         // Calculate aspect ratios
-        float scaleX = (float) this.width / this.imageHeight;
+        float scaleX = (float) this.width / this.imageWidth;
         float scaleY = (float) this.height / (float) this.imageHeight;
 
         float scale = Math.min(scaleX, scaleY) * additionalScale;
@@ -53,13 +56,21 @@ public class ImageComponent extends PageComponent{
         int newWidth = Math.round(this.imageWidth * scale);
         int newHeight = Math.round(this.imageHeight * scale);
 
-        int xOffset = this.x + (this.width - newWidth) / 2;
-        int yOffset = this.y + (this.height - newHeight) / 2;
+        /*int xOffset = this.x + (this.width - newWidth) / 2;
+        int yOffset = this.y + (this.height - newHeight) / 2;*/
 
+        float drawX = this.x;
+        float drawY = this.y;
+
+        if (this.centered) {
+            drawX += (this.width - newWidth) / 2.0F;
+            drawY += (this.height - newHeight) / 2.0F;
+        }
 
         graphics.pose().pushPose();
-        graphics.pose().translate(xOffset, yOffset, 0);
-        graphics.pose().scale(scale, scale, scale);
+        //graphics.pose().translate(xOffset, yOffset, 0);
+        graphics.pose().translate(drawX, drawY, 0);
+        graphics.pose().scale(scale, scale, 1.0F);
 
         // Blit the texture with the new scaled dimensions, drawing the specified image region
         graphics.blit(texture, 0, 0, 0, 0, imageWidth, imageHeight, totalTextureWidth, totalTextureHeight);

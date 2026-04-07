@@ -1,16 +1,14 @@
 package com.ren.lostintime.client.screen.book;
 
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.util.Tuple;
 import org.antlr.v4.runtime.misc.Triple;
 
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class Page{
+public abstract class Page {
 
     public int x;
     public int y;
@@ -31,15 +29,15 @@ public abstract class Page{
         updateBounds();
     }
 
-    public void addComponent(PageComponent component, Inset inset, Dimension dimension){
+    public void addComponent(PageComponent component, Inset inset, Dimension dimension) {
         pageComponents.add(new Triple<>(component, inset, dimension));
     }
 
-    public void addComponent(PageComponent component){
+    public void addComponent(PageComponent component) {
         pageComponents.add(new Triple<>(component, Inset.ZERO, Dimension.fill()));
     }
 
-    public void updateBounds(){
+    public void updateBounds() {
         int currentY = this.y;
 
         for (Triple<PageComponent, Inset, Dimension> pair : pageComponents) {
@@ -54,14 +52,14 @@ public abstract class Page{
             component.setX(this.x + left).setY(currentY);
 
             var calculatedWidth = dimension.resolveWidth(this.width, this.width);
-            if (dimension.width().unit() == DimensionValue.Unit.NONE){
+            if (dimension.width().unit() == DimensionValue.Unit.NONE) {
                 calculatedWidth = component.getBounds().width;
             }
 
             component.setWidth(calculatedWidth - left - insets.resolveRight(component.getBounds().width, this.width));
 
             var calculatedHeight = dimension.resolveHeight(this.height, this.height - this.y + currentY);
-            if (dimension.height().unit() == DimensionValue.Unit.NONE){
+            if (dimension.height().unit() == DimensionValue.Unit.NONE) {
                 calculatedHeight = component.getBounds().height;
             }
 
@@ -82,11 +80,11 @@ public abstract class Page{
         return new Rectangle(x, y, width, height);
     }
 
-    public boolean onClick(int mouseX, int mouseY, int button){
+    public boolean onClick(int mouseX, int mouseY, int button) {
         return false;
     }
 
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, Font font, PrehistoricBookScreen screen){
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, Font font, PrehistoricBookScreen screen) {
         //basically ensuring that only inside the bounds is drawn
         graphics.enableScissor(this.x, this.y, this.x + this.width, this.y + this.height);
         for (var pair : pageComponents) {
