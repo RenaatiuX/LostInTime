@@ -69,6 +69,7 @@ public class PrehistoricBookScreen extends Screen {
         super(Component.translatable("gui." + LostInTime.MODID + ".prehistoric_book"));
         this.pages.add(new DoublePage(new PrehistoricBookFirstPage(), new IntroductionPage()));
         this.pages.add(new TableOfContentsPage());
+        this.pages.add(new TestPage());
         this.pages.add(new DoublePage(new TimePeriodsIndexPage(), new CreatureIndexPage()));
         this.pages.add(new CreaturePage("Helicoprion", EntityInit.HELICOPRION.get(), new ItemStack(Items.SLIME_BALL), "Tiburón de sierra"));
         this.pages.add(new CreaturePage("Mastodonsaurus", EntityInit.MASTODONSAURUS.get(), new ItemStack(Items.COD), "Anfibio masivo"));

@@ -4,10 +4,12 @@ import com.ren.lostintime.common.init.EntityInit;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public enum TimePeriod {
+
 
     //PALEOZOIC
     CAMBRIAN(541, 485, "Paleozoic", 0x557A5C, false),
@@ -25,10 +27,12 @@ public enum TimePeriod {
     //CENOZOIC
     PALEOGENE(66, 23, "Cenozoic", 0xFFAA00, false),
     NEOGENE(23, 2.6, "Cenozoic", 0xFFE500, false),
-    QUATERNARY(2.6, 0, "Cenozoic", 0xF7EEAD, false),
+    QUATERNARY(2.6, 0, "Cenozoic", 0xF7EEAD, false);
 
     //EON
-    PHANEROZOIC(541, 0, "None", 0xFFFFFF, true);
+    //PHANEROZOIC(541, 0, "None", 0xFFFFFF, true);
+
+    private static double maxTime, minTime;
 
     /**
      * Years ago
@@ -47,6 +51,14 @@ public enum TimePeriod {
         this.color = color;
         this.isEon = isEon;
         this.descriptionKey = "lostintime.timeperiod." + this.name().toLowerCase() + ".desc";
+    }
+
+   public static double getMaxTime(){
+        return Arrays.stream(values()).mapToDouble(t -> Math.max(t.fromMa, t.toMa)).max().orElseThrow();
+   }
+
+    public static double getMinTime(){
+        return Arrays.stream(values()).mapToDouble(t -> Math.min(t.fromMa, t.toMa)).min().orElseThrow();
     }
 
     /**

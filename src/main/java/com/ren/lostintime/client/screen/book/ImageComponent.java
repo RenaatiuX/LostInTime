@@ -35,7 +35,6 @@ public class ImageComponent extends PageComponent{
     }
 
     public ImageComponent additionalScale(float scale){
-        //this.additionalScale = Mth.clamp(scale, 0, 1);
         this.additionalScale = Math.max(0, scale);
         return this;
     }

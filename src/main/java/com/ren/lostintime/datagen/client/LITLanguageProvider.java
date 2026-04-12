@@ -49,7 +49,7 @@ public class LITLanguageProvider extends LanguageProvider {
         add(TimePeriod.PALEOGENE.descriptionKey.replace(".desc", ""), "Paleogene");
         add(TimePeriod.NEOGENE.descriptionKey.replace(".desc", ""), "Neogene");
         add(TimePeriod.QUATERNARY.descriptionKey.replace(".desc", ""), "Quaternary");
-        add(TimePeriod.PHANEROZOIC.descriptionKey.replace(".desc", ""), "Phanerozoic Eon");
+        //add(TimePeriod.PHANEROZOIC.descriptionKey.replace(".desc", ""), "Phanerozoic Eon");
 
         // Descriptions
         add(TimePeriod.CAMBRIAN.descriptionKey, "The Cambrian (541-485 Ma) exploded with life. It saw the rise of arthropods like trilobites and the first complex marine ecosystems in history.");
@@ -64,7 +64,7 @@ public class LITLanguageProvider extends LanguageProvider {
         add(TimePeriod.PALEOGENE.descriptionKey, "The Paleogene (66-23 Ma) followed the dinosaurs' demise. Mammals and birds rapidly diversified to fill the empty ecological niches.");
         add(TimePeriod.NEOGENE.descriptionKey, "During the Neogene (23-2.6 Ma), climates cooled and grasslands expanded. Many modern mammal groups, including early hominids, appeared.");
         add(TimePeriod.QUATERNARY.descriptionKey, "The Quaternary (2.6 Ma - Present) is the age of ice and humans. It is defined by repeated glaciations and the rise of modern civilization.");
-        add(TimePeriod.PHANEROZOIC.descriptionKey, "The Phanerozoic Eon encompasses the last 541 million years. It is the age of 'visible life', where complex organisms have flourished across the globe.");
+        //add(TimePeriod.PHANEROZOIC.descriptionKey, "The Phanerozoic Eon encompasses the last 541 million years. It is the age of 'visible life', where complex organisms have flourished across the globe.");
     }
 
     private void add(TimePeriod period, String name) {
