@@ -1,5 +1,6 @@
 package com.ren.lostintime.common.entity.creatures;
 
+import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.config.Config;
 import com.ren.lostintime.common.entity.AbstractBaseFish;
 import com.ren.lostintime.common.entity.util.BookDescrtiptionImpl;
@@ -14,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -86,7 +88,7 @@ public class Anomalocaris extends AbstractBaseFish implements GeoEntity {
     private int curioFeedCooldown = 0;
     private int curioSwimWithPlayerCooldown = 0;
 
-    private LazyOptional<LostInTimeBookDescription> description = LazyOptional.of(() -> new BookDescrtiptionImpl(TimePeriod.TRIASSIC, this.getType(), ItemInit.RAW_ANOMALOCARIS));
+    private final LazyOptional<LostInTimeBookDescription> description = LazyOptional.of(() -> new BookDescrtiptionImpl(TimePeriod.TRIASSIC, this.getType(), ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/gui/book/images/anomalocaris.png"), ItemInit.RAW_ANOMALOCARIS));
 
 
     public Anomalocaris(EntityType<? extends AbstractBaseFish> pEntityType, Level pLevel) {

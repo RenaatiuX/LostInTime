@@ -1,6 +1,8 @@
 package com.ren.lostintime.client.screen.book.components;
 
-import com.ren.lostintime.client.screen.book.page.PrehistoricBookScreen;
+import com.ren.lostintime.client.screen.book.PrehistoricBookScreen;
+import com.ren.lostintime.client.screen.book.util.Dimension;
+import com.ren.lostintime.client.screen.book.util.Inset;
 import com.ren.lostintime.client.util.ScreenRenderingUtils;
 import com.ren.lostintime.common.entity.util.TimePeriod;
 import net.minecraft.client.gui.Font;
@@ -34,9 +36,8 @@ public class TimePeriodSliderPageComponent extends PageComponent {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, Font font, PrehistoricBookScreen screen) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, Font font, Inset inset, Dimension dimension, PrehistoricBookScreen screen) {
         var bounds = this.getBounds();
-        //graphics.enableScissor(bounds.x, bounds.y,(int) bounds.getMaxX(), (int)bounds.getMaxY());
 
         int outline = 0;
 
@@ -66,16 +67,13 @@ public class TimePeriodSliderPageComponent extends PageComponent {
             color = colorObject.getRGB();
 
             var timeBounds = new Rectangle(bounds.x + Math.min(toWidth, fromWidth) + outline, bounds.y + sliderHeight + outline, Math.abs(fromWidth - toWidth) + outline, bounds.height - outline);
-
             graphics.fill(bounds.x + Math.min(toWidth, fromWidth) + outline, bounds.y + sliderHeight + outline, bounds.x + Math.max(toWidth, fromWidth) + outline, bounds.y + bounds.height - outline, color);
             if (timeBounds.contains(mouseX, mouseY)) {
                 ScreenRenderingUtils.renderTimePeriodTooltip(graphics, (int) timeBounds.getCenterX(), (int) bounds.getMaxY() + 5, t, t == this.period, false);
             }
         }
-
         graphics.fill(bounds.x + outline, bounds.y + sliderHeight + outline + (int) ((periodsHeight - outline) * (1 - bottomLinePercentage)), bounds.x + bounds.width - outline, bounds.y + bounds.height - outline, backgroundColor);
 
-        //graphics.disableScissor();
         if (this.getBounds().contains(mouseX, mouseY)) {
             renderTriangle(graphics, mouseX);
         } else {
@@ -89,7 +87,6 @@ public class TimePeriodSliderPageComponent extends PageComponent {
 
             renderTriangle(graphics, this.x + middle);
         }
-
 
     }
 

@@ -1,6 +1,8 @@
 package com.ren.lostintime.client.screen.book.components;
 
-import com.ren.lostintime.client.screen.book.page.PrehistoricBookScreen;
+import com.ren.lostintime.client.screen.book.PrehistoricBookScreen;
+import com.ren.lostintime.client.screen.book.util.Dimension;
+import com.ren.lostintime.client.screen.book.util.Inset;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 
@@ -52,6 +54,6 @@ public abstract class PageComponent {
         return new Rectangle(x, y, width, height);
     }
 
-    public abstract void render(GuiGraphics graphics, int mouseX, int mouseY, Font font, PrehistoricBookScreen screen);
+    public abstract void render(GuiGraphics graphics, int mouseX, int mouseY, Font font, Inset inset, Dimension dimension, PrehistoricBookScreen screen);
 
 }

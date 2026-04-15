@@ -7,18 +7,9 @@ package com.ren.lostintime.client.screen.book.util;
 public record DimensionValue(float value, Unit unit) {
 
     public enum Unit {
-        NONE,
         PIXEL,
         PERCENT,
         FILL
-    }
-
-    /**
-     *
-     * @return a dimension which will prevent the dimension from setting this value
-     */
-    public static DimensionValue none() {
-        return new DimensionValue(0, Unit.NONE);
     }
 
     public static DimensionValue px(float pixels) {
@@ -50,7 +41,6 @@ public record DimensionValue(float value, Unit unit) {
             case PIXEL -> Math.round(value);
             case PERCENT -> Math.round(parentSize * value);
             case FILL -> availableSpace;
-            case NONE -> 0;
         };
     }
 }

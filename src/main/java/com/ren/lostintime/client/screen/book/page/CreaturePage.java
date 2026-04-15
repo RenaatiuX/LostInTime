@@ -1,6 +1,7 @@
 package com.ren.lostintime.client.screen.book.page;
 
 import com.mojang.blaze3d.platform.Lighting;
+import com.ren.lostintime.client.screen.book.PrehistoricBookScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

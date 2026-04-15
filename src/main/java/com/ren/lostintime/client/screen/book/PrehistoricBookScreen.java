@@ -1,7 +1,15 @@
-package com.ren.lostintime.client.screen.book.page;
+package com.ren.lostintime.client.screen.book;
 
 import com.ren.lostintime.LostInTime;
+import com.ren.lostintime.client.screen.book.components.TitlePageComponent;
+import com.ren.lostintime.client.screen.book.page.*;
+import com.ren.lostintime.client.screen.book.util.Dimension;
+import com.ren.lostintime.client.screen.book.util.DimensionValue;
+import com.ren.lostintime.client.screen.book.util.Inset;
+import com.ren.lostintime.client.screen.book.util.LayoutValue;
+import com.ren.lostintime.common.init.CapabilityInit;
 import com.ren.lostintime.common.init.EntityInit;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -70,6 +78,12 @@ public class PrehistoricBookScreen extends Screen {
         this.pages.add(new DoublePage(new PrehistoricBookFirstPage(), new IntroductionPage()));
         this.pages.add(new TableOfContentsPage());
         this.pages.add(new TestPage());
+        Minecraft.getInstance().player.getCapability(CapabilityInit.PLAYER_DISCOVERED_PREHISTORIC).ifPresent(cap -> {
+            for (var entity : cap.discoveredEntities()) {
+                this.pages.add(new CreatureLeftPage(entity));
+            }
+
+        });
         this.pages.add(new DoublePage(new TimePeriodsIndexPage(), new CreatureIndexPage()));
         this.pages.add(new CreaturePage("Helicoprion", EntityInit.HELICOPRION.get(), new ItemStack(Items.SLIME_BALL), "Tiburón de sierra"));
         this.pages.add(new CreaturePage("Mastodonsaurus", EntityInit.MASTODONSAURUS.get(), new ItemStack(Items.COD), "Anfibio masivo"));

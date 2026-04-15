@@ -153,4 +153,8 @@ public class ScreenRenderingUtils {
 
 
     }
+
+    public static void addTitleComponents(PageComponent component, Component text){
+
+    }
 }

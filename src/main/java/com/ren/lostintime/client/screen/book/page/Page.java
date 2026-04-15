@@ -1,5 +1,6 @@
 package com.ren.lostintime.client.screen.book.page;
 
+import com.ren.lostintime.client.screen.book.PrehistoricBookScreen;
 import com.ren.lostintime.client.screen.book.components.PageComponent;
 import com.ren.lostintime.client.screen.book.util.Dimension;
 import com.ren.lostintime.client.screen.book.util.DimensionValue;
@@ -35,7 +36,7 @@ public abstract class Page {
         updateBounds();
     }
 
-    public Page disableScisscor(){
+    public Page disableScisscor() {
         this.scissor = false;
         return this;
     }
@@ -61,23 +62,10 @@ public abstract class Page {
             var left = insets.resolveLeft(component.getBounds().width, this.width);
 
             component.setX(this.x + left).setY(currentY);
-
-            var calculatedWidth = dimension.resolveWidth(this.width, this.width);
-            if (dimension.width().unit() == DimensionValue.Unit.NONE) {
-                calculatedWidth = component.getBounds().width;
-            }
-
-            component.setWidth(calculatedWidth - left - insets.resolveRight(component.getBounds().width, this.width));
-
-            var calculatedHeight = dimension.resolveHeight(this.height, this.height - this.y + currentY);
-            if (dimension.height().unit() == DimensionValue.Unit.NONE) {
-                calculatedHeight = component.getBounds().height;
-            }
-
-            var componentHeight = calculatedHeight - topMargin - insets.resolveBottom(component.getBounds().height, this.height);
-            component.setHeight(componentHeight);
-
-            currentY += componentHeight;
+            component.setWidth(dimension.resolveWidth(this.width, this.width) - left - insets.resolveRight(component.getBounds().width, this.width));
+            component.setHeight(dimension.resolveHeight(this.height, this.height - currentY + this.y));
+            component.updateBounds();
+            currentY += component.getBounds().height + insets.resolveBottom(component.getBounds().height, this.height);
 
         }
 
@@ -101,7 +89,7 @@ public abstract class Page {
             graphics.enableScissor(this.x, this.y, this.x + this.width, this.y + this.height);
         for (var pair : pageComponents) {
             PageComponent component = pair.a;
-            component.render(graphics, mouseX, mouseY, font, screen);
+            component.render(graphics, mouseX, mouseY, font,pair.b, pair.c, screen);
         }
         if (scissor)
             graphics.disableScissor();

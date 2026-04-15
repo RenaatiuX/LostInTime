@@ -1,6 +1,7 @@
 package com.ren.lostintime.common.entity.util;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -16,15 +17,17 @@ public class BookDescrtiptionImpl implements LostInTimeBookDescription {
     private final List<Supplier<? extends ItemLike>> drops;
     private final EntityType<?> entityType;
     private final Component descriptionOverride;
+    private final ResourceLocation icon;
 
     @SafeVarargs
-    public BookDescrtiptionImpl(TimePeriod period, EntityType<?> entityType, Supplier<? extends ItemLike>... drops) {
-        this(period, entityType, null, drops);
+    public BookDescrtiptionImpl(TimePeriod period, EntityType<?> entityType, ResourceLocation icon, Supplier<? extends ItemLike>... drops) {
+        this(period, entityType, null, icon, drops);
     }
 
     @SafeVarargs
-    public BookDescrtiptionImpl(TimePeriod period, EntityType<?> entityType, Component descriptionOverride, Supplier<? extends ItemLike>... drops) {
+    public BookDescrtiptionImpl(TimePeriod period, EntityType<?> entityType, Component descriptionOverride, ResourceLocation icon, Supplier<? extends ItemLike>... drops) {
         this.period = period;
+        this.icon = icon;
         this.drops = Arrays.asList(drops);
         this.entityType = entityType;
         this.descriptionOverride = descriptionOverride;
@@ -50,5 +53,10 @@ public class BookDescrtiptionImpl implements LostInTimeBookDescription {
         if (descriptionOverride == null)
             return LostInTimeBookDescription.super.getDisplayName();
         return descriptionOverride;
+    }
+
+    @Override
+    public ResourceLocation icon() {
+        return this.icon;
     }
 }

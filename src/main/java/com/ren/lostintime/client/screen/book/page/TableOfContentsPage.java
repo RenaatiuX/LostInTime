@@ -1,5 +1,6 @@
 package com.ren.lostintime.client.screen.book.page;
 
+import com.ren.lostintime.client.screen.book.components.LinePageComponent;
 import com.ren.lostintime.client.screen.book.components.TitlePageComponent;
 import com.ren.lostintime.client.screen.book.util.Dimension;
 import com.ren.lostintime.client.screen.book.util.DimensionValue;
@@ -10,16 +11,19 @@ import net.minecraft.network.chat.Component;
 public class TableOfContentsPage extends Page {
 
     public TableOfContentsPage() {
-        this.addComponent(new TitlePageComponent(Component.literal("Table of Contents")).maxScale(1.5f)
-                        .addUnderline(2, 0x558B7D6B, Inset.symmetric(LayoutValue.px(3),
-                                LayoutValue.px(7))), Inset.symmetric(LayoutValue.ZERO, LayoutValue.px(1)),
-                Dimension.of(DimensionValue.fill(), DimensionValue.none())
+        this.addComponent(new TitlePageComponent(Component.literal("Table of Contents")).maxScale(1.5f),
+                Inset.symmetric(LayoutValue.ZERO, LayoutValue.px(2)),
+                Dimension.of(DimensionValue.fill(), DimensionValue.percent(0.1f))
         );
+        this.addComponent(new LinePageComponent(LinePageComponent.Orientation.HORIZONTAL, 0x558B7D6B),
+                Inset.symmetric(LayoutValue.px(5), LayoutValue.px(3)),
+                Dimension.of(DimensionValue.fill(), DimensionValue.px(2))
+                );
 
         this.addComponent(
                 new TitlePageComponent(Component.literal("I. The Geological Eras"), 0x302010, false, false),
                 Inset.of(LayoutValue.px(5), LayoutValue.px(0), LayoutValue.px(5), LayoutValue.px(0)),
-                Dimension.of(DimensionValue.fill(), DimensionValue.none())
+                Dimension.of(DimensionValue.fill(), DimensionValue.percent(0.1f))
         );
 
         /*this.addComponent(

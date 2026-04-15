@@ -1,5 +1,6 @@
 package com.ren.lostintime.client.screen.book.page;
 
+import com.ren.lostintime.client.screen.book.PrehistoricBookScreen;
 import com.ren.lostintime.client.screen.book.components.PageComponent;
 import com.ren.lostintime.client.screen.book.components.TitlePageComponent;
 import com.ren.lostintime.client.util.ScreenRenderingUtils;
@@ -35,7 +36,7 @@ public class TitlePage extends Page {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, Font font, PrehistoricBookScreen screen) {
         ScreenRenderingUtils.centerHorizontally(this.getBounds(), this.textPageComponent);
-        this.textPageComponent.render(graphics, mouseX, mouseY, font, screen);
+        //this.textPageComponent.render(graphics, mouseX, mouseY, font, screen);
 
         int textWidth = font.width(this.title);
         

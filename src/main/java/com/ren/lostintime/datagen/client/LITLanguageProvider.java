@@ -1,7 +1,7 @@
 package com.ren.lostintime.datagen.client;
 
 import com.ren.lostintime.LostInTime;
-import com.ren.lostintime.client.screen.book.page.PrehistoricBookScreen;
+import com.ren.lostintime.client.screen.book.PrehistoricBookScreen;
 import com.ren.lostintime.common.entity.util.TimePeriod;
 import com.ren.lostintime.common.init.ItemInit;
 import net.minecraft.data.PackOutput;;

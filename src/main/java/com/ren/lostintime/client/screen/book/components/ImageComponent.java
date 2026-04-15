@@ -1,11 +1,13 @@
 package com.ren.lostintime.client.screen.book.components;
 
-import com.ren.lostintime.client.screen.book.page.PrehistoricBookScreen;
+import com.ren.lostintime.client.screen.book.PrehistoricBookScreen;
+import com.ren.lostintime.client.screen.book.util.Dimension;
+import com.ren.lostintime.client.screen.book.util.Inset;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
-public class ImageComponent extends PageComponent{
+public class ImageComponent extends PageComponent {
 
     protected final ResourceLocation texture;
     protected int imageWidth, imageHeight, totalTextureWidth, totalTextureHeight;
@@ -19,10 +21,10 @@ public class ImageComponent extends PageComponent{
 
     /**
      *
-     * @param texture the texture
-     * @param imageWidth the width of the image to be drawn from the texture
-     * @param imageHeight the height of the image to be drawn from the texture
-     * @param totalTextureWidth the total width of the whole texture file
+     * @param texture            the texture
+     * @param imageWidth         the width of the image to be drawn from the texture
+     * @param imageHeight        the height of the image to be drawn from the texture
+     * @param totalTextureWidth  the total width of the whole texture file
      * @param totalTextureHeight the total height of the whole texture file
      */
     public ImageComponent(ResourceLocation texture, int imageWidth, int imageHeight, int totalTextureWidth, int totalTextureHeight, boolean centered) {
@@ -34,13 +36,13 @@ public class ImageComponent extends PageComponent{
         this.centered = centered;
     }
 
-    public ImageComponent additionalScale(float scale){
+    public ImageComponent additionalScale(float scale) {
         this.additionalScale = Math.max(0, scale);
         return this;
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, Font font, PrehistoricBookScreen screen) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, Font font, Inset inset, Dimension dimension, PrehistoricBookScreen screen) {
         // Ensure we don't divide by zero
         if (this.imageWidth <= 0 || this.imageHeight <= 0 || this.width <= 0 || this.height <= 0) {
             return;

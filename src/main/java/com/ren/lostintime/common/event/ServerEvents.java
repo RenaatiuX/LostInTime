@@ -12,6 +12,8 @@ import com.ren.lostintime.datagen.server.LITTags;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -35,6 +37,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -57,7 +60,7 @@ public class ServerEvents {
     @SubscribeEvent
     public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player player) {
-            event.addCapability(ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "player_discovery"), new ICapabilityProvider() {
+            event.addCapability(ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "player_discovery"), new ICapabilitySerializable() {
 
                 final LazyOptional<PlayerDiscoveredPrehistoric> optional = LazyOptional.of(() -> new PlayerDiscoveredPrehistoricImpl(player));
 
@@ -66,6 +69,18 @@ public class ServerEvents {
                     if (cap == CapabilityInit.PLAYER_DISCOVERED_PREHISTORIC)
                         return optional.cast();
                     return LazyOptional.empty();
+                }
+
+                @Override
+                public Tag serializeNBT() {
+                    return optional.map(PlayerDiscoveredPrehistoric::serializeNBT).orElse(new CompoundTag());
+                }
+
+                @Override
+                public void deserializeNBT(Tag nbt) {
+                    if (nbt instanceof CompoundTag tag){
+                        optional.ifPresent(playerDiscoveredPrehistoric -> playerDiscoveredPrehistoric.deserializeNBT(tag));
+                    }
                 }
             });
         }
