@@ -1,4 +1,4 @@
-package com.ren.lostintime.client.screen.book;
+package com.ren.lostintime.client.screen.book.page;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

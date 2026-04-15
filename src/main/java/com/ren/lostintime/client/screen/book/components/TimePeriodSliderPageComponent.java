@@ -1,6 +1,6 @@
 package com.ren.lostintime.client.screen.book.components;
 
-import com.ren.lostintime.client.screen.book.PrehistoricBookScreen;
+import com.ren.lostintime.client.screen.book.page.PrehistoricBookScreen;
 import com.ren.lostintime.client.util.ScreenRenderingUtils;
 import com.ren.lostintime.common.entity.util.TimePeriod;
 import net.minecraft.client.gui.Font;

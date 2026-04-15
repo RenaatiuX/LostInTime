@@ -1,6 +1,6 @@
 package com.ren.lostintime.common.item;
 
-import com.ren.lostintime.client.screen.book.PrehistoricBookScreen;
+import com.ren.lostintime.client.screen.book.page.PrehistoricBookScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;

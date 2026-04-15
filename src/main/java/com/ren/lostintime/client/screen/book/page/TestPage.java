@@ -1,4 +1,4 @@
-package com.ren.lostintime.client.screen.book;
+package com.ren.lostintime.client.screen.book.page;
 
 import com.ren.lostintime.client.screen.book.components.TimePeriodSliderPageComponent;
 import com.ren.lostintime.client.screen.book.components.TitlePageComponent;
