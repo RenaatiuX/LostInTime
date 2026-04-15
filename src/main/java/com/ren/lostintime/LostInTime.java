@@ -92,6 +92,7 @@ public class LostInTime {
             event.accept(ItemInit.REGURGITATED_MASS);
             event.accept(ItemInit.PREHISTORIC_BOOK);
             event.accept(ItemInit.SCANNER);
+            event.accept(ItemInit.GOLDEN_KEY);
 
             event.accept(ItemInit.DAEODON_SAC);
             event.accept(ItemInit.LEPTICTIDIUM_SAC);
@@ -137,11 +138,15 @@ public class LostInTime {
             event.accept(ItemInit.CLADOPHLEBIS_FOSSIL);
             event.accept(ItemInit.CONIOPTERIS_FOSSIL);
             event.accept(ItemInit.RED_ALGAE_FOSSIL);
+            event.accept(ItemInit.ALLONNIA_FOSSL);
+            event.accept(ItemInit.COOKSONIA_FOSSIL);
+            event.accept(ItemInit.ARAUCARIOXYLON_FOSSIL);
             event.accept(ItemInit.DODO_FOSSIL);
             event.accept(ItemInit.DODO_SKULL);
             event.accept(ItemInit.DODO_FOSSIL_MOUNT);
             event.accept(ItemInit.HELICOPRION_FOSSIL);
             event.accept(ItemInit.HELICOPRION_SKULL);
+            event.accept(ItemInit.HORSESHOE_CRAB_FOSSIL);
 
             event.accept(ItemInit.EMPTY_SKELETON_MOUNT);
 
@@ -170,6 +175,8 @@ public class LostInTime {
             event.accept(ItemInit.COOKED_DEINONYCHUS_MEAT);
             event.accept(ItemInit.RAW_HELICOPRION_MEAT);
             event.accept(ItemInit.COOKED_HELICOPRION_MEAT);
+            event.accept(ItemInit.RAW_PTERYGOTUS_MEAT);
+            event.accept(ItemInit.COOKED_PTERYGOTUS_MEAT);
 
             event.accept(ItemInit.SMALL_FRIED_EGG);
             event.accept(ItemInit.FRIED_EGG);
@@ -226,6 +233,7 @@ public class LostInTime {
             event.accept(ItemInit.PTERYGOTUS_SOUL_CFG);
             event.accept(ItemInit.SCUTOSAURUS_SOUL_CFG);
             event.accept(ItemInit.HELICOPRION_SOUL_CFG);
+            event.accept(ItemInit.HORSESHOE_CRAB_SOUL_CFG);
 
             event.accept(ItemInit.BARREL_SPONGE_VITAL_PATTERN);
             event.accept(ItemInit.GLASS_SPONGE_VITAL_PATTERN);
@@ -240,6 +248,7 @@ public class LostInTime {
             event.accept(ItemInit.GONDWANAGARICITES_VITAL_PATTERN);
             event.accept(ItemInit.RED_ALGAE_VITAL_PATTERN);
             event.accept(ItemInit.TITANOSARCOLITES_VITAL_PATTERN);
+            event.accept(ItemInit.ALLONNIA_VITAL_PATTERN);
 
             event.accept(ItemInit.BEIGE_SOLUTION);
             event.accept(ItemInit.CARMINE_SOLUTION);

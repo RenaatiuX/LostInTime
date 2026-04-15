@@ -177,41 +177,40 @@ public class SoulConfiguratorBlock extends LITMachineBlock {
             case SIDE -> SHAPE_SIDE;
         };
 
-        return rotateShape(Direction.NORTH, facing, baseShape);
+        return rotateShape(facing, baseShape);
     }
 
-    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{ shape, Shapes.empty() };
-        int times = (to.get2DDataValue() - from.get2DDataValue() + 4) % 4;
+    public static VoxelShape rotateShape(Direction to, VoxelShape shape) {
+        VoxelShape[] buffer = new VoxelShape[]{shape, Shapes.empty()};
+        int times = to.get2DDataValue();
         for (int i = 0; i < times; i++) {
-            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.join(buffer[1],
+            buffer[1] = Shapes.empty();
+            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.joinUnoptimized(buffer[1],
                     Shapes.box(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX), BooleanOp.OR));
             buffer[0] = buffer[1];
-            buffer[1] = Shapes.empty();
         }
         return buffer[0];
     }
 
     private static VoxelShape makeTopShape() {
         VoxelShape shape = Shapes.empty();
-        shape = Shapes.join(shape, Shapes.box(0, 0, 0, 1, 0.5625, 1), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(-0.0625, 0.25, -0.0625, 1.0625, 0.375, 1.0625), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.0625, 0.5625, 0.0625, 0.9375, 1, 0.9375), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0, 0, 0.0625, 0.9375, 0.5625, 0.9375), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.0625, 0.5625, 0.125, 0.875, 1, 0.875), BooleanOp.OR);
         return shape;
     }
 
     private static VoxelShape makeMainShape() {
         VoxelShape shape = Shapes.empty();
-        shape = Shapes.join(shape, Shapes.box(0, 0, -0.0625, 1.0625, 0.3125, 1.0625), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0, 0.3125, 0, 1, 1, 1), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0, 0.3125, 0.0625, 0.9375, 1, 0.9375), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0, 0, 0, 1, 0.3125, 1), BooleanOp.OR);
         return shape;
     }
 
     private static VoxelShape makeSideShape() {
         VoxelShape shape = Shapes.empty();
-        shape = Shapes.join(shape, Shapes.box(0, 0.3125, 0, 1, 0.75, 1), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(-0.0625, 0, -0.0625, 1, 0.3125, 1.0625), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(-0.0625, 0.75, -0.0625, 1, 1, 1.0625), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0, 0.75, 0, 1, 1, 1), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.0625, 0.3125, 0.0625, 1, 0.75, 0.9375), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0, 0, 0, 1, 0.3125, 1), BooleanOp.OR);
         return shape;
     }
 }

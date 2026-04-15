@@ -44,6 +44,7 @@ public class ItemInit {
             () -> new PrehistoricBookItem(new Item.Properties()));
     public static final RegistryObject<Item> SCANNER = ITEMS.register("scanner",
             () -> new PaleoScannerItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> GOLDEN_KEY = registerSimple("golden_key");
 
     //SAC
     public static final RegistryObject<Item> DAEODON_SAC = registerSimple("daeodon_sac");
@@ -116,6 +117,7 @@ public class ItemInit {
     public static final RegistryObject<Item> PTERYGOTUS_SOUL_CFG = registerSimple("pterygotus_soul_configuration");
     public static final RegistryObject<Item> SCUTOSAURUS_SOUL_CFG = registerSimple("scutosaurus_soul_configuration");
     public static final RegistryObject<Item> HELICOPRION_SOUL_CFG = registerSimple("helicoprion_soul_configuration");
+    public static final RegistryObject<Item> HORSESHOE_CRAB_SOUL_CFG = registerSimple("horseshoe_crab_soul_configuration");
 
     //PATTERN
     public static final RegistryObject<Item> PROTOTAXITES_VITAL_PATTERN = registerSimple("prototaxites_vital_pattern");
@@ -132,6 +134,7 @@ public class ItemInit {
     public static final RegistryObject<Item> GONDWANAGARICITES_VITAL_PATTERN = registerSimple("gondwanagaricites_vital_pattern");
     public static final RegistryObject<Item> RED_ALGAE_VITAL_PATTERN = registerSimple("red_algae_vital_pattern");
     public static final RegistryObject<Item> TITANOSARCOLITES_VITAL_PATTERN = registerSimple("titanosarcolites_vital_pattern");
+    public static final RegistryObject<Item> ALLONNIA_VITAL_PATTERN = registerSimple("allonnia_vital_pattern");
 
     //SOLUTION
     public static final RegistryObject<Item> BEIGE_SOLUTION = registerSimple("beige_solution");
@@ -172,11 +175,15 @@ public class ItemInit {
     public static final RegistryObject<Item> SCUTOSAURUS_SKULL = registerSimple("scutosaurus_skull");
     public static final RegistryObject<Item> HELICOPRION_FOSSIL = registerSimple("helicoprion_fossil");
     public static final RegistryObject<Item> HELICOPRION_SKULL = registerSimple("helicoprion_skull");
+    public static final RegistryObject<Item> HORSESHOE_CRAB_FOSSIL = registerSimple("horseshoe_crab_fossil");
 
     //PLANT FOSSIL
     public static final RegistryObject<Item> CLADOPHLEBIS_FOSSIL = registerSimple("cladophlebis_fossil");
     public static final RegistryObject<Item> CONIOPTERIS_FOSSIL = registerSimple("coniopteris_fossil");
     public static final RegistryObject<Item> RED_ALGAE_FOSSIL = registerSimple("red_algae_fossil");
+    public static final RegistryObject<Item> ALLONNIA_FOSSL = registerSimple("allonnia_fossil");
+    public static final RegistryObject<Item> COOKSONIA_FOSSIL = registerSimple("cooksonia_fossil");
+    public static final RegistryObject<Item> ARAUCARIOXYLON_FOSSIL = registerSimple("araucarioxylon_fossil");
 
     //FOSSIL MOUNT
     public static final RegistryObject<Item> DODO_FOSSIL_MOUNT = registerFossilItem("dodo_fossil_mount", "dodo");
@@ -232,6 +239,8 @@ public class ItemInit {
     public static final RegistryObject<Item> COOKED_DEINONYCHUS_MEAT = registerFood("cooked_deinonychus_meat", FoodInit.COOKED_DEINONYCHUS_MEAT);
     public static final RegistryObject<Item> RAW_HELICOPRION_MEAT = registerFood("raw_helicoprion_meat", FoodInit.RAW_HELICOPRION_MEAT);
     public static final RegistryObject<Item> COOKED_HELICOPRION_MEAT = registerFood("cooked_helicoprion_meat", FoodInit.COOKED_HELICOPRION_MEAT);
+    public static final RegistryObject<Item> RAW_PTERYGOTUS_MEAT = registerFood("raw_pterygotus_meat", FoodInit.RAW_PTERYGOTUS);
+    public static final RegistryObject<Item> COOKED_PTERYGOTUS_MEAT = registerFood("cooked_pterygotus_meat", FoodInit.COOKED_PTERYGOTUS);
 
     public static final RegistryObject<Item> MANGO = registerFood("mango", FoodInit.MANGO);
 

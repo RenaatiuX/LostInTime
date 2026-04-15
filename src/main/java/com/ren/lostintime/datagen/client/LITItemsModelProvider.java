@@ -40,6 +40,7 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.ENDOCERAS_SHELL_FRAGMENT.get());
         simple(ItemInit.SCUTOSAURUS_PLATE.get());
         simple(ItemInit.REGURGITATED_MASS.get());
+        simple(ItemInit.GOLDEN_KEY.get());
 
         simple(ItemInit.DAEODON_SAC.get());
         simple(ItemInit.LEPTICTIDIUM_SAC.get());
@@ -70,6 +71,8 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.COOKED_DEINONYCHUS_MEAT.get());
         simple(ItemInit.RAW_HELICOPRION_MEAT.get());
         simple(ItemInit.COOKED_HELICOPRION_MEAT.get());
+        simple(ItemInit.RAW_PTERYGOTUS_MEAT.get());
+        simple(ItemInit.COOKED_PTERYGOTUS_MEAT.get());
 
         simple(ItemInit.SMALL_FRIED_EGG.get());
         simple(ItemInit.FRIED_EGG.get());
@@ -157,8 +160,12 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.CLADOPHLEBIS_FOSSIL.get());
         simple(ItemInit.CONIOPTERIS_FOSSIL.get());
         simple(ItemInit.RED_ALGAE_FOSSIL.get());
+        simple(ItemInit.ALLONNIA_FOSSL.get());
+        simple(ItemInit.COOKSONIA_FOSSIL.get());
+        simple(ItemInit.ARAUCARIOXYLON_FOSSIL.get());
         simple(ItemInit.HELICOPRION_FOSSIL.get());
         simple(ItemInit.HELICOPRION_SKULL.get());
+        simple(ItemInit.HORSESHOE_CRAB_FOSSIL.get());
 
         simple(ItemInit.DODO_FOSSIL_MOUNT.get());
         simple(ItemInit.EMPTY_SKELETON_MOUNT.get());
@@ -216,6 +223,7 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.PTERYGOTUS_SOUL_CFG.get());
         simple(ItemInit.SCUTOSAURUS_SOUL_CFG.get());
         simple(ItemInit.HELICOPRION_SOUL_CFG.get());
+        simple(ItemInit.HORSESHOE_CRAB_SOUL_CFG.get());
 
         simple(ItemInit.BARREL_SPONGE_VITAL_PATTERN.get());
         simple(ItemInit.GLASS_SPONGE_VITAL_PATTERN.get());
@@ -230,6 +238,7 @@ public class LITItemsModelProvider extends ItemModelProvider {
         simple(ItemInit.GONDWANAGARICITES_VITAL_PATTERN.get());
         simple(ItemInit.RED_ALGAE_VITAL_PATTERN.get());
         simple(ItemInit.TITANOSARCOLITES_VITAL_PATTERN.get());
+        simple(ItemInit.ALLONNIA_VITAL_PATTERN.get());
 
         simple(ItemInit.BEIGE_SOLUTION.get());
         simple(ItemInit.CARMINE_SOLUTION.get());
