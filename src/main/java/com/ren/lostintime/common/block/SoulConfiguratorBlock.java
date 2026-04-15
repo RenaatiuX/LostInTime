@@ -185,16 +185,17 @@ public class SoulConfiguratorBlock extends LITMachineBlock {
         int times = to.get2DDataValue();
         for (int i = 0; i < times; i++) {
             buffer[1] = Shapes.empty();
-            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.joinUnoptimized(buffer[1],
-                    Shapes.box(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX), BooleanOp.OR));
+            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) ->
+                    buffer[1] = Shapes.join(buffer[1], Shapes.box(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX), BooleanOp.OR)
+            );
             buffer[0] = buffer[1];
         }
-        return buffer[0];
+        return buffer[0].optimize();
     }
 
     private static VoxelShape makeTopShape() {
         VoxelShape shape = Shapes.empty();
-        shape = Shapes.join(shape, Shapes.box(0, 0, 0.0625, 0.9375, 0.5625, 0.9375), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(-3.469446951953614e-18, 0, 0.0625, 0.9374999999999999, 0.5625, 0.9375), BooleanOp.OR);
         shape = Shapes.join(shape, Shapes.box(0.0625, 0.5625, 0.125, 0.875, 1, 0.875), BooleanOp.OR);
         return shape;
     }
@@ -203,7 +204,7 @@ public class SoulConfiguratorBlock extends LITMachineBlock {
         VoxelShape shape = Shapes.empty();
         shape = Shapes.join(shape, Shapes.box(0, 0.3125, 0.0625, 0.9375, 1, 0.9375), BooleanOp.OR);
         shape = Shapes.join(shape, Shapes.box(0, 0, 0, 1, 0.3125, 1), BooleanOp.OR);
-        return shape;
+        return shape.optimize();
     }
 
     private static VoxelShape makeSideShape() {
@@ -211,6 +212,6 @@ public class SoulConfiguratorBlock extends LITMachineBlock {
         shape = Shapes.join(shape, Shapes.box(0, 0.75, 0, 1, 1, 1), BooleanOp.OR);
         shape = Shapes.join(shape, Shapes.box(0.0625, 0.3125, 0.0625, 1, 0.75, 0.9375), BooleanOp.OR);
         shape = Shapes.join(shape, Shapes.box(0, 0, 0, 1, 0.3125, 1), BooleanOp.OR);
-        return shape;
+        return shape.optimize();
     }
 }
