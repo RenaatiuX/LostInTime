@@ -1,4 +1,4 @@
-package com.ren.lostintime.client.screen.book;
+package com.ren.lostintime.client.screen.book.util;
 
 public record Inset(LayoutValue top, LayoutValue bottom, LayoutValue left, LayoutValue right) {
 

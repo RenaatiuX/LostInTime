@@ -1,5 +1,7 @@
 package com.ren.lostintime.client.screen.book;
 
+import com.ren.lostintime.client.screen.book.components.PageComponent;
+import com.ren.lostintime.client.screen.book.components.TitlePageComponent;
 import com.ren.lostintime.client.util.ScreenRenderingUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;

@@ -2,15 +2,18 @@ package com.ren.lostintime.client.util;
 
 import com.mojang.blaze3d.vertex.*;
 import com.ren.lostintime.LostInTime;
-import com.ren.lostintime.client.screen.book.PageComponent;
+import com.ren.lostintime.client.screen.book.components.PageComponent;
 import com.ren.lostintime.common.entity.util.TimePeriod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.joml.Vector2i;
 
@@ -18,24 +21,26 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@OnlyIn(Dist.CLIENT)
 public class ScreenRenderingUtils {
 
 
     public static final ResourceLocation TIME_PERIODS_TEXTURE = ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/gui/book/time_period.png");
 
-    public static void centerHorizontally(Rectangle centerBounds, PageComponent target){
+    public static void centerHorizontally(Rectangle centerBounds, PageComponent target) {
         target.setX(centerBounds.x + (centerBounds.width - target.getBounds().width) / 2);
     }
-    public static void centerVertically(Rectangle centerBounds, PageComponent target){
+
+    public static void centerVertically(Rectangle centerBounds, PageComponent target) {
         target.setY(centerBounds.y + (centerBounds.height - target.getBounds().height) / 2);
     }
 
-    public static void center(Rectangle centerBounds, PageComponent target){
+    public static void center(Rectangle centerBounds, PageComponent target) {
         centerHorizontally(centerBounds, target);
         centerVertically(centerBounds, target);
     }
 
-    public static void renderTriangleWithOutline(PoseStack stack, Vector2i first, Vector2i second, Vector2i third,double margin, int foregroundColor, int backgroundColor){
+    public static void renderTriangleWithOutline(PoseStack stack, Vector2i first, Vector2i second, Vector2i third, double margin, int foregroundColor, int backgroundColor) {
         var modelMatrix = stack.last().pose();
 
         // Background Color (Outline)
@@ -88,14 +93,14 @@ public class ScreenRenderingUtils {
         tessellator.end();
     }
 
-    public static void renderTriangle(PoseStack stack, Vector2i first, Vector2i second, Vector2i third, int color){
+    public static void renderTriangle(PoseStack stack, Vector2i first, Vector2i second, Vector2i third, int color) {
 
         var modelMatrix = stack.last().pose();
 
         float alpha = (float) FastColor.ARGB32.alpha(color) / 255.0F;
-        float red = (float)FastColor.ARGB32.red(color) / 255.0F;
-        float green = (float)FastColor.ARGB32.green(color) / 255.0F;
-        float blue = (float)FastColor.ARGB32.blue(color) / 255.0F;
+        float red = (float) FastColor.ARGB32.red(color) / 255.0F;
+        float green = (float) FastColor.ARGB32.green(color) / 255.0F;
+        float blue = (float) FastColor.ARGB32.blue(color) / 255.0F;
 
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
@@ -110,7 +115,7 @@ public class ScreenRenderingUtils {
 
     }
 
-    public static void renderCenteredTriangleIcon(GuiGraphics graphics, int x, int y, int maxWidth, int maxHeight){
+    public static void renderCenteredTriangleIcon(GuiGraphics graphics, int x, int y, int maxWidth, int maxHeight) {
         final float iconWidth = 5.0f;
         final float iconHeight = 5.0f;
 
@@ -127,24 +132,24 @@ public class ScreenRenderingUtils {
         stack.translate(x - Math.round((scale * iconWidth) / 2f), y, 0);
         stack.scale(scale, scale, 1.0f);
 
-        graphics.blit(TIME_PERIODS_TEXTURE, 0,0, 0,9,5,5,128,128);
+        graphics.blit(TIME_PERIODS_TEXTURE, 0, 0, 0, 9, 5, 5, 128, 128);
 
         stack.popPose();
     }
 
-    public static void renderTimePeriodTooltip(GuiGraphics graphics, int x, int y, TimePeriod period, boolean extended, boolean xCentered){
-        var title = Component.translatable(period.descriptionKey.replace(".desc", ""));
+    public static void renderTimePeriodTooltip(GuiGraphics graphics, int x, int y, TimePeriod period, boolean extended, boolean xCentered) {
+        var title = Component.translatable(period.descriptionKey.replace(".desc", "")).plainCopy().withStyle(Style.EMPTY.withColor(period.color));
         var lines = new ArrayList<Component>();
         lines.add(title);
 
-        if(extended){
-            lines.add(Component.translatable(period.descriptionKey));
+        if (extended) {
+            lines.add(period.getEraDescription());
         }
+        List<ClientTooltipComponent> components = ForgeHooksClient.gatherTooltipComponents(ItemStack.EMPTY, lines, x, graphics.guiWidth() / 2, graphics.guiHeight(), Minecraft.getInstance().font);
 
-        graphics.renderTooltip(Minecraft.getInstance().font, lines.stream().map(Component::getVisualOrderText).toList(), (pScreenWidth, pScreenHeight, pMouseX, pMouseY, pTooltipWidth, pTooltipHeight) -> {
+        graphics.renderTooltipInternal(Minecraft.getInstance().font, components, x, y, (pScreenWidth, pScreenHeight, pMouseX, pMouseY, pTooltipWidth, pTooltipHeight) -> {
             return new Vector2i(pMouseX - pTooltipWidth / 2, pMouseY);
-        }, x, y);
-
+        });
 
 
     }

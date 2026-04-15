@@ -1,4 +1,4 @@
-package com.ren.lostintime.client.screen.book;
+package com.ren.lostintime.client.screen.book.util;
 
 /**
  * Represents a dynamic layout dimension.

@@ -1,4 +1,4 @@
-package com.ren.lostintime.client.screen.book;
+package com.ren.lostintime.client.screen.book.util;
 
 /**
  * Represents the width and height of a UI component.

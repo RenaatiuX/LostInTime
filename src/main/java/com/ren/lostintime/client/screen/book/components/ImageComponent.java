@@ -1,9 +1,9 @@
-package com.ren.lostintime.client.screen.book;
+package com.ren.lostintime.client.screen.book.components;
 
+import com.ren.lostintime.client.screen.book.PrehistoricBookScreen;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 
 public class ImageComponent extends PageComponent{
 

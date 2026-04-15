@@ -1,6 +1,8 @@
 package com.ren.lostintime.common.entity.util;
 
+import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.init.EntityInit;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -43,6 +45,7 @@ public enum TimePeriod {
     public final int color;
     public final boolean isEon;
     public final String descriptionKey;
+    public final String eraDescriptionKey;
 
     TimePeriod(double from, double to, String era, int color, boolean isEon) {
         this.fromMa = from;
@@ -50,7 +53,13 @@ public enum TimePeriod {
         this.era = era;
         this.color = color;
         this.isEon = isEon;
-        this.descriptionKey = "lostintime.timeperiod." + this.name().toLowerCase() + ".desc";
+        this.descriptionKey = LostInTime.MODID + ".timeperiod." + this.name().toLowerCase() + ".desc";
+        this.eraDescriptionKey = LostInTime.MODID + ".timeperiod." + this.name().toLowerCase() + ".era.desc";
+
+    }
+
+    public Component getEraDescription(){
+        return Component.translatable(this.eraDescriptionKey, fromMa, toMa);
     }
 
    public static double getMaxTime(){

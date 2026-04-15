@@ -65,6 +65,10 @@ public class LITLanguageProvider extends LanguageProvider {
         add(TimePeriod.NEOGENE.descriptionKey, "During the Neogene (23-2.6 Ma), climates cooled and grasslands expanded. Many modern mammal groups, including early hominids, appeared.");
         add(TimePeriod.QUATERNARY.descriptionKey, "The Quaternary (2.6 Ma - Present) is the age of ice and humans. It is defined by repeated glaciations and the rise of modern civilization.");
         //add(TimePeriod.PHANEROZOIC.descriptionKey, "The Phanerozoic Eon encompasses the last 541 million years. It is the age of 'visible life', where complex organisms have flourished across the globe.");
+
+        for (TimePeriod t : TimePeriod.values()){
+            add(t.eraDescriptionKey, "%d Ma - %d Ma");
+        }
     }
 
     private void add(TimePeriod period, String name) {

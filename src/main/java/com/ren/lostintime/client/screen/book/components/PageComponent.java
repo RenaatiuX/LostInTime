@@ -1,5 +1,6 @@
-package com.ren.lostintime.client.screen.book;
+package com.ren.lostintime.client.screen.book.components;
 
+import com.ren.lostintime.client.screen.book.PrehistoricBookScreen;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 

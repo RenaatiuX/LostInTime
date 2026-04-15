@@ -1,5 +1,9 @@
 package com.ren.lostintime.client.screen.book;
 
+import com.ren.lostintime.client.screen.book.components.PageComponent;
+import com.ren.lostintime.client.screen.book.util.Dimension;
+import com.ren.lostintime.client.screen.book.util.DimensionValue;
+import com.ren.lostintime.client.screen.book.util.Inset;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import org.antlr.v4.runtime.misc.Triple;
@@ -15,7 +19,9 @@ public abstract class Page {
     public int width;
     public int height;
 
-    protected List<Triple<PageComponent, Inset, Dimension>> pageComponents = new LinkedList<>();
+    private boolean scissor = true;
+
+    protected List<Triple<PageComponent, Inset, com.ren.lostintime.client.screen.book.util.Dimension>> pageComponents = new LinkedList<>();
 
     public void setBounds(Rectangle rect) {
         setBounds(rect.x, rect.y, rect.width, rect.height);
@@ -29,18 +35,23 @@ public abstract class Page {
         updateBounds();
     }
 
-    public void addComponent(PageComponent component, Inset inset, Dimension dimension) {
+    public Page disableScisscor(){
+        this.scissor = false;
+        return this;
+    }
+
+    public void addComponent(PageComponent component, Inset inset, com.ren.lostintime.client.screen.book.util.Dimension dimension) {
         pageComponents.add(new Triple<>(component, inset, dimension));
     }
 
     public void addComponent(PageComponent component) {
-        pageComponents.add(new Triple<>(component, Inset.ZERO, Dimension.fill()));
+        pageComponents.add(new Triple<>(component, Inset.ZERO, com.ren.lostintime.client.screen.book.util.Dimension.fill()));
     }
 
     public void updateBounds() {
         int currentY = this.y;
 
-        for (Triple<PageComponent, Inset, Dimension> pair : pageComponents) {
+        for (Triple<PageComponent, Inset, com.ren.lostintime.client.screen.book.util.Dimension> pair : pageComponents) {
             PageComponent component = pair.a;
             Inset insets = pair.b;
             Dimension dimension = pair.c;
@@ -86,11 +97,13 @@ public abstract class Page {
 
     public void render(GuiGraphics graphics, int mouseX, int mouseY, Font font, PrehistoricBookScreen screen) {
         //basically ensuring that only inside the bounds is drawn
-        graphics.enableScissor(this.x, this.y, this.x + this.width, this.y + this.height);
+        if (scissor)
+            graphics.enableScissor(this.x, this.y, this.x + this.width, this.y + this.height);
         for (var pair : pageComponents) {
             PageComponent component = pair.a;
             component.render(graphics, mouseX, mouseY, font, screen);
         }
-        graphics.disableScissor();
+        if (scissor)
+            graphics.disableScissor();
     }
 }

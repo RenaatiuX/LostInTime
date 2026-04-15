@@ -1,4 +1,4 @@
-package com.ren.lostintime.client.screen.book;
+package com.ren.lostintime.client.screen.book.util;
 
 /**
  * Represents a single dimension value (width or height) which can be absolute, 

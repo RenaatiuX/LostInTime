@@ -1,5 +1,10 @@
 package com.ren.lostintime.client.screen.book;
 
+import com.ren.lostintime.client.screen.book.components.TitlePageComponent;
+import com.ren.lostintime.client.screen.book.util.Dimension;
+import com.ren.lostintime.client.screen.book.util.DimensionValue;
+import com.ren.lostintime.client.screen.book.util.Inset;
+import com.ren.lostintime.client.screen.book.util.LayoutValue;
 import com.ren.lostintime.common.init.CapabilityInit;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

@@ -1,7 +1,11 @@
 package com.ren.lostintime.client.screen.book;
 
+import com.ren.lostintime.client.screen.book.components.TitlePageComponent;
+import com.ren.lostintime.client.screen.book.util.Dimension;
+import com.ren.lostintime.client.screen.book.util.DimensionValue;
+import com.ren.lostintime.client.screen.book.util.Inset;
+import com.ren.lostintime.client.screen.book.util.LayoutValue;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 public class TableOfContentsPage extends Page {
 
