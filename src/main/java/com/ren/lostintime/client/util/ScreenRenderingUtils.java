@@ -1,13 +1,27 @@
 package com.ren.lostintime.client.util;
 
 import com.mojang.blaze3d.vertex.*;
+import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.client.screen.book.PageComponent;
+import com.ren.lostintime.common.entity.util.TimePeriod;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.ForgeHooksClient;
 import org.joml.Vector2i;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScreenRenderingUtils {
+
+
+    public static final ResourceLocation TIME_PERIODS_TEXTURE = ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/gui/book/time_period.png");
 
     public static void centerHorizontally(Rectangle centerBounds, PageComponent target){
         target.setX(centerBounds.x + (centerBounds.width - target.getBounds().width) / 2);
@@ -93,6 +107,45 @@ public class ScreenRenderingUtils {
         buffer.vertex(modelMatrix, third.x(), third.y(), 0.0F).color(red, green, blue, alpha).endVertex();
 
         tessellator.end();
+
+    }
+
+    public static void renderCenteredTriangleIcon(GuiGraphics graphics, int x, int y, int maxWidth, int maxHeight){
+        final float iconWidth = 5.0f;
+        final float iconHeight = 5.0f;
+
+        var stack = graphics.pose();
+
+        // 1. Calculate the scale factors for both axes
+        float scaleX = maxWidth / iconWidth;
+        float scaleY = maxHeight / iconHeight;
+
+        // 2. Use the smaller scale factor to maintain aspect ratio and fit within the bounds
+        float scale = Math.min(scaleX, scaleY);
+
+        stack.pushPose();
+        stack.translate(x - Math.round((scale * iconWidth) / 2f), y, 0);
+        stack.scale(scale, scale, 1.0f);
+
+        graphics.blit(TIME_PERIODS_TEXTURE, 0,0, 0,9,5,5,128,128);
+
+        stack.popPose();
+    }
+
+    public static void renderTimePeriodTooltip(GuiGraphics graphics, int x, int y, TimePeriod period, boolean extended, boolean xCentered){
+        var title = Component.translatable(period.descriptionKey.replace(".desc", ""));
+        var lines = new ArrayList<Component>();
+        lines.add(title);
+
+        if(extended){
+            lines.add(Component.translatable(period.descriptionKey));
+        }
+
+        graphics.renderTooltip(Minecraft.getInstance().font, lines.stream().map(Component::getVisualOrderText).toList(), (pScreenWidth, pScreenHeight, pMouseX, pMouseY, pTooltipWidth, pTooltipHeight) -> {
+            return new Vector2i(pMouseX - pTooltipWidth / 2, pMouseY);
+        }, x, y);
+
+
 
     }
 }

@@ -8,30 +8,28 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 import org.joml.Vector2i;
 
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+
 public class TimePeriodSliderPageComponent extends PageComponent{
 
     private TimePeriod period;
     private double minTime, maxTime;
-    private final int backgroundColor, timeColor, outlineColor;
+    private final int backgroundColor, outlineColor;
 
 
     protected double sliderHeightPercentage = 0.4;
 
+
     public TimePeriodSliderPageComponent(TimePeriod period) {
-        this(period, 0xFF0000FF);
-
-    }
-
-    public TimePeriodSliderPageComponent(TimePeriod period, int timeColor) {
-        this(period, 0x558B7D6B, timeColor, 0xFF000000);
+        this(period, 0x55000000, 0xFF000000);
 
     }
 
 
-    public TimePeriodSliderPageComponent(TimePeriod period, int backgroundColor, int timeColor, int outlineColor) {
+    public TimePeriodSliderPageComponent(TimePeriod period, int backgroundColor, int outlineColor) {
         this.period = period;
         this.backgroundColor = backgroundColor;
-        this.timeColor = timeColor;
         this.outlineColor = outlineColor;
         minTime = TimePeriod.getMinTime();
         maxTime = TimePeriod.getMaxTime();
@@ -40,9 +38,9 @@ public class TimePeriodSliderPageComponent extends PageComponent{
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, Font font, PrehistoricBookScreen screen) {
         var bounds = this.getBounds();
-        graphics.enableScissor(bounds.x, bounds.y,(int) bounds.getMaxX(), (int)bounds.getMaxY());
+        //graphics.enableScissor(bounds.x, bounds.y,(int) bounds.getMaxX(), (int)bounds.getMaxY());
 
-        int outline = 1;
+        int outline = 0;
 
         double bottomLinePercentage = 0.05;
 
@@ -59,18 +57,27 @@ public class TimePeriodSliderPageComponent extends PageComponent{
             int fromWidth = Mth.ceil((this.width - 2 * outline) * fromPercentage);
             int toWidth = Mth.ceil((this.width - 2 * outline) * toPercentage);
             
-            int color = t == this.period ? timeColor : t.color;
+            int color = t.color;
             if ((color >>> 24) == 0) {
                 color |= 0xFF000000; // Force alpha to 255 (0xFF)
             }
+            var colorObject = new Color(color);
+            if(t != period){
+                colorObject = colorObject.darker().darker();
+            }
+            color = colorObject.getRGB();
+
+            var timeBounds = new Rectangle(bounds.x + toWidth + outline, bounds.y + sliderHeight + outline, fromWidth + outline, bounds.height - outline);
 
             graphics.fill(bounds.x + toWidth + outline, bounds.y + sliderHeight + outline, bounds.x + fromWidth + outline, bounds.y + bounds.height - outline, color);
+            if (timeBounds.contains(mouseX, mouseY)){
+                ScreenRenderingUtils.renderTimePeriodTooltip(graphics, (int)timeBounds.getCenterX(), (int)bounds.getMaxY() + 3, t, t == this.period, false);
+            }
         }
-
 
         graphics.fill(bounds.x + outline, bounds.y + sliderHeight + outline + (int) ((periodsHeight - outline) * (1 - bottomLinePercentage)), bounds.x + bounds.width - outline, bounds.y + bounds.height - outline, backgroundColor);
 
-        graphics.disableScissor();
+        //graphics.disableScissor();
         if (this.getBounds().contains(mouseX, mouseY)){
             renderTriangle(graphics, mouseX);
         }else {
@@ -93,10 +100,15 @@ public class TimePeriodSliderPageComponent extends PageComponent{
         int triangleRadius = 4;
         int sliderHeight = (int) (this.height * sliderHeightPercentage);
 
+        ScreenRenderingUtils.renderCenteredTriangleIcon(graphics, x, this.getBounds().y, 5, sliderHeight);
+
+                /*
         var firstPoint = new Vector2i(x - triangleRadius, this.y);
         var secondPoint = new Vector2i(x, this.y + sliderHeight);
         var thirdPoint = new Vector2i(x + triangleRadius, this.y);
 
         ScreenRenderingUtils.renderTriangleWithOutline(graphics.pose(), firstPoint, secondPoint, thirdPoint,0.4,0xFFFFFFFF, 0xFF555555);
+        */
+
     }
 }
