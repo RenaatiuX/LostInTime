@@ -165,10 +165,14 @@ public class ScreenRenderingUtils {
         addTitleComponents(page, text, 0x558B7D6B);
     }
 
-    public static void addTitleComponents(Page page, Component text, int underlineColor){
-        page.addComponent(new TitlePageComponent(text),
+    public static void addTitleComponents(Page page, Component text, int color){
+        addTitleComponents(page, text, color, color, true, false);
+    }
+
+    public static void addTitleComponents(Page page, Component text, int underlineColor, int textColor, boolean centered, boolean backDrop){
+        page.addComponent(new TitlePageComponent(text, textColor, backDrop, centered),
                 Inset.symmetric(LayoutValue.ZERO, LayoutValue.px(2)),
-                com.ren.lostintime.client.screen.book.util.Dimension.of(DimensionValue.fill(), DimensionValue.percent(0.1f))
+                Dimension.of(DimensionValue.fill(), DimensionValue.percent(0.1f))
         );
         page.addComponent(new LinePageComponent(LinePageComponent.Orientation.HORIZONTAL, underlineColor),
                 Inset.symmetric(LayoutValue.px(2), LayoutValue.px(7)),
