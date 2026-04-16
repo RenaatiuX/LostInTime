@@ -9,6 +9,7 @@ import com.ren.lostintime.client.screen.book.util.Inset;
 import com.ren.lostintime.client.screen.book.util.LayoutValue;
 import com.ren.lostintime.common.init.CapabilityInit;
 import com.ren.lostintime.common.init.EntityInit;
+import com.ren.lostintime.common.item.PrehistoricBookItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -73,18 +74,19 @@ public class PrehistoricBookScreen extends Screen {
 
     private final List<Page> pages = new ArrayList<>();
 
-    public PrehistoricBookScreen() {
+    public final ItemStack book;
+
+    public PrehistoricBookScreen(ItemStack book) {
         super(Component.translatable("gui." + LostInTime.MODID + ".prehistoric_book"));
+        this.book = book;
         this.pages.add(new DoublePage(new PrehistoricBookFirstPage(), new IntroductionPage()));
         this.pages.add(new TableOfContentsPage());
         this.pages.add(new TestPage());
-        Minecraft.getInstance().player.getCapability(CapabilityInit.PLAYER_DISCOVERED_PREHISTORIC).ifPresent(cap -> {
-            for (var entity : cap.discoveredEntities()) {
-                this.pages.add(new CreatureLeftPage(entity));
-            }
-
-        });
-        this.pages.add(new DoublePage(new TimePeriodsIndexPage(), new CreatureIndexPage()));
+        for (var entity : PrehistoricBookItem.discoveredEntities(book)){
+            var createdEntity = entity.create(Minecraft.getInstance().level);
+            createdEntity.getCapability(CapabilityInit.ENTITY_DESCRIPTION_CAPABILITY).ifPresent(c -> this.pages.add(new CreatureLeftPage(c)));
+        }
+        this.pages.add(new DoublePage(new TimePeriodsIndexPage(book), new CreatureIndexPage(book)));
         this.pages.add(new CreaturePage("Helicoprion", EntityInit.HELICOPRION.get(), new ItemStack(Items.SLIME_BALL), "Tiburón de sierra"));
         this.pages.add(new CreaturePage("Mastodonsaurus", EntityInit.MASTODONSAURUS.get(), new ItemStack(Items.COD), "Anfibio masivo"));
     }

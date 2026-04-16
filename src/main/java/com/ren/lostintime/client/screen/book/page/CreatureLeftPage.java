@@ -6,6 +6,7 @@ import com.ren.lostintime.client.screen.book.util.Dimension;
 import com.ren.lostintime.client.screen.book.util.DimensionValue;
 import com.ren.lostintime.client.screen.book.util.Inset;
 import com.ren.lostintime.client.screen.book.util.LayoutValue;
+import com.ren.lostintime.client.util.ScreenRenderingUtils;
 import com.ren.lostintime.common.entity.util.LostInTimeBookDescription;
 import net.minecraft.network.chat.Component;
 

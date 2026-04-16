@@ -3,6 +3,7 @@ package com.ren.lostintime.datagen.client;
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.client.screen.book.PrehistoricBookScreen;
 import com.ren.lostintime.common.entity.util.TimePeriod;
+import com.ren.lostintime.common.init.EntityInit;
 import com.ren.lostintime.common.init.ItemInit;
 import net.minecraft.data.PackOutput;;
 import net.minecraftforge.registries.RegistryObject;
@@ -68,6 +69,10 @@ public class LITLanguageProvider extends LanguageProvider {
 
         for (TimePeriod t : TimePeriod.values()){
             add(t.eraDescriptionKey, "%d Ma - %d Ma");
+        }
+
+        for (var entityType : EntityInit.ENTITIES.getEntries()){
+            add(entityType.get(), toTitleCase(entityType.getId().getPath()));
         }
     }
 

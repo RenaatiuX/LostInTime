@@ -2,7 +2,14 @@ package com.ren.lostintime.client.util;
 
 import com.mojang.blaze3d.vertex.*;
 import com.ren.lostintime.LostInTime;
+import com.ren.lostintime.client.screen.book.components.LinePageComponent;
 import com.ren.lostintime.client.screen.book.components.PageComponent;
+import com.ren.lostintime.client.screen.book.components.TitlePageComponent;
+import com.ren.lostintime.client.screen.book.page.Page;
+import com.ren.lostintime.client.screen.book.util.Dimension;
+import com.ren.lostintime.client.screen.book.util.DimensionValue;
+import com.ren.lostintime.client.screen.book.util.Inset;
+import com.ren.lostintime.client.screen.book.util.LayoutValue;
 import com.ren.lostintime.common.entity.util.TimePeriod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -154,7 +161,17 @@ public class ScreenRenderingUtils {
 
     }
 
-    public static void addTitleComponents(PageComponent component, Component text){
+    public static void addTitleComponents(Page page, Component text){
+        addTitleComponents(page, text, 0x558B7D6B);
+    }
 
+    public static void addTitleComponents(Page page, Component text, int underlineColor){
+        page.addComponent(new TitlePageComponent(text),
+                Inset.symmetric(LayoutValue.ZERO, LayoutValue.px(2)),
+                com.ren.lostintime.client.screen.book.util.Dimension.of(DimensionValue.fill(), DimensionValue.percent(0.1f))
+        );
+        page.addComponent(new LinePageComponent(LinePageComponent.Orientation.HORIZONTAL, underlineColor),
+                Inset.symmetric(LayoutValue.px(2), LayoutValue.px(7)),
+                Dimension.of(DimensionValue.fill(), DimensionValue.px(1)));
     }
 }

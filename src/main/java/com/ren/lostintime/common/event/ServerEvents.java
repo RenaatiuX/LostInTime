@@ -3,27 +3,18 @@ package com.ren.lostintime.common.event;
 import com.ren.lostintime.LostInTime;
 import com.ren.lostintime.common.command.DiscoverCommand;
 import com.ren.lostintime.common.entity.creatures.Dodo;
-import com.ren.lostintime.common.entity.util.PlayerDiscoveredPrehistoric;
-import com.ren.lostintime.common.entity.util.PlayerDiscoveredPrehistoricImpl;
 import com.ren.lostintime.common.init.*;
 import com.ren.lostintime.common.villager.LITItemTrade;
 import com.ren.lostintime.common.villager.helper.RandomItemStackSource;
 import com.ren.lostintime.datagen.server.LITTags;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -32,14 +23,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ToolActions;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -49,43 +34,13 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = LostInTime.MODID)
 public class ServerEvents {
 
-    @SubscribeEvent
-    public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof Player player) {
-            event.addCapability(ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "player_discovery"), new ICapabilitySerializable() {
-
-                final LazyOptional<PlayerDiscoveredPrehistoric> optional = LazyOptional.of(() -> new PlayerDiscoveredPrehistoricImpl(player));
-
-                @Override
-                public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-                    if (cap == CapabilityInit.PLAYER_DISCOVERED_PREHISTORIC)
-                        return optional.cast();
-                    return LazyOptional.empty();
-                }
-
-                @Override
-                public Tag serializeNBT() {
-                    return optional.map(PlayerDiscoveredPrehistoric::serializeNBT).orElse(new CompoundTag());
-                }
-
-                @Override
-                public void deserializeNBT(Tag nbt) {
-                    if (nbt instanceof CompoundTag tag){
-                        optional.ifPresent(playerDiscoveredPrehistoric -> playerDiscoveredPrehistoric.deserializeNBT(tag));
-                    }
-                }
-            });
-        }
-    }
-
+   
     @SubscribeEvent
     public static void commandRegisterEvent(RegisterCommandsEvent event) {
         event.getDispatcher().register(DiscoverCommand.register());
