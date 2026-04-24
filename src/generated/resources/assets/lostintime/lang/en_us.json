@@ -343,5 +343,7 @@
   "lostintime.timeperiod.triassic.desc": "The Triassic (252-201 Ma) marked the recovery of life. It saw the rise of the first dinosaurs and the split of the supercontinent Pangea.",
   "lostintime.timeperiod.triassic.era.desc": "%d Ma - %d Ma",
   "lostintime.tooltip.residue": "Residue: %s / %s",
-  "message.lostintime.infection_block": "The infection prevents your wounds from healing!"
+  "message.lostintime.infection_block": "The infection prevents your wounds from healing!",
+  "prehistoric.book.lostintime.creature.health.description": "Health: %d",
+  "prehistoric.book.lostintime.creature.hunger.description": "Hunger: %d"
 }

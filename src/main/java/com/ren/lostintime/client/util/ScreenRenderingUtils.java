@@ -47,6 +47,19 @@ public class ScreenRenderingUtils {
         centerVertically(centerBounds, target);
     }
 
+
+    public static Rectangle centered(int centerX, int centerY, int radius){
+        return centered(new Vector2i(centerX, centerY), radius);
+    }
+
+    public static Rectangle centered(Vector2i center, int radius){
+        return new Rectangle(center.x - radius, center.y - radius, 2 * radius, 2 * radius);
+    }
+
+    public static void fill(GuiGraphics graphics, Rectangle rect, int color){
+        graphics.fill(rect.x, rect.y, (int) Math.round(rect.getMaxX()), (int)  Math.round(rect.getMaxY()), color);
+    }
+
     public static void renderTriangleWithOutline(PoseStack stack, Vector2i first, Vector2i second, Vector2i third, double margin, int foregroundColor, int backgroundColor) {
         var modelMatrix = stack.last().pose();
 

@@ -74,6 +74,10 @@ public class LITLanguageProvider extends LanguageProvider {
         for (var entityType : EntityInit.ENTITIES.getEntries()){
             add(entityType.get(), toTitleCase(entityType.getId().getPath()));
         }
+
+
+        add("prehistoric.book." + LostInTime.MODID + ".creature.health.description", "Health: %d");
+        add("prehistoric.book." + LostInTime.MODID + ".creature.hunger.description", "Hunger: %d");
     }
 
     private void add(TimePeriod period, String name) {

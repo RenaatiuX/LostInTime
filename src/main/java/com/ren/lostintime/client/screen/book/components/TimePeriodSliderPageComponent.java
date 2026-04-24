@@ -63,6 +63,8 @@ public class TimePeriodSliderPageComponent extends PageComponent {
             var colorObject = new Color(color);
             if (t != period) {
                 colorObject = colorObject.darker().darker();
+            }else{
+                colorObject = colorObject.brighter().brighter();
             }
             color = colorObject.getRGB();
 

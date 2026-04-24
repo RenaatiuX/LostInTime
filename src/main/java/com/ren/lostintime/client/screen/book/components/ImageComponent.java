@@ -10,30 +10,40 @@ import net.minecraft.resources.ResourceLocation;
 public class ImageComponent extends PageComponent {
 
     protected final ResourceLocation texture;
+    protected final int u, v;
     protected int imageWidth, imageHeight, totalTextureWidth, totalTextureHeight;
 
     protected float additionalScale = 1f;
-    private final boolean centered;
+    protected final boolean centered;
 
     public ImageComponent(ResourceLocation texture, int imageWidth, int imageHeight, boolean centered) {
-        this(texture, imageWidth, imageHeight, imageWidth, imageHeight, centered);
+        this(texture, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight, centered);
+    }
+
+    public ImageComponent(ResourceLocation texture, int imageWidth, int imageHeight, int totalTextureWidth, int totalTextureHeight, boolean centered) {
+        this(texture, 0, 0, imageWidth, imageHeight, totalTextureWidth, totalTextureHeight, centered);
     }
 
     /**
      *
      * @param texture            the texture
+     * @param u                  the x-coordinate of the image within the texture
+     * @param v                  the y-coordinate of the image within the texture
      * @param imageWidth         the width of the image to be drawn from the texture
      * @param imageHeight        the height of the image to be drawn from the texture
      * @param totalTextureWidth  the total width of the whole texture file
      * @param totalTextureHeight the total height of the whole texture file
+     * @param centered           whether to center the image within the component bounds
      */
-    public ImageComponent(ResourceLocation texture, int imageWidth, int imageHeight, int totalTextureWidth, int totalTextureHeight, boolean centered) {
+    public ImageComponent(ResourceLocation texture, int u, int v, int imageWidth, int imageHeight, int totalTextureWidth, int totalTextureHeight, boolean centered) {
         this.texture = texture;
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
         this.totalTextureHeight = totalTextureHeight;
         this.totalTextureWidth = totalTextureWidth;
         this.centered = centered;
+        this.u = u;
+        this.v = v;
     }
 
     public ImageComponent additionalScale(float scale) {
@@ -57,9 +67,6 @@ public class ImageComponent extends PageComponent {
         int newWidth = Math.round(this.imageWidth * scale);
         int newHeight = Math.round(this.imageHeight * scale);
 
-        /*int xOffset = this.x + (this.width - newWidth) / 2;
-        int yOffset = this.y + (this.height - newHeight) / 2;*/
-
         float drawX = this.x;
         float drawY = this.y;
 
@@ -69,12 +76,11 @@ public class ImageComponent extends PageComponent {
         }
 
         graphics.pose().pushPose();
-        //graphics.pose().translate(xOffset, yOffset, 0);
         graphics.pose().translate(drawX, drawY, 0);
         graphics.pose().scale(scale, scale, 1.0F);
 
-        // Blit the texture with the new scaled dimensions, drawing the specified image region
-        graphics.blit(texture, 0, 0, 0, 0, imageWidth, imageHeight, totalTextureWidth, totalTextureHeight);
+        // Blit the texture with the new scaled dimensions, drawing the specified image region using u and v
+        graphics.blit(texture, 0, 0, u, v, imageWidth, imageHeight, totalTextureWidth, totalTextureHeight);
         graphics.pose().popPose();
     }
 }
