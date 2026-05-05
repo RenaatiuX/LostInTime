@@ -95,8 +95,8 @@ public class MapDrawUtils {
 
 
 
-        //latitude = sanitize(latitude, 180);
-        //longitude = sanitize(longitude, 360);
+        latitude = sanitize(latitude, 180);
+        longitude = sanitize(longitude, 360);
 
         // Longitude: -180 is the far left (0.0), +180 is the far right (1.0)
         float locX = (longitude + 180.0f) / 360.0f;
@@ -105,7 +105,7 @@ public class MapDrawUtils {
         // Note: Y is inverted because in Minecraft GUI, Y=0 is the top of the screen!
         //float locY = (-latitude + 90.0f) / 180.0f;
 
-        float locY = 0.5f * (1f - (float)Math.tan(latitude / 2d));
+        float locY = 0.5f * (1f - (float)Math.tan(Math.toRadians(latitude / 2d)));
 
 
         return new float[]{locX, locY};
