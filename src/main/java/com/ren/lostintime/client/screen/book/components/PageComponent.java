@@ -54,6 +54,10 @@ public abstract class PageComponent {
         return new Rectangle(x, y, width, height);
     }
 
+    public boolean onClick(int mouseX, int mouseY, int button) {
+        return false;
+    }
+
     public abstract void render(GuiGraphics graphics, int mouseX, int mouseY, Font font, Inset inset, Dimension dimension, PrehistoricBookScreen screen);
 
 }

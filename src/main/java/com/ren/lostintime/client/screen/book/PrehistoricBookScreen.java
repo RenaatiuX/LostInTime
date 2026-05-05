@@ -29,7 +29,7 @@ import java.util.List;
 
 public class PrehistoricBookScreen extends Screen {
 
-    private static final ResourceLocation BOOK_TEXTURE = ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/gui/prehistoric_book.png");
+    public static final ResourceLocation BOOK_TEXTURE = ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/gui/book/paleopedia.png");
     public static final ResourceLocation WIDGETS_LOCATION = ResourceLocation.parse("textures/gui/icons.png");
 
     public static final String TITLE_TRANSLATION_KEY = "gui." + LostInTime.MODID + ".prehistoric_book.title";

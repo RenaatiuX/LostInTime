@@ -80,6 +80,14 @@ public abstract class Page {
     }
 
     public boolean onClick(int mouseX, int mouseY, int button) {
+        for (var pair : pageComponents) {
+            PageComponent component = pair.a;
+            if (component.getBounds().contains(mouseX, mouseY)){
+                if (component.onClick(mouseX, mouseY, button)){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 

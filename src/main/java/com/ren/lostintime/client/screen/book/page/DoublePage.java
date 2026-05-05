@@ -27,6 +27,21 @@ public class DoublePage extends Page {
         }
     }
 
+    @Override
+    public boolean isInside(int x, int y) {
+        return leftPage.isInside(x, y) || rightPage.isInside(x, y);
+    }
+
+    @Override
+    public boolean onClick(int mouseX, int mouseY, int button) {
+        if (leftPage.isInside(mouseX, mouseY)){
+            return leftPage.onClick(mouseX, mouseY, button);
+        }else if (rightPage.isInside(mouseX, mouseY)){
+            return rightPage.onClick(mouseX, mouseY, button);
+        }
+        return super.onClick(mouseX, mouseY, button);
+    }
+
     public Page getLeftPage() {
         return leftPage;
     }
