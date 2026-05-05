@@ -12,17 +12,17 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import oshi.util.tuples.Pair;
+import net.minecraft.util.Mth;
 
 import java.awt.*;
-import java.time.chrono.MinguoEra;
 import java.util.List;
 import java.util.Optional;
 
 public class MapPageComponent extends PageComponent {
 
     public static final ResourceLocation MAP_TEXTURE = ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/gui/book/atlas.png");
-    protected static final int imageWidth = 768, imageHeight = 690;
+    public static final ResourceLocation MAP_FRAME_TEXTURE = ResourceLocation.fromNamespaceAndPath(LostInTime.MODID, "textures/gui/book/atlas_frame.png");
+    protected static final int mapImageWidth = 768, mapImageHeight = 590, frameWidth = 58, frameHeight = 58;
 
     protected List<DiscoveredLocation> locations;
 
@@ -33,52 +33,74 @@ public class MapPageComponent extends PageComponent {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, Font font, Inset inset, Dimension dimension, PrehistoricBookScreen screen) {
-        float scaleX = (float) this.width / imageWidth;
-        float scaleY = (float) this.height / (float) imageHeight;
+        float scaleX = (float) this.width / frameWidth;
+        float scaleY = (float) this.height / (float) frameHeight;
 
-        float scale = Math.min(scaleX, scaleY);
+        float frameScale = Math.min(scaleX, scaleY);
 
-        int newWidth = Math.round(imageWidth * scale);
-        int newHeight = Math.round(imageHeight * scale);
+        int frameWidth = Math.round(MapPageComponent.frameWidth * frameScale);
+        int frameHeight = Math.round(MapPageComponent.frameHeight * frameScale);
 
-        float drawX = this.x;
-        float drawY = this.y;
+        float frameX = this.x;
+        float frameY = this.y;
 
 
-        drawX += (this.width - newWidth) / 2.0F;
-        drawY += (this.height - newHeight) / 2.0F;
+        frameX += (this.width - frameWidth) / 2.0F;
+        frameY += (this.height - frameHeight) / 2.0F;
+
+        var mapFrameRect = new Rectangle(Mth.floor(frameX), Mth.floor(frameY), frameWidth, frameHeight);
+
+        var mapFrameInsideRect = ScreenRenderingUtils.growRectangle(mapFrameRect, Math.round(-7f));
+
 
 
         graphics.pose().pushPose();
-        graphics.pose().translate(drawX, drawY, 0);
-        graphics.pose().scale(scale, scale, 1.0F);
+        ScreenRenderingUtils.scissor(graphics, ScreenRenderingUtils.growRectangle(mapFrameRect, -1));
 
-        // Blit the texture with the new scaled dimensions, drawing the specified image region using u and v
-        graphics.blit(MAP_TEXTURE, 0, 0, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+        //calculate the map y and x
+        float mapScale = (float) mapFrameInsideRect.height / mapImageHeight;
+
+        int scaledMapWidth = Math.round(mapScale * mapImageWidth);
+
+        graphics.pose().translate(mapFrameInsideRect.x - (scaledMapWidth - mapFrameInsideRect.width) / 2f, mapFrameInsideRect.y, 0);
+        graphics.pose().scale(mapScale, mapScale, 1f);
+
+        graphics.blit(MAP_TEXTURE, 0, 0, 0, 0, mapImageWidth, mapImageHeight, mapImageWidth, mapImageHeight);
+
+
         int size = 5;
-        
+
         // Inverse the translation and scaling to get mouse coordinates in the unscaled texture space
-        float unscaledMouseX = (mouseX - drawX) / scale;
-        float unscaledMouseY = (mouseY - drawY) / scale;
+        float unscaledMouseX = (mouseX - frameX) / frameScale;
+        float unscaledMouseY = (mouseY - frameY) / frameScale;
 
         DiscoveredLocation tooltip = null;
 
         for (var location : this.locations) {
-            var pixelCoordinates = MapDrawUtils.projectRealWorldToMap(location.worldCoordinates().x, location.worldCoordinates().y, imageWidth, imageHeight);
+            var pixelCoordinates = MapDrawUtils.projectRealWorldToMap(location.worldCoordinates().x, location.worldCoordinates().y, mapImageWidth, mapImageHeight);
 
-            var rect = ScreenRenderingUtils.centered((int) pixelCoordinates[0], (int) pixelCoordinates[1], size);
+            var rect = ScreenRenderingUtils.centered((int) Math.round(pixelCoordinates[0]), (int) Math.round(pixelCoordinates[1]), size);
 
             if (rect.contains(unscaledMouseX, unscaledMouseY)) {
                 tooltip = location;
             }
-            // System.out.printf("Mouse: [%s, %s]\n", unscaledMouseX, unscaledMouseY);
-
-            //graphics.fill(Math.round(pixelCoordinates[0]) - size, Math.round(pixelCoordinates[1]) - size, Math.round(pixelCoordinates[0]) + size, Math.round(pixelCoordinates[1]) + size, 0xFF000000);
-
             ScreenRenderingUtils.fill(graphics, rect, 0xFFFFFFFF);
         }
+        graphics.disableScissor();
+        graphics.pose().popPose();
+
+
+        graphics.pose().pushPose();
+        graphics.pose().translate(frameX, frameY, 0);
+        graphics.pose().scale(frameScale, frameScale, 1.0F);
+
+        // Blit the texture with the new scaled dimensions, drawing the specified image region using u and v
+        graphics.blit(MAP_FRAME_TEXTURE, 0, 0, 3, 3, MapPageComponent.frameWidth, MapPageComponent.frameHeight, 64, 64);
+
+
 
         graphics.pose().popPose();
+        //graphics.renderOutline(mapFrameInsideRect.x, mapFrameInsideRect.y, mapFrameInsideRect.width, mapFrameInsideRect.height, 0xFF000000);
         if (tooltip != null)
             graphics.renderTooltip(Minecraft.getInstance().font, List.of(Component.literal(tooltip.name()), Component.literal(tooltip.city())), Optional.empty(), mouseX, mouseY);
     }

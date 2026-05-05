@@ -47,17 +47,29 @@ public class ScreenRenderingUtils {
         centerVertically(centerBounds, target);
     }
 
+    public static void scissor(GuiGraphics graphics, Rectangle rect){
+        graphics.enableScissor(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height);
+    }
 
-    public static Rectangle centered(int centerX, int centerY, int radius){
+
+    public static Rectangle centered(int centerX, int centerY, int radius) {
         return centered(new Vector2i(centerX, centerY), radius);
     }
 
-    public static Rectangle centered(Vector2i center, int radius){
+    public static Rectangle centered(Vector2i center, int radius) {
         return new Rectangle(center.x - radius, center.y - radius, 2 * radius, 2 * radius);
     }
 
-    public static void fill(GuiGraphics graphics, Rectangle rect, int color){
-        graphics.fill(rect.x, rect.y, (int) Math.round(rect.getMaxX()), (int)  Math.round(rect.getMaxY()), color);
+    public static void fill(GuiGraphics graphics, Rectangle rect, int color) {
+        graphics.fill(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, color);
+    }
+
+    public static Rectangle growRectangle(Rectangle rect, int w){
+        return growRectangle(rect, w, w);
+    }
+
+    public static Rectangle growRectangle(Rectangle rect, int w, int h){
+        return new Rectangle(rect.x - w, rect.y - h, rect.width + 2 * w, rect.height + 2 * h);
     }
 
     public static void renderTriangleWithOutline(PoseStack stack, Vector2i first, Vector2i second, Vector2i third, double margin, int foregroundColor, int backgroundColor) {
@@ -174,15 +186,15 @@ public class ScreenRenderingUtils {
 
     }
 
-    public static void addTitleComponents(Page page, Component text){
+    public static void addTitleComponents(Page page, Component text) {
         addTitleComponents(page, text, 0x558B7D6B);
     }
 
-    public static void addTitleComponents(Page page, Component text, int color){
+    public static void addTitleComponents(Page page, Component text, int color) {
         addTitleComponents(page, text, color, color, true, false);
     }
 
-    public static void addTitleComponents(Page page, Component text, int underlineColor, int textColor, boolean centered, boolean backDrop){
+    public static void addTitleComponents(Page page, Component text, int underlineColor, int textColor, boolean centered, boolean backDrop) {
         page.addComponent(new TitlePageComponent(text, textColor, backDrop, centered),
                 Inset.symmetric(LayoutValue.ZERO, LayoutValue.px(2)),
                 Dimension.of(DimensionValue.fill(), DimensionValue.percent(0.1f))

@@ -65,6 +65,23 @@ public class MapDrawUtils {
         return locations;
     }
 
+    public static float sanitize(float value, float circleGroupOrder){
+
+        float max = circleGroupOrder / 2f;
+        float min = -max;
+
+        float sanitized = value;
+
+        while (sanitized > max){
+            sanitized -= circleGroupOrder;
+        }
+
+        while (sanitized < min){
+            sanitized += circleGroupOrder;
+        }
+        return sanitized;
+    }
+
 
     /**
      * Converts real-world GPS coordinates to the normalized map coordinates (0.0 to 1.0).
@@ -75,23 +92,29 @@ public class MapDrawUtils {
      */
     public static float[] projectRealWorldToMap(float latitude, float longitude) {
         // Clamp the values just in case invalid GPS coordinates are passed
-        latitude = Mth.clamp(latitude, -90.0f, 90.0f);
-        longitude = Mth.clamp(longitude, -180.0f, 180.0f);
+
+
+
+        //latitude = sanitize(latitude, 180);
+        //longitude = sanitize(longitude, 360);
 
         // Longitude: -180 is the far left (0.0), +180 is the far right (1.0)
         float locX = (longitude + 180.0f) / 360.0f;
 
         // Latitude: +90 is the top (0.0), -90 is the bottom (1.0)
         // Note: Y is inverted because in Minecraft GUI, Y=0 is the top of the screen!
-        float locY = (-latitude + 90.0f) / 180.0f;
+        //float locY = (-latitude + 90.0f) / 180.0f;
+
+        float locY = 0.5f * (1f - (float)Math.tan(latitude / 2d));
+
 
         return new float[]{locX, locY};
     }
 
     public static float[] projectRealWorldToMap(float latitude, float longitude, int imagWidth, int imageHeight) {
         var location = projectRealWorldToMap(latitude, longitude);
-        location[0] *= imagWidth;
-        location[1] *= imageHeight;
+        location[0] *= (float)imagWidth;
+        location[1] *= (float)imageHeight;
         return location;
     }
 }
