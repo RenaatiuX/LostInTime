@@ -15,12 +15,24 @@ public class HorizontalFlowLayout extends PageComponent {
 
     protected List<Triple<PageComponent, Inset, Dimension>> pageComponents = new LinkedList<>();
 
-    public void addComponent(PageComponent component, Inset inset, com.ren.lostintime.client.screen.book.util.Dimension dimension) {
+    public void addComponent(PageComponent component, Inset inset, Dimension dimension) {
         pageComponents.add(new Triple<>(component, inset, dimension));
     }
 
     public void addComponent(PageComponent component) {
         pageComponents.add(new Triple<>(component, Inset.ZERO, Dimension.fill()));
+    }
+
+    @Override
+    public boolean onClick(int mouseX, int mouseY, int button) {
+        for (var componentTriple : this.pageComponents) {
+            var component = componentTriple.a;
+            if (component.getBounds().contains(mouseX, mouseY)) {
+                return component.onClick(mouseX, mouseY, button);
+            }
+        }
+
+        return super.onClick(mouseX, mouseY, button);
     }
 
     @Override

@@ -34,9 +34,10 @@ public class CreatureRightPage extends Page{
         var horizontalLayout = new HorizontalFlowLayout();
         var forwardButton = new ForwardButton(mapComponent);
 
-        horizontalLayout.addComponent(forwardButton);
+        horizontalLayout.addComponent(forwardButton, Inset.ZERO, Dimension.of(DimensionValue.percent(0.3f), DimensionValue.fill()));
+        horizontalLayout.addComponent(new BackwardButton(mapComponent), Inset.ZERO, Dimension.of(DimensionValue.percent(0.3f), DimensionValue.fill()));
 
-        this.addComponent(forwardButton,
+        this.addComponent(horizontalLayout,
                 Inset.of(LayoutValue.px(0), LayoutValue.px(0), LayoutValue.px(4), LayoutValue.px(4)),
                 Dimension.of(DimensionValue.fill(), DimensionValue.percent(0.1f)));
     }
