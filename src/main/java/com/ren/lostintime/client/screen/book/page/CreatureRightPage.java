@@ -9,9 +9,7 @@ import com.ren.lostintime.client.screen.book.util.LayoutValue;
 import com.ren.lostintime.common.entity.util.LostInTimeBookDescription;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.Map;
-
-public class CreatureRightPage extends Page{
+public class CreatureRightPage extends Page {
 
     public CreatureRightPage(LostInTimeBookDescription description) {
 
@@ -31,7 +29,7 @@ public class CreatureRightPage extends Page{
                 Inset.of(LayoutValue.px(4), LayoutValue.px(0), LayoutValue.px(4), LayoutValue.px(4)),
                 Dimension.of(DimensionValue.fill(), DimensionValue.percent(0.5f)));
 
-        var horizontalLayout = new HorizontalFlowLayout();
+        var horizontalLayout = new HorizontalFlowLayout().centered();
         var forwardButton = new ForwardButton(mapComponent);
 
         horizontalLayout.addComponent(forwardButton, Inset.ZERO, Dimension.of(DimensionValue.percent(0.3f), DimensionValue.fill()));

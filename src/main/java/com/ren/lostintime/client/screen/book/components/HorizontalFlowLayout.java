@@ -14,13 +14,21 @@ public class HorizontalFlowLayout extends PageComponent {
 
 
     protected List<Triple<PageComponent, Inset, Dimension>> pageComponents = new LinkedList<>();
+    protected boolean centered = false;
+
+    public HorizontalFlowLayout centered(){
+        this.centered = true;
+        return this;
+    }
 
     public void addComponent(PageComponent component, Inset inset, Dimension dimension) {
         pageComponents.add(new Triple<>(component, inset, dimension));
+        updateBounds();
     }
 
     public void addComponent(PageComponent component) {
         pageComponents.add(new Triple<>(component, Inset.ZERO, Dimension.fill()));
+        updateBounds();
     }
 
     @Override
@@ -39,8 +47,8 @@ public class HorizontalFlowLayout extends PageComponent {
     public void updateBounds() {
         super.updateBounds();
 
+        int currentX = getCurrentX();
         int currentY = this.y;
-        int currentX = this.x;
 
         for (Triple<PageComponent, Inset, Dimension> pair : pageComponents) {
             PageComponent component = pair.a;
@@ -58,6 +66,23 @@ public class HorizontalFlowLayout extends PageComponent {
 
             currentX += component.getBounds().width + insets.resolveRight(component.getBounds().width, this.width);
         }
+    }
+
+    private int getCurrentX() {
+        int totalWidth = 0;
+        if (centered) {
+            for (Triple<PageComponent, Inset, Dimension> pair : pageComponents) {
+                PageComponent component = pair.a;
+                Inset insets = pair.b;
+                Dimension dimension = pair.c;
+                
+                int componentWidth = dimension.resolveWidth(this.width, this.width);
+                totalWidth += componentWidth + insets.resolveHorizontalTotal(componentWidth, this.width);
+            }
+        }
+
+        int currentX = this.x + (centered ? (this.width - totalWidth) / 2 : 0);
+        return currentX;
     }
 
     @Override
