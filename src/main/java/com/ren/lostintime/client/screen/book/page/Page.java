@@ -22,7 +22,7 @@ public abstract class Page {
 
     private boolean scissor = true;
 
-    protected List<Triple<PageComponent, Inset, com.ren.lostintime.client.screen.book.util.Dimension>> pageComponents = new LinkedList<>();
+    protected List<Triple<PageComponent, Inset, Dimension>> pageComponents = new LinkedList<>();
 
     public void setBounds(Rectangle rect) {
         setBounds(rect.x, rect.y, rect.width, rect.height);
@@ -41,18 +41,18 @@ public abstract class Page {
         return this;
     }
 
-    public void addComponent(PageComponent component, Inset inset, com.ren.lostintime.client.screen.book.util.Dimension dimension) {
+    public void addComponent(PageComponent component, Inset inset, Dimension dimension) {
         pageComponents.add(new Triple<>(component, inset, dimension));
     }
 
     public void addComponent(PageComponent component) {
-        pageComponents.add(new Triple<>(component, Inset.ZERO, com.ren.lostintime.client.screen.book.util.Dimension.fill()));
+        pageComponents.add(new Triple<>(component, Inset.ZERO, Dimension.fill()));
     }
 
     public void updateBounds() {
         int currentY = this.y;
 
-        for (Triple<PageComponent, Inset, com.ren.lostintime.client.screen.book.util.Dimension> pair : pageComponents) {
+        for (Triple<PageComponent, Inset, Dimension> pair : pageComponents) {
             PageComponent component = pair.a;
             Inset insets = pair.b;
             Dimension dimension = pair.c;
